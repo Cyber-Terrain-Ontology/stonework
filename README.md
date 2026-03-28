@@ -96,6 +96,4 @@ Contributions, discussions, and proposals are welcome.
 This project is open‑source and part of the Cyber‑Terrain‑Ontology ecosystem.  
 See the repository’s LICENSE file for details.
 
----
 
-A logo that visually expresses the idea of a forge, crafted stonework, or the shaping of next‑generation semantics would reinforce the identity of this ontology. What kind of symbolic direction do you want the logo to lean toward—craftsmanship, mythic resonance, cyber‑terrain topology, or something more abstract?
