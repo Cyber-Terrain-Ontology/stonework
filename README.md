@@ -1,7 +1,4 @@
-Below is a full **README.md** written to feel native inside the Cyber‑Terrain‑Ontology ecosystem. It tells the evolutionary story from STIX → STONES → STONEWORK, frames the ontology’s purpose, and positions it as the forge where next‑generation threat‑intelligence semantics are shaped.
-
----
-
+![STONES Badge](docs/resources/images/STONEWORK-carved-emb.png)
 # **STONEWORK**  
 ### **Semantic Threat Ontology for Next‑generation Extensions, Workflows, Objects, Relationships, and Knowledge**
 
