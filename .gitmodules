@@ -1,0 +1,3 @@
+[submodule "ontologies/vendor/stones"]
+	path = ontologies/vendor/stones
+	url = https://github.com/Cyber-Terrain-Ontology/stones.git
