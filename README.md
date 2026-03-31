@@ -1,7 +1,4 @@
-Below is a full **README.md** written to feel native inside the Cyber‑Terrain‑Ontology ecosystem. It tells the evolutionary story from STIX → STONES → STONEWORK, frames the ontology’s purpose, and positions it as the forge where next‑generation threat‑intelligence semantics are shaped.
-
----
-
+![STONES Badge](docs/resources/images/STONEWORK-carved-emb.png)
 # **STONEWORK**  
 ### **Semantic Threat Ontology for Next‑generation Extensions, Workflows, Objects, Relationships, and Knowledge**
 
@@ -99,6 +96,4 @@ Contributions, discussions, and proposals are welcome.
 This project is open‑source and part of the Cyber‑Terrain‑Ontology ecosystem.  
 See the repository’s LICENSE file for details.
 
----
 
-A logo that visually expresses the idea of a forge, crafted stonework, or the shaping of next‑generation semantics would reinforce the identity of this ontology. What kind of symbolic direction do you want the logo to lean toward—craftsmanship, mythic resonance, cyber‑terrain topology, or something more abstract?
