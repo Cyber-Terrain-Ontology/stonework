@@ -1,4 +1,3 @@
-@prefix : <https://cyberterrain.org/ns/stonework#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
@@ -9,8 +8,8 @@
 @base <https://cyberterrain.org/ns/stonework#> .
 
 <https://cyberterrain.org/ns/stonework#> rdf:type owl:Ontology ;
-                                           owl:versionIRI <https://cyberterrain.org/ns/stonework/0.1.0> ;
-                                           owl:imports stones: .
+                                          owl:versionIRI <https://cyberterrain.org/ns/stonework/0.1.0> ;
+                                          owl:imports stones: .
 
 #################################################################
 #    Object Properties
@@ -20,8 +19,8 @@
 stonework:affected rdf:type owl:ObjectProperty ;
                    rdfs:domain stones:Vulnerability ;
                    rdfs:range stonework:Product ;
-                   <http://www.w3.org/2004/02/skos/core#prefLabel> "affected" ;
                    <http://www.w3.org/2004/02/skos/core#definition> "Relates a vulnerability to a product known to be affected by it." ;
+                   <http://www.w3.org/2004/02/skos/core#prefLabel> "affected" ;
                    <http://www.w3.org/2004/02/skos/core#scopeNote> "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
 
@@ -29,8 +28,8 @@ stonework:affected rdf:type owl:ObjectProperty ;
 stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
                            rdfs:domain stones:Vulnerability ;
                            rdfs:range stonework:Weakness ;
-                           <http://www.w3.org/2004/02/skos/core#prefLabel> "exploitsWeakness" ;
                            <http://www.w3.org/2004/02/skos/core#definition> "Relates a vulnerability to the weakness class it exploits or instantiates." ;
+                           <http://www.w3.org/2004/02/skos/core#prefLabel> "exploitsWeakness" ;
                            <http://www.w3.org/2004/02/skos/core#scopeNote> "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest." .
 
 
