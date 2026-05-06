@@ -3,6 +3,7 @@ ontologies/catalog-backup-*.xml
 
 # IDE
 .idea/
+.claude/
 
 # OS
 Thumbs.db
