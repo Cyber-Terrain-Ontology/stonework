@@ -1,0 +1,9 @@
+# Protégé artifacts
+ontologies/catalog-backup-*.xml
+
+# IDE
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
