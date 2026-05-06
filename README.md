@@ -91,6 +91,31 @@ Contributions, discussions, and proposals are welcome.
 
 ---
 
+## **Getting Started**
+
+### Clone with submodules
+
+```bash
+git clone --recurse-submodules https://github.com/Cyber-Terrain-Ontology/stonework.git
+cd stonework
+```
+
+If you already cloned without `--recurse-submodules`:
+
+```bash
+git submodule update --init --recursive
+```
+
+### Activate the pre-commit hook
+
+Run this once after cloning to enable the pre-commit hook (strips Protégé's default prefix from `.ttl` files and keeps the ontology catalog read-only):
+
+```bash
+git config core.hooksPath .githooks
+```
+
+---
+
 ## **License**
 
 This project is open‑source and part of the Cyber‑Terrain‑Ontology ecosystem.  
