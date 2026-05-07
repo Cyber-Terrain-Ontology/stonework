@@ -16,6 +16,24 @@
 #    Object Properties
 #################################################################
 
+###  https://cyberterrain.org/ns/stonework#affected
+stonework:affected rdf:type owl:ObjectProperty ;
+                   rdfs:domain stones:Vulnerability ;
+                   rdfs:range stonework:Product ;
+                   <http://www.w3.org/2004/02/skos/core#definition> "Relates a vulnerability to a product known to be affected by it." ;
+                   <http://www.w3.org/2004/02/skos/core#prefLabel> "affected" ;
+                   <http://www.w3.org/2004/02/skos/core#scopeNote> "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
+
+
+###  https://cyberterrain.org/ns/stonework#exploitsWeakness
+stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
+                           rdfs:domain stones:Vulnerability ;
+                           rdfs:range stonework:Weakness ;
+                           <http://www.w3.org/2004/02/skos/core#definition> "Relates a vulnerability to the weakness class it exploits or instantiates." ;
+                           <http://www.w3.org/2004/02/skos/core#prefLabel> "exploitsWeakness" ;
+                           <http://www.w3.org/2004/02/skos/core#scopeNote> "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest." .
+
+
 ###  https://cyberterrain.org/ns/stonework#hasTechnique
 stonework:hasTechnique rdf:type owl:ObjectProperty ;
                        rdfs:domain stonework:Tactic ;

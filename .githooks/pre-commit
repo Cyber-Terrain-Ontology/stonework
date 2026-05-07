@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CATALOG="ontologies/catalog-v001.xml"
+
+# Remove the Protégé-injected default ":" prefix from any staged .ttl files.
+# Protégé adds: @prefix : <...> .  which duplicates the named stonework: prefix.
+staged_ttl=$(git diff --cached --name-only --diff-filter=ACM | grep '\.ttl$' || true)
+if [ -n "$staged_ttl" ]; then
+    while IFS= read -r f; do
+        if grep -qE '^@prefix[[:space:]]+:[[:space:]]+<[^>]+>[[:space:]]*\.$' "$f"; then
+            sed -i '/^@prefix[[:space:]]\+:[[:space:]]\+<[^>]*>[[:space:]]*\.$/d' "$f"
+            git add "$f"
+            echo "pre-commit: removed default ':' prefix from $f"
+        fi
+    done <<< "$staged_ttl"
+fi
+
+# Keep catalog-v001.xml read-only so Protégé cannot overwrite it on save.
+if [ -f "$CATALOG" ]; then
+    chmod 444 "$CATALOG"
+    echo "pre-commit: set $CATALOG read-only"
+fi
