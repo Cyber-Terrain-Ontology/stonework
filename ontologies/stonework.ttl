@@ -3,6 +3,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix provo: <https://www.w3.org/TR/prov-o/#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
@@ -75,7 +76,8 @@ stonework:Agent rdf:type owl:Class ;
                 rdfs:subClassOf stones:StixCoreObject ;
                 skos:prefLabel "Agent" ;
                 skos:definition "Any entity that can act, perform actions, or be attributed responsibility in a cyber or sociotechnical context."@en ;
-                skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en .
+                skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
+                rdfs:seeAlso provo:Agent .
 
 ###  https://cyberterrain.org/ns/stonework#Control
 stonework:Control rdf:type owl:Class ;
@@ -113,14 +115,16 @@ stonework:Organization rdf:type owl:Class ;
                        rdfs:subClassOf stonework:Group ;
                        skos:prefLabel "Organization" ;
                        skos:definition "A formal or semi-formal structured entity such as a company, government agency, non-profit, military unit, or consortium with defined boundaries and usually legal identity."@en ;
-                       skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en .
+                       skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
+                       rdfs:seeAlso provo:Organization .
 
 ###  https://cyberterrain.org/ns/stonework#Person
 stonework:Person rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Agent ;
                  skos:prefLabel "Person" ;
                  skos:definition "A single human individual."@en ;
-                 skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en .
+                 skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en ;
+                 rdfs:seeAlso provo:Person .
 
 ###  https://cyberterrain.org/ns/stonework#Procedure
 stonework:Procedure rdf:type owl:Class ;
