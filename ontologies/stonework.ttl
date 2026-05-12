@@ -45,7 +45,7 @@ stonework:hasTechnique rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#Control
 stonework:Control rdf:type owl:Class ;
-                  rdfs:subClassOf stonework:OperationalProcess ;
+                  rdfs:subClassOf stonework:Process ;
                   rdfs:comment "Instances of stonework:Control may represent individual controls, control enhancements, or sub‑controls. Framework‑specific identifiers (e.g., “AC‑2”, “CIS 4.1”) SHOULD be modeled using explicit properties rather than encoded in the class IRI. Control text SHOULD be referenced via citations rather than reproduced verbatim." ;
                   skos:prefLabel "Control" ;
                   skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
@@ -69,24 +69,16 @@ stonework:Likelihood rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Mitigation
 stonework:Mitigation rdf:type owl:Class ;
-                     rdfs:subClassOf stonework:OperationalProcess ;
+                     rdfs:subClassOf stonework:Process ;
                      skos:prefLabel "Mitigation" ;
                      skos:definition "A deliberate OperationalProcess or set of activities intended to reduce the likelihood, impact, or severity of a risk, threat, vulnerability, or adverse event."@en ;
                      skos:scopeNote """Mitigations are proactive or reactive actions taken to address weaknesses or threats. 
 Examples include: applying a security patch, enabling multi-factor authentication, deploying a firewall rule, isolating a compromised host, or training users.  A Mitigation may be a one-time action or a repeatable control."""@en ;
                      rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> .
 
-###  https://cyberterrain.org/ns/stonework#OperationalProcess
-stonework:OperationalProcess rdf:type owl:Class ;
-                             rdfs:subClassOf stones:StixDomainObject ;
-                             skos:prefLabel "OperationalProcess" ;
-                             skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
-                             skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is intended for modeling Controls, Playbooks, Mitigations, Threat Scenarios, and other repeatable or planned workflows."@en ;
-                             rdfs:seeAlso <https://www.opmw.org/model/p-plan/> , <https://www.w3.org/TR/prov-o/#Activity> .
-
 ###  https://cyberterrain.org/ns/stonework#Playbook
 stonework:Playbook rdf:type owl:Class ;
-                   rdfs:subClassOf stonework:OperationalProcess ;
+                   rdfs:subClassOf stonework:Process ;
                    rdfs:comment "Playbooks are often versioned, tested, and executed as instances of OperationalProcess."@en ;
                    skos:prefLabel "Playbook" ;
                    skos:definition "A documented, structured OperationalProcess that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
@@ -100,6 +92,14 @@ stonework:Procedure rdf:type owl:Class ;
                     skos:prefLabel "Procedure" ;
                     skos:definition "A concrete, observable sequence of actions, commands, or behaviors that implements a technique in a specific operational context." ;
                     skos:scopeNote "Procedures describe the actual steps an adversary takes, such as specific commands, scripts, tools, or configurations. They represent the most granular level of adversary behavior." .
+
+###  https://cyberterrain.org/ns/stonework#Process
+stonework:Process rdf:type owl:Class ;
+                  rdfs:subClassOf stones:StixDomainObject ;
+                  skos:prefLabel "Process"@en ;
+                  skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
+                  skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is intended for modeling Controls, Playbooks, Mitigations, Threat Scenarios, and other repeatable or planned workflows."@en ;
+                  rdfs:seeAlso <https://www.opmw.org/model/p-plan/> , <https://www.w3.org/TR/prov-o/#Activity> .
 
 ###  https://cyberterrain.org/ns/stonework#Product
 stonework:Product rdf:type owl:Class ;
@@ -142,7 +142,7 @@ stonework:Threat rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#ThreatScenario
 stonework:ThreatScenario rdf:type owl:Class ;
-                         rdfs:subClassOf stonework:OperationalProcess ;
+                         rdfs:subClassOf stonework:Process ;
                          rdfs:comment "Instances of stonework:ThreatScenario may include assumptions, triggering conditions, targeted assets, adversary profiles, attack paths, and expected impacts. Threat scenarios are distinct from threats, attacks, or incidents; they represent hypothetical or anticipated sequences rather than observed events." ;
                          skos:prefLabel "ThreatScenario" ;
                          skos:definition "A structured description of how a threat could materialize against specific assets or missions, incorporating adversary intent, capability, opportunity, preconditions, and potential consequences." ;
