@@ -71,7 +71,7 @@ stonework:Likelihood rdf:type owl:Class ;
 stonework:Mitigation rdf:type owl:Class ;
                      rdfs:subClassOf stonework:Process ;
                      skos:prefLabel "Mitigation" ;
-                     skos:definition "A deliberate OperationalProcess or set of activities intended to reduce the likelihood, impact, or severity of a risk, threat, vulnerability, or adverse event."@en ;
+                     skos:definition "A deliberate Process or set of activities intended to reduce the likelihood, impact, or severity of a risk, threat, vulnerability, or adverse event."@en ;
                      skos:scopeNote """Mitigations are proactive or reactive actions taken to address weaknesses or threats. 
 Examples include: applying a security patch, enabling multi-factor authentication, deploying a firewall rule, isolating a compromised host, or training users.  A Mitigation may be a one-time action or a repeatable control."""@en ;
                      rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> .
@@ -79,9 +79,9 @@ Examples include: applying a security patch, enabling multi-factor authenticatio
 ###  https://cyberterrain.org/ns/stonework#Playbook
 stonework:Playbook rdf:type owl:Class ;
                    rdfs:subClassOf stonework:Process ;
-                   rdfs:comment "Playbooks are often versioned, tested, and executed as instances of OperationalProcess."@en ;
+                   rdfs:comment "Playbooks are often versioned, tested, and executed as instances of Process."@en ;
                    skos:prefLabel "Playbook" ;
-                   skos:definition "A documented, structured OperationalProcess that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
+                   skos:definition "A documented, structured Process that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
                    skos:scopeNote "A Playbook provides reusable, often automated or semi-automated guidance for security operations, incident response, threat hunting, recovery, or routine tasks. It typically includes triggers, decision points, assigned roles (Agents), inputs/outputs, and success criteria.  Playbooks bridge planning and execution."@en ;
                    rdfs:seeAlso <https://www.w3.org/TR/prov-o/#Plan> .
 
