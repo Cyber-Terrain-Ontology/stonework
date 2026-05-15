@@ -31,14 +31,21 @@ stonework:affected rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Group ;
-                     skos:prefLabel "hasMembers" .
+                     skos:prefLabel "hasMembers" ;
+                     skos:definition "Links a Group or Organization to its member Agents, Identities, or Organizations."@en ;
+                     skos:scopeNote "Used for modeling coalitions, organizations, threat actor groups, insider teams, etc."@en ;
+                     rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#hasTechnique
-stonework:hasTechnique rdf:type owl:AsymmetricProperty , owl:ObjectProperty , owl:TransitiveProperty ;
-                       rdfs:range stonework:Technique .
+stonework:hasTechnique rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                       rdfs:range stonework:Technique ;
+                       skos:prefLabel "hasTechnique"@en ;
+                       skos:definition "Links a Tactic to the Techniques that can be used to achieve it."@en ;
+                       skos:scopeNote "This is the standard relationship in ATT&CK-style models: a Tactic 'has' multiple Techniques. Marked as transitive so that a Tactic can also reach Subtechniques through chained Techniques."@en ;
+                       rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#hasWeakness
-stonework:hasWeakness rdf:type owl:AsymmetricProperty , owl:ObjectProperty ;
+stonework:hasWeakness rdf:type owl:ObjectProperty ;
                       rdfs:domain stones:Vulnerability ;
                       rdfs:range stonework:Weakness ;
                       skos:prefLabel "hasWeakness" ;
@@ -49,13 +56,19 @@ stonework:hasWeakness rdf:type owl:AsymmetricProperty , owl:ObjectProperty ;
 stonework:membersOf rdf:type owl:ObjectProperty ;
                     owl:inverseOf stonework:hasMembers ;
                     rdfs:range stonework:Group ;
-                    skos:prefLabel "membersOf" .
+                    skos:prefLabel "membersOf" ;
+                    skos:definition "Indicates that an Agent, Identity, or Organization is a member of a Group."@en ;
+                    skos:scopeNote "Inverse of hasMembers. Useful for queries like 'which groups is this actor a member of?'"@en ;
+                    rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#techniqueOf
 stonework:techniqueOf rdf:type owl:ObjectProperty ;
                       owl:inverseOf stonework:hasTechnique ;
                       rdfs:domain stonework:Technique ;
-                      skos:prefLabel "techniqueOf"@en .
+                      skos:prefLabel "techniqueOf"@en ;
+                      skos:definition "Links a Technique to the Tactic(s) it achieves or supports."@en ;
+                      skos:scopeNote "This is the inverse of hasTechnique. A single Technique may support multiple Tactics (e.g. 'Phishing' supports both Initial Access and Credential Access)."@en ;
+                      rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#weaknessOf
 stonework:weaknessOf rdf:type owl:ObjectProperty ;
