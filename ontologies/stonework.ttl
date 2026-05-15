@@ -92,14 +92,6 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 #    Classes
 #################################################################
 
-###  https://cyberterrain.org/ns/stonework#Category
-stonework:Category rdf:type owl:Class ;
-                   rdfs:subClassOf stones:StixMetaObject ;
-                   skos:prefLabel "Category" ;
-                   skos:definition "A classification or tagging concept used to group or qualify other individuals in a particular context." ;
-                   skos:scopeNote "Categories are reified so they can be referenced, versioned, or scoped. They are not rigid types."@en ;
-                   rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
-
 ###  https://cyberterrain.org/ns/stonework#Agent
 stonework:Agent rdf:type owl:Class ;
                 rdfs:subClassOf stones:StixCoreObject ;
@@ -107,6 +99,14 @@ stonework:Agent rdf:type owl:Class ;
                 skos:definition "Any entity that can act, perform actions, or be attributed responsibility in a cyber or sociotechnical context."@en ;
                 skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
                 rdfs:seeAlso provo:Agent .
+
+###  https://cyberterrain.org/ns/stonework#Category
+stonework:Category rdf:type owl:Class ;
+                   rdfs:subClassOf stones:StixMetaObject ;
+                   skos:prefLabel "Category" ;
+                   skos:definition "A classification or tagging concept used to group or qualify other individuals in a particular context." ;
+                   skos:scopeNote "Categories are reified so they can be referenced, versioned, or scoped. They are not rigid types."@en ;
+                   rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#Control
 stonework:Control rdf:type owl:Class ;
@@ -148,6 +148,14 @@ stonework:Mitigation rdf:type owl:Class ;
 Examples include: applying a security patch, enabling multi-factor authentication, deploying a firewall rule, isolating a compromised host, or training users.  A Mitigation may be a one-time action or a repeatable control."""@en ;
                      rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> .
 
+###  https://cyberterrain.org/ns/stonework#Organization
+stonework:Organization rdf:type owl:Class ;
+                       rdfs:subClassOf stonework:Group ;
+                       skos:prefLabel "Organization" ;
+                       skos:definition "A formal or semi-formal structured entity such as a company, government agency, non-profit, military unit, or consortium with defined boundaries and usually legal identity."@en ;
+                       skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
+                       rdfs:seeAlso provo:Organization .
+
 ###  https://cyberterrain.org/ns/stonework#Playbook
 stonework:Playbook rdf:type owl:Class ;
                    rdfs:subClassOf stonework:Process ;
@@ -156,13 +164,6 @@ stonework:Playbook rdf:type owl:Class ;
                    skos:definition "A documented, structured Process that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
                    skos:scopeNote "A Playbook provides reusable, often automated or semi-automated guidance for security operations, incident response, threat hunting, recovery, or routine tasks. It typically includes triggers, decision points, assigned roles (Agents), inputs/outputs, and success criteria.  Playbooks bridge planning and execution."@en ;
                    rdfs:seeAlso <https://www.w3.org/TR/prov-o/#Plan> .
-###  https://cyberterrain.org/ns/stonework#Organization
-stonework:Organization rdf:type owl:Class ;
-                       rdfs:subClassOf stonework:Group ;
-                       skos:prefLabel "Organization" ;
-                       skos:definition "A formal or semi-formal structured entity such as a company, government agency, non-profit, military unit, or consortium with defined boundaries and usually legal identity."@en ;
-                       skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
-                       rdfs:seeAlso provo:Organization .
 
 ###  https://cyberterrain.org/ns/stonework#Person
 stonework:Person rdf:type owl:Class ;
