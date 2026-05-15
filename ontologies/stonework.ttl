@@ -156,6 +156,14 @@ stonework:Organization rdf:type owl:Class ;
                        skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
                        rdfs:seeAlso provo:Organization .
 
+###  https://cyberterrain.org/ns/stonework#Person
+stonework:Person rdf:type owl:Class ;
+                 rdfs:subClassOf stonework:Agent ;
+                 skos:prefLabel "Person" ;
+                 skos:definition "A single human individual."@en ;
+                 skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en ;
+                 rdfs:seeAlso provo:Person .
+
 ###  https://cyberterrain.org/ns/stonework#Playbook
 stonework:Playbook rdf:type owl:Class ;
                    rdfs:subClassOf stonework:Process ;
@@ -164,14 +172,6 @@ stonework:Playbook rdf:type owl:Class ;
                    skos:definition "A documented, structured Process that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
                    skos:scopeNote "A Playbook provides reusable, often automated or semi-automated guidance for security operations, incident response, threat hunting, recovery, or routine tasks. It typically includes triggers, decision points, assigned roles (Agents), inputs/outputs, and success criteria.  Playbooks bridge planning and execution."@en ;
                    rdfs:seeAlso <https://www.w3.org/TR/prov-o/#Plan> .
-
-###  https://cyberterrain.org/ns/stonework#Person
-stonework:Person rdf:type owl:Class ;
-                 rdfs:subClassOf stonework:Agent ;
-                 skos:prefLabel "Person" ;
-                 skos:definition "A single human individual."@en ;
-                 skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en ;
-                 rdfs:seeAlso provo:Person .
 
 ###  https://cyberterrain.org/ns/stonework#Procedure
 stonework:Procedure rdf:type owl:Class ;
