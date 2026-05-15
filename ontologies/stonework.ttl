@@ -81,7 +81,7 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#Category
 stonework:Category rdf:type owl:Class ;
-                   rdfs:subClassOf stones:StixDomainObject ;
+                   rdfs:subClassOf stones:StixMetaObject ;
                    skos:prefLabel "Category" ;
                    skos:definition "A classification or tagging concept used to group or qualify other individuals in a particular context." ;
                    skos:scopeNote "Categories are reified so they can be referenced, versioned, or scoped. They are not rigid types."@en ;
