@@ -28,6 +28,14 @@ stonework:affected rdf:type owl:ObjectProperty ;
                    skos:definition "Relates a vulnerability to a product known to be affected by it." ;
                    skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
+###  https://cyberterrain.org/ns/stonework#categorizedBy
+stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                        rdfs:range stonework:Category ;
+                        skos:prefLabel "categorizedBy" ;
+                        skos:definition "Links any individual to one or more contextual categories." ;
+                        skos:scopeNote "This is the primary mechanism for flexible, context-sensitive classification (e.g., Evidence, HighValue, Suspect, etc.). Multiple categories per individual are allowed."@en ;
+                        rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Group ;
@@ -83,6 +91,14 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 #################################################################
 #    Classes
 #################################################################
+
+###  https://cyberterrain.org/ns/stonework#Category
+stonework:Category rdf:type owl:Class ;
+                   rdfs:subClassOf stones:StixMetaObject ;
+                   skos:prefLabel "Category" ;
+                   skos:definition "A classification or tagging concept used to group or qualify other individuals in a particular context." ;
+                   skos:scopeNote "Categories are reified so they can be referenced, versioned, or scoped. They are not rigid types."@en ;
+                   rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#Agent
 stonework:Agent rdf:type owl:Class ;
@@ -226,3 +242,15 @@ stonework:Weakness rdf:type owl:Class ;
                    skos:prefLabel "Weakness" ;
                    skos:definition "A type of flaw, fault, or design condition in software, hardware, or system architecture that can enable vulnerabilities, reduce security assurance, or increase the likelihood of exploitable behavior." ;
                    skos:scopeNote "This class provides a semantic representation of weakness types defined in the Common Weakness Enumeration (CWE). It supports hierarchical relationships, abstraction levels, and mappings to related attack patterns, vulnerabilities, and security controls." .
+
+
+#################################################################
+#    Named Individuals
+#################################################################
+
+###  https://cyberterrain.org/ns/stonework#evidence
+stonework:evidence rdf:type owl:NamedIndividual , stonework:Category ;
+                   skos:prefLabel "Evidence" ;
+                   skos:definition "Material or information offered to support or refute a claim, typically within an investigation or legal context."@en ;
+                   skos:scopeNote "This is a reusable category instance. It is *not* a class. Use stonework:categorizedBy to assert that something is evidence in a given context."@en ;
+                   rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
