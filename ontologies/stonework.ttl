@@ -7,6 +7,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix stoneworkx: <https://cyberterrain.org/ns/stoneworkx#> .
 @base <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#
@@ -36,6 +37,19 @@ stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                         skos:scopeNote "This is the primary mechanism for flexible, context-sensitive classification (e.g., Evidence, HighValue, Suspect, etc.). Multiple categories per individual are allowed."@en ;
                         rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
+###  https://cyberterrain.org/ns/stonework#dependencyOf
+stonework:dependencyOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                       rdfs:domain stonework:ProductVersion ;
+                       rdfs:range stonework:ProductVersion ;
+                       skos:prefLabel "dependencyOf" .
+
+###  https://cyberterrain.org/ns/stonework#hasDependency
+stonework:hasDependency rdf:type owl:ObjectProperty ;
+                        owl:inverseOf stonework:dependencyOf ;
+                        rdfs:domain stonework:ProductVersion ;
+                        rdfs:range stonework:ProductVersion ;
+                        skos:prefLabel "hasDependency" .
+
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Group ;
@@ -51,6 +65,21 @@ stonework:hasTechnique rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                        skos:definition "Links a Tactic to the Techniques that can be used to achieve it."@en ;
                        skos:scopeNote "This is the standard relationship in ATT&CK-style models: a Tactic 'has' multiple Techniques. Marked as transitive so that a Tactic can also reach Subtechniques through chained Techniques."@en ;
                        rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
+###  https://cyberterrain.org/ns/stonework#hasVendor
+stonework:hasVendor rdf:type owl:ObjectProperty ;
+                    owl:inverseOf stonework:vendorOf ;
+                    rdfs:domain stonework:Product ;
+                    rdfs:range stonework:Agent ;
+                    skos:prefLabel "hasVendor" .
+
+###  https://cyberterrain.org/ns/stonework#hasVersion
+stonework:hasVersion rdf:type owl:ObjectProperty ;
+                     owl:inverseOf stonework:versionOf ;
+                     rdfs:domain stonework:Product ;
+                     rdfs:range stonework:ProductVersion ;
+                     skos:prefLabel "hasVersion" ;
+                     skos:definition "Links a base Product to a specific version."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasWeakness
 stonework:hasWeakness rdf:type owl:ObjectProperty ;
@@ -69,6 +98,15 @@ stonework:membersOf rdf:type owl:ObjectProperty ;
                     skos:scopeNote "Inverse of hasMembers. Useful for queries like 'which groups is this actor a member of?'"@en ;
                     rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
+###  https://cyberterrain.org/ns/stonework#producttype
+stonework:producttype rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:Product ;
+                      rdfs:range stonework:ProductTypeVocabulary ;
+                      skos:prefLabel "productType" ;
+                      skos:definition "The high-level category of this product." ;
+                      skos:scopeNote "Examples: os, application, hardware, firmware, saas, iaas, package, middleware."@en ;
+                      rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
 ###  https://cyberterrain.org/ns/stonework#techniqueOf
 stonework:techniqueOf rdf:type owl:ObjectProperty ;
                       owl:inverseOf stonework:hasTechnique ;
@@ -78,6 +116,19 @@ stonework:techniqueOf rdf:type owl:ObjectProperty ;
                       skos:scopeNote "This is the inverse of hasTechnique. A single Technique may support multiple Tactics (e.g. 'Phishing' supports both Initial Access and Credential Access)."@en ;
                       rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
+###  https://cyberterrain.org/ns/stonework#vendorOf
+stonework:vendorOf rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Agent ;
+                   rdfs:range stonework:Product ;
+                   skos:prefLabel "vendorOf" .
+
+###  https://cyberterrain.org/ns/stonework#versionOf
+stonework:versionOf rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:ProductVersion ;
+                    rdfs:range stonework:Product ;
+                    skos:prefLabel "versionOf" ;
+                    skos:definition "Links a specific version back to the base Product."@en .
+
 ###  https://cyberterrain.org/ns/stonework#weaknessOf
 stonework:weaknessOf rdf:type owl:ObjectProperty ;
                      owl:inverseOf stonework:hasWeakness ;
@@ -86,6 +137,63 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
                      skos:prefLabel "weaknessOf"@en ;
                      skos:definition "Relates a weakness to the vulnerability that exploits or instantiates it."@en ;
                      skos:scopeNote "The range is a vulnerability individual. The weakness individual (domain) is a stonework:Weakness whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
+
+
+#################################################################
+#    Data Properties
+#################################################################
+
+###  https://cyberterrain.org/ns/stonework#alias
+stonework:alias rdf:type owl:DatatypeProperty ;
+                rdfs:domain stonework:Product , stonework:ProductVersion ;
+                rdfs:range xsd:string .
+
+###  https://cyberterrain.org/ns/stonework#architecture
+stonework:architecture rdf:type owl:DatatypeProperty ;
+                       rdfs:domain stonework:ProductVersion ;
+                       rdfs:range xsd:string ;
+                       skos:definition "The CPU architecture or instruction set this product version supports."@en ;
+                       skos:scopeNote "Examples: x86_64, arm64, aarch64, x86, ppc64le, s390x"@en .
+
+###  https://cyberterrain.org/ns/stonework#ecosystem
+stonework:ecosystem rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Product ;
+                    rdfs:range xsd:string ;
+                    skos:definition "The software ecosystem or package registry this product belongs to."@en ;
+                    skos:scopeNote "Examples: npm, pypi, maven, nuget, apt, homebrew, aws, azure, gcp, docker, etc."@en .
+
+###  https://cyberterrain.org/ns/stonework#platform
+stonework:platform rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:ProductVersion ;
+                   rdfs:range xsd:string ;
+                   skos:definition "The platform or operating system this product version targets or runs on."@en ;
+                   skos:scopeNote "Examples: windows, linux, macos, android, ios, aws, kubernetes"@en .
+
+###  https://cyberterrain.org/ns/stonework#publishedDate
+stonework:publishedDate rdf:type owl:DatatypeProperty ;
+                        rdfs:domain stonework:ProductVersion ;
+                        rdfs:range xsd:dateTime ;
+                        skos:definition "Date the product version was published."@en .
+
+###  https://cyberterrain.org/ns/stonework#purl
+stonework:purl rdf:type owl:DatatypeProperty ;
+               rdfs:domain stonework:Product , stonework:ProductVersion ;
+               rdfs:range xsd:string ;
+               skos:definition "Package URL (PURL) that uniquely identifies this specific version of the product."@en ;
+               rdfs:seeAlso <https://github.com/package-url/purl-spec> .
+
+###  https://cyberterrain.org/ns/stonework#releaseType
+stonework:releaseType rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:ProductVersion ;
+                      rdfs:range xsd:string ;
+                      skos:scopeNote "Example: stable, lts, beta, rc, security-patch"@en .
+
+###  https://cyberterrain.org/ns/stonework#repository
+stonework:repository rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:Product ;
+                     rdfs:range xsd:string ;
+                     skos:definition "URL of the source code repository for this product."@en ;
+                     skos:scopeNote "Usually a GitHub, GitLab, or Bitbucket URL."@en .
 
 
 #################################################################
@@ -171,7 +279,7 @@ stonework:Playbook rdf:type owl:Class ;
                    skos:prefLabel "Playbook" ;
                    skos:definition "A documented, structured Process that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
                    skos:scopeNote "A Playbook provides reusable, often automated or semi-automated guidance for security operations, incident response, threat hunting, recovery, or routine tasks. It typically includes triggers, decision points, assigned roles (Agents), inputs/outputs, and success criteria.  Playbooks bridge planning and execution."@en ;
-                   rdfs:seeAlso <https://www.w3.org/TR/prov-o/#Plan> .
+                   rdfs:seeAlso provo:Plan .
 
 ###  https://cyberterrain.org/ns/stonework#Procedure
 stonework:Procedure rdf:type owl:Class ;
@@ -187,16 +295,31 @@ stonework:Process rdf:type owl:Class ;
                   skos:prefLabel "Process"@en ;
                   skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
                   skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is intended for modeling Controls, Playbooks, Mitigations, Threat Scenarios, and other repeatable or planned workflows."@en ;
-                  rdfs:seeAlso <https://www.opmw.org/model/p-plan/> , <https://www.w3.org/TR/prov-o/#Activity> .
+                  rdfs:seeAlso <https://www.opmw.org/model/p-plan/> , provo:Activity .
 
 ###  https://cyberterrain.org/ns/stonework#Product
 stonework:Product rdf:type owl:Class ;
-                  rdfs:subClassOf stones:StixDomainObject ;
+                  rdfs:subClassOf stones:StixCoreObject ;
                   rdfs:comment "Instances of stonework:Product may include operating systems, applications, libraries, devices, or embedded components. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
                   skos:prefLabel "Product" ;
                   skos:definition "A software, hardware, or firmware entity identified by its vendor, product name, and version characteristics, used to represent a specific platform or component within vulnerability, configuration, or threat‑intelligence contexts."@en ;
                   skos:scopeNote "This class provides a semantic representation of platform entities commonly identified using CPE naming schemes. It does not require the use of CPE, but supports mapping to CPE identifiers when available."@en ;
                   rdfs:isDefinedBy "https://cyberterrain.org/ns/stonework#" .
+
+###  https://cyberterrain.org/ns/stonework#ProductTypeVocabulary
+stonework:ProductTypeVocabulary rdf:type owl:Class ;
+                                rdfs:subClassOf stones:OpenVocabulary ;
+                                skos:prefLabel "ProductTypeVocabulary"@en ;
+                                skos:definition "Controlled vocabulary for categorizing different kinds of technology products." ;
+                                rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
+###  https://cyberterrain.org/ns/stonework#ProductVersion
+stonework:ProductVersion rdf:type owl:Class ;
+                         rdfs:subClassOf stones:StixCoreObject ;
+                         skos:prefLabel "Product Version" ;
+                         skos:definition "A specific released version of a Product." ;
+                         skos:scopeNote "Used for version-specific tracking such as vulnerabilities, dependencies, CPEs, and SBOMs. Each version is linked back to its parent Product via the versionOf property."@en ;
+                         rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#Risk
 stonework:Risk rdf:type owl:Class ;
@@ -255,3 +378,86 @@ stonework:evidence rdf:type owl:NamedIndividual , stonework:Category ;
                    skos:definition "Material or information offered to support or refute a claim, typically within an investigation or legal context."@en ;
                    skos:scopeNote "This is a reusable category instance. It is *not* a class. Use stonework:categorizedBy to assert that something is evidence in a given context."@en ;
                    rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
+###  https://cyberterrain.org/ns/stoneworkx#_ai-model
+stoneworkx:_ai-model rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                     skos:prefLabel "AI Model" ;
+                     skos:notation "ai-model" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_application
+stoneworkx:_application rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                        skos:prefLabel "Application" ;
+                        skos:notation "application" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_container
+stoneworkx:_container rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                      skos:prefLabel "Container Image"@en ;
+                      skos:notation "container-image" , "container" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_firmware
+stoneworkx:_firmware rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                     rdfs:label "Firmware"@en ;
+                     skos:notation "firmware" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_hardware
+stoneworkx:_hardware rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                     rdfs:label "Hardware"@en ;
+                     skos:notation "hardware" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_iaas
+stoneworkx:_iaas rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                 skos:prefLabel "Infrastructure as a Service" ;
+                 skos:notation "iaas" , "infrastructure-as-a-service" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_library
+stoneworkx:_library rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                    skos:prefLabel "Library" ;
+                    skos:notation "library" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_middleware
+stoneworkx:_middleware rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                       skos:prefLabel "Middleware" ;
+                       skos:notation "middleware" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_operating-system
+stoneworkx:_operating-system rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                             rdfs:label "Operating System"@en ;
+                             skos:notation "operating-system" , "os" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_paas
+stoneworkx:_paas rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                 skos:prefLabel "Platform as a Service" ;
+                 skos:notation "paas" , "platform-as-a-service" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_package
+stoneworkx:_package rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                    skos:prefLabel "Package" ;
+                    skos:notation "package" .
+
+###  https://cyberterrain.org/ns/stoneworkx#_saas
+stoneworkx:_saas rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary ;
+                 rdfs:label "Software as a Service"@en ;
+                 skos:notation "saas" , "software-as-a-service" .
+
+
+#################################################################
+#    General Axioms
+#################################################################
+
+###  https://cyberterrain.org/ns/stones#authors
+stones:authors rdfs:domain stonework:Product .
+
+###  https://cyberterrain.org/ns/stones#cpe
+stones:cpe rdfs:domain stonework:ProductVersion .
+
+###  https://cyberterrain.org/ns/stones#name
+stones:name rdfs:domain stonework:Product .
+
+###  https://cyberterrain.org/ns/stones#SoftwareObject
+stones:SoftwareObject rdfs:subClassOf stonework:Product .
+
+###  https://cyberterrain.org/ns/stones#version
+stones:version rdfs:domain stonework:ProductVersion .
+
+###  https://cyberterrain.org/ns/stonework#releaseDate
+stonework:releaseDate rdfs:domain stonework:ProductVersion .
