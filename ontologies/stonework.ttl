@@ -24,7 +24,7 @@
 ###  https://cyberterrain.org/ns/stonework#affected
 stonework:affected rdf:type owl:ObjectProperty ;
                    rdfs:domain stones:Vulnerability ;
-                   rdfs:range stonework:Product ;
+                   rdfs:range stonework:Product , stonework:ProductVersion ;
                    skos:prefLabel "affected" ;
                    skos:definition "Relates a vulnerability to a product known to be affected by it." ;
                    skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
