@@ -107,6 +107,12 @@ stonework:producttype rdf:type owl:ObjectProperty ;
                       skos:scopeNote "Examples: os, application, hardware, firmware, saas, iaas, package, middleware."@en ;
                       rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
+###  https://cyberterrain.org/ns/stonework#supersedes
+stonework:supersedes rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                     rdfs:domain stonework:Product ;
+                     rdfs:range stonework:Product ;
+                     skos:prefLabel "supersedes" .
+
 ###  https://cyberterrain.org/ns/stonework#techniqueOf
 stonework:techniqueOf rdf:type owl:ObjectProperty ;
                       owl:inverseOf stonework:hasTechnique ;
@@ -145,7 +151,7 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#alias
 stonework:alias rdf:type owl:DatatypeProperty ;
-                rdfs:domain stonework:Product , stonework:ProductFamily ;
+                rdfs:domain stonework:ProductFamily ;
                 rdfs:range xsd:string .
 
 ###  https://cyberterrain.org/ns/stonework#architecture
@@ -154,6 +160,12 @@ stonework:architecture rdf:type owl:DatatypeProperty ;
                        rdfs:range xsd:string ;
                        skos:definition "The CPU architecture or instruction set this product version supports."@en ;
                        skos:scopeNote "Examples: x86_64, arm64, aarch64, x86, ppc64le, s390x"@en .
+
+###  https://cyberterrain.org/ns/stonework#deprecated
+stonework:deprecated rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:Product ;
+                     rdfs:range xsd:boolean ;
+                     skos:prefLabel "deprecated" .
 
 ###  https://cyberterrain.org/ns/stonework#ecosystem
 stonework:ecosystem rdf:type owl:DatatypeProperty ;
@@ -164,6 +176,11 @@ stonework:ecosystem rdf:type owl:DatatypeProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#homepage
 stonework:homepage rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:ProductFamily ;
+                   rdfs:range xsd:string .
+
+###  https://cyberterrain.org/ns/stonework#keywords
+stonework:keywords rdf:type owl:DatatypeProperty ;
                    rdfs:domain stonework:ProductFamily ;
                    rdfs:range xsd:string .
 
@@ -459,6 +476,9 @@ stones:authors rdfs:domain stonework:ProductFamily .
 
 ###  https://cyberterrain.org/ns/stones#cpe
 stones:cpe rdfs:domain stonework:Product .
+
+###  https://cyberterrain.org/ns/stones#description
+stones:description rdfs:domain stonework:ProductFamily .
 
 ###  https://cyberterrain.org/ns/stones#name
 stones:name rdfs:domain stonework:ProductFamily .
