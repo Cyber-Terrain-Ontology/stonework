@@ -39,6 +39,7 @@ stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Agent ;
+                     rdfs:range stonework:Agent ;
                      skos:prefLabel "hasMembers" ;
                      skos:definition "Links a Group or Organization to its member Agents, Identities, or Organizations."@en ;
                      skos:scopeNote "Used for modeling coalitions, organizations, threat actor groups, insider teams, etc."@en ;
@@ -63,6 +64,7 @@ stonework:hasWeakness rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#membersOf
 stonework:membersOf rdf:type owl:ObjectProperty ;
                     owl:inverseOf stonework:hasMembers ;
+                    rdfs:domain stonework:Agent ;
                     rdfs:range stonework:Agent ;
                     skos:prefLabel "membersOf" ;
                     skos:definition "Indicates that an Agent, Identity, or Organization is a member of a Group."@en ;
@@ -94,7 +96,7 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#Agent
 stonework:Agent rdf:type owl:Class ;
-                rdfs:subClassOf stones:StixCoreObject ;
+                rdfs:subClassOf stones:StixDomainObject ;
                 skos:prefLabel "Agent" ;
                 skos:definition "Any entity that can act, perform actions, or be attributed responsibility in a cyber or sociotechnical context."@en ;
                 skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
@@ -150,7 +152,7 @@ Examples include: applying a security patch, enabling multi-factor authenticatio
 
 ###  https://cyberterrain.org/ns/stonework#Organization
 stonework:Organization rdf:type owl:Class ;
-                       rdfs:subClassOf stonework:Agent ;
+                       rdfs:subClassOf stones:Identity , stonework:Agent ;
                        skos:prefLabel "Organization" ;
                        skos:definition "A formal or semi-formal structured entity such as a company, government agency, non-profit, military unit, or consortium with defined boundaries and usually legal identity."@en ;
                        skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
@@ -158,7 +160,7 @@ stonework:Organization rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Person
 stonework:Person rdf:type owl:Class ;
-                 rdfs:subClassOf stonework:Agent ;
+                 rdfs:subClassOf stones:Identity , stonework:Agent ;
                  skos:prefLabel "Person" ;
                  skos:definition "A single human individual."@en ;
                  skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en ;
@@ -260,6 +262,9 @@ stonework:evidence rdf:type owl:NamedIndividual , stonework:Category ;
 #################################################################
 #    General Axioms
 #################################################################
+
+###  https://cyberterrain.org/ns/stones#Identity
+stones:Identity rdfs:subClassOf stonework:Agent .
 
 ###  https://cyberterrain.org/ns/stones#ThreatActor
 stones:ThreatActor rdfs:subClassOf stonework:Agent .
