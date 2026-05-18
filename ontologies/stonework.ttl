@@ -182,12 +182,19 @@ stonework:homepage rdf:type owl:DatatypeProperty ;
 ###  https://cyberterrain.org/ns/stonework#keywords
 stonework:keywords rdf:type owl:DatatypeProperty ;
                    rdfs:domain stonework:ProductFamily ;
-                   rdfs:range xsd:string .
+                   rdfs:range xsd:string ;
+                   skos:definition "Multiple values are expressed as multiple triples."@en .
 
 ###  https://cyberterrain.org/ns/stonework#license
 stonework:license rdf:type owl:DatatypeProperty ;
                   rdfs:domain stonework:Product , stonework:ProductFamily ;
                   rdfs:range xsd:string .
+
+###  https://cyberterrain.org/ns/stonework#maintainers
+stonework:maintainers rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:ProductFamily ;
+                      rdfs:range xsd:string ;
+                      skos:definition "Names of the maintainers of a product. Multiple values are expressed as multiple triples."@en .
 
 ###  https://cyberterrain.org/ns/stonework#platform
 stonework:platform rdf:type owl:DatatypeProperty ;
