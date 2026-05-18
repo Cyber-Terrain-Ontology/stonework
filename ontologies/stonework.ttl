@@ -149,11 +149,6 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 #    Data Properties
 #################################################################
 
-###  https://cyberterrain.org/ns/stonework#alias
-stonework:alias rdf:type owl:DatatypeProperty ;
-                rdfs:domain stonework:ProductFamily ;
-                rdfs:range xsd:string .
-
 ###  https://cyberterrain.org/ns/stonework#architecture
 stonework:architecture rdf:type owl:DatatypeProperty ;
                        rdfs:domain stonework:Product ;
@@ -477,6 +472,9 @@ stoneworkx:_saas rdf:type owl:NamedIndividual , stonework:ProductTypeVocabulary 
 #################################################################
 #    General Axioms
 #################################################################
+
+###  https://cyberterrain.org/ns/stones#aliases
+stones:aliases rdfs:domain stonework:ProductFamily .
 
 ###  https://cyberterrain.org/ns/stones#authors
 stones:authors rdfs:domain stonework:ProductFamily .
