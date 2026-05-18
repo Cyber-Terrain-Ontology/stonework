@@ -38,7 +38,6 @@ stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
-                     rdfs:domain stonework:Group ;
                      skos:prefLabel "hasMembers" ;
                      skos:definition "Links a Group or Organization to its member Agents, Identities, or Organizations."@en ;
                      skos:scopeNote "Used for modeling coalitions, organizations, threat actor groups, insider teams, etc."@en ;
@@ -63,7 +62,6 @@ stonework:hasWeakness rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#membersOf
 stonework:membersOf rdf:type owl:ObjectProperty ;
                     owl:inverseOf stonework:hasMembers ;
-                    rdfs:range stonework:Group ;
                     skos:prefLabel "membersOf" ;
                     skos:definition "Indicates that an Agent, Identity, or Organization is a member of a Group."@en ;
                     skos:scopeNote "Inverse of hasMembers. Useful for queries like 'which groups is this actor a member of?'"@en ;
@@ -115,6 +113,13 @@ stonework:Control rdf:type owl:Class ;
                   skos:prefLabel "Control" ;
                   skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
                   skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." .
+
+###  https://cyberterrain.org/ns/stonework#DigitalIdentity
+stonework:DigitalIdentity rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:Agent ;
+                          skos:prefLabel "Digital Identity"@en ;
+                          skos:definition "A digital persona, account, or identifier used by an individual, group, or organization in online environments."@en ;
+                          skos:scopeNote "Includes usernames, social media handles, forum profiles, email accounts, cryptocurrency wallets, gamer tags, etc. Often used for attribution, tracking, or targeting."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Group
 stonework:Group rdf:type owl:Class ;
@@ -171,7 +176,7 @@ stonework:Playbook rdf:type owl:Class ;
                    skos:prefLabel "Playbook" ;
                    skos:definition "A documented, structured Process that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
                    skos:scopeNote "A Playbook provides reusable, often automated or semi-automated guidance for security operations, incident response, threat hunting, recovery, or routine tasks. It typically includes triggers, decision points, assigned roles (Agents), inputs/outputs, and success criteria.  Playbooks bridge planning and execution."@en ;
-                   rdfs:seeAlso <https://www.w3.org/TR/prov-o/#Plan> .
+                   rdfs:seeAlso provo:Plan .
 
 ###  https://cyberterrain.org/ns/stonework#Procedure
 stonework:Procedure rdf:type owl:Class ;
@@ -187,7 +192,7 @@ stonework:Process rdf:type owl:Class ;
                   skos:prefLabel "Process"@en ;
                   skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
                   skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is intended for modeling Controls, Playbooks, Mitigations, Threat Scenarios, and other repeatable or planned workflows."@en ;
-                  rdfs:seeAlso <https://www.opmw.org/model/p-plan/> , <https://www.w3.org/TR/prov-o/#Activity> .
+                  rdfs:seeAlso <https://www.opmw.org/model/p-plan/> , provo:Activity .
 
 ###  https://cyberterrain.org/ns/stonework#Product
 stonework:Product rdf:type owl:Class ;
