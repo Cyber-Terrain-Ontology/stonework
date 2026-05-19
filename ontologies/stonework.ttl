@@ -3,13 +3,15 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @base <https://cyberterrain.org/ns/stonework#> .
 
 <https://cyberterrain.org/ns/stonework#> rdf:type owl:Ontology ;
-                                          owl:versionIRI <https://cyberterrain.org/ns/stonework/0.1.0> ;
+                                          owl:versionIRI <https://cyberterrain.org/ns/stonework/0.2.0> ;
                                           owl:imports stones: .
+
 
 #################################################################
 #    Object Properties
@@ -19,126 +21,187 @@
 stonework:affected rdf:type owl:ObjectProperty ;
                    rdfs:domain stones:Vulnerability ;
                    rdfs:range stonework:Product ;
-                   <http://www.w3.org/2004/02/skos/core#definition> "Relates a vulnerability to a product known to be affected by it." ;
-                   <http://www.w3.org/2004/02/skos/core#prefLabel> "affected" ;
-                   <http://www.w3.org/2004/02/skos/core#scopeNote> "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
+                   skos:prefLabel "affected" ;
+                   skos:definition "Relates a vulnerability to a product known to be affected by it." ;
+                   skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
 
 ###  https://cyberterrain.org/ns/stonework#exploitsWeakness
 stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
                            rdfs:domain stones:Vulnerability ;
                            rdfs:range stonework:Weakness ;
-                           <http://www.w3.org/2004/02/skos/core#definition> "Relates a vulnerability to the weakness class it exploits or instantiates." ;
-                           <http://www.w3.org/2004/02/skos/core#prefLabel> "exploitsWeakness" ;
-                           <http://www.w3.org/2004/02/skos/core#scopeNote> "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest." .
+                           skos:prefLabel "exploitsWeakness" ;
+                           skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates." ;
+                           skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest." .
 
 
 ###  https://cyberterrain.org/ns/stonework#hasTechnique
 stonework:hasTechnique rdf:type owl:ObjectProperty ;
                        rdfs:domain stonework:Tactic ;
-                       rdfs:range stonework:Technique .
+                       rdfs:range stonework:AttackTechnique ;
+                       skos:prefLabel "hasTechnique" ;
+                       skos:definition "Relates a tactic to an offensive technique that serves that tactic's goal." .
+
+
+###  https://cyberterrain.org/ns/stonework#mitigatesTechnique
+stonework:mitigatesTechnique rdf:type owl:ObjectProperty ;
+                             rdfs:domain stonework:Control ;
+                             rdfs:range stonework:Technique ;
+                             skos:prefLabel "mitigatesTechnique" ;
+                             skos:definition "Relates a security control to a technique it helps mitigate or counter." ;
+                             skos:scopeNote "Range is stonework:Technique to accommodate both offensive and defensive technique frameworks. Framework-specific sub-properties (e.g. cis:mitigatesTechnique) constrain the range further." .
+
+
+###  https://cyberterrain.org/ns/stonework#relatedAttackPattern
+stonework:relatedAttackPattern rdf:type owl:ObjectProperty ;
+                               rdfs:domain stonework:Weakness ;
+                               rdfs:range stones:AttackPattern ;
+                               skos:prefLabel "relatedAttackPattern" ;
+                               skos:definition "Relates a weakness to an attack pattern that exploits or instantiates it." ;
+                               skos:scopeNote "Framework-specific sub-properties (e.g. cwe:relatedAttackPattern) provide the concrete triples; this property enables cross-framework queries using STONEWORK vocabulary alone." .
+
+
+###  https://cyberterrain.org/ns/stonework#relatedAttackTechnique
+stonework:relatedAttackTechnique rdf:type owl:ObjectProperty ;
+                                 rdfs:domain stones:AttackPattern ;
+                                 rdfs:range stonework:AttackTechnique ;
+                                 skos:prefLabel "relatedAttackTechnique" ;
+                                 skos:definition "Relates an abstract attack pattern to a specific offensive technique that operationalizes it." ;
+                                 skos:scopeNote "Bridges the STIX attack-pattern abstraction layer (e.g. CAPEC) to the operationalized technique layer (e.g. ATT&CK). Framework-specific sub-properties (e.g. capec:relatedAttackTechnique) provide the concrete triples." .
+
+
+###  https://cyberterrain.org/ns/stonework#uses
+stonework:uses rdf:type owl:ObjectProperty ;
+               rdfs:domain stones:IntrusionSet ;
+               rdfs:range stonework:AttackTechnique ;
+               skos:prefLabel "uses" ;
+               skos:definition "Relates a threat actor group or campaign to an offensive technique they are known to employ." ;
+               skos:scopeNote "Framework-specific sub-properties (e.g. attack:uses) provide the concrete triples from ATT&CK relationship data." .
 
 
 #################################################################
 #    Classes
 #################################################################
 
+###  https://cyberterrain.org/ns/stonework#AttackTechnique
+stonework:AttackTechnique rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:CyberTechnique ;
+                          skos:prefLabel "AttackTechnique" ;
+                          skos:definition "A prescribed offensive method used by an adversary to achieve a specific tactical objective within a target environment." ;
+                          skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. Not a subclass of stones:AttackPattern — attack patterns (e.g. CAPEC) are abstract descriptions of attack classes, whereas AttackTechnique is an operationalized plan for execution. Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals." .
+
+
 ###  https://cyberterrain.org/ns/stonework#Control
 stonework:Control rdf:type owl:Class ;
                   rdfs:subClassOf stones:StixDomainObject ;
-                  rdfs:comment "Instances of stonework:Control may represent individual controls, control enhancements, or sub‑controls. Framework‑specific identifiers (e.g., “AC‑2”, “CIS 4.1”) SHOULD be modeled using explicit properties rather than encoded in the class IRI. Control text SHOULD be referenced via citations rather than reproduced verbatim." ;
-                  <http://www.w3.org/2004/02/skos/core#definition> "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
-                  <http://www.w3.org/2004/02/skos/core#prefLabel> "Control" ;
-                  <http://www.w3.org/2004/02/skos/core#scopeNote> "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." .
+                  skos:prefLabel "Control" ;
+                  skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
+                  rdfs:comment "Instances of stonework:Control may represent individual controls, control enhancements, or sub‑controls. Framework‑specific identifiers (e.g., \"AC‑2\", \"CIS 4.1\") SHOULD be modeled using explicit properties rather than encoded in the class IRI. Control text SHOULD be referenced via citations rather than reproduced verbatim." ;
+                  skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." .
+
+
+###  https://cyberterrain.org/ns/stonework#CyberTechnique
+stonework:CyberTechnique rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:Technique ;
+                         skos:prefLabel "CyberTechnique" ;
+                         skos:definition "A technique performed within or against cyberspace, encompassing both offensive and defensive cyber operations." ;
+                         skos:scopeNote "Mirrors D3FEND's CyberTechnique class. Subclassed by stonework:AttackTechnique (offensive) and stonework:DefendTechnique (defensive), enabling a single property chain to span both ATT&CK and D3FEND individuals." .
+
+
+###  https://cyberterrain.org/ns/stonework#DefendTechnique
+stonework:DefendTechnique rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:CyberTechnique ;
+                          skos:prefLabel "DefendTechnique" ;
+                          skos:definition "A prescribed defensive method used to detect, prevent, or respond to adversary behavior within a target environment." ;
+                          skos:scopeNote "Aligns with MITRE D3FEND DefensiveTechnique. Framework-specific subclasses (e.g. d3fend:DefensiveTechnique) extend this class when D3FEND data is loaded." .
 
 
 ###  https://cyberterrain.org/ns/stonework#Impact
 stonework:Impact rdf:type owl:Class ;
                  rdfs:subClassOf stones:StixDomainObject ;
+                 skos:prefLabel "Impact" ;
+                 skos:definition "The magnitude of harm, loss, or adverse effects that would result if a threat were realized and a compromise occurred, expressed in terms of mission, business, operational, or technical consequences." ;
                  rdfs:comment "Instances of stonework:Impact SHOULD specify the affected asset or mission, the type of consequence, and the severity level. Impact SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
-                 <http://www.w3.org/2004/02/skos/core#definition> "The magnitude of harm, loss, or adverse effects that would result if a threat were realized and a compromise occurred, expressed in terms of mission, business, operational, or technical consequences." ;
-                 <http://www.w3.org/2004/02/skos/core#prefLabel> "Impact" ;
-                 <http://www.w3.org/2004/02/skos/core#scopeNote> "Impact represents the severity of consequences associated with a compromise. It may include effects on confidentiality, integrity, availability, safety, mission success, financial loss, or reputational damage. Impact values may be qualitative or quantitative." .
+                 skos:scopeNote "Impact represents the severity of consequences associated with a compromise. It may include effects on confidentiality, integrity, availability, safety, mission success, financial loss, or reputational damage. Impact values may be qualitative or quantitative." .
 
 
 ###  https://cyberterrain.org/ns/stonework#Likelihood
 stonework:Likelihood rdf:type owl:Class ;
                      rdfs:subClassOf stones:StixDomainObject ;
+                     skos:prefLabel "Likelihood" ;
+                     skos:definition "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
                      rdfs:comment "Instances of stonework:Likelihood may incorporate assumptions, uncertainty, adversary behavior, historical frequency, or environmental conditions. Likelihood SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
-                     <http://www.w3.org/2004/02/skos/core#definition> "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
-                     <http://www.w3.org/2004/02/skos/core#prefLabel> "Likelihood" ;
-                     <http://www.w3.org/2004/02/skos/core#scopeNote> "Likelihood reflects the chance that a compromise will occur, considering adversary capability, intent, opportunity, preconditions, and environmental factors. Likelihood values may be qualitative, ordinal, or quantitative." .
+                     skos:scopeNote "Likelihood reflects the chance that a compromise will occur, considering adversary capability, intent, opportunity, preconditions, and environmental factors. Likelihood values may be qualitative, ordinal, or quantitative." .
 
 
 ###  https://cyberterrain.org/ns/stonework#Procedure
 stonework:Procedure rdf:type owl:Class ;
                     rdfs:subClassOf stones:StixDomainObject ;
+                    skos:prefLabel "Procedure" ;
+                    skos:definition "A concrete, observable sequence of actions, commands, or behaviors that implements a technique in a specific operational context." ;
                     rdfs:comment "Procedures are instances or patterns of execution that realize a technique. They may include command lines, API calls, malware behaviors, or operator playbook steps. Procedures are distinct from techniques, which describe generalized methods." ;
-                    <http://www.w3.org/2004/02/skos/core#definition> "A concrete, observable sequence of actions, commands, or behaviors that implements a technique in a specific operational context." ;
-                    <http://www.w3.org/2004/02/skos/core#prefLabel> "Procedure" ;
-                    <http://www.w3.org/2004/02/skos/core#scopeNote> "Procedures describe the actual steps an adversary takes, such as specific commands, scripts, tools, or configurations. They represent the most granular level of adversary behavior." .
+                    skos:scopeNote "Procedures describe the actual steps an adversary takes, such as specific commands, scripts, tools, or configurations. They represent the most granular level of adversary behavior." .
 
 
 ###  https://cyberterrain.org/ns/stonework#Product
 stonework:Product rdf:type owl:Class ;
                   rdfs:subClassOf stones:StixDomainObject ;
-                  rdfs:comment "Instances of stonework:Product may include operating systems, applications, libraries, devices, or embedded components. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
                   rdfs:isDefinedBy "https://cyberterrain.org/ns/stonework#" ;
-                  <http://www.w3.org/2004/02/skos/core#definition> "A software, hardware, or firmware entity identified by its vendor, product name, and version characteristics, used to represent a specific platform or component within vulnerability, configuration, or threat‑intelligence contexts."@en ;
-                  <http://www.w3.org/2004/02/skos/core#prefLabel> "Product" ;
-                  <http://www.w3.org/2004/02/skos/core#scopeNote> "This class provides a semantic representation of platform entities commonly identified using CPE naming schemes. It does not require the use of CPE, but supports mapping to CPE identifiers when available."@en .
+                  skos:prefLabel "Product" ;
+                  skos:definition "A software, hardware, or firmware entity identified by its vendor, product name, and version characteristics, used to represent a specific platform or component within vulnerability, configuration, or threat‑intelligence contexts."@en ;
+                  rdfs:comment "Instances of stonework:Product may include operating systems, applications, libraries, devices, or embedded components. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
+                  skos:scopeNote "This class provides a semantic representation of platform entities commonly identified using CPE naming schemes. It does not require the use of CPE, but supports mapping to CPE identifiers when available."@en .
 
 
 ###  https://cyberterrain.org/ns/stonework#Risk
 stonework:Risk rdf:type owl:Class ;
                rdfs:subClassOf stones:StixDomainObject ;
+               skos:prefLabel "Risk" ;
+               skos:definition "A measure of the potential for loss or adverse effects arising from the realization of a threat, expressed as a function of the impact of compromise and the likelihood that the compromise will occur." ;
                rdfs:comment "Instances of stonework:Risk may reference the threat being considered, the assets affected, the expected impact of compromise, and the likelihood of occurrence. Risk values may be qualitative or quantitative, and SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
-               <http://www.w3.org/2004/02/skos/core#definition> "A measure of the potential for loss or adverse effects arising from the realization of a threat, expressed as a function of the impact of compromise and the likelihood that the compromise will occur." ;
-               <http://www.w3.org/2004/02/skos/core#prefLabel> "Risk" ;
-               <http://www.w3.org/2004/02/skos/core#scopeNote> "This class represents the assessed or estimated level of exposure to harm for a specific asset, mission, or organization. Risk is typically derived from the combination of impact and likelihood, and may incorporate assumptions, uncertainty, and contextual factors." .
+               skos:scopeNote "This class represents the assessed or estimated level of exposure to harm for a specific asset, mission, or organization. Risk is typically derived from the combination of impact and likelihood, and may incorporate assumptions, uncertainty, and contextual factors." .
 
 
 ###  https://cyberterrain.org/ns/stonework#Tactic
 stonework:Tactic rdf:type owl:Class ;
                  rdfs:subClassOf stones:StixDomainObject ;
+                 skos:prefLabel "Tactic" ;
+                 skos:definition "A high‑level adversary objective or strategic goal that groups related techniques by the purpose they serve during an intrusion or operation." ;
                  rdfs:comment "Instances of stonework:Tactic SHOULD correspond to high‑level adversary goals. Techniques are typically modeled as children or members of a tactic." ;
-                 <http://www.w3.org/2004/02/skos/core#definition> "A high‑level adversary objective or strategic goal that groups related techniques by the purpose they serve during an intrusion or operation." ;
-                 <http://www.w3.org/2004/02/skos/core#scopeNote> "Tactics represent the strategic intent behind adversary behavior, such as gaining initial access, executing code, or exfiltrating data. They serve as conceptual categories for techniques." .
+                 skos:scopeNote "Tactics represent the strategic intent behind adversary behavior, such as gaining initial access, executing code, or exfiltrating data. They serve as conceptual categories for techniques." .
 
 
 ###  https://cyberterrain.org/ns/stonework#Technique
 stonework:Technique rdf:type owl:Class ;
-                    rdfs:subClassOf stones:AttackPattern ;
-                    rdfs:comment "STONEWORK aligns techniques with MITRE ATT&CK attack patterns. Techniques are distinct from procedures, which describe concrete implementations." ;
-                    <http://www.w3.org/2004/02/skos/core#definition> "A specific method or means by which an adversary achieves a tactical objective, typically describing how an action is performed." ;
-                    <http://www.w3.org/2004/02/skos/core#scopeNote> "Techniques represent the “how” of adversary behavior. They may have sub‑techniques that provide more granular detail." .
+                    rdfs:subClassOf stones:StixDomainObject ;
+                    skos:prefLabel "Technique" ;
+                    skos:definition "A reusable, prescribed method for achieving an objective, which may be instantiated as a concrete execution by an actor or system." ;
+                    rdfs:comment "Mirrors D3FEND's Technique class and reflects the PROV-O Plan philosophy: a technique is a plan that describes how an action should be carried out, distinct from the activity that executes it. Subclassed by stonework:CyberTechnique for cyber-specific methods." ;
+                    skos:scopeNote "Technique is intentionally not a subclass of stones:AttackPattern. Attack patterns (e.g. CAPEC) are abstract descriptions of attack classes in the STIX sense; techniques are operationalized plans. See stonework:CyberTechnique, stonework:AttackTechnique, stonework:DefendTechnique." .
 
 
 ###  https://cyberterrain.org/ns/stonework#Threat
 stonework:Threat rdf:type owl:Class ;
                  rdfs:subClassOf stones:StixDomainObject ;
+                 skos:prefLabel "Threat" ;
+                 skos:definition "A potential or actual source of harm arising from an adversary's capability, intent, and opportunity to exploit weaknesses or create adverse effects within a system, organization, or mission." ;
                  rdfs:comment "Instances of stonework:Threat may describe adversary capabilities, strategic objectives, targeting patterns, or environmental conditions that increase the likelihood of harmful action. Threats may be linked to threat actors, campaigns, malware, TTPs, weaknesses, or assets, but are conceptually distinct from the actions or events that realize them." ;
-                 <http://www.w3.org/2004/02/skos/core#definition> "A potential or actual source of harm arising from an adversary’s capability, intent, and opportunity to exploit weaknesses or create adverse effects within a system, organization, or mission." ;
-                 <http://www.w3.org/2004/02/skos/core#prefLabel> "Threat" ;
-                 <http://www.w3.org/2004/02/skos/core#scopeNote> "This class represents the abstract notion of a cyber threat, independent of specific threat actors, campaigns, or events. It provides a semantic foundation for modeling adversary capabilities, intentions, targeting, and conditions that give rise to harmful outcomes." .
+                 skos:scopeNote "This class represents the abstract notion of a cyber threat, independent of specific threat actors, campaigns, or events. It provides a semantic foundation for modeling adversary capabilities, intentions, targeting, and conditions that give rise to harmful outcomes." .
 
 
 ###  https://cyberterrain.org/ns/stonework#ThreatScenario
 stonework:ThreatScenario rdf:type owl:Class ;
                          rdfs:subClassOf stones:StixDomainObject ;
+                         skos:prefLabel "ThreatScenario" ;
+                         skos:definition "A structured description of how a threat could materialize against specific assets or missions, incorporating adversary intent, capability, opportunity, preconditions, and potential consequences." ;
                          rdfs:comment "Instances of stonework:ThreatScenario may include assumptions, triggering conditions, targeted assets, adversary profiles, attack paths, and expected impacts. Threat scenarios are distinct from threats, attacks, or incidents; they represent hypothetical or anticipated sequences rather than observed events." ;
-                         <http://www.w3.org/2004/02/skos/core#definition> "A structured description of how a threat could materialize against specific assets or missions, incorporating adversary intent, capability, opportunity, preconditions, and potential consequences." ;
-                         <http://www.w3.org/2004/02/skos/core#prefLabel> "ThreatScenario" ;
-                         <http://www.w3.org/2004/02/skos/core#scopeNote> "Threat scenarios describe plausible or anticipated sequences of adversarial behavior and environmental conditions that could lead to harmful outcomes. They support risk assessment, prioritization, and strategic planning by expressing how threats may be realized in a given organizational context." .
+                         skos:scopeNote "Threat scenarios describe plausible or anticipated sequences of adversarial behavior and environmental conditions that could lead to harmful outcomes. They support risk assessment, prioritization, and strategic planning by expressing how threats may be realized in a given organizational context." .
 
 
 ###  https://cyberterrain.org/ns/stonework#Weakness
 stonework:Weakness rdf:type owl:Class ;
                    rdfs:subClassOf stones:StixDomainObject ;
-                   rdfs:comment "Instances of stonework:Weakness may represent base weaknesses, variant weaknesses, or compound weaknesses. CWE identifiers (e.g., “CWE‑79”) SHOULD be modeled using explicit properties rather than encoded in the class IRI. Descriptions and extended details SHOULD be referenced via citations rather than reproduced verbatim." ;
-                   <http://www.w3.org/2004/02/skos/core#definition> "A type of flaw, fault, or design condition in software, hardware, or system architecture that can enable vulnerabilities, reduce security assurance, or increase the likelihood of exploitable behavior." ;
-                   <http://www.w3.org/2004/02/skos/core#prefLabel> "Weakness" ;
-                   <http://www.w3.org/2004/02/skos/core#scopeNote> "This class provides a semantic representation of weakness types defined in the Common Weakness Enumeration (CWE). It supports hierarchical relationships, abstraction levels, and mappings to related attack patterns, vulnerabilities, and security controls." .
-
-
-###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
+                   skos:prefLabel "Weakness" ;
+                   skos:definition "A type of flaw, fault, or design condition in software, hardware, or system architecture that can enable vulnerabilities, reduce security assurance, or increase the likelihood of exploitable behavior." ;
+                   rdfs:comment "Instances of stonework:Weakness may represent base weaknesses, variant weaknesses, or compound weaknesses. CWE identifiers (e.g., \"CWE‑79\") SHOULD be modeled using explicit properties rather than encoded in the class IRI. Descriptions and extended details SHOULD be referenced via citations rather than reproduced verbatim." ;
+                   skos:scopeNote "This class provides a semantic representation of weakness types defined in the Common Weakness Enumeration (CWE). It supports hierarchical relationships, abstraction levels, and mappings to related attack patterns, vulnerabilities, and security controls." .
