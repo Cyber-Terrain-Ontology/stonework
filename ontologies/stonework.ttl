@@ -38,6 +38,7 @@ stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:Group ;
                      skos:prefLabel "hasMembers" ;
                      skos:definition "Links a Group or Organization to its member Agents, Identities, or Organizations."@en ;
                      skos:scopeNote "Used for modeling coalitions, organizations, threat actor groups, insider teams, etc."@en ;
@@ -62,6 +63,7 @@ stonework:hasWeakness rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#membersOf
 stonework:membersOf rdf:type owl:ObjectProperty ;
                     owl:inverseOf stonework:hasMembers ;
+                    rdfs:range stonework:Group ;
                     skos:prefLabel "membersOf" ;
                     skos:definition "Indicates that an Agent, Identity, or Organization is a member of a Group."@en ;
                     skos:scopeNote "Inverse of hasMembers. Useful for queries like 'which groups is this actor a member of?'"@en ;
