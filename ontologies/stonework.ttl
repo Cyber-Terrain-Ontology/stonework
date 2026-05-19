@@ -353,7 +353,7 @@ stonework:ProductFamily rdf:type owl:Class ;
                         skos:prefLabel "Product Family"@en ;
                         skos:definition "A logical technology product, project, or software component that exists across one or more versions."@en ;
                         skos:scopeNote "This class represents the product as a conceptual whole (e.g. 'Windows 11', 'React', 'AWS EC2'). It holds stable attributes such as name, vendor, ecosystem, repository, and homepage. Individual released versions are modeled as separate Product instances linked via hasVersion / versionOf."@en ;
-                        rdfs:isDefinedBy "https://cyberterrain.org/ns/stonework#" .
+                        rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#ProductTypeVocabulary
 stonework:ProductTypeVocabulary rdf:type owl:Class ;
