@@ -118,8 +118,8 @@ stonework:Control rdf:type owl:Class ;
 stonework:DigitalIdentity rdf:type owl:Class ;
                           rdfs:subClassOf stonework:Agent ;
                           skos:prefLabel "Digital Identity"@en ;
-                          skos:definition "A digital persona, account, or identifier used by an individual, group, or organization in online environments."@en ;
-                          skos:scopeNote "Includes usernames, social media handles, forum profiles, email accounts, cryptocurrency wallets, gamer tags, etc. Often used for attribution, tracking, or targeting."@en .
+                          skos:definition "A digital persona or identifier used by an individual, group, or organization in online environments."@en ;
+                          skos:scopeNote "A digital identity can comprise usernames, social media handles, forum profiles, email accounts, cryptocurrency wallets, gamer tags, etc. Often used for attribution, tracking, or targeting."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Group
 stonework:Group rdf:type owl:Class ;
