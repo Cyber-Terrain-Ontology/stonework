@@ -21,13 +21,13 @@
 #    Object Properties
 #################################################################
 
-###  https://cyberterrain.org/ns/stonework#affected
-stonework:affected rdf:type owl:ObjectProperty ;
-                   rdfs:domain stones:Vulnerability ;
-                   rdfs:range stonework:Product ;
-                   skos:prefLabel "affected" ;
-                   skos:definition "Relates a vulnerability to a product known to be affected by it." ;
-                   skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
+###  https://cyberterrain.org/ns/stonework#affectedProduct
+stonework:affectedProduct rdf:type owl:ObjectProperty ;
+                          rdfs:domain stones:Vulnerability ;
+                          rdfs:range stonework:Product ;
+                          skos:prefLabel "affectedProduct"@en ;
+                          skos:definition "Relates a vulnerability to a product known to be affected by it." ;
+                          skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
 ###  https://cyberterrain.org/ns/stonework#categorizedBy
 stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
@@ -42,6 +42,14 @@ stonework:dependencyOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                        rdfs:domain stonework:Product ;
                        rdfs:range stonework:Product ;
                        skos:prefLabel "dependencyOf" .
+
+###  https://cyberterrain.org/ns/stonework#fixedInProduct
+stonework:fixedInProduct rdf:type owl:ObjectProperty ;
+                         rdfs:domain stones:Vulnerability ;
+                         rdfs:range stonework:Product ;
+                         skos:prefLabel "fixedInProduct" ;
+                         skos:definition "Relates a vulnerability to a product version that addresses the issue."@en ;
+                         skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasDependency
 stonework:hasDependency rdf:type owl:ObjectProperty ;
@@ -191,6 +199,11 @@ stonework:maintainers rdf:type owl:DatatypeProperty ;
                       rdfs:range xsd:string ;
                       skos:definition "Names of the maintainers of a product. Multiple values are expressed as multiple triples."@en .
 
+###  https://cyberterrain.org/ns/stonework#namespace
+stonework:namespace rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:ProductFamily ;
+                    rdfs:range xsd:string .
+
 ###  https://cyberterrain.org/ns/stonework#platform
 stonework:platform rdf:type owl:DatatypeProperty ;
                    rdfs:domain stonework:Product ;
@@ -329,18 +342,17 @@ stonework:Process rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#Product
 stonework:Product rdf:type owl:Class ;
                   rdfs:subClassOf stones:StixCoreObject ;
-                  rdfs:comment "Instances of stonework:Product may include operating systems, applications, libraries, devices, or embedded components. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
                   skos:prefLabel "Product"@en ;
-                  skos:definition "A software, hardware, or firmware entity identified by its vendor, product name, and version characteristics, used to represent a specific platform or component within vulnerability, configuration, or threat‑intelligence contexts."@en ;
-                  skos:scopeNote "This class provides a semantic representation of platform entities commonly identified using CPE naming schemes. It does not require the use of CPE, but supports mapping to CPE identifiers when available."@en ;
+                  skos:definition "A specific versioned release or build of a ProductFamily.  A Product is a technology product, component, or software artifact that can be installed, deployed, or consumed, including applications, libraries, packages, operating systems, firmware, hardware, SaaS offerings, and container images."@en ;
+                  skos:scopeNote "This is the primary class used for vulnerability tracking, dependency analysis, SBOMs, asset inventory, and version-specific threat intelligence. Each instance represents one released version (e.g. 'react 19.2.6'). It carries version-specific data such as purl, cpe, published date, and dependencies."@en ;
                   rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
 ###  https://cyberterrain.org/ns/stonework#ProductFamily
 stonework:ProductFamily rdf:type owl:Class ;
                         rdfs:subClassOf stones:StixCoreObject ;
                         skos:prefLabel "Product Family"@en ;
-                        skos:definition "The abstract representation of a product or project, independent of any specific version."@en ;
-                        skos:scopeNote "Used to group all versions of the same product. Individual released versions are modeled as separate Product instances linked via the hasVersion / versionOf relationship. This class captures stable attributes such as name, vendor, ecosystem, and repository."@en ;
+                        skos:definition "A logical technology product, project, or software component that exists across one or more versions."@en ;
+                        skos:scopeNote "This class represents the product as a conceptual whole (e.g. 'Windows 11', 'React', 'AWS EC2'). It holds stable attributes such as name, vendor, ecosystem, repository, and homepage. Individual released versions are modeled as separate Product instances linked via hasVersion / versionOf."@en ;
                         rdfs:isDefinedBy "https://cyberterrain.org/ns/stonework#" .
 
 ###  https://cyberterrain.org/ns/stonework#ProductTypeVocabulary
@@ -485,11 +497,17 @@ stones:cpe rdfs:domain stonework:Product .
 ###  https://cyberterrain.org/ns/stones#description
 stones:description rdfs:domain stonework:ProductFamily .
 
+###  https://cyberterrain.org/ns/stones#languages
+stones:languages rdfs:domain stonework:ProductFamily .
+
 ###  https://cyberterrain.org/ns/stones#name
 stones:name rdfs:domain stonework:ProductFamily .
 
 ###  https://cyberterrain.org/ns/stones#SoftwareObject
-stones:SoftwareObject rdfs:subClassOf stonework:ProductFamily .
+stones:SoftwareObject rdfs:subClassOf stonework:Product .
+
+###  https://cyberterrain.org/ns/stones#swid
+stones:swid rdfs:domain stonework:Product .
 
 ###  https://cyberterrain.org/ns/stones#version
 stones:version rdfs:domain stonework:Product .
