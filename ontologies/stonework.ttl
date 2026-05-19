@@ -1,16 +1,19 @@
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix provo: <https://www.w3.org/TR/prov-o/#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @base <https://cyberterrain.org/ns/stonework#> .
 
+###  https://cyberterrain.org/ns/stonework#
 <https://cyberterrain.org/ns/stonework#> rdf:type owl:Ontology ;
                                           owl:versionIRI <https://cyberterrain.org/ns/stonework/0.2.0> ;
-                                          owl:imports stones: .
+                                          owl:imports stones: ;
+                                          dcterms:description "A semantic threat ontology and research framework that serves as the evolutionary successor to the STONES ontology. It provides a forward-looking, extensible foundation for modeling next-generation cyber threat intelligence concepts, objects, relationships, workflows, and knowledge beyond the scope of STIX 2.1." .
 
 
 #################################################################
@@ -35,12 +38,32 @@ stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
                            skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest." .
 
 
+###  https://cyberterrain.org/ns/stonework#hasMembers
+stonework:hasMembers rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:Group ;
+                     skos:prefLabel "hasMembers" .
+
 ###  https://cyberterrain.org/ns/stonework#hasTechnique
 stonework:hasTechnique rdf:type owl:ObjectProperty ;
                        rdfs:domain stonework:Tactic ;
                        rdfs:range stonework:AttackTechnique ;
                        skos:prefLabel "hasTechnique" ;
                        skos:definition "Relates a tactic to an offensive technique that serves that tactic's goal." .
+
+
+###  https://cyberterrain.org/ns/stonework#hasWeakness
+stonework:hasWeakness rdf:type owl:AsymmetricProperty , owl:ObjectProperty ;
+                      rdfs:domain stones:Vulnerability ;
+                      rdfs:range stonework:Weakness ;
+                      skos:prefLabel "hasWeakness" ;
+                      skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates."@en ;
+                      skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
+
+###  https://cyberterrain.org/ns/stonework#membersOf
+stonework:membersOf rdf:type owl:ObjectProperty ;
+                    owl:inverseOf stonework:hasMembers ;
+                    rdfs:range stonework:Group ;
+                    skos:prefLabel "membersOf" .
 
 
 ###  https://cyberterrain.org/ns/stonework#mitigatesTechnique
@@ -70,6 +93,12 @@ stonework:relatedAttackTechnique rdf:type owl:ObjectProperty ;
                                  skos:scopeNote "Bridges the STIX attack-pattern abstraction layer (e.g. CAPEC) to the operationalized technique layer (e.g. ATT&CK). Framework-specific sub-properties (e.g. capec:relatedAttackTechnique) provide the concrete triples." .
 
 
+###  https://cyberterrain.org/ns/stonework#techniqueOf
+stonework:techniqueOf rdf:type owl:ObjectProperty ;
+                      owl:inverseOf stonework:hasTechnique ;
+                      rdfs:domain stonework:Technique ;
+                      skos:prefLabel "techniqueOf"@en .
+
 ###  https://cyberterrain.org/ns/stonework#uses
 stonework:uses rdf:type owl:ObjectProperty ;
                rdfs:domain stones:IntrusionSet ;
@@ -79,9 +108,28 @@ stonework:uses rdf:type owl:ObjectProperty ;
                skos:scopeNote "Framework-specific sub-properties (e.g. attack:uses) provide the concrete triples from ATT&CK relationship data." .
 
 
+###  https://cyberterrain.org/ns/stonework#weaknessOf
+stonework:weaknessOf rdf:type owl:ObjectProperty ;
+                     owl:inverseOf stonework:hasWeakness ;
+                     rdfs:domain stonework:Weakness ;
+                     rdfs:range stones:Vulnerability ;
+                     skos:prefLabel "weaknessOf"@en ;
+                     skos:definition "Relates a weakness to the vulnerability that exploits or instantiates it."@en ;
+                     skos:scopeNote "The range is a vulnerability individual. The weakness individual (domain) is a stonework:Weakness whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
+
+
 #################################################################
 #    Classes
 #################################################################
+
+###  https://cyberterrain.org/ns/stonework#Agent
+stonework:Agent rdf:type owl:Class ;
+                rdfs:subClassOf stones:StixCoreObject ;
+                skos:prefLabel "Agent" ;
+                skos:definition "Any entity that can act, perform actions, or be attributed responsibility in a cyber or sociotechnical context."@en ;
+                skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
+                rdfs:seeAlso provo:Agent .
+
 
 ###  https://cyberterrain.org/ns/stonework#AttackTechnique
 stonework:AttackTechnique rdf:type owl:Class ;
@@ -116,6 +164,14 @@ stonework:DefendTechnique rdf:type owl:Class ;
                           skos:scopeNote "Aligns with MITRE D3FEND DefensiveTechnique. Framework-specific subclasses (e.g. d3fend:DefensiveTechnique) extend this class when D3FEND data is loaded." .
 
 
+###  https://cyberterrain.org/ns/stonework#Group
+stonework:Group rdf:type owl:Class ;
+                rdfs:subClassOf stonework:Agent ;
+                skos:prefLabel "Group" ;
+                skos:definition "Any collection of Persons, Organizations, or other Groups that share a common purpose or identity but do not necessarily have formal legal structure."@en ;
+                skos:scopeNote "Used for informal collectives, communities, ad-hoc teams, criminal syndicates, or loose alliances. More general than Organization. Can contain other Groups or Organizations."@en .
+
+
 ###  https://cyberterrain.org/ns/stonework#Impact
 stonework:Impact rdf:type owl:Class ;
                  rdfs:subClassOf stones:StixDomainObject ;
@@ -132,6 +188,24 @@ stonework:Likelihood rdf:type owl:Class ;
                      skos:definition "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
                      rdfs:comment "Instances of stonework:Likelihood may incorporate assumptions, uncertainty, adversary behavior, historical frequency, or environmental conditions. Likelihood SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
                      skos:scopeNote "Likelihood reflects the chance that a compromise will occur, considering adversary capability, intent, opportunity, preconditions, and environmental factors. Likelihood values may be qualitative, ordinal, or quantitative." .
+
+
+###  https://cyberterrain.org/ns/stonework#Organization
+stonework:Organization rdf:type owl:Class ;
+                       rdfs:subClassOf stonework:Group ;
+                       skos:prefLabel "Organization" ;
+                       skos:definition "A formal or semi-formal structured entity such as a company, government agency, non-profit, military unit, or consortium with defined boundaries and usually legal identity."@en ;
+                       skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
+                       rdfs:seeAlso provo:Organization .
+
+
+###  https://cyberterrain.org/ns/stonework#Person
+stonework:Person rdf:type owl:Class ;
+                 rdfs:subClassOf stonework:Agent ;
+                 skos:prefLabel "Person" ;
+                 skos:definition "A single human individual."@en ;
+                 skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en ;
+                 rdfs:seeAlso provo:Person .
 
 
 ###  https://cyberterrain.org/ns/stonework#Procedure
