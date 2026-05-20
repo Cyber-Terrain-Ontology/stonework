@@ -118,6 +118,13 @@ stonework:Control rdf:type owl:Class ;
                   skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
                   skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." .
 
+###  https://cyberterrain.org/ns/stonework#DigitalIdentity
+stonework:DigitalIdentity rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:Agent ;
+                          skos:prefLabel "Digital Identity"@en ;
+                          skos:definition "A digital persona or identifier used by an individual, group, or organization in online environments."@en ;
+                          skos:scopeNote "A digital identity can comprise usernames, social media handles, forum profiles, email accounts, cryptocurrency wallets, gamer tags, etc. Often used for attribution, tracking, or targeting."@en .
+
 ###  https://cyberterrain.org/ns/stonework#Group
 stonework:Group rdf:type owl:Class ;
                 rdfs:subClassOf stonework:Agent ;
