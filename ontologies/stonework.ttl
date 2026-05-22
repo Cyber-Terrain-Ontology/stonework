@@ -17,33 +17,79 @@
 
 
 #################################################################
-#    Datatype Properties (completing stones: declarations)
+#    Datatype Properties (extending stones: declarations)
 #
-#    stones:stixId and stones:stixType are referenced throughout the
-#    STONES ontology (equivalent class expressions, owl:hasKey) but
-#    never explicitly declared as DatatypeProperties in the vendor
-#    stones.ttl. We complete that declaration here since stonework
-#    imports stones and is the appropriate extension point.
+#    stones:relationshipType is declared as owl:DatatypeProperty in the
+#    STONES datatype-properties.ttl but without owl:FunctionalProperty,
+#    domain, range, or annotations. We extend it here.
 #################################################################
 
-###  https://cyberterrain.org/ns/stones#stixId
-stones:stixId rdf:type owl:DatatypeProperty, owl:FunctionalProperty ;
-              rdfs:domain stones:StixObject ;
-              rdfs:range xsd:string ;
-              skos:prefLabel "stixId" ;
-              skos:definition "The STIX 2.1 identifier string for this object, e.g. 'attack-pattern--xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'. Corresponds to the 'id' field in STIX 2.1 JSON." .
-
-
-###  https://cyberterrain.org/ns/stones#stixType
-stones:stixType rdf:type owl:DatatypeProperty, owl:FunctionalProperty ;
-                rdfs:domain stones:StixObject ;
-                rdfs:range xsd:string ;
-                skos:prefLabel "stixType" ;
-                skos:definition "The STIX 2.1 type string for this object, e.g. 'attack-pattern', 'intrusion-set', 'malware'. Corresponds to the 'type' field in STIX 2.1 JSON. Used by STONES equivalent class axioms to classify individuals into the appropriate OWL class." .
+###  https://cyberterrain.org/ns/stones#relationshipType
+stones:relationshipType rdf:type owl:DatatypeProperty, owl:FunctionalProperty ;
+                        rdfs:domain stones:Relationship ;
+                        rdfs:range xsd:string ;
+                        skos:prefLabel "relationshipType" ;
+                        skos:definition "The relationship_type string value from the STIX 2.1 SRO (e.g. 'uses', 'mitigates', 'subtechnique-of'). Drawn from the STIX 2.1 open vocabulary; corresponding named individuals are declared as stones:RelationshipTypeVocabulary instances in vocabularies.ttl. A shortcut object property is also asserted: stones:<type_underscored> from source to target." .
 
 
 #################################################################
-#    Object Properties
+#    Object Properties (SRO shortcut predicates)
+#
+#    The STIX 2.1 transform emits a shortcut triple for each SRO:
+#      <source> stones:<relationship_type_underscored> <target>
+#    These predicates are declared here so they are formally typed
+#    as OWL ObjectProperties. Sub-property links to stonework: are
+#    asserted where a STONEWORK semantic equivalent exists.
+#################################################################
+
+###  https://cyberterrain.org/ns/stones#mitigates
+stones:mitigates rdf:type owl:ObjectProperty ;
+                 skos:prefLabel "mitigates" ;
+                 skos:definition "Shortcut triple: source CourseOfAction mitigates target AttackPattern or Vulnerability. Corresponds to STIX relationship_type 'mitigates'." .
+
+###  https://cyberterrain.org/ns/stones#detects
+stones:detects rdf:type owl:ObjectProperty ;
+               skos:prefLabel "detects" ;
+               skos:definition "Shortcut triple: source CourseOfAction or Indicator detects target. Corresponds to STIX relationship_type 'detects'." .
+
+###  https://cyberterrain.org/ns/stones#subtechnique_of
+stones:subtechnique_of rdf:type owl:ObjectProperty ;
+                       skos:prefLabel "subtechnique_of" ;
+                       skos:definition "Shortcut triple: source AttackPattern is a sub-technique of target AttackPattern. Corresponds to STIX relationship_type 'subtechnique-of' (hyphens converted to underscores in the predicate IRI)." .
+
+###  https://cyberterrain.org/ns/stones#revoked_by
+stones:revoked_by rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "revoked_by" ;
+                  skos:definition "Shortcut triple: source STIX object is revoked and superseded by target. Corresponds to STIX relationship_type 'revoked-by'." .
+
+###  https://cyberterrain.org/ns/stones#attributed_to
+stones:attributed_to rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "attributed_to" ;
+                     skos:definition "Shortcut triple: source Campaign or IntrusionSet is attributed to target ThreatActor or IntrusionSet. Corresponds to STIX relationship_type 'attributed-to'." .
+
+###  https://cyberterrain.org/ns/stones#indicates
+stones:indicates rdf:type owl:ObjectProperty ;
+                 skos:prefLabel "indicates" ;
+                 skos:definition "Shortcut triple: source Indicator indicates presence of target. Corresponds to STIX relationship_type 'indicates'." .
+
+###  https://cyberterrain.org/ns/stones#related_to
+stones:related_to rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "related_to" ;
+                  skos:definition "Shortcut triple: generic relationship. Corresponds to STIX relationship_type 'related-to'." .
+
+###  https://cyberterrain.org/ns/stones#targets
+stones:targets rdf:type owl:ObjectProperty ;
+               skos:prefLabel "targets" ;
+               skos:definition "Shortcut triple: source targets the target Identity, Vulnerability, or Location. Corresponds to STIX relationship_type 'targets'." .
+
+###  https://cyberterrain.org/ns/stones#exploits
+stones:exploits rdf:type owl:ObjectProperty ;
+                skos:prefLabel "exploits" ;
+                skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
+
+
+#################################################################
+#    Object Properties (STONEWORK semantic layer)
 #################################################################
 
 ###  https://cyberterrain.org/ns/stonework#affected
@@ -98,7 +144,7 @@ stonework:mitigatesAttackPattern rdf:type owl:ObjectProperty ;
                                  rdfs:range stones:AttackPattern ;
                                  skos:prefLabel "mitigatesAttackPattern" ;
                                  skos:definition "Relates a security control to an attack pattern or technique it helps mitigate or counter." ;
-                                 skos:scopeNote "Range is stones:AttackPattern, which covers both abstract attack pattern classes (e.g. CAPEC) and operationalized techniques (e.g. ATT&CK), both of which are typed attack-pattern in STIX 2.1. Asserted into graph/stonework by the post-load cross-link UPDATE query." .
+                                 skos:scopeNote "Range is stones:AttackPattern, which covers both abstract attack pattern classes (e.g. CAPEC) and operationalized techniques (e.g. ATT&CK), both of which are typed attack-pattern in STIX 2.1." .
 
 
 ###  https://cyberterrain.org/ns/stonework#relatedAttackPattern
@@ -107,7 +153,7 @@ stonework:relatedAttackPattern rdf:type owl:ObjectProperty ;
                                rdfs:range stones:AttackPattern ;
                                skos:prefLabel "relatedAttackPattern" ;
                                skos:definition "Relates any STIX object to an attack pattern it exploits, instantiates, or operationalizes." ;
-                               skos:scopeNote "Covers two cross-dataset links: (1) CWE weakness → CAPEC attack pattern (exploits/instantiates), and (2) CAPEC attack pattern → ATT&CK technique (operationalizes). Both subjects are stones:StixObject individuals. Asserted into graph/stonework by the post-load cross-link UPDATE query." .
+                               skos:scopeNote "Covers two cross-dataset links: (1) CWE weakness → CAPEC attack pattern (exploits/instantiates), and (2) CAPEC attack pattern → ATT&CK technique (operationalizes). Both subjects are stones:StixObject individuals." .
 
 
 ###  https://cyberterrain.org/ns/stonework#techniqueOf
@@ -119,10 +165,14 @@ stonework:techniqueOf rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#uses
 stonework:uses rdf:type owl:ObjectProperty ;
                rdfs:domain stones:IntrusionSet ;
-               rdfs:range stonework:AttackTechnique ;
+               rdfs:range stones:AttackPattern ;
                skos:prefLabel "uses" ;
                skos:definition "Relates a threat actor group or campaign to an offensive technique they are known to employ." ;
-               skos:scopeNote "Framework-specific sub-properties (e.g. attack:uses) provide the concrete triples from ATT&CK relationship data." .
+               skos:scopeNote "Sub-property stones:uses carries the shortcut triples emitted by the STIX 2.1 transform for relationship_type 'uses'." .
+
+###  stones:uses as sub-property of stonework:uses
+stones:uses rdf:type owl:ObjectProperty ;
+            rdfs:subPropertyOf stonework:uses .
 
 
 ###  https://cyberterrain.org/ns/stonework#weaknessOf
