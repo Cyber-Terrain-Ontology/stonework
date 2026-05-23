@@ -12,6 +12,11 @@
 ###  https://cyberterrain.org/ns/stonework#
 <https://cyberterrain.org/ns/stonework#> rdf:type owl:Ontology ;
                                           owl:versionIRI <https://cyberterrain.org/ns/stonework/0.2.0> ;
+                                          owl:versionInfo "0.2.0" ;
+                                          rdfs:label "STONEWORK"@en ;
+                                          dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
+                                          dcterms:creator "Hohimer Intelligence Strategies LLC" ;
+                                          dcterms:license <https://opensource.org/licenses/MIT> ;
                                           owl:imports stones: ;
                                           dcterms:description "A semantic threat ontology and research framework that serves as the evolutionary successor to the STONES ontology. It provides a forward-looking, extensible foundation for modeling next-generation cyber threat intelligence concepts, objects, relationships, workflows, and knowledge beyond the scope of STIX 2.1." .
 
