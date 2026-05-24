@@ -12,6 +12,14 @@ STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or 
 
 ---
 
+## Status
+
+**v0.2.0 — Active Development**
+
+The namespace (`https://cyberterrain.org/ns/stonework#`) is stable and will not change. Core extension vocabulary is in place. Framework coverage (ATT&CK, D3FEND, CWE, NIST SP 800-53, CIS) is expanding. The scope of coverage will grow as the ontology matures. Feedback, issues, and contributions are welcome.
+
+---
+
 ## What STONEWORK adds
 
 STONEWORK extends STONES across four concrete domains:
@@ -109,9 +117,13 @@ git config core.hooksPath .githooks
 - **STONES** — faithful OWL 2 binding of STIX 2.1
 - **STONEWORK** — extends STONES with ATT&CK, D3FEND, CWE, NIST SP 800-53, and CIS *(this repository)*
 
-STONEWORK is also imported by [gistCyber](https://github.com/semanticarts/gistCyber) (Semantic Arts), integrating it into the gist enterprise ontology stack.
-
 Both ontologies are candidate submissions to the **Cyber Ontology Foundry**, alongside MITRE's D3FEND Framework Ontology.
+
+---
+
+## Adopters
+
+*Using STONEWORK in a project or product? Open an issue or pull request to be listed here.*
 
 ---
 
