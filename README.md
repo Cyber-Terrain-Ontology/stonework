@@ -1,99 +1,74 @@
-![STONES Badge](docs/resources/images/STONEWORK-carved-emb.png)
-# **STONEWORK**  
-### **Semantic Threat Ontology for Next‑generation Extensions, Workflows, Objects, Relationships, and Knowledge**
+![STONEWORK Badge](docs/resources/images/STONEWORK-carved-emb.png)
 
-STONEWORK is the evolutionary successor to the **STONES** ontology, designed to explore, prototype, and refine the semantic foundations of what a next‑generation STIX‑like standard could become. It extends the Cyber‑Terrain‑Ontology ecosystem by providing a research‑grade, forward‑looking space for modeling concepts that go beyond the scope of STIX 2.1 while remaining grounded in its lineage.
+# STONEWORK — Semantic Threat Ontology for Next-generation Extensions, Workflows, Objects, Relationships, and Knowledge
 
----
+**STONEWORK is an OWL 2 extension of STONES that adds what STIX 2.1 does not define.**
 
-## **Origins and Evolution**
+[STONES](https://github.com/Cyber-Terrain-Ontology/stones) provides a faithful ontological binding of STIX 2.1. STONEWORK imports STONES and extends the cyber terrain to cover adversary techniques, software weaknesses, and defensive controls — drawing from MITRE ATT&CK, MITRE D3FEND, CWE, NIST SP 800-53, and CIS Critical Controls. Together, STONES and STONEWORK form a composable semantic stack for AI-driven cyber threat intelligence analysis.
 
-The Cyber‑Terrain‑Ontology organization began with a clear mission:  
-to create faithful, expressive, and semantically rigorous representations of cyber‑threat intelligence.
+STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or CIS.
 
-Three repositories formed the initial foundation:
-
-- **STONES** — a complete, JSON‑schema‑aligned, OWL‑based ontology for STIX 2.1  
-- **stone‑age‑tools** — utilities, helpers, and transformation pipelines  
-- **cyberterrain‑website** — the public home for documentation and community stewardship  
-
-STONES established a high‑fidelity semantic model of the current STIX standard. But as the community’s needs grew, so did the desire to explore concepts that STIX 2.1 does not yet express: richer workflows, extended observables, deeper relationships, operational context, and knowledge‑centric reasoning.
-
-This is where **STONEWORK** enters the story.
+> STONEWORK is a candidate ontology for the **Cyber Ontology Foundry**, announced at STIDS 2026.
 
 ---
 
-## **Purpose of STONEWORK**
+## What STONEWORK adds
 
-STONEWORK is the **forge**—the conceptual workshop where the next generation of threat‑intelligence semantics is shaped. It is not an official OASIS standard, nor does it claim to be. Instead, it serves as:
+STONEWORK extends STONES across four concrete domains:
 
-- a **research incubator** for STIX‑3‑like ideas  
-- a **semantic extension layer** beyond STONES  
-- a **modeling environment** for workflows, reasoning, and operational knowledge  
-- a **prototype space** for concepts that may influence future standards  
+| Domain | Sources |
+|---|---|
+| Adversary techniques (TTPs) | MITRE ATT&CK, MITRE D3FEND |
+| Software weaknesses | CWE (Common Weakness Enumeration) |
+| Defensive controls | NIST SP 800-53, CIS Critical Controls |
+| Vulnerability linkage | Connects CVE → CWE → ATT&CK technique → control |
 
-STONEWORK allows the community to explore what comes *after* STIX 2.1 without being constrained by the boundaries of the existing specification.
-
----
-
-## **What STONEWORK Adds**
-
-STONEWORK expands the modeling surface in several key areas:
-
-- **Next‑generation Extensions**  
-  New domain objects, cyber‑observables, and contextual entities that STIX 2.1 does not yet define.
-
-- **Workflows**  
-  Representations of processes, sequences, and operational flows that connect threat intelligence to action.
-
-- **Objects and Relationships**  
-  Enhanced structural models that capture richer semantics, deeper linkages, and more expressive patterns.
-
-- **Knowledge**  
-  A shift from purely structural modeling to knowledge‑centric reasoning, inference, and semantic integration.
-
-Together, these dimensions form a foundation for exploring what a future STIX ecosystem could look like—one that is more expressive, more interconnected, and more aligned with real‑world cyber operations.
+This coverage enables queries that no single standard can answer on its own. A SPARQL query can trace a CVE to the weakness it exploits, to the attack patterns that leverage that weakness, to the APT groups known to use them, and to the controls that mitigate the risk — in a single federated query.
 
 ---
 
-## **Relationship to STONES**
+## Quick Start — Using the Ontology
 
-STONEWORK does not replace STONES.  
-Instead, it **extends** it.
+### 1. Download
 
-- STONES remains the authoritative, faithful representation of STIX 2.1.  
-- STONEWORK builds on that foundation to explore the next horizon.  
-- Both ontologies coexist within the Cyber‑Terrain‑Ontology ecosystem, each serving a distinct purpose.
+Download the STONEWORK ontology file:
 
-This separation ensures clarity:  
-STONES is the standard; STONEWORK is the evolution.
+```
+ontologies/stonework.ttl
+```
+
+STONEWORK imports STONES. Load both into your triplestore, or clone with submodules (see Developer Setup) to get everything together.
+
+### 2. Load into a triplestore
+
+Load both `stones-merged.ttl` (from the STONES repo) and `stonework.ttl` into any OWL-compatible triplestore:
+[AllegroGraph](https://allegrograph.com) · [Stardog](https://stardog.com) · [GraphDB](https://graphdb.ontotext.com) · [Apache Jena / Fuseki](https://jena.apache.org)
+
+### 3. Verify with SPARQL
+
+```sparql
+PREFIX stonework: <https://cyberterrain.org/ns/stonework#>
+PREFIX owl:       <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs:      <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?class ?label WHERE {
+  ?class a owl:Class ;
+         rdfs:label ?label .
+}
+ORDER BY ?label
+```
+
+### 4. Try the worked example
+
+Load the CTI reference datasets (ATT&CK, CAPEC, CVE, CWE, NIST SP 800-53, CIS) and run the Log4Shell chain query: from a vulnerable product to a threat actor to a defensive control in a single SPARQL query. Full walkthrough at [cyberterrain.org](https://cyberterrain.org).
 
 ---
 
-## **Design Principles**
-
-STONEWORK is guided by several core principles:
-
-- **Semantic fidelity** — every concept is modeled with precision and ontological rigor.  
-- **Extensibility** — new ideas can be explored without breaking the STONES foundation.  
-- **Transparency** — the ontology is open, inspectable, and community‑driven.  
-- **Future‑readiness** — the model anticipates the needs of next‑generation threat intelligence.  
-- **Ethical stewardship** — the project avoids misleading adjacency to official standards while contributing meaningfully to the ecosystem.
-
----
-
-## **Status**
-
-STONEWORK is an active research and development ontology.  
-Its structure, vocabulary, and modeling patterns will evolve as the community explores new concepts and refines the next generation of cyber‑threat semantics.
-
-Contributions, discussions, and proposals are welcome.
-
----
-
-## **Getting Started**
+## Developer Setup
 
 ### Clone with submodules
+
+STONEWORK includes STONES as a submodule.
 
 ```bash
 git clone --recurse-submodules https://github.com/Cyber-Terrain-Ontology/stonework.git
@@ -108,7 +83,7 @@ git submodule update --init --recursive
 
 ### Activate the pre-commit hook
 
-Run this once after cloning to enable the pre-commit hook (strips Protégé's default prefix from `.ttl` files and keeps the ontology catalog read-only):
+Run once after cloning to enable the pre-commit hook (strips Protégé's default prefix from `.ttl` files and keeps the ontology catalog read-only):
 
 ```bash
 git config core.hooksPath .githooks
@@ -116,9 +91,30 @@ git config core.hooksPath .githooks
 
 ---
 
-## **License**
+## Documentation
 
-This project is open‑source and part of the Cyber‑Terrain‑Ontology ecosystem.  
-See the repository’s LICENSE file for details.
+| Resource | URL |
+|---|---|
+| Website | [cyberterrain.org](https://cyberterrain.org) |
+| Ontology reference (WIDOCO) | [cyberterrain.org/ns/stonework/doc](https://cyberterrain.org/ns/stonework/doc/) |
+| Namespace | `https://cyberterrain.org/ns/stonework#` |
+| Base ontology | [STONES](https://github.com/Cyber-Terrain-Ontology/stones) |
 
+---
 
+## Ecosystem
+
+**STONES + STONEWORK** form a composable semantic stack for AI-driven CTI analysis:
+
+- **STONES** — faithful OWL 2 binding of STIX 2.1
+- **STONEWORK** — extends STONES with ATT&CK, D3FEND, CWE, NIST SP 800-53, and CIS *(this repository)*
+
+STONEWORK is also imported by [gistCyber](https://github.com/semanticarts/gistCyber) (Semantic Arts), integrating it into the gist enterprise ontology stack.
+
+Both ontologies are candidate submissions to the **Cyber Ontology Foundry**, alongside MITRE's D3FEND Framework Ontology.
+
+---
+
+## License
+
+STONEWORK is released under the **MIT License** — free to use, extend, and integrate in both open-source and commercial environments. See [LICENSE](LICENSE) for full terms.
