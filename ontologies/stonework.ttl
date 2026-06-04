@@ -20,6 +20,10 @@
 #    Object Properties
 #################################################################
 
+###  https://cyberterrain.org/ns/stonework#achieves
+stonework:achieves rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "achieves" .
+
 ###  https://cyberterrain.org/ns/stonework#affected
 stonework:affected rdf:type owl:ObjectProperty ;
                    rdfs:domain stones:Vulnerability ;
@@ -28,6 +32,18 @@ stonework:affected rdf:type owl:ObjectProperty ;
                    skos:definition "Relates a vulnerability to a product known to be affected by it." ;
                    skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
+###  https://cyberterrain.org/ns/stonework#affiliatedWith
+stonework:affiliatedWith rdf:type owl:ObjectProperty ;
+                         skos:prefLabel "affiliatedWith" .
+
+###  https://cyberterrain.org/ns/stonework#associatedWith
+stonework:associatedWith rdf:type owl:ObjectProperty ;
+                         skos:prefLabel "associatedWith" .
+
+###  https://cyberterrain.org/ns/stonework#attributedTo
+stonework:attributedTo rdf:type owl:ObjectProperty ;
+                       skos:prefLabel "attributedTo" .
+
 ###  https://cyberterrain.org/ns/stonework#categorizedBy
 stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                         rdfs:range stonework:Category ;
@@ -35,6 +51,71 @@ stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                         skos:definition "Links any individual to one or more contextual categories." ;
                         skos:scopeNote "This is the primary mechanism for flexible, context-sensitive classification (e.g., Evidence, HighValue, Suspect, etc.). Multiple categories per individual are allowed."@en ;
                         rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
+###  https://cyberterrain.org/ns/stonework#circumvents
+stonework:circumvents rdf:type owl:ObjectProperty ;
+                      skos:prefLabel "circumvents" .
+
+###  https://cyberterrain.org/ns/stonework#clusteredWith
+stonework:clusteredWith rdf:type owl:ObjectProperty ;
+                        skos:prefLabel "clusteredWith" .
+
+###  https://cyberterrain.org/ns/stonework#communicatesWith
+stonework:communicatesWith rdf:type owl:ObjectProperty ;
+                           skos:prefLabel "communicatesWith" .
+
+###  https://cyberterrain.org/ns/stonework#compromisedIn
+stonework:compromisedIn rdf:type owl:ObjectProperty ;
+                        skos:prefLabel "compromisedIn" .
+
+###  https://cyberterrain.org/ns/stonework#consistsOf
+stonework:consistsOf rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "consistsOf" .
+
+###  https://cyberterrain.org/ns/stonework#contains
+stonework:contains rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "contains" .
+
+###  https://cyberterrain.org/ns/stonework#counters
+stonework:counters rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "counters" .
+
+###  https://cyberterrain.org/ns/stonework#derivedFrom
+stonework:derivedFrom rdf:type owl:ObjectProperty ;
+                      skos:prefLabel "derivedFrom" .
+
+###  https://cyberterrain.org/ns/stonework#detects
+stonework:detects rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "detects" .
+
+###  https://cyberterrain.org/ns/stonework#downloads
+stonework:downloads rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "downloads" .
+
+###  https://cyberterrain.org/ns/stonework#drops
+stonework:drops rdf:type owl:ObjectProperty ;
+                skos:prefLabel "drops" .
+
+###  https://cyberterrain.org/ns/stonework#emailOf
+stonework:emailOf rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "emailOf" .
+
+###  https://cyberterrain.org/ns/stonework#employs
+stonework:employs rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "employs" .
+
+###  https://cyberterrain.org/ns/stonework#exploits
+stonework:exploits rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "exploits" .
+
+###  https://cyberterrain.org/ns/stonework#generatedFrom
+stonework:generatedFrom rdf:type owl:ObjectProperty ;
+                        skos:prefLabel "generatedFrom" .
+
+###  https://cyberterrain.org/ns/stonework#hasIndicator
+stonework:hasIndicator rdf:type owl:ObjectProperty ;
+                       rdfs:range stones:StixCyberobservableObject ;
+                       skos:prefLabel "hasIndicator" .
 
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
@@ -61,6 +142,20 @@ stonework:hasWeakness rdf:type owl:ObjectProperty ;
                       skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates."@en ;
                       skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
 
+###  https://cyberterrain.org/ns/stonework#hostedBy
+stonework:hostedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                   skos:prefLabel "hostedBy" .
+
+###  https://cyberterrain.org/ns/stonework#indicatorOf
+stonework:indicatorOf rdf:type owl:ObjectProperty ;
+                      owl:inverseOf stonework:hasIndicator ;
+                      rdfs:domain stones:StixCyberobservableObject ;
+                      skos:prefLabel "indicatorOf" .
+
+###  https://cyberterrain.org/ns/stonework#linkedTo
+stonework:linkedTo rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "linkedTo" .
+
 ###  https://cyberterrain.org/ns/stonework#membersOf
 stonework:membersOf rdf:type owl:ObjectProperty ;
                     owl:inverseOf stonework:hasMembers ;
@@ -71,6 +166,72 @@ stonework:membersOf rdf:type owl:ObjectProperty ;
                     skos:scopeNote "Inverse of hasMembers. Useful for queries like 'which groups is this actor a member of?'"@en ;
                     rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
+###  https://cyberterrain.org/ns/stonework#mentions
+stonework:mentions rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "mentions" .
+
+###  https://cyberterrain.org/ns/stonework#mitigates
+stonework:mitigates rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "mitigates" .
+
+###  https://cyberterrain.org/ns/stonework#observedIn
+stonework:observedIn rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "observedIn" .
+
+###  https://cyberterrain.org/ns/stonework#originatesFrom
+stonework:originatesFrom rdf:type owl:ObjectProperty ;
+                         skos:prefLabel "originatesFrom" .
+
+###  https://cyberterrain.org/ns/stonework#overlapsWith
+stonework:overlapsWith rdf:type owl:ObjectProperty ;
+                       skos:prefLabel "overlapsWith" .
+
+###  https://cyberterrain.org/ns/stonework#precedes
+stonework:precedes rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "precedes" .
+
+###  https://cyberterrain.org/ns/stonework#references
+stonework:references rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "references" .
+
+###  https://cyberterrain.org/ns/stonework#registeredWith
+stonework:registeredWith rdf:type owl:ObjectProperty ;
+                         skos:prefLabel "registeredWith" .
+
+###  https://cyberterrain.org/ns/stonework#relatedTo
+stonework:relatedTo rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "relatedTo" .
+
+###  https://cyberterrain.org/ns/stonework#remediates
+stonework:remediates rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "remediates" .
+
+###  https://cyberterrain.org/ns/stonework#resovlesTo
+stonework:resovlesTo rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "resovlesTo" .
+
+###  https://cyberterrain.org/ns/stonework#revokedBy
+stonework:revokedBy rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "revokedBy" .
+
+###  https://cyberterrain.org/ns/stonework#sharesCertificate
+stonework:sharesCertificate rdf:type owl:ObjectProperty ;
+                            skos:prefLabel "sharesCertificate" .
+
+###  https://cyberterrain.org/ns/stonework#sharesRegistrant
+stonework:sharesRegistrant rdf:type owl:ObjectProperty ;
+                           skos:prefLabel "sharesRegistrant" .
+
+###  https://cyberterrain.org/ns/stonework#subdomainOf
+stonework:subdomainOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                      rdfs:domain stones:DomainNameObject ;
+                      rdfs:range stones:DomainNameObject ;
+                      skos:prefLabel "subdomainOf" .
+
+###  https://cyberterrain.org/ns/stonework#targets
+stonework:targets rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "targets" .
+
 ###  https://cyberterrain.org/ns/stonework#techniqueOf
 stonework:techniqueOf rdf:type owl:ObjectProperty ;
                       owl:inverseOf stonework:hasTechnique ;
@@ -79,6 +240,18 @@ stonework:techniqueOf rdf:type owl:ObjectProperty ;
                       skos:definition "Links a Technique to the Tactic(s) it achieves or supports."@en ;
                       skos:scopeNote "This is the inverse of hasTechnique. A single Technique may support multiple Tactics (e.g. 'Phishing' supports both Initial Access and Credential Access)."@en ;
                       rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
+###  https://cyberterrain.org/ns/stonework#urlOf
+stonework:urlOf rdf:type owl:ObjectProperty ;
+                skos:prefLabel "urlOf" .
+
+###  https://cyberterrain.org/ns/stonework#uses
+stonework:uses rdf:type owl:ObjectProperty ;
+               skos:prefLabel "uses" .
+
+###  https://cyberterrain.org/ns/stonework#variantOf
+stonework:variantOf rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "variantOf" .
 
 ###  https://cyberterrain.org/ns/stonework#weaknessOf
 stonework:weaknessOf rdf:type owl:ObjectProperty ;
