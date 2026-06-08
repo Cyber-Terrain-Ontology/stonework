@@ -3,7 +3,6 @@
 @prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
-@prefix stones:    <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix attack:    <https://cyberterrain.org/ns/frameworks/attack#> .
 @prefix capec:     <https://cyberterrain.org/ns/frameworks/capec#> .
@@ -20,7 +19,7 @@
 
 capec:AttackPattern
     a owl:Class ;
-    rdfs:subClassOf stones:AttackPattern ;
+    rdfs:subClassOf stonework:AttackPattern ;
     rdfs:label "Attack Pattern"@en ;
     rdfs:comment "A CAPEC attack pattern. Instances are identified by ctienc:_AttackPattern_CAPEC-{ID} IRIs."@en .
 
@@ -89,7 +88,7 @@ capec:relatedAttackTechnique
     rdfs:label "related attack technique"@en ;
     rdfs:comment "ATT&CK technique that this abstract attack pattern maps to or operationalizes. Materialized by a post-load SPARQL UPDATE joining capec:attackTechniqueId against stones:externalReferences/stones:externalId."@en ;
     rdfs:domain capec:AttackPattern ;
-    rdfs:range stones:AttackPattern .
+    rdfs:range stonework:AttackPattern .
 
 capec:exploitsWeakness
     a owl:ObjectProperty ;

@@ -3,7 +3,6 @@
 @prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
-@prefix stones:    <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix attack:    <https://cyberterrain.org/ns/frameworks/attack#> .
 @prefix cis:       <https://cyberterrain.org/ns/frameworks/cis#> .
@@ -74,7 +73,7 @@ cis:mitigatesTechnique
     rdfs:label "mitigates technique"@en ;
     rdfs:comment "ATT&CK technique that this safeguard helps mitigate. Materialized by a post-load SPARQL UPDATE joining cis:mitigatesTechniqueId against stones:externalReferences/stones:externalId."@en ;
     rdfs:domain cis:Control ;
-    rdfs:range stones:AttackPattern .
+    rdfs:range stonework:AttackPattern .
 
 # --- Object Properties ----------------------------------------------
 

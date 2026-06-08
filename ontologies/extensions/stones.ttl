@@ -25,7 +25,7 @@ stones:Vulnerability
 
 stones:AttackPattern 
     a owl:Class ;
-    owl:equivalentClass stonework:OffensiveTechnique ;
+    owl:equivalentClass stonework:AttackPattern ;
     rdfs:label "STIX Attack Pattern"@en ;
     rdfs:comment "STIX 2.1 Attack Pattern SDO."@en .
 
