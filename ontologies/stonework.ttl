@@ -257,10 +257,10 @@ stonework:Likelihood rdf:type owl:Class ;
                      skos:definition "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
                      skos:scopeNote "Likelihood reflects the chance that a compromise will occur, considering adversary capability, intent, opportunity, preconditions, and environmental factors. Likelihood values may be qualitative, ordinal, or quantitative." .
 
-###  https://cyberterrain.org/ns/stones#Location
-stones:Location rdf:type owl:Class ;
-               skos:prefLabel "Location"@en ;
-               skos:definition "Represents a geographic location. May be as specific as a latitude/longitude coordinate or as broad as a continent. At least one of region, country, or latitude/longitude must be provided." .
+###  https://cyberterrain.org/ns/stonework#Location
+stonework:Location rdf:type owl:Class ;
+                   skos:prefLabel "Location"@en ;
+                   skos:definition "Represents a geographic location. May be as specific as a latitude/longitude coordinate or as broad as a continent. At least one of region, country, or latitude/longitude must be provided." .
 
 ###  https://cyberterrain.org/ns/stonework#Malware
 stonework:Malware rdf:type owl:Class ;
