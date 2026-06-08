@@ -15,31 +15,20 @@
     rdfs:comment "An OWL 2 ontology modelling the STIX 2.1 specification. Provides a class hierarchy for all STIX Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STIX properties."@en ;
     owl:imports <https://cyberterrain.org/ns/stonework#> , <https://cyberterrain.org/ns/stones#> .
 
-# --- Classes --------------------------------------------------------
+# --- Equivalent Classes --------------------------------------------------------
 
-stones:Vulnerability
-    a owl:Class ;
-    owl:equivalentClass stonework:Vulnerability ;
-    rdfs:label "STIX Vulnerability"@en ;
-    rdfs:comment "STIX 2.1 Vulnerability SDO. Equivalent to stonework:Vulnerability."@en .
+stones:AttackPattern                owl:equivalentClass     stonework:AttackPattern .
+stones:Campaign                     owl:equivalentClass     stonework:Campaign .
+stones:StixCyberobservableObject    owl:equivalentClass     stonework:Indicators .
+stones:Infrastructure               owl:equivalentClass     stonework:Infrastructure .
+stones:ThreatActor                  owl:equivalentClass     stonework:ThreatActor .
+stones:Vulnerability                owl:equivalentClass     stonework:Vulnerability .
 
-stones:AttackPattern 
-    a owl:Class ;
-    owl:equivalentClass stonework:AttackPattern ;
-    rdfs:label "STIX Attack Pattern"@en ;
-    rdfs:comment "STIX 2.1 Attack Pattern SDO."@en .
+# --- Subclasses --------------------------------------------------------
 
-stones:ThreatActor
-    a owl:Class ;
-    owl:equivalentClass stonework:ThreatActor ;
-    rdfs:label "STIX Threat Actor"@en ;
-    rdfs:comment "STIX 2.1 Threat Actor SDO. Equivalent to stonework:ThreatActor."@en .
-
-stones:Identity
-    a owl:Class ;
-    owl:subClassOf stonework:Agent ;
-    rdfs:label "STIX Identity"@en ;
-    rdfs:comment "STIX 2.1 Identity SDO."@en .
+stones:CourseOfAction               owl:subClassOf          stonework:Mitigation .
+stones:Identity                     owl:subClassOf          stonework:Agent .
+stones:StixSubType                  owl:subClassOf          stonework:Indicators .
 
 # --- Datatype Properties --------------------------------------------
 

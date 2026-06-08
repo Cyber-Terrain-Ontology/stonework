@@ -135,6 +135,11 @@ stonework:AttackTechnique rdf:type owl:Class ;
                           skos:definition "A prescribed offensive method used by an adversary to achieve a specific tactical objective within a target environment."@en ;
                           skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. Not a subclass of stones:AttackPattern — attack patterns (e.g. CAPEC) are abstract descriptions of attack classes, whereas AttackTechnique is an operationalized plan for execution. Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals."@en .
 
+###  https://cyberterrain.org/ns/stonework#Campaign
+stonework:Campaign rdf:type owl:Class ;
+                   skos:prefLabel "Campaign"@en ;
+                   skos:definition "A grouping of adversary behaviours and resources with a common objective pursued over a period of time. Campaigns may be attributed to intrusion sets or threat actors." .
+
 ###  https://cyberterrain.org/ns/stonework#Category
 stonework:Category rdf:type owl:Class ;
                    skos:prefLabel "Category" ;
@@ -179,7 +184,15 @@ stonework:Impact rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Indicators
 stonework:Indicators rdf:type owl:Class ;
-                     skos:prefLabel "Indicators" .
+                     rdfs:comment "A pattern, observable, or digital artifact (or set thereof) that suggests the presence of malicious or suspicious activity." ;
+                     skos:prefLabel "Indicators" ;
+                     skos:definition "An assertion that a specific pattern or set of Digital Artifacts is associated with malicious behavior, enabling detection, correlation, and response. Serves as the unifying concept between STIX Indicators and D3FEND Digital Artifacts/Events." ;
+                     skos:scopeNote "In STONEWORK, Indicators can be simple (single IOC like a hash or IP) or complex (full STIX patterns combining multiple artifacts and conditions)." .
+
+###  https://cyberterrain.org/ns/stonework#Infrastructure
+stonework:Infrastructure rdf:type owl:Class ;
+                         skos:prefLabel "Infrastructure"@en ;
+                         skos:definition "Represents systems, software services, or any group of resources used to conduct cyber operations. Infrastructure is used by threat actors and intrusion sets both offensively and defensively." .
 
 ###  https://cyberterrain.org/ns/stonework#Likelihood
 stonework:Likelihood rdf:type owl:Class ;
@@ -187,6 +200,11 @@ stonework:Likelihood rdf:type owl:Class ;
                      skos:prefLabel "Likelihood" ;
                      skos:definition "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
                      skos:scopeNote "Likelihood reflects the chance that a compromise will occur, considering adversary capability, intent, opportunity, preconditions, and environmental factors. Likelihood values may be qualitative, ordinal, or quantitative." .
+
+###  https://cyberterrain.org/ns/stonework#Malware
+stonework:Malware rdf:type owl:Class ;
+                  skos:prefLabel "Malware"@en ;
+                  skos:definition "A type of TTP that represents malicious code. Captures both malware families (when is_family is true) and specific instances or samples." .
 
 ###  https://cyberterrain.org/ns/stonework#Mitigation
 stonework:Mitigation rdf:type owl:Class ;
@@ -199,6 +217,7 @@ Examples include: applying a security patch, enabling multi-factor authenticatio
 
 ###  https://cyberterrain.org/ns/stonework#Organization
 stonework:Organization rdf:type owl:Class ;
+                       rdfs:subClassOf stonework:Agent ;
                        skos:prefLabel "Organization" ;
                        skos:definition "A formal or semi-formal structured entity such as a company, government agency, non-profit, military unit, or consortium with defined boundaries and usually legal identity."@en ;
                        skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
@@ -241,8 +260,7 @@ stonework:Product rdf:type owl:Class ;
                   rdfs:comment "Instances of stonework:Product may include operating systems, applications, libraries, devices, or embedded components. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
                   skos:prefLabel "Product" ;
                   skos:definition "A software, hardware, or firmware entity identified by its vendor, product name, and version characteristics, used to represent a specific platform or component within vulnerability, configuration, or threat‑intelligence contexts."@en ;
-                  skos:scopeNote "This class provides a semantic representation of platform entities commonly identified using CPE naming schemes. It does not require the use of CPE, but supports mapping to CPE identifiers when available."@en ;
-                  rdfs:isDefinedBy "https://cyberterrain.org/ns/stonework#" .
+                  skos:scopeNote "This class provides a semantic representation of platform entities commonly identified using CPE naming schemes. It does not require the use of CPE, but supports mapping to CPE identifiers when available."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Risk
 stonework:Risk rdf:type owl:Class ;
