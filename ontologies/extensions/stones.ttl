@@ -35,6 +35,12 @@ stones:ThreatActor
     rdfs:label "STIX Threat Actor"@en ;
     rdfs:comment "STIX 2.1 Threat Actor SDO. Equivalent to stonework:ThreatActor."@en .
 
+stones:Identity
+    a owl:Class ;
+    owl:subClassOf stonework:Agent ;
+    rdfs:label "STIX Identity"@en ;
+    rdfs:comment "STIX 2.1 Identity SDO."@en .
+
 # --- Datatype Properties --------------------------------------------
 
 ###  https://cyberterrain.org/ns/stones#relationshipType

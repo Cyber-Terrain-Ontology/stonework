@@ -3,7 +3,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix provo: <https://www.w3.org/TR/prov-o/#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @base <https://cyberterrain.org/ns/stonework#> .
@@ -31,6 +31,14 @@ stonework:affected rdf:type owl:ObjectProperty ;
                    skos:definition "Relates a vulnerability to a product known to be affected by it." ;
                    skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
+###  https://cyberterrain.org/ns/stonework#categorizedBy
+stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                        rdfs:range stonework:Category ;
+                        skos:prefLabel "categorizedBy" ;
+                        skos:definition "Links any individual to one or more contextual categories." ;
+                        skos:scopeNote "This is the primary mechanism for flexible, context-sensitive classification (e.g., Evidence, HighValue, Suspect, etc.). Multiple categories per individual are allowed."@en ;
+                        rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
 ###  https://cyberterrain.org/ns/stonework#exploitsWeakness
 stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
                            rdfs:domain stonework:Vulnerability ;
@@ -41,7 +49,7 @@ stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
-                     rdfs:domain stonework:Group ;
+                     rdfs:domain stonework:Group, stonework:Organization, stonework:ThreatActor ;
                      skos:prefLabel "hasMembers" .
 
 ###  https://cyberterrain.org/ns/stonework#hasTechnique
@@ -62,7 +70,7 @@ stonework:hasWeakness rdf:type owl:AsymmetricProperty , owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#membersOf
 stonework:membersOf rdf:type owl:ObjectProperty ;
                     owl:inverseOf stonework:hasMembers ;
-                    rdfs:range stonework:Group ;
+                    rdfs:range stonework:Group, stonework:Organization, stonework:ThreatActor ;
                     skos:prefLabel "membersOf" .
 
 ###  https://cyberterrain.org/ns/stonework#mitigatesAttackPattern
@@ -113,7 +121,7 @@ stonework:Agent rdf:type owl:Class ;
                 skos:prefLabel "Agent" ;
                 skos:definition "Any entity that can act, perform actions, or be attributed responsibility in a cyber or sociotechnical context."@en ;
                 skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
-                rdfs:seeAlso provo:Agent .
+                rdfs:seeAlso prov:Agent .
 
 ###  https://cyberterrain.org/ns/stonework#AttackPattern
 stonework:AttackPattern rdf:type owl:Class ;
@@ -127,8 +135,17 @@ stonework:AttackTechnique rdf:type owl:Class ;
                           skos:definition "A prescribed offensive method used by an adversary to achieve a specific tactical objective within a target environment."@en ;
                           skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. Not a subclass of stones:AttackPattern — attack patterns (e.g. CAPEC) are abstract descriptions of attack classes, whereas AttackTechnique is an operationalized plan for execution. Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals."@en .
 
+###  https://cyberterrain.org/ns/stonework#Category
+stonework:Category rdf:type owl:Class ;
+                   rdfs:subClassOf stones:StixMetaObject ;
+                   skos:prefLabel "Category" ;
+                   skos:definition "A classification or tagging concept used to group or qualify other individuals in a particular context." ;
+                   skos:scopeNote "Categories are reified so they can be referenced, versioned, or scoped. They are not rigid types."@en ;
+                   rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
 ###  https://cyberterrain.org/ns/stonework#Control
 stonework:Control rdf:type owl:Class ;
+                  rdfs:subClassOf stonework:Process ;
                   rdfs:comment """Instances of stonework:Control may represent individual controls, control enhancements, or sub‑controls. Framework‑specific identifiers (e.g., \"AC‑2\", \"CIS 4.1\") SHOULD be modeled using explicit properties rather than encoded in the class IRI. Control text SHOULD be referenced via citations rather than reproduced verbatim.""" ;
                   skos:prefLabel "Control" ;
                   skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
@@ -173,13 +190,21 @@ stonework:Likelihood rdf:type owl:Class ;
                      skos:definition "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
                      skos:scopeNote "Likelihood reflects the chance that a compromise will occur, considering adversary capability, intent, opportunity, preconditions, and environmental factors. Likelihood values may be qualitative, ordinal, or quantitative." .
 
+###  https://cyberterrain.org/ns/stonework#Mitigation
+stonework:Mitigation rdf:type owl:Class ;
+                     rdfs:subClassOf stonework:Process ;
+                     skos:prefLabel "Mitigation" ;
+                     skos:definition "A deliberate Process or set of activities intended to reduce the likelihood, impact, or severity of a risk, threat, vulnerability, or adverse event."@en ;
+                     skos:scopeNote """Mitigations are proactive or reactive actions taken to address weaknesses or threats. 
+Examples include: applying a security patch, enabling multi-factor authentication, deploying a firewall rule, isolating a compromised host, or training users.  A Mitigation may be a one-time action or a repeatable control."""@en ;
+                     rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> .
+
 ###  https://cyberterrain.org/ns/stonework#Organization
 stonework:Organization rdf:type owl:Class ;
-                       rdfs:subClassOf stonework:Group ;
                        skos:prefLabel "Organization" ;
                        skos:definition "A formal or semi-formal structured entity such as a company, government agency, non-profit, military unit, or consortium with defined boundaries and usually legal identity."@en ;
                        skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
-                       rdfs:seeAlso provo:Organization .
+                       rdfs:seeAlso prov:Organization .
 
 ###  https://cyberterrain.org/ns/stonework#Person
 stonework:Person rdf:type owl:Class ;
@@ -187,14 +212,31 @@ stonework:Person rdf:type owl:Class ;
                  skos:prefLabel "Person" ;
                  skos:definition "A single human individual."@en ;
                  skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en ;
-                 rdfs:seeAlso provo:Person .
+                 rdfs:seeAlso prov:Person .
+
+###  https://cyberterrain.org/ns/stonework#Playbook
+stonework:Playbook rdf:type owl:Class ;
+                   rdfs:subClassOf stonework:Process ;
+                   rdfs:comment "Playbooks are often versioned, tested, and executed as instances of Process."@en ;
+                   skos:prefLabel "Playbook" ;
+                   skos:definition "A documented, structured Process that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
+                   skos:scopeNote "A Playbook provides reusable, often automated or semi-automated guidance for security operations, incident response, threat hunting, recovery, or routine tasks. It typically includes triggers, decision points, assigned roles (Agents), inputs/outputs, and success criteria.  Playbooks bridge planning and execution."@en ;
+                   rdfs:seeAlso prov:Plan .
 
 ###  https://cyberterrain.org/ns/stonework#Procedure
 stonework:Procedure rdf:type owl:Class ;
+                    rdfs:subClassOf stonework:Process ;
                     rdfs:comment "Procedures are instances or patterns of execution that realize a technique. They may include command lines, API calls, malware behaviors, or operator playbook steps. Procedures are distinct from techniques, which describe generalized methods." ;
                     skos:prefLabel "Procedure" ;
                     skos:definition "A concrete, observable sequence of actions, commands, or behaviors that implements a technique in a specific operational context." ;
                     skos:scopeNote "Procedures describe the actual steps an adversary takes, such as specific commands, scripts, tools, or configurations. They represent the most granular level of adversary behavior." .
+
+###  https://cyberterrain.org/ns/stonework#Process
+stonework:Process rdf:type owl:Class ;
+                  skos:prefLabel "Process"@en ;
+                  skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
+                  skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is intended for modeling Controls, Playbooks, Mitigations, Threat Scenarios, and other repeatable or planned workflows."@en ;
+                  rdfs:seeAlso <https://www.opmw.org/model/p-plan/> , prov:Activity .
 
 ###  https://cyberterrain.org/ns/stonework#Product
 stonework:Product rdf:type owl:Class ;
@@ -239,10 +281,11 @@ stonework:ThreatActor rdf:type owl:Class ;
                       skos:prefLabel "ThreatActor" ;
                       skos:definition "An individual, group, organization, or collective that has the capability and intent to conduct harmful activities within a cyber or sociotechnical context." ;
                       skos:scopeNote "This class represents the actors behind cyber threats. It includes both human and non-human entities that can perform actions, have intent, and be attributed responsibility for cyber operations."@en ;
-                      rdfs:seeAlso provo:Agent .
+                      rdfs:seeAlso prov:Agent .
 
 ###  https://cyberterrain.org/ns/stonework#ThreatScenario
 stonework:ThreatScenario rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:Process ;
                          rdfs:comment "Instances of stonework:ThreatScenario may include assumptions, triggering conditions, targeted assets, adversary profiles, attack paths, and expected impacts. Threat scenarios are distinct from threats, attacks, or incidents; they represent hypothetical or anticipated sequences rather than observed events." ;
                          skos:prefLabel "ThreatScenario" ;
                          skos:definition "A structured description of how a threat could materialize against specific assets or missions, incorporating adversary intent, capability, opportunity, preconditions, and potential consequences." ;
@@ -260,3 +303,14 @@ stonework:Weakness rdf:type owl:Class ;
                    skos:prefLabel "Weakness" ;
                    skos:definition "A type of flaw, fault, or design condition in software, hardware, or system architecture that can enable vulnerabilities, reduce security assurance, or increase the likelihood of exploitable behavior." ;
                    skos:scopeNote "This class provides a semantic representation of weakness types defined in the Common Weakness Enumeration (CWE). It supports hierarchical relationships, abstraction levels, and mappings to related attack patterns, vulnerabilities, and security controls." .
+
+
+#################################################################
+#    Named Individuals
+#################################################################
+
+###  https://cyberterrain.org/ns/stonework#evidence
+stonework:evidence rdf:type owl:NamedIndividual , stonework:Category ;
+                   skos:prefLabel "Evidence" ;
+                   skos:definition "Material or information offered to support or refute a claim, typically within an investigation or legal context."@en ;
+                   skos:scopeNote "This is a reusable category instance. It is *not* a class. Use stonework:categorizedBy to assert that something is evidence in a given context."@en .
