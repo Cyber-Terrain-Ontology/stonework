@@ -36,8 +36,7 @@ stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                         rdfs:range stonework:Category ;
                         skos:prefLabel "categorizedBy" ;
                         skos:definition "Links any individual to one or more contextual categories." ;
-                        skos:scopeNote "This is the primary mechanism for flexible, context-sensitive classification (e.g., Evidence, HighValue, Suspect, etc.). Multiple categories per individual are allowed."@en ;
-                        rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+                        skos:scopeNote "This is the primary mechanism for flexible, context-sensitive classification (e.g., Evidence, HighValue, Suspect, etc.). Multiple categories per individual are allowed."@en .
 
 ###  https://cyberterrain.org/ns/stonework#exploitsWeakness
 stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
@@ -73,14 +72,6 @@ stonework:membersOf rdf:type owl:ObjectProperty ;
                     rdfs:range stonework:Group, stonework:Organization, stonework:ThreatActor ;
                     skos:prefLabel "membersOf" .
 
-###  https://cyberterrain.org/ns/stonework#mitigatesAttackPattern
-stonework:mitigatesAttackPattern rdf:type owl:ObjectProperty ;
-                             rdfs:domain stonework:Control ;
-                             rdfs:range stonework:AttackPattern ;
-                             skos:prefLabel "mitigatesAttackPattern" ;
-                             skos:definition "Relates a security control to an attack pattern it helps mitigate or counter." ;
-                             skos:scopeNote "Range is stonework:AttackPattern, which covers both abstract attack pattern classes (e.g. CAPEC) and operationalized techniques (e.g. ATT&CK), both of which are typed attack-pattern in STIX 2.1." .
-
 ###  https://cyberterrain.org/ns/stonework#relatedTechnique
 stonework:relatedTechnique rdf:type owl:ObjectProperty ;
                            rdfs:range stonework:AttackTechnique ;
@@ -114,6 +105,8 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#mitigates
 stonework:mitigates rdf:type owl:ObjectProperty ;
                     skos:prefLabel "mitigates" ;
+                    rdfs:domain stonework:Control, stonework:Mitigation ;
+                    rdfs:range stonework:AttackPattern ;
                     skos:definition "Shortcut triple: source CourseOfAction mitigates target AttackPattern or Vulnerability. Corresponds to STIX relationship_type 'mitigates'." .
 
 ###  https://cyberterrain.org/ns/stonework#detects

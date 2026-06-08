@@ -63,13 +63,13 @@ cis:implementationGroup
 cis:mitigatesTechniqueId
     a owl:DatatypeProperty ;
     rdfs:label "mitigates technique ID"@en ;
-    rdfs:comment "ATT&CK technique or sub-technique identifier (e.g. 'T1200', 'T1059.001') that this safeguard helps mitigate. Source string retained for provenance; use stonework:mitigatesAttackPattern for the resolved IRI link."@en ;
+    rdfs:comment "ATT&CK technique or sub-technique identifier (e.g. 'T1200', 'T1059.001') that this safeguard helps mitigate. Source string retained for provenance; use stonework:mitigates for the resolved IRI link."@en ;
     rdfs:domain cis:Control ;
     rdfs:range xsd:string .
 
 cis:mitigatesTechnique
     a owl:ObjectProperty ;
-    rdfs:subPropertyOf stonework:mitigatesAttackPattern ;
+    rdfs:subPropertyOf stonework:mitigates ;
     rdfs:label "mitigates technique"@en ;
     rdfs:comment "ATT&CK technique that this safeguard helps mitigate. Materialized by a post-load SPARQL UPDATE joining cis:mitigatesTechniqueId against stones:externalReferences/stones:externalId."@en ;
     rdfs:domain cis:Control ;

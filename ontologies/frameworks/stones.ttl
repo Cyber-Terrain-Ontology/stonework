@@ -11,8 +11,8 @@
 
 <https://cyberterrain.org/ns/frameworks/stonesx>
     a owl:Ontology ;
-    rdfs:label "STONES Extension Ontology"@en ;
-    rdfs:comment "An OWL 2 ontology modelling the STIX 2.1 specification. Provides a class hierarchy for all STIX Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STIX properties."@en ;
+    rdfs:label "STONES Framework Ontology"@en ;
+    rdfs:comment "A mapping of the STONES Ontology to STONEWORK. Provides a class hierarchy for all STONES Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STONES properties."@en ;
     owl:imports <https://cyberterrain.org/ns/stonework#> , <https://cyberterrain.org/ns/stones#> .
 
 # --- Equivalent Classes --------------------------------------------------------
