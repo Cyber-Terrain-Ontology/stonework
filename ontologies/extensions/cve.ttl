@@ -24,7 +24,7 @@
 # CveState
 cve:CveState
     a owl:Class ;
-    rdfs:label "CveState"@en ;
+    rdfs:label "CVE State"@en ;
     rdfs:comment "Lifecycle state of a CVE record."@en ;
     owl:equivalentClass [ a owl:Class ; owl:oneOf ( cve:PUBLISHED cve:REJECTED cve:RESERVED cve:UNKNOWN ) ] .
 
@@ -47,7 +47,7 @@ cve:UNKNOWN
 # CvssVersion
 cve:CvssVersion
     a owl:Class ;
-    rdfs:label "CvssVersion"@en ;
+    rdfs:label "CVSS Version"@en ;
     rdfs:comment "Supported CVSS scoring version identifiers."@en ;
     owl:equivalentClass [ a owl:Class ; owl:oneOf ( cve:2_0 cve:3_0 cve:3_1 cve:4_0 ) ] .
 
@@ -70,7 +70,7 @@ cve:4_0
 # CreditRole
 cve:CreditRole
     a owl:Class ;
-    rdfs:label "CreditRole"@en ;
+    rdfs:label "Credit Role"@en ;
     rdfs:comment "Role played by a credited party in relation to a CVE."@en ;
     owl:equivalentClass [ a owl:Class ; owl:oneOf ( cve:finder cve:reporter cve:coordinator cve:remediation cve:tool cve:sponsor cve:other cve:discoverer cve:researcher cve:patcher cve:tester cve:reproducer cve:releaser cve:documentation ) ] .
 
@@ -135,26 +135,26 @@ cve:documentation
 # LocalizedText
 cve:LocalizedText
     a owl:Class ;
-    rdfs:label "LocalizedText"@en ;
+    rdfs:label "Localized Text"@en ;
     rdfs:comment "A text value paired with a BCP-47 / ISO-639-2 language tag."@en .
 
 # VersionRange
 cve:VersionRange
     a owl:Class ;
-    rdfs:label "VersionRange"@en ;
+    rdfs:label "Version Range"@en ;
     rdfs:comment "A version or version range specifying affected/fixed software.\n\nv2  → DWF.AFFECTS[].AFFECTED / FIXEDIN  (plain version strings with optional\n      leading >, <, >=, <= operators)\nv5  → affected[].versions[]  (structured {version, status, lessThan, …})"@en .
 
 # ProblemType
 cve:ProblemType
     a owl:Class ;
-    rdfs:label "ProblemType"@en ;
+    rdfs:label "Problem Type"@en ;
     rdfs:comment "Weakness classification for the vulnerability.\n\nv2  → DWF.PROBLEM_TYPE  (CWE string, OWASP string, free-text DESCRIPTION)\nv5  → cnaContainer.problemTypes[].descriptions[]"@en .
 
 # AffectedProduct
 cve:AffectedProduct
     a owl:Class ;
     rdfs:subClassOf stonework:Product ;
-    rdfs:label "AffectedProduct"@en ;
+    rdfs:label "Affected Product"@en ;
     rdfs:comment "A product/component affected by (or fixed for) the vulnerability.\n\nv2  → DWF.AFFECTS[]\nv5  → cnaContainer.affected[]"@en .
 
 # Reference
@@ -166,7 +166,7 @@ cve:Reference
 # CvssMetric
 cve:CvssMetric
     a owl:Class ;
-    rdfs:label "CvssMetric"@en ;
+    rdfs:label "CVSS Metric"@en ;
     rdfs:comment "A CVSS score in any supported version.\n\nv2  → DWF.CVSSv2 / DWF.CVSSv3  (split into BM/TM/EM sub-objects)\nv5  → cnaContainer.metrics[].cvssV2_0 / cvssV3_0 / cvssV3_1 / cvssV4_0"@en .
 
 # Credit
@@ -178,13 +178,13 @@ cve:Credit
 # TimelineEntry
 cve:TimelineEntry
     a owl:Class ;
-    rdfs:label "TimelineEntry"@en ;
+    rdfs:label "Timeline Entry"@en ;
     rdfs:comment "A single event on the CVE disclosure timeline.\n\nv2  → DWF.TIMELINE[]\nv5  → cnaContainer.timeline[]"@en .
 
 # CveRecord
 cve:CveRecord
     a owl:Class ;
-    rdfs:label "CveRecord"@en ;
+    rdfs:label "CVE Record"@en ;
     rdfs:comment "Unified, source-agnostic CVE record.\n\nAfter ingestion from either v2.x or v5.x JSON, all consumers work\nagainst this single model regardless of origin schema."@en ;
     rdfs:subClassOf stonework:Vulnerability .
 

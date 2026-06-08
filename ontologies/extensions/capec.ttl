@@ -20,7 +20,7 @@
 capec:AttackPattern
     a owl:Class ;
     rdfs:subClassOf stonework:AttackPattern ;
-    rdfs:label "Attack Pattern"@en ;
+    rdfs:label "CAPEC Attack Pattern"@en ;
     rdfs:comment "A CAPEC attack pattern. Instances are identified by ctienc:_AttackPattern_CAPEC-{ID} IRIs."@en .
 
 # --- Datatype Properties --------------------------------------------
