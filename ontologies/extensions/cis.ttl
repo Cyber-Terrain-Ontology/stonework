@@ -1,0 +1,86 @@
+@prefix owl:       <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix stones:    <https://cyberterrain.org/ns/stones#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix attack:    <https://cyberterrain.org/ns/frameworks/attack#> .
+@prefix cis:       <https://cyberterrain.org/ns/frameworks/cis#> .
+
+# --- Ontology declaration -------------------------------------------
+
+<https://cyberterrain.org/ns/frameworks/cis>
+    a owl:Ontology ;
+    rdfs:label "CIS Controls Framework Ontology"@en ;
+    rdfs:comment "OWL vocabulary for CIS Controls v8.1 data as represented in the CTI Encyclopedia. Top-level controls and safeguards (sub-controls) are both modeled as cis:Control individuals. Safeguards carry a cis:subcontrolOf link to their parent control."@en ;
+    owl:imports <https://cyberterrain.org/ns/stonework#> .
+
+# --- Classes --------------------------------------------------------
+
+cis:Control
+    a owl:Class ;
+    rdfs:subClassOf stonework:Control ;
+    rdfs:label "CIS Control"@en ;
+    rdfs:comment "A CIS Controls v8 control or safeguard (sub-control). Top-level controls (CIS 1–18) and their safeguards are both instances of this class; safeguards are distinguished by the presence of a cis:subcontrolOf triple."@en .
+
+# --- Datatype Properties --------------------------------------------
+
+cis:cisId
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "CIS ID"@en ;
+    rdfs:comment "OSCAL identifier string, e.g. 'cisc-001' for Control 1 or 'cisc-001.001' for Safeguard 1.1."@en ;
+    rdfs:domain cis:Control ;
+    rdfs:range xsd:string .
+
+cis:title
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "title"@en ;
+    rdfs:comment "Human-readable control or safeguard title as supplied in the OSCAL catalog."@en ;
+    rdfs:domain cis:Control ;
+    rdfs:range xsd:string .
+
+cis:assetClass
+    a owl:DatatypeProperty ;
+    rdfs:label "asset class"@en ;
+    rdfs:comment "OSCAL asset-class property value for this safeguard, e.g. 'devices', 'software', 'users', 'data', 'network'."@en ;
+    rdfs:domain cis:Control ;
+    rdfs:range xsd:string .
+
+cis:securityFunction
+    a owl:DatatypeProperty ;
+    rdfs:label "security function"@en ;
+    rdfs:comment "NIST CSF security function associated with this safeguard: 'identify', 'protect', 'detect', 'respond', or 'recover'."@en ;
+    rdfs:domain cis:Control ;
+    rdfs:range xsd:string .
+
+cis:implementationGroup
+    a owl:DatatypeProperty ;
+    rdfs:label "implementation group"@en ;
+    rdfs:comment "CIS Implementation Group number (1, 2, or 3). A safeguard may belong to multiple groups; each membership is a separate triple."@en ;
+    rdfs:domain cis:Control ;
+    rdfs:range xsd:integer .
+
+cis:mitigatesTechniqueId
+    a owl:DatatypeProperty ;
+    rdfs:label "mitigates technique ID"@en ;
+    rdfs:comment "ATT&CK technique or sub-technique identifier (e.g. 'T1200', 'T1059.001') that this safeguard helps mitigate. Source string retained for provenance; use stonework:mitigatesAttackPattern for the resolved IRI link."@en ;
+    rdfs:domain cis:Control ;
+    rdfs:range xsd:string .
+
+cis:mitigatesTechnique
+    a owl:ObjectProperty ;
+    rdfs:subPropertyOf stonework:mitigatesAttackPattern ;
+    rdfs:label "mitigates technique"@en ;
+    rdfs:comment "ATT&CK technique that this safeguard helps mitigate. Materialized by a post-load SPARQL UPDATE joining cis:mitigatesTechniqueId against stones:externalReferences/stones:externalId."@en ;
+    rdfs:domain cis:Control ;
+    rdfs:range stones:AttackPattern .
+
+# --- Object Properties ----------------------------------------------
+
+cis:subcontrolOf
+    a owl:ObjectProperty ;
+    rdfs:label "subcontrol of"@en ;
+    rdfs:comment "Links a CIS safeguard to its parent top-level CIS control."@en ;
+    rdfs:domain cis:Control ;
+    rdfs:range cis:Control .

@@ -1,0 +1,77 @@
+@prefix owl:       <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix cwe:       <https://cyberterrain.org/ns/frameworks/cwe#> .
+@prefix capec:     <https://cyberterrain.org/ns/frameworks/capec#> .
+
+# --- Ontology declaration -------------------------------------------
+
+<https://cyberterrain.org/ns/frameworks/cwe>
+    a owl:Ontology ;
+    rdfs:label "CWE Framework Ontology"@en ;
+    rdfs:comment "OWL vocabulary for MITRE Common Weakness Enumeration (CWE) data as represented in the CTI Encyclopedia."@en ;
+    owl:imports <https://cyberterrain.org/ns/stonework#> .
+
+# --- Classes --------------------------------------------------------
+
+cwe:Weakness
+    a owl:Class ;
+    rdfs:subClassOf stonework:Weakness ;
+    rdfs:label "Weakness"@en ;
+    rdfs:comment "A CWE weakness type. Instances are identified by ctienc:_Weakness_CWE-{ID} IRIs."@en .
+
+# --- Datatype Properties --------------------------------------------
+
+cwe:cweId
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "CWE ID"@en ;
+    rdfs:comment "CWE identifier string, e.g. '79'."@en ;
+    rdfs:domain cwe:Weakness ;
+    rdfs:range xsd:string .
+
+cwe:weaknessAbstraction
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "weakness abstraction"@en ;
+    rdfs:comment "CWE abstraction level: Pillar, Class, Base, or Variant."@en ;
+    rdfs:domain cwe:Weakness ;
+    rdfs:range xsd:string .
+
+cwe:status
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "status"@en ;
+    rdfs:comment "CWE entry status, e.g. Draft, Stable, Deprecated."@en ;
+    rdfs:domain cwe:Weakness ;
+    rdfs:range xsd:string .
+
+cwe:description
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "description"@en ;
+    rdfs:domain cwe:Weakness ;
+    rdfs:range xsd:string .
+
+cwe:likelihoodOfExploit
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "likelihood of exploit"@en ;
+    rdfs:comment "NVD-assigned exploit likelihood: Low, Medium, or High."@en ;
+    rdfs:domain cwe:Weakness ;
+    rdfs:range xsd:string .
+
+# --- Object Properties ----------------------------------------------
+
+cwe:childOf
+    a owl:ObjectProperty ;
+    rdfs:label "child of"@en ;
+    rdfs:comment "Hierarchical parent weakness in the CWE tree."@en ;
+    rdfs:domain cwe:Weakness ;
+    rdfs:range cwe:Weakness .
+
+cwe:relatedAttackPattern
+    a owl:ObjectProperty ;
+    rdfs:subPropertyOf stonework:relatedAttackPattern ;
+    rdfs:label "related attack pattern"@en ;
+    rdfs:comment "CAPEC attack pattern that exploits this weakness."@en ;
+    rdfs:domain cwe:Weakness ;
+    rdfs:range capec:AttackPattern .
