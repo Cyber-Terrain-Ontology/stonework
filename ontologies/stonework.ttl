@@ -31,12 +31,27 @@ stonework:affected rdf:type owl:ObjectProperty ;
                    skos:definition "Relates a vulnerability to a product known to be affected by it." ;
                    skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
+###  https://cyberterrain.org/ns/stonework#attributedTo
+stonework:attributedTo rdf:type owl:ObjectProperty ;
+                       skos:prefLabel "attributedTo" ;
+                       skos:definition "Shortcut triple: source Campaign or IntrusionSet is attributed to target ThreatActor or IntrusionSet. Corresponds to STIX relationship_type 'attributed-to'." .
+
 ###  https://cyberterrain.org/ns/stonework#categorizedBy
 stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                         rdfs:range stonework:Category ;
                         skos:prefLabel "categorizedBy" ;
                         skos:definition "Links any individual to one or more contextual categories." ;
                         skos:scopeNote "This is the primary mechanism for flexible, context-sensitive classification (e.g., Evidence, HighValue, Suspect, etc.). Multiple categories per individual are allowed."@en .
+
+###  https://cyberterrain.org/ns/stonework#detects
+stonework:detects rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "detects" ;
+                  skos:definition "Shortcut triple: source CourseOfAction or Indicator detects target. Corresponds to STIX relationship_type 'detects'." .
+
+###  https://cyberterrain.org/ns/stonework#exploits
+stonework:exploits rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "exploits" ;
+                   skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
 
 ###  https://cyberterrain.org/ns/stonework#exploitsWeakness
 stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
@@ -48,7 +63,7 @@ stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
-                     rdfs:domain stonework:Group, stonework:Organization, stonework:ThreatActor ;
+                     rdfs:domain stonework:Group , stonework:Organization , stonework:ThreatActor ;
                      skos:prefLabel "hasMembers" .
 
 ###  https://cyberterrain.org/ns/stonework#hasTechnique
@@ -66,11 +81,23 @@ stonework:hasWeakness rdf:type owl:AsymmetricProperty , owl:ObjectProperty ;
                       skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates."@en ;
                       skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
 
+###  https://cyberterrain.org/ns/stonework#indicates
+stonework:indicates rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "indicates" ;
+                    skos:definition "Shortcut triple: source Indicator indicates presence of target. Corresponds to STIX relationship_type 'indicates'." .
+
 ###  https://cyberterrain.org/ns/stonework#membersOf
 stonework:membersOf rdf:type owl:ObjectProperty ;
                     owl:inverseOf stonework:hasMembers ;
-                    rdfs:range stonework:Group, stonework:Organization, stonework:ThreatActor ;
+                    rdfs:range stonework:Group , stonework:Organization , stonework:ThreatActor ;
                     skos:prefLabel "membersOf" .
+
+###  https://cyberterrain.org/ns/stonework#mitigates
+stonework:mitigates rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:Control , stonework:Mitigation ;
+                    rdfs:range stonework:AttackPattern ;
+                    skos:prefLabel "mitigates" ;
+                    skos:definition "Shortcut triple: source CourseOfAction mitigates target AttackPattern or Vulnerability. Corresponds to STIX relationship_type 'mitigates'." .
 
 ###  https://cyberterrain.org/ns/stonework#relatedTechnique
 stonework:relatedTechnique rdf:type owl:ObjectProperty ;
@@ -78,6 +105,26 @@ stonework:relatedTechnique rdf:type owl:ObjectProperty ;
                            skos:prefLabel "relatedTechnique" ;
                            skos:definition "Relates any STIX object to a technique it exploits, instantiates, or operationalizes." ;
                            skos:scopeNote "Covers two cross-dataset links: (1) CWE weakness → CAPEC technique (exploits/instantiates), and (2) CAPEC technique → ATT&CK technique (operationalizes). Both subjects are stones:StixObject individuals." .
+
+###  https://cyberterrain.org/ns/stonework#relatedTo
+stonework:relatedTo rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "relatedTo" ;
+                    skos:definition "Shortcut triple: generic relationship. Corresponds to STIX relationship_type 'related-to'." .
+
+###  https://cyberterrain.org/ns/stonework#revokedBy
+stonework:revokedBy rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "revokedBy" ;
+                    skos:definition "Shortcut triple: source STIX object is revoked and superseded by target. Corresponds to STIX relationship_type 'revoked-by'." .
+
+###  https://cyberterrain.org/ns/stonework#subtechniqueOf
+stonework:subtechniqueOf rdf:type owl:ObjectProperty ;
+                         skos:prefLabel "subtechniqueOf" ;
+                         skos:definition "Shortcut triple: source AttackPattern is a sub-technique of target AttackPattern. Corresponds to STIX relationship_type 'subtechnique-of' (hyphens converted to underscores in the predicate IRI)." .
+
+###  https://cyberterrain.org/ns/stonework#targets
+stonework:targets rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "targets" ;
+                  skos:definition "Shortcut triple: source targets the target Identity, Vulnerability, or Location. Corresponds to STIX relationship_type 'targets'." .
 
 ###  https://cyberterrain.org/ns/stonework#techniqueOf
 stonework:techniqueOf rdf:type owl:ObjectProperty ;
@@ -102,52 +149,6 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
                      skos:definition "Relates a weakness to the vulnerability that exploits or instantiates it."@en ;
                      skos:scopeNote "The range is a vulnerability individual. The weakness individual (domain) is a stonework:Weakness whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
 
-###  https://cyberterrain.org/ns/stonework#mitigates
-stonework:mitigates rdf:type owl:ObjectProperty ;
-                    skos:prefLabel "mitigates" ;
-                    rdfs:domain stonework:Control, stonework:Mitigation ;
-                    rdfs:range stonework:AttackPattern ;
-                    skos:definition "Shortcut triple: source CourseOfAction mitigates target AttackPattern or Vulnerability. Corresponds to STIX relationship_type 'mitigates'." .
-
-###  https://cyberterrain.org/ns/stonework#detects
-stonework:detects rdf:type owl:ObjectProperty ;
-                  skos:prefLabel "detects" ;
-                  skos:definition "Shortcut triple: source CourseOfAction or Indicator detects target. Corresponds to STIX relationship_type 'detects'." .
-
-###  https://cyberterrain.org/ns/stonework#subtechnique_of
-stonework:subtechniqueOf rdf:type owl:ObjectProperty ;
-                         skos:prefLabel "subtechniqueOf" ;
-                         skos:definition "Shortcut triple: source AttackPattern is a sub-technique of target AttackPattern. Corresponds to STIX relationship_type 'subtechnique-of' (hyphens converted to underscores in the predicate IRI)." .
-
-###  https://cyberterrain.org/ns/stonework#revoked_by
-stonework:revokedBy rdf:type owl:ObjectProperty ;
-                    skos:prefLabel "revokedBy" ;
-                    skos:definition "Shortcut triple: source STIX object is revoked and superseded by target. Corresponds to STIX relationship_type 'revoked-by'." .
-
-###  https://cyberterrain.org/ns/stonework#attributed_to
-stonework:attributedTo rdf:type owl:ObjectProperty ;
-                       skos:prefLabel "attributedTo" ;
-                       skos:definition "Shortcut triple: source Campaign or IntrusionSet is attributed to target ThreatActor or IntrusionSet. Corresponds to STIX relationship_type 'attributed-to'." .
-
-###  https://cyberterrain.org/ns/stonework#indicates
-stonework:indicates rdf:type owl:ObjectProperty ;
-                    skos:prefLabel "indicates" ;
-                    skos:definition "Shortcut triple: source Indicator indicates presence of target. Corresponds to STIX relationship_type 'indicates'." .
-
-###  https://cyberterrain.org/ns/stonework#relatedTo
-stonework:relatedTo rdf:type owl:ObjectProperty ;
-                    skos:prefLabel "relatedTo" ;
-                    skos:definition "Shortcut triple: generic relationship. Corresponds to STIX relationship_type 'related-to'." .
-
-###  https://cyberterrain.org/ns/stonework#targets
-stonework:targets rdf:type owl:ObjectProperty ;
-                  skos:prefLabel "targets" ;
-                  skos:definition "Shortcut triple: source targets the target Identity, Vulnerability, or Location. Corresponds to STIX relationship_type 'targets'." .
-
-###  https://cyberterrain.org/ns/stonework#exploits
-stonework:exploits rdf:type owl:ObjectProperty ;
-                   skos:prefLabel "exploits" ;
-                   skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
 
 #################################################################
 #    Classes
@@ -200,15 +201,15 @@ stonework:CyberTechnique rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#DefendTechnique
 stonework:DefendTechnique rdf:type owl:Class ;
-                             rdfs:subClassOf stonework:CyberTechnique ;
-                             skos:prefLabel "Defend Technique" ;
-                             skos:definition "A prescribed defensive method used to detect, prevent, or respond to adversary behavior within a target environment." ;
-                             skos:scopeNote "Aligns with MITRE D3FEND DefensiveTechnique. Framework-specific subclasses (e.g. d3fend:DefensiveTechnique) extend this class when D3FEND data is loaded." .
+                          rdfs:subClassOf stonework:CyberTechnique ;
+                          skos:prefLabel "Defend Technique" ;
+                          skos:definition "A prescribed defensive method used to detect, prevent, or respond to adversary behavior within a target environment." ;
+                          skos:scopeNote "Aligns with MITRE D3FEND DefensiveTechnique. Framework-specific subclasses (e.g. d3fend:DefensiveTechnique) extend this class when D3FEND data is loaded." .
 
-###  https://cyberterrain.org/ns/stones#Domain
+###  https://cyberterrain.org/ns/stonework#Domain
 stonework:Domain rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Indicators ;
-                 skos:prefLabel "Domain Name Object"@en ;
+                 skos:prefLabel "Domain"@en ;
                  skos:definition "Represents a network domain name. Can reference the IP addresses it resolves to." .
 
 ###  https://cyberterrain.org/ns/stonework#Group
@@ -217,6 +218,12 @@ stonework:Group rdf:type owl:Class ;
                 skos:prefLabel "Group" ;
                 skos:definition "Any collection of Persons, Organizations, or other Groups that share a common purpose or identity but do not necessarily have formal legal structure."@en ;
                 skos:scopeNote "Used for informal collectives, communities, ad-hoc teams, criminal syndicates, or loose alliances. More general than Organization. Can contain other Groups or Organizations."@en .
+
+###  https://cyberterrain.org/ns/stonework#IPAddress
+stonework:IPAddress rdf:type owl:Class ;
+                    rdfs:subClassOf stonework:Indicators ;
+                    skos:prefLabel "IP Address"@en ;
+                    skos:definition "Represents one or more addresses expressed using CIDR notation." .
 
 ###  https://cyberterrain.org/ns/stonework#Impact
 stonework:Impact rdf:type owl:Class ;
@@ -236,12 +243,6 @@ stonework:Indicators rdf:type owl:Class ;
 stonework:Infrastructure rdf:type owl:Class ;
                          skos:prefLabel "Infrastructure"@en ;
                          skos:definition "Represents systems, software services, or any group of resources used to conduct cyber operations. Infrastructure is used by threat actors and intrusion sets both offensively and defensively." .
-
-###  https://cyberterrain.org/ns/stonework#IPAddress
-stonework:IPAddress rdf:type owl:Class ;
-                    owl:subClassOf stonework:Indicators ;
-                    skos:prefLabel "IP Address"@en ;
-                    skos:definition "Represents one or more addresses expressed using CIDR notation." .
 
 ###  https://cyberterrain.org/ns/stonework#Likelihood
 stonework:Likelihood rdf:type owl:Class ;
@@ -307,7 +308,7 @@ stonework:Process rdf:type owl:Class ;
                   skos:prefLabel "Process"@en ;
                   skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
                   skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is intended for modeling Controls, Playbooks, Mitigations, Threat Scenarios, and other repeatable or planned workflows."@en ;
-                  rdfs:seeAlso <https://www.opmw.org/model/p-plan/> , prov:Activity .
+                  rdfs:seeAlso prov:Activity , <https://www.opmw.org/model/p-plan/> .
 
 ###  https://cyberterrain.org/ns/stonework#Product
 stonework:Product rdf:type owl:Class ;
@@ -343,11 +344,6 @@ stonework:Technique rdf:type owl:Class ;
                     skos:definition "A reusable, prescribed method for achieving an objective, which may be instantiated as a concrete execution by an actor or system." ;
                     skos:scopeNote "Technique is intentionally not a subclass of stones:AttackPattern. Attack patterns (e.g. CAPEC) are abstract descriptions of attack classes in the STIX sense; techniques are operationalized plans. See stonework:CyberTechnique, stonework:AttackTechnique, stonework:DefendTechnique." .
 
-###  https://cyberterrain.org/ns/stonework#Tool
-stonework:Tool rdf:type owl:Class ;
-               skos:prefLabel "Tool"@en ;
-               skos:definition "Legitimate software that can be used by threat actors to perform attacks. Distinguishable from malware by being designed for benign purposes but repurposed maliciously." .
-
 ###  https://cyberterrain.org/ns/stonework#Threat
 stonework:Threat rdf:type owl:Class ;
                  rdfs:comment "Instances of stonework:Threat may describe adversary capabilities, strategic objectives, targeting patterns, or environmental conditions that increase the likelihood of harmful action. Threats may be linked to threat actors, campaigns, malware, TTPs, weaknesses, or assets, but are conceptually distinct from the actions or events that realize them." ;
@@ -371,6 +367,11 @@ stonework:ThreatScenario rdf:type owl:Class ;
                          skos:prefLabel "ThreatScenario" ;
                          skos:definition "A structured description of how a threat could materialize against specific assets or missions, incorporating adversary intent, capability, opportunity, preconditions, and potential consequences." ;
                          skos:scopeNote "Threat scenarios describe plausible or anticipated sequences of adversarial behavior and environmental conditions that could lead to harmful outcomes. They support risk assessment, prioritization, and strategic planning by expressing how threats may be realized in a given organizational context." .
+
+###  https://cyberterrain.org/ns/stonework#Tool
+stonework:Tool rdf:type owl:Class ;
+               skos:prefLabel "Tool"@en ;
+               skos:definition "Legitimate software that can be used by threat actors to perform attacks. Distinguishable from malware by being designed for benign purposes but repurposed maliciously." .
 
 ###  https://cyberterrain.org/ns/stonework#Vulnerability
 stonework:Vulnerability rdf:type owl:Class ;
