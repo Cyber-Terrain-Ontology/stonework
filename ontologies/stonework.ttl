@@ -161,6 +161,12 @@ stonework:Agent rdf:type owl:Class ;
                 skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
                 rdfs:seeAlso prov:Agent .
 
+stonework:Assessment rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:Process ;
+                         skos:prefLabel "Assessment" ;
+                         skos:definition "A process of evaluating, analyzing, or estimating risk, likelihood, impact, or other security-related attributes."@en ;
+                         skos:scopeNote "Covers risk assessments, vulnerability assessments, impact analyses, and similar evaluative processes. Not a static property but an active process that produces outputs (e.g. risk ratings) that can be represented as properties or linked individuals."@en .
+
 ###  https://cyberterrain.org/ns/stonework#AttackPattern
 stonework:AttackPattern rdf:type owl:Class ;
                         skos:prefLabel "Attack Pattern"@en ;
