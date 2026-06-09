@@ -61,6 +61,19 @@ stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
                            skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates." ;
                            skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest." .
 
+### https://cyberterrain.org/ns/stonework#hasHash
+stonework:hasHash rdf:type owl:ObjectProperty ;
+                  rdfs:range stonework:Hash ;
+                  skos:prefLabel "hasHash" ;
+                  skos:definition "Relates an entity to its hash entries. The range is a stonework:Hash individual representing a single hash algorithm and digest value." .
+
+### https://cyberterrain.org/ns/stonework#hashOf
+stonework:hashOf rdf:type owl:ObjectProperty ;
+                 owl:inverseOf stonework:hasHash ;
+                 rdfs:domain stonework:Hash ;
+                 skos:prefLabel "hashOf" ;
+                 skos:definition "Relates a hash entry to the entity it describes. The domain is a stonework:Hash individual representing a single hash algorithm and digest value." .
+
 ###  https://cyberterrain.org/ns/stonework#hasMembers
 stonework:hasMembers rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Group , stonework:Organization , stonework:ThreatActor ;
@@ -218,12 +231,24 @@ stonework:Domain rdf:type owl:Class ;
                  skos:prefLabel "Domain"@en ;
                  skos:definition "Represents a network domain name. Can reference the IP addresses it resolves to." .
 
+###  https://cyberterrain.org/ns/stonework#File
+stonework:File rdf:type owl:Class ;
+               rdfs:subClassOf stonework:Indicators ;
+               skos:prefLabel "File"@en ;
+               skos:definition "Represents a file with its metadata and optional content reference. Supports extensions for archive files, NTFS streams, PE binaries, PDF documents, and raster images." .
+
 ###  https://cyberterrain.org/ns/stonework#Group
 stonework:Group rdf:type owl:Class ;
                 rdfs:subClassOf stonework:Agent ;
                 skos:prefLabel "Group" ;
                 skos:definition "Any collection of Persons, Organizations, or other Groups that share a common purpose or identity but do not necessarily have formal legal structure."@en ;
                 skos:scopeNote "Used for informal collectives, communities, ad-hoc teams, criminal syndicates, or loose alliances. More general than Organization. Can contain other Groups or Organizations."@en .
+
+###  https://cyberterrain.org/ns/stonework#Hash
+stonework:Hash rdf:type owl:Class ;
+               rdfs:subClassOf stonework:Indicators ;
+               skos:prefLabel "Hash"@en ;
+               skos:definition "A single cryptographic hash entry associating a hashing algorithm with its hex-encoded digest value. Used to represent entries in the STIX hashes dictionary." .
 
 ###  https://cyberterrain.org/ns/stonework#IPAddress
 stonework:IPAddress rdf:type owl:Class ;
