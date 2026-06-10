@@ -35,7 +35,7 @@ stones:relationshipType rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
 stones:AttackPattern rdfs:subClassOf stonework:AttackPattern .
 
 ###  https://cyberterrain.org/ns/stones#attributed_to
-stones:attributed_to owl:equivalentProperty stonework:attributedTo .
+stones:attributed_to rdfs:subPropertyOf stonework:attributedTo .
 
 ###  https://cyberterrain.org/ns/stones#AutonomousSystemObject
 stones:AutonomousSystemObject rdfs:subClassOf stonework:AutonomousSystem .
@@ -47,7 +47,7 @@ stones:Campaign rdfs:subClassOf stonework:Campaign .
 stones:CourseOfAction rdfs:subClassOf stonework:Mitigation .
 
 ###  https://cyberterrain.org/ns/stones#detects
-stones:detects owl:equivalentProperty stonework:detects .
+stones:detects rdfs:subPropertyOf stonework:detects .
 
 ###  https://cyberterrain.org/ns/stones#DomainNameObject
 stones:DomainNameObject rdfs:subClassOf stonework:Domain .
@@ -56,7 +56,7 @@ stones:DomainNameObject rdfs:subClassOf stonework:Domain .
 stones:EmailAddressObject rdfs:subClassOf stonework:EmailAddress .
 
 ###  https://cyberterrain.org/ns/stones#exploits
-stones:exploits owl:equivalentProperty stonework:exploits .
+stones:exploits rdfs:subPropertyOf stonework:exploits .
 
 ###  https://cyberterrain.org/ns/stones#FileObject
 stones:FileObject rdfs:subClassOf stonework:File .
@@ -68,7 +68,7 @@ stones:Hash rdfs:subClassOf stonework:Hash .
 stones:Identity rdfs:subClassOf stonework:Agent .
 
 ###  https://cyberterrain.org/ns/stones#indicates
-stones:indicates owl:equivalentProperty stonework:indicates .
+stones:indicates rdfs:subPropertyOf stonework:indicates .
 
 ###  https://cyberterrain.org/ns/stones#Infrastructure
 stones:Infrastructure rdfs:subClassOf stonework:Infrastructure .
@@ -86,16 +86,19 @@ stones:Location rdfs:subClassOf stonework:Location .
 stones:Malware rdfs:subClassOf stonework:Malware .
 
 ###  https://cyberterrain.org/ns/stones#mitigates
-stones:mitigates owl:equivalentProperty stonework:mitigates .
+stones:mitigates rdfs:subPropertyOf stonework:mitigates .
+
+###  https://cyberterrain.org/ns/stones#NetworkTrafficObject
+stones:NetworkTrafficObject rdfs:subClassOf stonework:NetworkTraffic .
 
 ###  https://cyberterrain.org/ns/stones#ProcessObject
 stones:ProcessObject rdfs:subClassOf stonework:OSProcess .
 
 ###  https://cyberterrain.org/ns/stones#related_to
-stones:related_to owl:equivalentProperty stonework:relatedTo .
+stones:related_to rdfs:subPropertyOf stonework:relatedTo .
 
 ###  https://cyberterrain.org/ns/stones#revoked_by
-stones:revoked_by owl:equivalentProperty stonework:revokedBy .
+stones:revoked_by rdfs:subPropertyOf stonework:revokedBy .
 
 ###  https://cyberterrain.org/ns/stones#SoftwareObject
 stones:SoftwareObject rdfs:subClassOf stonework:Product .
@@ -110,7 +113,7 @@ stones:StixSubType rdfs:subClassOf stonework:Indicators .
 stones:subtechnique_of rdfs:subPropertyOf stonework:techniqueOf .
 
 ###  https://cyberterrain.org/ns/stones#targets
-stones:targets owl:equivalentProperty stonework:targets .
+stones:targets rdfs:subPropertyOf stonework:targets .
 
 ###  https://cyberterrain.org/ns/stones#ThreatActor
 stones:ThreatActor rdfs:subClassOf stonework:ThreatActor .

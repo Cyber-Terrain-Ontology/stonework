@@ -482,6 +482,12 @@ stonework:Mitigation rdf:type owl:Class ;
 Examples include: applying a security patch, enabling multi-factor authentication, deploying a firewall rule, isolating a compromised host, or training users.  A Mitigation may be a one-time action or a repeatable control."""@en ;
                      rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> .
 
+###  https://cyberterrain.org/ns/stonework#NetworkTraffic
+stonework:NetworkTraffic rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:Indicators ;
+                         skos:prefLabel "Network Traffic"@en ;
+                         skos:definition "Represents an arbitrary network traffic flow between source and destination endpoints. Supports extensions for HTTP, ICMP, socket, and TCP specifics." .
+
 ###  https://cyberterrain.org/ns/stonework#OSProcess
 stonework:OSProcess rdf:type owl:Class ;
                     rdfs:subClassOf stonework:Indicators ;
