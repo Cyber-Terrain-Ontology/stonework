@@ -1,72 +1,131 @@
-@prefix owl:       <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
-@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
-@prefix stones:    <https://cyberterrain.org/ns/stones#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix frameworks: <https://cyberterrain.org/ns/frameworks/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
-@prefix stonesx:   <https://cyberterrain.org/ns/frameworks/stonesx#> .
+@base <https://cyberterrain.org/ns/frameworks/stonesx> .
 
-# --- Ontology declaration -------------------------------------------
+###  https://cyberterrain.org/ns/frameworks/stonesx
+frameworks:stonesx rdf:type owl:Ontology ;
+                   owl:imports <https://cyberterrain.org/ns/stones#> , <https://cyberterrain.org/ns/stonework#> ;
+                   rdfs:label "STONES Framework Ontology"@en ;
+                   rdfs:comment "A mapping of the STONES Ontology to STONEWORK. Provides a class hierarchy for all STONES Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STONES properties."@en .
 
-<https://cyberterrain.org/ns/frameworks/stonesx>
-    a owl:Ontology ;
-    rdfs:label "STONES Framework Ontology"@en ;
-    rdfs:comment "A mapping of the STONES Ontology to STONEWORK. Provides a class hierarchy for all STONES Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STONES properties."@en ;
-    owl:imports <https://cyberterrain.org/ns/stonework#> , <https://cyberterrain.org/ns/stones#> .
 
-# --- Equivalent Classes --------------------------------------------------------
-
-stones:AutonomousSystemObject       owl:equivalentClass     stonework:AutonomousSystem .
-stones:AttackPattern                owl:equivalentClass     stonework:AttackPattern .
-stones:Campaign                     owl:equivalentClass     stonework:Campaign .
-stones:EmailAddressObject           owl:equivalentClass     stonework:EmailAddress .
-stones:FileObject                   owl:equivalentClass     stonework:File .
-stones:Infrastructure               owl:equivalentClass     stonework:Infrastructure .
-stones:Hash                         owl:equivalentClass     stonework:Hash .
-stones:Malware                      owl:equivalentClass     stonework:Malware .
-stones:ProcessObject                owl:equivalentClass     stonework:OSProcess .
-stones:StixCyberobservableObject    owl:equivalentClass     stonework:Indicators .
-stones:Tool                         owl:equivalentClass     stonework:Tool .
-stones:ThreatActor                  owl:equivalentClass     stonework:ThreatActor .
-stones:URLObject                    owl:equivalentClass     stonework:URL .
-stones:UserAccountObject            owl:equivalentClass     stonework:UserAccount .
-stones:Vulnerability                owl:equivalentClass     stonework:Vulnerability .
-
-# --- Subclasses --------------------------------------------------------
-
-stones:CourseOfAction               rdfs:subClassOf         stonework:Mitigation .
-stones:DomainNameObject             rdfs:subClassOf         stonework:Domain .
-stones:Identity                     rdfs:subClassOf         stonework:Agent .
-stones:IPv4AddressObject            rdfs:subClassOf         stonework:IPAddress .
-stones:IPv6AddressObject            rdfs:subClassOf         stonework:IPAddress .
-stones:Location                     rdfs:subClassOf         stonework:Location .
-stones:SoftwareObject               rdfs:subClassOf         stonework:Product .
-stones:StixSubType                  rdfs:subClassOf         stonework:Indicators .
-
-# --- Datatype Properties --------------------------------------------
+#################################################################
+#    Data Properties
+#################################################################
 
 ###  https://cyberterrain.org/ns/stones#relationshipType
-stones:relationshipType rdf:type owl:DatatypeProperty, owl:FunctionalProperty ;
+stones:relationshipType rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
                         rdfs:domain stones:Relationship ;
                         rdfs:range xsd:string ;
                         skos:prefLabel "relationshipType" ;
                         skos:definition "The relationship_type string value from the STIX 2.1 SRO (e.g. 'uses', 'mitigates', 'subtechnique-of'). Drawn from the STIX 2.1 open vocabulary; corresponding named individuals are declared as stones:RelationshipTypeVocabulary instances in vocabularies.ttl. A shortcut object property is also asserted: stones:<type_underscored> from source to target." .
 
-# --- Object Properties ----------------------------------------------
 
-stones:mitigates        owl:equivalentProperty      stonework:mitigates .
-stones:detects          owl:equivalentProperty      stonework:detects .
-stones:revoked_by       owl:equivalentProperty      stonework:revokedBy .
-stones:attributed_to    owl:equivalentProperty      stonework:attributedTo .
-stones:indicates        owl:equivalentProperty      stonework:indicates .
-stones:related_to       owl:equivalentProperty      stonework:relatedTo .
-stones:targets          owl:equivalentProperty      stonework:targets .
-stones:exploits         owl:equivalentProperty      stonework:exploits .
+#################################################################
+#    General Axioms
+#################################################################
 
-# --- Object SubProperties ---------------------------------------------
+###  https://cyberterrain.org/ns/stones#AttackPattern
+stones:AttackPattern rdfs:subClassOf stonework:AttackPattern .
 
-stones:uses             rdfs:subPropertyOf          stonework:uses .
-stones:subtechnique_of  rdfs:subPropertyOf          stonework:techniqueOf .
+###  https://cyberterrain.org/ns/stones#attributed_to
+stones:attributed_to owl:equivalentProperty stonework:attributedTo .
 
+###  https://cyberterrain.org/ns/stones#AutonomousSystemObject
+stones:AutonomousSystemObject rdfs:subClassOf stonework:AutonomousSystem .
 
+###  https://cyberterrain.org/ns/stones#Campaign
+stones:Campaign rdfs:subClassOf stonework:Campaign .
+
+###  https://cyberterrain.org/ns/stones#CourseOfAction
+stones:CourseOfAction rdfs:subClassOf stonework:Mitigation .
+
+###  https://cyberterrain.org/ns/stones#detects
+stones:detects owl:equivalentProperty stonework:detects .
+
+###  https://cyberterrain.org/ns/stones#DomainNameObject
+stones:DomainNameObject rdfs:subClassOf stonework:Domain .
+
+###  https://cyberterrain.org/ns/stones#EmailAddressObject
+stones:EmailAddressObject rdfs:subClassOf stonework:EmailAddress .
+
+###  https://cyberterrain.org/ns/stones#exploits
+stones:exploits owl:equivalentProperty stonework:exploits .
+
+###  https://cyberterrain.org/ns/stones#FileObject
+stones:FileObject rdfs:subClassOf stonework:File .
+
+###  https://cyberterrain.org/ns/stones#Hash
+stones:Hash rdfs:subClassOf stonework:Hash .
+
+###  https://cyberterrain.org/ns/stones#Identity
+stones:Identity rdfs:subClassOf stonework:Agent .
+
+###  https://cyberterrain.org/ns/stones#indicates
+stones:indicates owl:equivalentProperty stonework:indicates .
+
+###  https://cyberterrain.org/ns/stones#Infrastructure
+stones:Infrastructure rdfs:subClassOf stonework:Infrastructure .
+
+###  https://cyberterrain.org/ns/stones#IPv4AddressObject
+stones:IPv4AddressObject rdfs:subClassOf stonework:IPAddress .
+
+###  https://cyberterrain.org/ns/stones#IPv6AddressObject
+stones:IPv6AddressObject rdfs:subClassOf stonework:IPAddress .
+
+###  https://cyberterrain.org/ns/stones#Location
+stones:Location rdfs:subClassOf stonework:Location .
+
+###  https://cyberterrain.org/ns/stones#Malware
+stones:Malware rdfs:subClassOf stonework:Malware .
+
+###  https://cyberterrain.org/ns/stones#mitigates
+stones:mitigates owl:equivalentProperty stonework:mitigates .
+
+###  https://cyberterrain.org/ns/stones#ProcessObject
+stones:ProcessObject rdfs:subClassOf stonework:OSProcess .
+
+###  https://cyberterrain.org/ns/stones#related_to
+stones:related_to owl:equivalentProperty stonework:relatedTo .
+
+###  https://cyberterrain.org/ns/stones#revoked_by
+stones:revoked_by owl:equivalentProperty stonework:revokedBy .
+
+###  https://cyberterrain.org/ns/stones#SoftwareObject
+stones:SoftwareObject rdfs:subClassOf stonework:Product .
+
+###  https://cyberterrain.org/ns/stones#StixCyberobservableObject
+stones:StixCyberobservableObject owl:equivalentClass stonework:Indicators .
+
+###  https://cyberterrain.org/ns/stones#StixSubType
+stones:StixSubType rdfs:subClassOf stonework:Indicators .
+
+###  https://cyberterrain.org/ns/stones#subtechnique_of
+stones:subtechnique_of rdfs:subPropertyOf stonework:techniqueOf .
+
+###  https://cyberterrain.org/ns/stones#targets
+stones:targets owl:equivalentProperty stonework:targets .
+
+###  https://cyberterrain.org/ns/stones#ThreatActor
+stones:ThreatActor rdfs:subClassOf stonework:ThreatActor .
+
+###  https://cyberterrain.org/ns/stones#Tool
+stones:Tool rdfs:subClassOf stonework:Tool .
+
+###  https://cyberterrain.org/ns/stones#URLObject
+stones:URLObject rdfs:subClassOf stonework:URL .
+
+###  https://cyberterrain.org/ns/stones#UserAccountObject
+stones:UserAccountObject rdfs:subClassOf stonework:UserAccount .
+
+###  https://cyberterrain.org/ns/stones#uses
+stones:uses rdfs:subPropertyOf stonework:uses .
+
+###  https://cyberterrain.org/ns/stones#Vulnerability
+stones:Vulnerability rdfs:subClassOf stonework:Vulnerability .
