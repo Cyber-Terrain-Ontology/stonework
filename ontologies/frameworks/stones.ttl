@@ -17,6 +17,7 @@
 
 # --- Equivalent Classes --------------------------------------------------------
 
+stones:AutonomousSystemObject       owl:equivalentClass     stonework:AutonomousSystem .
 stones:AttackPattern                owl:equivalentClass     stonework:AttackPattern .
 stones:Campaign                     owl:equivalentClass     stonework:Campaign .
 stones:EmailAddressObject           owl:equivalentClass     stonework:EmailAddress .
@@ -25,7 +26,10 @@ stones:Infrastructure               owl:equivalentClass     stonework:Infrastruc
 stones:Hash                         owl:equivalentClass     stonework:Hash .
 stones:StixCyberobservableObject    owl:equivalentClass     stonework:Indicators .
 stones:Tool                         owl:equivalentClass     stonework:Tool .
+stones:ProcessObject                owl:equivalentClass     stonework:OSProcess .
 stones:ThreatActor                  owl:equivalentClass     stonework:ThreatActor .
+stones:URLObject                    owl:equivalentClass     stonework:URL .
+stones:UserAccountObject            owl:equivalentClass     stonework:UserAccount .
 stones:Vulnerability                owl:equivalentClass     stonework:Vulnerability .
 
 # --- Subclasses --------------------------------------------------------

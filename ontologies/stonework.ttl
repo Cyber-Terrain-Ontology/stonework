@@ -306,6 +306,12 @@ stonework:Agent rdf:type owl:Class ;
                 skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
                 rdfs:seeAlso prov:Agent .
 
+###  https://cyberterrain.org/ns/stonework#AutonomousSystem
+stonework:AutonomousSystem rdf:type owl:Class ;
+                           rdfs:subClassOf stonework:Infrastructure ;
+                           skos:prefLabel "Autonomous System"@en ;
+                           skos:definition "Represents an Autonomous System (AS), a collection of IP routing prefixes under the control of a single administrative entity, identified by its AS number." .
+
 ###  https://cyberterrain.org/ns/stonework#Assessment
 stonework:Assessment rdf:type owl:Class ;
                      rdfs:subClassOf stonework:Process ;
@@ -440,6 +446,12 @@ stonework:Mitigation rdf:type owl:Class ;
 Examples include: applying a security patch, enabling multi-factor authentication, deploying a firewall rule, isolating a compromised host, or training users.  A Mitigation may be a one-time action or a repeatable control."""@en ;
                      rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> .
 
+###  https://cyberterrain.org/ns/stonework#OSProcess
+stonework:OSProcess rdf:type owl:Class ;
+                    rdfs:subClassOf stonework:Indicators ;
+                    skos:prefLabel "OS Process"@en ;
+                    skos:definition "Represents a running or terminated process on a host. Supports extensions for Windows-specific process and service attributes." .
+
 ###  https://cyberterrain.org/ns/stonework#Organization
 stonework:Organization rdf:type owl:Class ;
                        rdfs:subClassOf stonework:Agent ;
@@ -534,7 +546,7 @@ stonework:ThreatActor rdf:type owl:Class ;
 stonework:ThreatScenario rdf:type owl:Class ;
                          rdfs:subClassOf stonework:Process ;
                          rdfs:comment "Instances of stonework:ThreatScenario may include assumptions, triggering conditions, targeted assets, adversary profiles, attack paths, and expected impacts. Threat scenarios are distinct from threats, attacks, or incidents; they represent hypothetical or anticipated sequences rather than observed events." ;
-                         skos:prefLabel "ThreatScenario" ;
+                         skos:prefLabel "Threat Scenario" ;
                          skos:definition "A structured description of how a threat could materialize against specific assets or missions, incorporating adversary intent, capability, opportunity, preconditions, and potential consequences." ;
                          skos:scopeNote "Threat scenarios describe plausible or anticipated sequences of adversarial behavior and environmental conditions that could lead to harmful outcomes. They support risk assessment, prioritization, and strategic planning by expressing how threats may be realized in a given organizational context." .
 
@@ -542,6 +554,18 @@ stonework:ThreatScenario rdf:type owl:Class ;
 stonework:Tool rdf:type owl:Class ;
                skos:prefLabel "Tool"@en ;
                skos:definition "Legitimate software that can be used by threat actors to perform attacks. Distinguishable from malware by being designed for benign purposes but repurposed maliciously." .
+
+###  https://cyberterrain.org/ns/stonework#URL
+stonework:URL rdf:type owl:Class ;
+                rdfs:subClassOf stonework:Indicators ;
+                skos:prefLabel "URL"@en ;
+                skos:definition "Represents a Uniform Resource Locator conforming to RFC 3986." .
+
+###  https://cyberterrain.org/ns/stonework#UserAccount
+stonework:UserAccount rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:Indicators ;
+                      skos:prefLabel "User Account"@en ;
+                      skos:definition "Represents a user account on a system or service, including local OS accounts, cloud accounts, and social media accounts. Supports a unix-account extension for POSIX attributes." .
 
 ###  https://cyberterrain.org/ns/stonework#Vulnerability
 stonework:Vulnerability rdf:type owl:Class ;
