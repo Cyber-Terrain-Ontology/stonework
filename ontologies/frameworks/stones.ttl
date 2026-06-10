@@ -48,12 +48,10 @@ stones:relationshipType rdf:type owl:DatatypeProperty, owl:FunctionalProperty ;
                         skos:prefLabel "relationshipType" ;
                         skos:definition "The relationship_type string value from the STIX 2.1 SRO (e.g. 'uses', 'mitigates', 'subtechnique-of'). Drawn from the STIX 2.1 open vocabulary; corresponding named individuals are declared as stones:RelationshipTypeVocabulary instances in vocabularies.ttl. A shortcut object property is also asserted: stones:<type_underscored> from source to target." .
 
-
 # --- Object Properties ----------------------------------------------
 
 stones:mitigates        owl:equivalentProperty      stonework:mitigates .
 stones:detects          owl:equivalentProperty      stonework:detects .
-stones:subtechnique_of  owl:equivalentProperty      stonework:subtechniqueOf .
 stones:revoked_by       owl:equivalentProperty      stonework:revokedBy .
 stones:attributed_to    owl:equivalentProperty      stonework:attributedTo .
 stones:indicates        owl:equivalentProperty      stonework:indicates .
@@ -61,8 +59,9 @@ stones:related_to       owl:equivalentProperty      stonework:relatedTo .
 stones:targets          owl:equivalentProperty      stonework:targets .
 stones:exploits         owl:equivalentProperty      stonework:exploits .
 
-###  stones:uses as sub-property of stonework:uses
-stones:uses rdf:type owl:ObjectProperty ;
-            rdfs:subPropertyOf stonework:uses .
+# --- Object SubProperties ---------------------------------------------
+
+stones:uses             rdfs:subPropertyOf          stonework:uses .
+stones:subtechnique_of  rdfs:subPropertyOf          stonework:techniqueOf .
 
 
