@@ -299,6 +299,12 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 #    Classes
 #################################################################
 
+###  https://cyberterrain.org/ns/stonework#AITechnique
+stonework:AITechnique rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:CyberTechnique ;
+                      skos:prefLabel "AITechnique" ;
+                      skos:definition "A specific method by which adversaries attack AI/ML systems (e.g., training data poisoning, adversarial examples, model extraction)."@en .
+
 ###  https://cyberterrain.org/ns/stonework#Agent
 stonework:Agent rdf:type owl:Class ;
                 skos:prefLabel "Agent" ;
@@ -306,11 +312,11 @@ stonework:Agent rdf:type owl:Class ;
                 skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
                 rdfs:seeAlso prov:Agent .
 
-###  https://cyberterrain.org/ns/stonework#AutonomousSystem
-stonework:AutonomousSystem rdf:type owl:Class ;
-                           rdfs:subClassOf stonework:Infrastructure ;
-                           skos:prefLabel "Autonomous System"@en ;
-                           skos:definition "Represents an Autonomous System (AS), a collection of IP routing prefixes under the control of a single administrative entity, identified by its AS number." .
+###  https://cyberterrain.org/ns/stonework#AnalyticTechnique
+stonework:AnalyticTechnique rdf:type owl:Class ;
+                            rdfs:subClassOf stonework:CyberTechnique ;
+                            skos:prefLabel "Analytic Technique" ;
+                            skos:definition "Methods of analysis (part of the Analytic Characterization Framework)"@en .
 
 ###  https://cyberterrain.org/ns/stonework#Assessment
 stonework:Assessment rdf:type owl:Class ;
@@ -331,6 +337,18 @@ stonework:AttackTechnique rdf:type owl:Class ;
                           skos:definition "A prescribed offensive method used by an adversary to achieve a specific tactical objective within a target environment."@en ;
                           skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. Not a subclass of stones:AttackPattern — attack patterns (e.g. CAPEC) are abstract descriptions of attack classes, whereas AttackTechnique is an operationalized plan for execution. Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals."@en .
 
+###  https://cyberterrain.org/ns/stonework#AutonomousSystem
+stonework:AutonomousSystem rdf:type owl:Class ;
+                           rdfs:subClassOf stonework:Infrastructure ;
+                           skos:prefLabel "Autonomous System"@en ;
+                           skos:definition "Represents an Autonomous System (AS), a collection of IP routing prefixes under the control of a single administrative entity, identified by its AS number." .
+
+###  https://cyberterrain.org/ns/stonework#CIDR
+stonework:CIDR rdf:type owl:Class ;
+               rdfs:subClassOf stonework:Infrastructure ;
+               skos:prefLabel "CIDR Block"@en ;
+               skos:definition "A Classless Inter-Domain Routing block used to represent an IP network range."@en .
+
 ###  https://cyberterrain.org/ns/stonework#Campaign
 stonework:Campaign rdf:type owl:Class ;
                    skos:prefLabel "Campaign"@en ;
@@ -349,6 +367,12 @@ stonework:Control rdf:type owl:Class ;
                   skos:prefLabel "Control" ;
                   skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
                   skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." .
+
+###  https://cyberterrain.org/ns/stonework#Cryptocurrency
+stonework:Cryptocurrency rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:Indicators ;
+                         skos:prefLabel "Cryptocurrency" ;
+                         skos:definition "A digital asset or wallet address used in cryptocurrency transactions, often relevant for tracking ransomware payments or illicit finance."@en .
 
 ###  https://cyberterrain.org/ns/stonework#CyberTechnique
 stonework:CyberTechnique rdf:type owl:Class ;
@@ -369,6 +393,12 @@ stonework:Domain rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Indicators ;
                  skos:prefLabel "Domain"@en ;
                  skos:definition "Represents a network domain name. Can reference the IP addresses it resolves to." .
+
+###  https://cyberterrain.org/ns/stonework#DomainRegistrar
+stonework:DomainRegistrar rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:Infrastructure ;
+                          skos:prefLabel "Domain Registrar" ;
+                          skos:definition "An organization that manages the registration of domain names."@en .
 
 ###  https://cyberterrain.org/ns/stonework#EmailAddress
 stonework:EmailAddress rdf:type owl:Class ;
@@ -394,6 +424,12 @@ stonework:Hash rdf:type owl:Class ;
                rdfs:subClassOf stonework:Indicators ;
                skos:prefLabel "Hash"@en ;
                skos:definition "A single cryptographic hash entry associating a hashing algorithm with its hex-encoded digest value. Used to represent entries in the STIX hashes dictionary." .
+
+###  https://cyberterrain.org/ns/stonework#HostingProvider
+stonework:HostingProvider rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:Infrastructure ;
+                          skos:prefLabel "Hosting Provider" ;
+                          skos:definition "An organization that provides infrastructure for hosting websites, applications, or other online services."@en .
 
 ###  https://cyberterrain.org/ns/stonework#IPAddress
 stonework:IPAddress rdf:type owl:Class ;
@@ -557,9 +593,9 @@ stonework:Tool rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#URL
 stonework:URL rdf:type owl:Class ;
-                rdfs:subClassOf stonework:Indicators ;
-                skos:prefLabel "URL"@en ;
-                skos:definition "Represents a Uniform Resource Locator conforming to RFC 3986." .
+              rdfs:subClassOf stonework:Indicators ;
+              skos:prefLabel "URL"@en ;
+              skos:definition "Represents a Uniform Resource Locator conforming to RFC 3986." .
 
 ###  https://cyberterrain.org/ns/stonework#UserAccount
 stonework:UserAccount rdf:type owl:Class ;
