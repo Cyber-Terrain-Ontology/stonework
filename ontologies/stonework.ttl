@@ -23,6 +23,11 @@
 #    Object Properties
 #################################################################
 
+
+###  https://cyberterrain.org/ns/stonework#achieves
+stonework:achieves rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "achieves" .
+
 ###  https://cyberterrain.org/ns/stonework#affected
 stonework:affected rdf:type owl:ObjectProperty ;
                    rdfs:domain stonework:Vulnerability ;
@@ -36,6 +41,14 @@ stonework:attributedTo rdf:type owl:ObjectProperty ;
                        skos:prefLabel "attributedTo" ;
                        skos:definition "Shortcut triple: source Campaign or IntrusionSet is attributed to target ThreatActor or IntrusionSet. Corresponds to STIX relationship_type 'attributed-to'." .
 
+###  https://cyberterrain.org/ns/stonework#affiliatedWith
+stonework:affiliatedWith rdf:type owl:ObjectProperty ;
+                         skos:prefLabel "affiliatedWith" .
+
+###  https://cyberterrain.org/ns/stonework#associatedWith
+stonework:associatedWith rdf:type owl:ObjectProperty ;
+                         skos:prefLabel "associatedWith" .
+
 ###  https://cyberterrain.org/ns/stonework#categorizedBy
 stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                         rdfs:range stonework:Category ;
@@ -43,10 +56,58 @@ stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                         skos:definition "Links any individual to one or more contextual categories." ;
                         skos:scopeNote "This is the primary mechanism for flexible, context-sensitive classification (e.g., Evidence, HighValue, Suspect, etc.). Multiple categories per individual are allowed."@en .
 
+###  https://cyberterrain.org/ns/stonework#circumvents
+stonework:circumvents rdf:type owl:ObjectProperty ;
+                      skos:prefLabel "circumvents" .
+
+###  https://cyberterrain.org/ns/stonework#clusteredWith
+stonework:clusteredWith rdf:type owl:ObjectProperty ;
+                        skos:prefLabel "clusteredWith" .
+
+###  https://cyberterrain.org/ns/stonework#communicatesWith
+stonework:communicatesWith rdf:type owl:ObjectProperty ;
+                           skos:prefLabel "communicatesWith" .
+
+###  https://cyberterrain.org/ns/stonework#compromisedIn
+stonework:compromisedIn rdf:type owl:ObjectProperty ;
+                        skos:prefLabel "compromisedIn" .
+
+###  https://cyberterrain.org/ns/stonework#consistsOf
+stonework:consistsOf rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "consistsOf" .
+
+###  https://cyberterrain.org/ns/stonework#contains
+stonework:contains rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "contains" .
+
+###  https://cyberterrain.org/ns/stonework#counters
+stonework:counters rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "counters" .
+
+###  https://cyberterrain.org/ns/stonework#derivedFrom
+stonework:derivedFrom rdf:type owl:ObjectProperty ;
+                      skos:prefLabel "derivedFrom" .
+
 ###  https://cyberterrain.org/ns/stonework#detects
 stonework:detects rdf:type owl:ObjectProperty ;
                   skos:prefLabel "detects" ;
                   skos:definition "Shortcut triple: source CourseOfAction or Indicator detects target. Corresponds to STIX relationship_type 'detects'." .
+
+###  https://cyberterrain.org/ns/stonework#downloads
+stonework:downloads rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "downloads" .
+
+###  https://cyberterrain.org/ns/stonework#drops
+stonework:drops rdf:type owl:ObjectProperty ;
+                skos:prefLabel "drops" .
+
+###  https://cyberterrain.org/ns/stonework#emailOf
+stonework:emailOf rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "emailOf" .
+
+###  https://cyberterrain.org/ns/stonework#employs
+stonework:employs rdf:type owl:ObjectProperty ;
+                  skos:prefLabel "employs" .
 
 ###  https://cyberterrain.org/ns/stonework#exploits
 stonework:exploits rdf:type owl:ObjectProperty ;
@@ -60,6 +121,10 @@ stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
                            skos:prefLabel "exploitsWeakness" ;
                            skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates." ;
                            skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest." .
+
+###  https://cyberterrain.org/ns/stonework#generatedFrom
+stonework:generatedFrom rdf:type owl:ObjectProperty ;
+                        skos:prefLabel "generatedFrom" .
 
 ### https://cyberterrain.org/ns/stonework#hasHash
 stonework:hasHash rdf:type owl:ObjectProperty ;
@@ -94,10 +159,18 @@ stonework:hasWeakness rdf:type owl:AsymmetricProperty , owl:ObjectProperty ;
                       skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates."@en ;
                       skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
 
+###  https://cyberterrain.org/ns/stonework#hostedBy
+stonework:hostedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                   skos:prefLabel "hostedBy" .
+
 ###  https://cyberterrain.org/ns/stonework#indicates
 stonework:indicates rdf:type owl:ObjectProperty ;
                     skos:prefLabel "indicates" ;
                     skos:definition "Shortcut triple: source Indicator indicates presence of target. Corresponds to STIX relationship_type 'indicates'." .
+
+###  https://cyberterrain.org/ns/stonework#linkedTo
+stonework:linkedTo rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "linkedTo" .
 
 ###  https://cyberterrain.org/ns/stonework#membersOf
 stonework:membersOf rdf:type owl:ObjectProperty ;
@@ -105,12 +178,40 @@ stonework:membersOf rdf:type owl:ObjectProperty ;
                     rdfs:range stonework:Group , stonework:Organization , stonework:ThreatActor ;
                     skos:prefLabel "membersOf" .
 
+###  https://cyberterrain.org/ns/stonework#mentions
+stonework:mentions rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "mentions" .
+
 ###  https://cyberterrain.org/ns/stonework#mitigates
 stonework:mitigates rdf:type owl:ObjectProperty ;
                     rdfs:domain stonework:Control , stonework:Mitigation ;
                     rdfs:range stonework:AttackPattern ;
                     skos:prefLabel "mitigates" ;
                     skos:definition "Shortcut triple: source CourseOfAction mitigates target AttackPattern or Vulnerability. Corresponds to STIX relationship_type 'mitigates'." .
+
+###  https://cyberterrain.org/ns/stonework#observedIn
+stonework:observedIn rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "observedIn" .
+
+###  https://cyberterrain.org/ns/stonework#originatesFrom
+stonework:originatesFrom rdf:type owl:ObjectProperty ;
+                         skos:prefLabel "originatesFrom" .
+
+###  https://cyberterrain.org/ns/stonework#overlapsWith
+stonework:overlapsWith rdf:type owl:ObjectProperty ;
+                       skos:prefLabel "overlapsWith" .
+
+###  https://cyberterrain.org/ns/stonework#precedes
+stonework:precedes rdf:type owl:ObjectProperty ;
+                   skos:prefLabel "precedes" .
+
+###  https://cyberterrain.org/ns/stonework#references
+stonework:references rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "references" .
+
+###  https://cyberterrain.org/ns/stonework#registeredWith
+stonework:registeredWith rdf:type owl:ObjectProperty ;
+                         skos:prefLabel "registeredWith" .
 
 ###  https://cyberterrain.org/ns/stonework#relatedTechnique
 stonework:relatedTechnique rdf:type owl:ObjectProperty ;
@@ -124,10 +225,33 @@ stonework:relatedTo rdf:type owl:ObjectProperty ;
                     skos:prefLabel "relatedTo" ;
                     skos:definition "Shortcut triple: generic relationship. Corresponds to STIX relationship_type 'related-to'." .
 
+
+###  https://cyberterrain.org/ns/stonework#remediates
+stonework:remediates rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "remediates" .
+
+###  https://cyberterrain.org/ns/stonework#resovlesTo
+stonework:resovlesTo rdf:type owl:ObjectProperty ;
+                     skos:prefLabel "resovlesTo" .
+
 ###  https://cyberterrain.org/ns/stonework#revokedBy
 stonework:revokedBy rdf:type owl:ObjectProperty ;
                     skos:prefLabel "revokedBy" ;
                     skos:definition "Shortcut triple: source STIX object is revoked and superseded by target. Corresponds to STIX relationship_type 'revoked-by'." .
+
+###  https://cyberterrain.org/ns/stonework#sharesCertificate
+stonework:sharesCertificate rdf:type owl:ObjectProperty ;
+                            skos:prefLabel "sharesCertificate" .
+
+###  https://cyberterrain.org/ns/stonework#sharesRegistrant
+stonework:sharesRegistrant rdf:type owl:ObjectProperty ;
+                           skos:prefLabel "sharesRegistrant" .
+
+###  https://cyberterrain.org/ns/stonework#subdomainOf
+stonework:subdomainOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                      rdfs:domain stonework:Domain ;
+                      rdfs:range stonework:Domain ;
+                      skos:prefLabel "subdomainOf" .
 
 ###  https://cyberterrain.org/ns/stonework#subtechniqueOf
 stonework:subtechniqueOf rdf:type owl:ObjectProperty ;
@@ -143,7 +267,14 @@ stonework:targets rdf:type owl:ObjectProperty ;
 stonework:techniqueOf rdf:type owl:ObjectProperty ;
                       owl:inverseOf stonework:hasTechnique ;
                       rdfs:domain stonework:Technique ;
-                      skos:prefLabel "techniqueOf"@en .
+                      skos:prefLabel "techniqueOf"@en ;
+                      skos:definition "Links a Technique to the Tactic(s) it achieves or supports."@en ;
+                      skos:scopeNote "This is the inverse of hasTechnique. A single Technique may support multiple Tactics (e.g. 'Phishing' supports both Initial Access and Credential Access)."@en ;
+                      rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
+
+###  https://cyberterrain.org/ns/stonework#urlOf
+stonework:urlOf rdf:type owl:ObjectProperty ;
+                skos:prefLabel "urlOf" .
 
 ###  https://cyberterrain.org/ns/stonework#uses
 stonework:uses rdf:type owl:ObjectProperty ;
@@ -152,6 +283,10 @@ stonework:uses rdf:type owl:ObjectProperty ;
                skos:prefLabel "uses" ;
                skos:definition "Relates a threat actor group or campaign to an offensive technique they are known to employ." ;
                skos:scopeNote "Sub-property stones:uses carries the shortcut triples emitted by the STIX 2.1 transform for relationship_type 'uses'." .
+
+###  https://cyberterrain.org/ns/stonework#variantOf
+stonework:variantOf rdf:type owl:ObjectProperty ;
+                    skos:prefLabel "variantOf" .
 
 ###  https://cyberterrain.org/ns/stonework#weaknessOf
 stonework:weaknessOf rdf:type owl:ObjectProperty ;
@@ -230,6 +365,12 @@ stonework:Domain rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Indicators ;
                  skos:prefLabel "Domain"@en ;
                  skos:definition "Represents a network domain name. Can reference the IP addresses it resolves to." .
+
+###  https://cyberterrain.org/ns/stonework#EmailAddress
+stonework:EmailAddress rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:Indicators ;
+                         skos:prefLabel "Email Address"@en ;
+                         skos:definition "Represents a single email address, optionally associating it with a display name and a user account." .
 
 ###  https://cyberterrain.org/ns/stonework#File
 stonework:File rdf:type owl:Class ;

@@ -19,10 +19,11 @@
 
 stones:AttackPattern                owl:equivalentClass     stonework:AttackPattern .
 stones:Campaign                     owl:equivalentClass     stonework:Campaign .
-stones:StixCyberobservableObject    owl:equivalentClass     stonework:Indicators .
-stones:Infrastructure               owl:equivalentClass     stonework:Infrastructure .
+stones:EmailAddressObject           owl:equivalentClass     stonework:EmailAddress .
 stones:FileObject                   owl:equivalentClass     stonework:File .
+stones:Infrastructure               owl:equivalentClass     stonework:Infrastructure .
 stones:Hash                         owl:equivalentClass     stonework:Hash .
+stones:StixCyberobservableObject    owl:equivalentClass     stonework:Indicators .
 stones:Tool                         owl:equivalentClass     stonework:Tool .
 stones:ThreatActor                  owl:equivalentClass     stonework:ThreatActor .
 stones:Vulnerability                owl:equivalentClass     stonework:Vulnerability .
