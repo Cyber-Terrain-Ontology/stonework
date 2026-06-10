@@ -31,6 +31,10 @@ stones:relationshipType rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
 #    General Axioms
 #################################################################
 
+
+###  https://cyberterrain.org/ns/stones#ArtifactObject
+stones:ArtifactObject rdfs:subClassOf stonework:DigitalArtifact .
+
 ###  https://cyberterrain.org/ns/stones#AttackPattern
 stones:AttackPattern rdfs:subClassOf stonework:AttackPattern .
 
@@ -82,11 +86,17 @@ stones:IPv6AddressObject rdfs:subClassOf stonework:IPAddress .
 ###  https://cyberterrain.org/ns/stones#Location
 stones:Location rdfs:subClassOf stonework:Location .
 
+###  https://cyberterrain.org/ns/stones#MACAddressObject
+stones:MACAddressObject rdfs:subClassOf stonework:Identifier .
+
 ###  https://cyberterrain.org/ns/stones#Malware
 stones:Malware rdfs:subClassOf stonework:Malware .
 
 ###  https://cyberterrain.org/ns/stones#mitigates
 stones:mitigates rdfs:subPropertyOf stonework:mitigates .
+
+###  https://cyberterrain.org/ns/stones#MutexObject
+stones:MutexObject rdfs:subClassOf stonework:DigitalArtifact .
 
 ###  https://cyberterrain.org/ns/stones#NetworkTrafficObject
 stones:NetworkTrafficObject rdfs:subClassOf stonework:NetworkTraffic .
@@ -102,9 +112,6 @@ stones:revoked_by rdfs:subPropertyOf stonework:revokedBy .
 
 ###  https://cyberterrain.org/ns/stones#SoftwareObject
 stones:SoftwareObject rdfs:subClassOf stonework:Product .
-
-###  https://cyberterrain.org/ns/stones#StixCyberobservableObject
-stones:StixCyberobservableObject owl:equivalentClass stonework:Indicators .
 
 ###  https://cyberterrain.org/ns/stones#StixSubType
 stones:StixSubType rdfs:subClassOf stonework:Indicators .

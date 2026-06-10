@@ -388,6 +388,11 @@ stonework:DefendTechnique rdf:type owl:Class ;
                           skos:definition "A prescribed defensive method used to detect, prevent, or respond to adversary behavior within a target environment." ;
                           skos:scopeNote "Aligns with MITRE D3FEND DefensiveTechnique. Framework-specific subclasses (e.g. d3fend:DefensiveTechnique) extend this class when D3FEND data is loaded." .
 
+###  https://cyberterrain.org/ns/stonework#DigitalArtifact
+stonework:DigitalArtifact rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:Indicators ;
+                          skos:prefLabel "Digital Artifact" .
+
 ###  https://cyberterrain.org/ns/stonework#Domain
 stonework:Domain rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Indicators ;
@@ -436,6 +441,11 @@ stonework:IPAddress rdf:type owl:Class ;
                     rdfs:subClassOf stonework:Indicators ;
                     skos:prefLabel "IP Address"@en ;
                     skos:definition "Represents one or more addresses expressed using CIDR notation." .
+
+###  https://cyberterrain.org/ns/stonework#Identifier
+stonework:Identifier rdf:type owl:Class ;
+                     rdfs:subClassOf stonework:Indicators ;
+                     skos:prefLabel "Identifier" .
 
 ###  https://cyberterrain.org/ns/stonework#Impact
 stonework:Impact rdf:type owl:Class ;
@@ -509,6 +519,11 @@ stonework:Person rdf:type owl:Class ;
                  skos:definition "A single human individual."@en ;
                  skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en ;
                  rdfs:seeAlso prov:Person .
+
+###  https://cyberterrain.org/ns/stonework#PhoneNumber
+stonework:PhoneNumber rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:Indicators ;
+                      skos:prefLabel "Phone Number" .
 
 ###  https://cyberterrain.org/ns/stonework#Playbook
 stonework:Playbook rdf:type owl:Class ;
