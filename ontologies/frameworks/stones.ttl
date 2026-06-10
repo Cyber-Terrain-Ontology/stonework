@@ -24,9 +24,10 @@ stones:EmailAddressObject           owl:equivalentClass     stonework:EmailAddre
 stones:FileObject                   owl:equivalentClass     stonework:File .
 stones:Infrastructure               owl:equivalentClass     stonework:Infrastructure .
 stones:Hash                         owl:equivalentClass     stonework:Hash .
+stones:Malware                      owl:equivalentClass     stonework:Malware .
+stones:ProcessObject                owl:equivalentClass     stonework:OSProcess .
 stones:StixCyberobservableObject    owl:equivalentClass     stonework:Indicators .
 stones:Tool                         owl:equivalentClass     stonework:Tool .
-stones:ProcessObject                owl:equivalentClass     stonework:OSProcess .
 stones:ThreatActor                  owl:equivalentClass     stonework:ThreatActor .
 stones:URLObject                    owl:equivalentClass     stonework:URL .
 stones:UserAccountObject            owl:equivalentClass     stonework:UserAccount .
@@ -34,14 +35,14 @@ stones:Vulnerability                owl:equivalentClass     stonework:Vulnerabil
 
 # --- Subclasses --------------------------------------------------------
 
-stones:CourseOfAction               owl:subClassOf          stonework:Mitigation .
-stones:DomainNameObject             owl:subClassOf          stonework:Domain .
-stones:Identity                     owl:subClassOf          stonework:Agent .
-stones:IPv4AddressObject            owl:subClassOf          stonework:IPAddress .
-stones:IPv6AddressObject            owl:subClassOf          stonework:IPAddress .
-stones:Location                     owl:subClassOf          stonework:Location .
-stones:SoftwareObject               owl:subClassOf          stonework:Product .
-stones:StixSubType                  owl:subClassOf          stonework:Indicators .
+stones:CourseOfAction               rdfs:subClassOf         stonework:Mitigation .
+stones:DomainNameObject             rdfs:subClassOf         stonework:Domain .
+stones:Identity                     rdfs:subClassOf         stonework:Agent .
+stones:IPv4AddressObject            rdfs:subClassOf         stonework:IPAddress .
+stones:IPv6AddressObject            rdfs:subClassOf         stonework:IPAddress .
+stones:Location                     rdfs:subClassOf         stonework:Location .
+stones:SoftwareObject               rdfs:subClassOf         stonework:Product .
+stones:StixSubType                  rdfs:subClassOf         stonework:Indicators .
 
 # --- Datatype Properties --------------------------------------------
 
