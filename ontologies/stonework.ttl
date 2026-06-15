@@ -23,6 +23,12 @@
 #    Object Properties
 #################################################################
 
+###  https://cyberterrain.org/ns/stonework#accountFor
+stonework:accountFor rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:UserAccount ;
+                     rdfs:range stonework:Agent ;
+                     skos:prefLabel "accountFor" .
+
 ###  https://cyberterrain.org/ns/stonework#achieves
 stonework:achieves rdf:type owl:ObjectProperty ;
                    skos:prefLabel "achieves" .
@@ -81,6 +87,12 @@ stonework:compromisedIn rdf:type owl:ObjectProperty ;
 stonework:consistsOf rdf:type owl:ObjectProperty ;
                      skos:prefLabel "consistsOf" .
 
+###  https://cyberterrain.org/ns/stonework#contactFor
+stonework:contactFor rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:EmailAddress , stonework:PhoneNumber ;
+                     rdfs:range stonework:Agent ;
+                     skos:prefLabel "contactFor" .
+
 ###  https://cyberterrain.org/ns/stonework#contains
 stonework:contains rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                    rdfs:domain stonework:AutonomousSystem , stonework:CIDR ;
@@ -111,7 +123,7 @@ stonework:downloads rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#drops
 stonework:drops rdf:type owl:ObjectProperty ;
                 rdfs:domain stonework:Malware ;
-                rdfs:range stonework:File , stonework:Malware ;
+                rdfs:range stonework:DigitalArtifact , stonework:File , stonework:Malware ;
                 skos:prefLabel "drops" .
 
 ###  https://cyberterrain.org/ns/stonework#emailOf
@@ -218,6 +230,12 @@ stonework:precedes rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#references
 stonework:references rdf:type owl:ObjectProperty ;
                      skos:prefLabel "references" .
+
+###  https://cyberterrain.org/ns/stonework#registeredTo
+stonework:registeredTo rdf:type owl:ObjectProperty ;
+                       rdfs:domain stonework:Infrastructure ;
+                       rdfs:range stonework:Agent ;
+                       skos:prefLabel "registeredTo" .
 
 ###  https://cyberterrain.org/ns/stonework#registeredWith
 stonework:registeredWith rdf:type owl:ObjectProperty ;
