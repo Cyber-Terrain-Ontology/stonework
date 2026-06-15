@@ -31,7 +31,6 @@ stones:relationshipType rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
 #    General Axioms
 #################################################################
 
-
 ###  https://cyberterrain.org/ns/stones#ArtifactObject
 stones:ArtifactObject rdfs:subClassOf stonework:DigitalArtifact .
 
@@ -112,9 +111,6 @@ stones:revoked_by rdfs:subPropertyOf stonework:revokedBy .
 
 ###  https://cyberterrain.org/ns/stones#SoftwareObject
 stones:SoftwareObject rdfs:subClassOf stonework:Product .
-
-###  https://cyberterrain.org/ns/stones#StixSubType
-stones:StixSubType rdfs:subClassOf stonework:Indicators .
 
 ###  https://cyberterrain.org/ns/stones#subtechnique_of
 stones:subtechnique_of rdfs:subPropertyOf stonework:techniqueOf .
