@@ -12,7 +12,7 @@
 <https://cyberterrain.org/ns/frameworks/registry>
     a owl:Ontology ;
     rdfs:comment "Describes elements within  the Windows configuration Registry system."@en ;
-    rdfs:label "Windows Registry Ontology"@en ;
+    rdfs:label "Windows Registry Framework Ontology"@en ;
     owl:imports <https://cyberterrain.org/ns/stonework#> .
 
 # --- Classes --------------------------------------------------------
@@ -20,7 +20,7 @@
 registry:Hive
     a owl:Class ;
     rdfs:comment "A Hive within a windows registry. Hives are individual registry files on-disk (such as HKEY_LOCAL_MACHINE)"@en ;
-    rdfs:label "Hive"@en ;
+    rdfs:label "Registry Hive"@en ;
     rdfs:subClassOf stonework:Registry .
 
 registry:Key
@@ -32,8 +32,8 @@ registry:Key
 registry:Value
     a owl:Class ;
     rdfs:comment "a value within a Registry Key"@en ;
-    rdfs:label "Key Value"@en ;
-    rdfs:subClassOf stonework:Registry, stones:WindowsRegistryValueObject .
+    rdfs:label "Registry Value"@en ;
+    rdfs:subClassOf stonework:Registry, stones:WindowsRegistryValue .
 
 # --- Datatype Properties --------------------------------------------
 
