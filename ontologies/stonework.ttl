@@ -472,6 +472,12 @@ stonework:Category rdf:type owl:Class ;
                    skos:definition "A classification or tagging concept used to group or qualify other individuals in a particular context." ;
                    skos:scopeNote "Categories are reified so they can be referenced, versioned, or scoped. They are not rigid types." .
 
+###  https://cyberterrain.org/ns/stonework#City
+stonework:City rdf:type owl:Class ;
+               rdfs:subClassOf stonework:Location ;
+               skos:prefLabel "City" ;
+               skos:definition "A significant urban settlement, municipality, or metropolitan area." .
+
 ###  https://cyberterrain.org/ns/stonework#Control
 stonework:Control rdf:type owl:Class ;
                   rdfs:subClassOf stonework:SecurityMeasure ;
@@ -479,6 +485,12 @@ stonework:Control rdf:type owl:Class ;
                   skos:prefLabel "Control" ;
                   skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
                   skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." .
+
+###  https://cyberterrain.org/ns/stonework#Country
+stonework:Country rdf:type owl:Class ;
+                  rdfs:subClassOf stonework:Location ;
+                  skos:prefLabel "Country" ;
+                  skos:definition "A sovereign state or top-level administrative entity recognized internationally." .
 
 ###  https://cyberterrain.org/ns/stonework#CryptoAsset
 stonework:CryptoAsset rdf:type owl:Class ;
@@ -778,6 +790,12 @@ stonework:Publication rdf:type owl:Class ;
                       rdfs:subClassOf stonework:Provenance ;
                       skos:prefLabel "Publication" ;
                       skos:definition "A structured intelligence artifact such as a blog post, advisory, report, or news article." .
+
+###  https://cyberterrain.org/ns/stonework#Region
+stonework:Region rdf:type owl:Class ;
+                 rdfs:subClassOf stonework:Location ;
+                 skos:prefLabel "Region" ;
+                 skos:definition "A sub-national territorial division such as a state, province, region, or governorate." .
 
 ###  https://cyberterrain.org/ns/stonework#Registry
 stonework:Registry rdf:type owl:Class ;
