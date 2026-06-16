@@ -6,10 +6,10 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
-@base <https://cyberterrain.org/ns/frameworks/stonesx> .
+@base <https://cyberterrain.org/ns/frameworks/stix> .
 
-###  https://cyberterrain.org/ns/frameworks/stonesx
-frameworks:stonesx rdf:type owl:Ontology ;
+###  https://cyberterrain.org/ns/frameworks/stix
+frameworks:stix rdf:type owl:Ontology ;
                    owl:imports <https://cyberterrain.org/ns/stones#> , <https://cyberterrain.org/ns/stonework#> ;
                    rdfs:label "STONES Framework Ontology"@en ;
                    rdfs:comment "A mapping of the STONES Ontology to STONEWORK. Provides a class hierarchy for all STONES Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STONES properties."@en .
