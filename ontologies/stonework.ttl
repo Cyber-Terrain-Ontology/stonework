@@ -51,7 +51,7 @@ stonework:associatedWith rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#attributedTo
 stonework:attributedTo rdf:type owl:ObjectProperty ;
-                       rdfs:domain stonework:Campaign , stonework:ThreatActor ;
+                       rdfs:domain stonework:Campaign ;
                        rdfs:range stonework:ThreatActor ;
                        skos:prefLabel "attributedTo" ;
                        skos:definition "Shortcut triple: source Campaign or IntrusionSet is attributed to target ThreatActor or IntrusionSet. Corresponds to STIX relationship_type 'attributed-to'." .
@@ -74,7 +74,9 @@ stonework:clusteredWith rdf:type owl:ObjectProperty ;
                         skos:prefLabel "clusteredWith" .
 
 ###  https://cyberterrain.org/ns/stonework#communicatesWith
-stonework:communicatesWith rdf:type owl:ObjectProperty ;
+stonework:communicatesWith rdf:type owl:ObjectProperty , owl:SymmetricProperty ;
+                           rdfs:domain stonework:Malware , stonework:Tool ;
+                           rdfs:range stonework:Infrastructure ;
                            skos:prefLabel "communicatesWith" .
 
 ###  https://cyberterrain.org/ns/stonework#compromisedIn
@@ -129,6 +131,7 @@ stonework:drops rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#emailOf
 stonework:emailOf rdf:type owl:ObjectProperty ;
                   rdfs:domain stonework:EmailAddress ;
+                  rdfs:range stonework:Agent ;
                   skos:prefLabel "emailOf" .
 
 ###  https://cyberterrain.org/ns/stonework#exploits
@@ -260,11 +263,11 @@ stonework:remediates rdf:type owl:ObjectProperty ;
                      rdfs:range stonework:Vulnerability , stonework:Weakness ;
                      skos:prefLabel "remediates" .
 
-###  https://cyberterrain.org/ns/stonework#resovlesTo
-stonework:resovlesTo rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+###  https://cyberterrain.org/ns/stonework#resolvesTo
+stonework:resolvesTo rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                      rdfs:domain stonework:Infrastructure ;
                      rdfs:range stonework:Infrastructure ;
-                     skos:prefLabel "resovlesTo" .
+                     skos:prefLabel "resolvesTo"@en .
 
 ###  https://cyberterrain.org/ns/stonework#revokedBy
 stonework:revokedBy rdf:type owl:ObjectProperty ;
@@ -427,7 +430,6 @@ stonework:DefendTechnique rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#DigitalArtifact
 stonework:DigitalArtifact rdf:type owl:Class ;
-                          rdfs:subClassOf stonework:Host ;
                           skos:prefLabel "Digital Artifact" .
 
 ###  https://cyberterrain.org/ns/stonework#Domain
@@ -444,7 +446,7 @@ stonework:EmailAddress rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#File
 stonework:File rdf:type owl:Class ;
-               rdfs:subClassOf stonework:Host ;
+               rdfs:subClassOf stonework:DigitalArtifact ;
                skos:prefLabel "File"@en ;
                skos:definition "Represents a file with its metadata and optional content reference. Supports extensions for archive files, NTFS streams, PE binaries, PDF documents, and raster images." .
 
@@ -521,13 +523,13 @@ Examples include: applying a security patch, enabling multi-factor authenticatio
 
 ###  https://cyberterrain.org/ns/stonework#NetworkTraffic
 stonework:NetworkTraffic rdf:type owl:Class ;
-                         rdfs:subClassOf stonework:Host ;
+                         rdfs:subClassOf stonework:DigitalArtifact ;
                          skos:prefLabel "Network Traffic"@en ;
                          skos:definition "Represents an arbitrary network traffic flow between source and destination endpoints. Supports extensions for HTTP, ICMP, socket, and TCP specifics." .
 
 ###  https://cyberterrain.org/ns/stonework#OSProcess
 stonework:OSProcess rdf:type owl:Class ;
-                    rdfs:subClassOf stonework:Host ;
+                    rdfs:subClassOf stonework:DigitalArtifact ;
                     skos:prefLabel "OS Process"@en ;
                     skos:definition "Represents a running or terminated process on a host. Supports extensions for Windows-specific process and service attributes." .
 
@@ -549,7 +551,7 @@ stonework:Person rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#PhoneNumber
 stonework:PhoneNumber rdf:type owl:Class ;
-                      rdfs:subClassOf stonework:Infrastructure ;
+                      rdfs:subClassOf stonework:Identifier ;
                       skos:prefLabel "Phone Number" .
 
 ###  https://cyberterrain.org/ns/stonework#Playbook
@@ -636,6 +638,7 @@ stonework:ThreatScenario rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Tool
 stonework:Tool rdf:type owl:Class ;
+               rdfs:subClassOf stonework:DigitalArtifact ;
                skos:prefLabel "Tool"@en ;
                skos:definition "Legitimate software that can be used by threat actors to perform attacks. Distinguishable from malware by being designed for benign purposes but repurposed maliciously." .
 
@@ -647,7 +650,7 @@ stonework:URL rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#UserAccount
 stonework:UserAccount rdf:type owl:Class ;
-                      rdfs:subClassOf stonework:Infrastructure ;
+                      rdfs:subClassOf stonework:Identifier ;
                       skos:prefLabel "User Account"@en ;
                       skos:definition "Represents a user account on a system or service, including local OS accounts, cloud accounts, and social media accounts. Supports a unix-account extension for POSIX attributes." .
 
