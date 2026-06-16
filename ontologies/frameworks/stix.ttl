@@ -136,6 +136,9 @@ stones:Report rdfs:subClassOf stonework:Report .
 ###  https://cyberterrain.org/ns/stones#revoked_by
 stones:revoked_by rdfs:subPropertyOf stonework:revokedBy .
 
+###  https://cyberterrain.org/ns/stones#Sighting
+stones:Sighting rdfs:subClassOf stonework:Sighting .
+
 ###  https://cyberterrain.org/ns/stones#SoftwareObject
 stones:SoftwareObject rdfs:subClassOf stonework:Product .
 

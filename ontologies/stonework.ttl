@@ -334,6 +334,13 @@ stonework:uses rdf:type owl:ObjectProperty ;
                skos:definition "Relates a threat actor group or campaign to an offensive technique they are known to employ." ;
                skos:scopeNote "Sub-property stones:uses carries the shortcut triples emitted by the STIX 2.1 transform for relationship_type 'uses'." .
 
+###  https://cyberterrain.org/ns/stonework#usesRule
+stonework:usesRule rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Sensor ;
+                   rdfs:range stonework:DetectionRule ;
+                   skos:prefLabel "usesRule" ;
+                   skos:definition "Relates a Sensor to the Detection Rules it applies." .
+
 ###  https://cyberterrain.org/ns/stonework#variantOf
 stonework:variantOf rdf:type owl:ObjectProperty ;
                     rdfs:domain stonework:Malware ;
@@ -460,6 +467,12 @@ stonework:DefendTechnique rdf:type owl:Class ;
                           skos:prefLabel "Defend Technique" ;
                           skos:definition "A prescribed defensive method used to detect, prevent, or respond to adversary behavior within a target environment." ;
                           skos:scopeNote "Aligns with MITRE D3FEND DefensiveTechnique. Framework-specific subclasses (e.g. d3fend:DefensiveTechnique) extend this class when D3FEND data is loaded." .
+
+###  https://cyberterrain.org/ns/stonework#DetectionRule
+stonework:DetectionRule rdf:type owl:Class ;
+                        rdfs:subClassOf stonework:SecurityMeasure ;
+                        skos:prefLabel "Detection Rule" ;
+                        skos:definition "A structured, machine-readable rule designed to detect malicious or suspicious activity, techniques, or indicators. It may be signature-based, behavioral, correlation-based, or analytic." .
 
 ###  https://cyberterrain.org/ns/stonework#DigitalArtifact
 stonework:DigitalArtifact rdf:type owl:Class ;
@@ -735,6 +748,18 @@ stonework:SecurityMeasure rdf:type owl:Class ;
                           skos:prefLabel "Security Measure" ;
                           skos:definition "Any control, mitigation, or safeguard intended to protect against, reduce, or respond to security risks."@en ;
                           skos:scopeNote "Includes Controls and Mitigations."@en .
+
+###  https://cyberterrain.org/ns/stonework#Sensor
+stonework:Sensor rdf:type owl:Class ;
+                 rdfs:subClassOf stonework:Infrastructure ;
+                 skos:prefLabel "Sensor" ;
+                 skos:definition "Sensors are deployed systems (software agents, appliances, virtual instances, network taps, etc.).  A tool, system, or method that collects data about digital artifacts or adversary activity." .
+
+###  https://cyberterrain.org/ns/stonework#Sighting
+stonework:Sighting rdf:type owl:Class ;
+                   rdfs:subClassOf stonework:Information ;
+                   skos:prefLabel "Sighting" ;
+                   skos:definition "Records that a object such as an indicator, malware, tool, or threat actor was seen. Wraps observation metadata around a reference to the sighted object."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Tactic
 stonework:Tactic rdf:type owl:Class ;
