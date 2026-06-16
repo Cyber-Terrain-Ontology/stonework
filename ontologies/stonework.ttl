@@ -570,6 +570,12 @@ stonework:Incident rdf:type owl:Class ;
                    skos:prefLabel "Incident" ;
                    skos:definition "A significant adverse event or series of related events that has caused, or has the potential to cause, harm to an organization’s operations, assets, or people." .
 
+###  https://cyberterrain.org/ns/stonework#Industry
+stonework:Industry rdf:type owl:Class ;
+                   rdfs:subClassOf stonework:Category ;
+                   skos:prefLabel "Industry" ;
+                   skos:definition "A sector or vertical of economic activity (typically modeled using NAICS codes)." .
+
 ###  https://cyberterrain.org/ns/stonework#Information
 stonework:Information rdf:type owl:Class ;
                       rdfs:subClassOf stonework:CyberEntity ;
@@ -589,6 +595,12 @@ stonework:Investigation rdf:type owl:Class ;
                         skos:prefLabel "Investigation" ;
                         skos:definition "A systematic Process of inquiry, evidence collection, analysis, hypothesis testing, and conclusion to understand, attribute, or resolve security incidents, threats, anomalies, or other matters of interest." ;
                         skos:scopeNote "Includes digital forensics, threat hunting, root cause analysis, and incident investigations. Links to Sightings, Evidence (via categorizedBy), Sensors, and produces Findings or updated Assessments."@en .
+
+###  https://cyberterrain.org/ns/stonework#KillChainPhase
+stonework:KillChainPhase rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:Category ;
+                         skos:prefLabel "Kill Chain Phase" ;
+                         skos:definition "Represents a phase within a named kill chain framework, such as the MITRE ATT&CK or Lockheed Martin Cyber Kill Chain, used to categorise the stage of an attack." .
 
 ###  https://cyberterrain.org/ns/stonework#Likelihood
 stonework:Likelihood rdf:type owl:Class ;

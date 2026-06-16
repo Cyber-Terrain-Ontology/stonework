@@ -15,11 +15,13 @@
     rdfs:comment "OWL vocabulary for the Lockheed Martin Cyber Kill Chain framework."@en ;
     owl:imports <https://cyberterrain.org/ns/stonework#> .
 
+# --- Classes --------------------------------------------------------
+
 ###  https://cyberterrain.org/ns/frameworks/killchain#killChainPhase
 killchain:killChainPhase 
     rdf:type owl:ObjectProperty ;
     rdfs:domain stonework:CyberEntity ;
-    rdfs:range stones:KillChainPhase , stonework:Category ;
+    rdfs:range stones:KillChainPhase , stonework:KillChainPhase ;
     skos:prefLabel "kill chain phase"@en ;
     skos:definition "Links an entity to one or more phases of a kill chain framework."@en ;
     rdfs:seeAlso stones:killChainName , stones:phaseName .
@@ -29,9 +31,11 @@ killchain:killChainPhase
 #    Mapped to stones:KillChainPhase for compatibility
 #################################################################
 
+# --- Individuals ---------------------------------------------------
+
 ###  https://cyberterrain.org/ns/frameworks/killchain#Reconnaissance
 killchain:Reconnaissance 
-    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    rdf:type owl:NamedIndividual , stonework:KillChainPhase , stones:KillChainPhase ;
     stones:killChainName "lockheed-martin-cyber-kill-chain" ;
     stones:phaseName "reconnaissance" ;
     skos:prefLabel "Reconnaissance"@en ;
@@ -39,7 +43,7 @@ killchain:Reconnaissance
 
 ###  https://cyberterrain.org/ns/frameworks/killchain#Weaponization
 killchain:Weaponization 
-    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    rdf:type owl:NamedIndividual , stonework:KillChainPhase , stones:KillChainPhase ;
     stones:killChainName "lockheed-martin-cyber-kill-chain" ;
     stones:phaseName "weaponization" ;
     skos:prefLabel "Weaponization"@en ;
@@ -47,7 +51,7 @@ killchain:Weaponization
 
 ###  https://cyberterrain.org/ns/frameworks/killchain#Delivery
 killchain:Delivery 
-    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    rdf:type owl:NamedIndividual , stonework:KillChainPhase , stones:KillChainPhase ;
     stones:killChainName "lockheed-martin-cyber-kill-chain" ;
     stones:phaseName "delivery" ;
     skos:prefLabel "Delivery"@en ;
@@ -55,7 +59,7 @@ killchain:Delivery
 
 ###  https://cyberterrain.org/ns/frameworks/killchain#Exploitation
 killchain:Exploitation 
-    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    rdf:type owl:NamedIndividual , stonework:KillChainPhase , stones:KillChainPhase ;
     stones:killChainName "lockheed-martin-cyber-kill-chain" ;
     stones:phaseName "exploitation" ;
     skos:prefLabel "Exploitation"@en ;
@@ -63,7 +67,7 @@ killchain:Exploitation
 
 ###  https://cyberterrain.org/ns/frameworks/killchain#Installation
 killchain:Installation 
-    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    rdf:type owl:NamedIndividual , stonework:KillChainPhase , stones:KillChainPhase ;
     stones:killChainName "lockheed-martin-cyber-kill-chain" ;
     stones:phaseName "installation" ;
     skos:prefLabel "Installation"@en ;
@@ -71,7 +75,7 @@ killchain:Installation
 
 ###  https://cyberterrain.org/ns/frameworks/killchain#CommandAndControl
 killchain:CommandAndControl 
-    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    rdf:type owl:NamedIndividual , stonework:KillChainPhase , stones:KillChainPhase ;
     stones:killChainName "lockheed-martin-cyber-kill-chain" ;
     stones:phaseName "command-and-control" ;
     skos:prefLabel "Command and Control"@en ;
@@ -79,7 +83,7 @@ killchain:CommandAndControl
 
 ###  https://cyberterrain.org/ns/frameworks/killchain#ActionsOnObjectives
 killchain:ActionsOnObjectives 
-    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    rdf:type owl:NamedIndividual , stonework:KillChainPhase , stones:KillChainPhase ;
     stones:killChainName "lockheed-martin-cyber-kill-chain" ;
     stones:phaseName "actions-on-objectives" ;
     skos:prefLabel "Actions on Objectives"@en ;

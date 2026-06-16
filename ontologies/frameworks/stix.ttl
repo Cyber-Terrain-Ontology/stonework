@@ -94,6 +94,9 @@ stones:IPv4AddressObject rdfs:subClassOf stonework:IPAddress .
 ###  https://cyberterrain.org/ns/stones#IPv6AddressObject
 stones:IPv6AddressObject rdfs:subClassOf stonework:IPAddress .
 
+###  https://cyberterrain.org/ns/stones#KillChainPhase
+stones:KillChainPhase rdfs:subClassOf stonework:KillChainPhase .
+
 ###  https://cyberterrain.org/ns/stones#Location
 stones:Location rdfs:subClassOf stonework:Location .
 
