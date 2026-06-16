@@ -21,7 +21,7 @@
 killchain:killChainPhase 
     rdf:type owl:ObjectProperty ;
     rdfs:domain stonework:CyberEntity ;
-    rdfs:range stones:KillChainPhase , stonework:KillChainPhase ;
+    rdfs:range stonework:KillChainPhase ;
     skos:prefLabel "kill chain phase"@en ;
     skos:definition "Links an entity to one or more phases of a kill chain framework."@en ;
     rdfs:seeAlso stones:killChainName , stones:phaseName .
