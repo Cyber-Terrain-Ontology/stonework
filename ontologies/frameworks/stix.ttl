@@ -62,7 +62,7 @@ stones:EmailAddressObject rdfs:subClassOf stonework:EmailAddress .
 stones:exploits rdfs:subPropertyOf stonework:exploits .
 
 ###  https://cyberterrain.org/ns/stones#ExternalReference
-stones:ExternalReference rdfs:subClassOf stonework:Provenance .
+stones:ExternalReference rdfs:subClassOf stonework:OnlineReference .
 
 ###  https://cyberterrain.org/ns/stones#FileObject
 stones:FileObject rdfs:subClassOf stonework:File .

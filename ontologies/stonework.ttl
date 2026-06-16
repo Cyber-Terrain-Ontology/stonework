@@ -583,6 +583,13 @@ stonework:Infrastructure rdf:type owl:Class ;
                          skos:prefLabel "Infrastructure"@en ;
                          skos:definition "Represents systems, software services, or any group of resources used to conduct cyber operations. Infrastructure is used by threat actors and intrusion sets both offensively and defensively." .
 
+###  https://cyberterrain.org/ns/stonework#Investigation
+stonework:Investigation rdf:type owl:Class ;
+                        rdfs:subClassOf stonework:Process ;
+                        skos:prefLabel "Investigation" ;
+                        skos:definition "A systematic Process of inquiry, evidence collection, analysis, hypothesis testing, and conclusion to understand, attribute, or resolve security incidents, threats, anomalies, or other matters of interest." ;
+                        skos:scopeNote "Includes digital forensics, threat hunting, root cause analysis, and incident investigations. Links to Sightings, Evidence (via categorizedBy), Sensors, and produces Findings or updated Assessments."@en .
+
 ###  https://cyberterrain.org/ns/stonework#Likelihood
 stonework:Likelihood rdf:type owl:Class ;
                      rdfs:subClassOf stonework:SecurityCondition ;
@@ -664,7 +671,7 @@ stonework:PhoneNumber rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Playbook
 stonework:Playbook rdf:type owl:Class ;
-                   rdfs:subClassOf stonework:Behavior ;
+                   rdfs:subClassOf stonework:Process ;
                    rdfs:comment "Playbooks are often versioned, tested, and executed as instances of Process."@en ;
                    skos:prefLabel "Playbook" ;
                    skos:definition "A documented, structured Process that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
