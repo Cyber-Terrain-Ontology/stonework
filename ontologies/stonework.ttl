@@ -98,8 +98,8 @@ stonework:contactFor rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#contains
 stonework:contains rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
-                   rdfs:domain stonework:AutonomousSystem , stonework:CIDR ;
-                   rdfs:range stonework:CIDR , stonework:IPAddress ;
+                   rdfs:domain stonework:AutonomousSystem , stonework:IPBlock ;
+                   rdfs:range stonework:IPAddress , stonework:IPBlock ;
                    skos:prefLabel "contains" .
 
 ###  https://cyberterrain.org/ns/stonework#counters
@@ -350,7 +350,9 @@ stonework:AITechnique rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#Activity
 stonework:Activity rdf:type owl:Class ;
                    rdfs:subClassOf stonework:CyberEntity ;
-                   skos:prefLabel "Activity" .
+                   skos:prefLabel "Activity" ;
+                   skos:definition "A specific occurrence or performance of actions by one or more agents over time."@en ;
+                   skos:scopeNote "Superclass for higher-level operational concepts such as Campaigns, Incidents, and Events."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Agent
 stonework:Agent rdf:type owl:Class ;
@@ -395,13 +397,9 @@ stonework:AutonomousSystem rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#Behavior
 stonework:Behavior rdf:type owl:Class ;
                    rdfs:subClassOf stonework:CyberEntity ;
-                   skos:prefLabel "Behavior" .
-
-###  https://cyberterrain.org/ns/stonework#CIDR
-stonework:CIDR rdf:type owl:Class ;
-               rdfs:subClassOf stonework:Infrastructure ;
-               skos:prefLabel "CIDR Block"@en ;
-               skos:definition "A Classless Inter-Domain Routing block used to represent an IP network range."@en .
+                   skos:prefLabel "Behavior" ;
+                   skos:definition "A pattern of actions or methods characteristic of an entity, particularly adversaries."@en ;
+                   skos:scopeNote "Groups TTP-related classes such as Tactics, Techniques, and Procedures."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Campaign
 stonework:Campaign rdf:type owl:Class ;
@@ -424,15 +422,17 @@ stonework:Control rdf:type owl:Class ;
                   skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
                   skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." .
 
-###  https://cyberterrain.org/ns/stonework#Cryptocurrency
-stonework:Cryptocurrency rdf:type owl:Class ;
-                         rdfs:subClassOf stonework:Identifier ;
-                         skos:prefLabel "Cryptocurrency" ;
-                         skos:definition "A digital asset or wallet address used in cryptocurrency transactions, often relevant for tracking ransomware payments or illicit finance."@en .
+###  https://cyberterrain.org/ns/stonework#CryptoAsset
+stonework:CryptoAsset rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:DigitalArtifact ;
+                      skos:prefLabel "Crypto Asset"@en ;
+                      skos:definition "A digital asset or wallet address used in cryptocurrency transactions, often relevant for tracking ransomware payments or illicit finance."@en .
 
 ###  https://cyberterrain.org/ns/stonework#CyberEntity
 stonework:CyberEntity rdf:type owl:Class ;
-                      skos:prefLabel "Cyber Entity" .
+                      skos:prefLabel "Cyber Entity" ;
+                      skos:definition "Any concept, object, or resource that exists or operates within a cyber or sociotechnical domain."@en ;
+                      skos:scopeNote "Serves as the root superclass for the STONEWORK ontology."@en .
 
 ###  https://cyberterrain.org/ns/stonework#CyberTechnique
 stonework:CyberTechnique rdf:type owl:Class ;
@@ -451,7 +451,9 @@ stonework:DefendTechnique rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#DigitalArtifact
 stonework:DigitalArtifact rdf:type owl:Class ;
                           rdfs:subClassOf stonework:CyberEntity ;
-                          skos:prefLabel "Digital Artifact" .
+                          skos:prefLabel "Digital Artifact" ;
+                          skos:definition "Any discrete digital object or content entity that can be observed, transmitted, stored, or acted upon in a cyber environment."@en ;
+                          skos:scopeNote "Includes files, hashes, malware samples, network traffic captures, and other content-bearing items. Aligns with D3FEND DigitalArtifact concepts."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Domain
 stonework:Domain rdf:type owl:Class ;
@@ -492,18 +494,27 @@ stonework:Hash rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#Host
 stonework:Host rdf:type owl:Class ;
                rdfs:subClassOf stonework:Infrastructure ;
-               skos:prefLabel "Host"@en .
+               skos:prefLabel "Host"@en ;
+               skos:definition "A computing system, device, or endpoint (physical, virtual, container, or cloud instance) that can run processes, host files, and participate in networks."@en .
 
 ###  https://cyberterrain.org/ns/stonework#IPAddress
 stonework:IPAddress rdf:type owl:Class ;
                     rdfs:subClassOf stonework:Infrastructure ;
                     skos:prefLabel "IP Address"@en ;
-                    skos:definition "Represents one or more addresses expressed using CIDR notation." .
+                    skos:definition "Represents a single IP address (IPv4 or IPv6)."@en .
+
+###  https://cyberterrain.org/ns/stonework#IPBlock
+stonework:IPBlock rdf:type owl:Class ;
+                  rdfs:subClassOf stonework:Infrastructure ;
+                  skos:prefLabel "IP Block"@en ;
+                  skos:definition "A Classless Inter-Domain Routing (CIDR) block used to represent an IP network range."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Identifier
 stonework:Identifier rdf:type owl:Class ;
                      rdfs:subClassOf stonework:CyberEntity ;
-                     skos:prefLabel "Identifier" .
+                     skos:prefLabel "Identifier" ;
+                     skos:definition "An atomic label, string, or token used to uniquely identify, locate, or reference a cyber entity, resource, or principal."@en ;
+                     skos:scopeNote "Includes contact identifiers, network locators, accounts, and similar atomic artifacts."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Impact
 stonework:Impact rdf:type owl:Class ;
@@ -522,7 +533,9 @@ stonework:Incident rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#Information
 stonework:Information rdf:type owl:Class ;
                       rdfs:subClassOf stonework:CyberEntity ;
-                      skos:prefLabel "Information" .
+                      skos:prefLabel "Information" ;
+                      skos:definition "Data or knowledge artifacts that convey meaning, facts, or intelligence."@en ;
+                      skos:scopeNote "Superclass for structured knowledge such as Assessments, Provenance, and Threat Scenarios."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Infrastructure
 stonework:Infrastructure rdf:type owl:Class ;
@@ -562,7 +575,8 @@ Examples include: applying a security patch, enabling multi-factor authenticatio
 ###  https://cyberterrain.org/ns/stonework#NetworkService
 stonework:NetworkService rdf:type owl:Class ;
                          rdfs:subClassOf stonework:Infrastructure ;
-                         skos:prefLabel "Network Service" .
+                         skos:prefLabel "Network Service" ;
+                         skos:definition "A network-accessible service or endpoint provided by infrastructure, such as HTTP, DNS, or SSH servers."@en .
 
 ###  https://cyberterrain.org/ns/stonework#NetworkTraffic
 stonework:NetworkTraffic rdf:type owl:Class ;
@@ -644,21 +658,25 @@ stonework:Risk rdf:type owl:Class ;
                skos:definition "A measure of the potential for loss or adverse effects arising from the realization of a threat, expressed as a function of the impact of compromise and the likelihood that the compromise will occur." ;
                skos:scopeNote "This class represents the assessed or estimated level of exposure to harm for a specific asset, mission, or organization. Risk is typically derived from the combination of impact and likelihood, and may incorporate assumptions, uncertainty, and contextual factors." .
 
+###  https://cyberterrain.org/ns/stonework#RuntimeProcess
+stonework:RuntimeProcess rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:DigitalArtifact ;
+                         skos:prefLabel "Runtime Process"@en ;
+                         skos:definition "Represents a running or terminated process on a host. Supports extensions for operating system process and service attributes."@en .
+
 ###  https://cyberterrain.org/ns/stonework#SecurityCondition
 stonework:SecurityCondition rdf:type owl:Class ;
                             rdfs:subClassOf stonework:CyberEntity ;
-                            skos:prefLabel "Security Condition" .
+                            skos:prefLabel "Security Condition" ;
+                            skos:definition "A state, circumstance, or factor relevant to the security posture of a system, asset, or mission."@en ;
+                            skos:scopeNote "Includes Threats, Vulnerabilities, Risks, Impacts, and Likelihoods."@en .
 
 ###  https://cyberterrain.org/ns/stonework#SecurityMeasure
 stonework:SecurityMeasure rdf:type owl:Class ;
                           rdfs:subClassOf stonework:CyberEntity ;
-                          skos:prefLabel "Security Measure" .
-
-###  https://cyberterrain.org/ns/stonework#SystemProcess
-stonework:SystemProcess rdf:type owl:Class ;
-                        rdfs:subClassOf stonework:DigitalArtifact ;
-                        skos:prefLabel "System Process"@en ;
-                        skos:definition "Represents a running or terminated process on a host. Supports extensions for operating system process and service attributes."@en .
+                          skos:prefLabel "Security Measure" ;
+                          skos:definition "Any control, mitigation, or safeguard intended to protect against, reduce, or respond to security risks."@en ;
+                          skos:scopeNote "Includes Controls and Mitigations."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Tactic
 stonework:Tactic rdf:type owl:Class ;

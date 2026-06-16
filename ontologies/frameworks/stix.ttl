@@ -86,7 +86,7 @@ stones:IPv6AddressObject rdfs:subClassOf stonework:IPAddress .
 stones:Location rdfs:subClassOf stonework:Location .
 
 ###  https://cyberterrain.org/ns/stones#MACAddressObject
-stones:MACAddressObject rdfs:subClassOf stonework:Identifier .
+stones:MACAddressObject rdfs:subClassOf stonework:Infrastructure .
 
 ###  https://cyberterrain.org/ns/stones#Malware
 stones:Malware rdfs:subClassOf stonework:Malware .
@@ -101,7 +101,7 @@ stones:MutexObject rdfs:subClassOf stonework:DigitalArtifact .
 stones:NetworkTrafficObject rdfs:subClassOf stonework:NetworkTraffic .
 
 ###  https://cyberterrain.org/ns/stones#ProcessObject
-stones:ProcessObject rdfs:subClassOf stonework:OSProcess .
+stones:ProcessObject rdfs:subClassOf stonework:RuntimeProcess .
 
 ###  https://cyberterrain.org/ns/stones#related_to
 stones:related_to rdfs:subPropertyOf stonework:relatedTo .
