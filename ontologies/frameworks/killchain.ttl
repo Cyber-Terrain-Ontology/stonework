@@ -1,0 +1,85 @@
+@prefix owl:       <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix stones:    <https://cyberterrain.org/ns/stones#> .
+@prefix stonework: <https://cyberterrain.org/ns/frameworks/killchain#> .
+
+# --- Ontology declaration -------------------------------------------
+
+<https://cyberterrain.org/ns/frameworks/killchain>
+    a owl:Ontology ;
+    rdfs:label "Cyber Kill Chain Framework Ontology"@en ;
+    rdfs:comment "OWL vocabulary for the Lockheed Martin Cyber Kill Chain framework."@en ;
+    owl:imports <https://cyberterrain.org/ns/frameworks/killchain#> .
+
+###  https://cyberterrain.org/ns/frameworks/killchain#killChainPhase
+stonework:killChainPhase 
+    rdf:type owl:ObjectProperty ;
+    rdfs:domain stonework:CyberEntity ;
+    rdfs:range stones:KillChainPhase , stonework:Category ;
+    skos:prefLabel "kill chain phase"@en ;
+    skos:definition "Links an entity to one or more phases of a kill chain framework."@en ;
+    rdfs:seeAlso stones:killChainName , stones:phaseName .
+
+#################################################################
+#    Cyber Kill Chain Phases (Lockheed Martin)
+#    Mapped to stones:KillChainPhase for compatibility
+#################################################################
+
+###  https://cyberterrain.org/ns/frameworks/killchain#Reconnaissance
+stonework:Reconnaissance 
+    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    stones:killChainName "lockheed-martin-cyber-kill-chain" ;
+    stones:phaseName "reconnaissance" ;
+    skos:prefLabel "Reconnaissance"@en ;
+    skos:definition "The adversary gathers information to identify and select targets (e.g., public source reconnaissance, phishing email harvesting)."@en .
+
+###  https://cyberterrain.org/ns/frameworks/killchain#Weaponization
+stonework:Weaponization 
+    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    stones:killChainName "lockheed-martin-cyber-kill-chain" ;
+    stones:phaseName "weaponization" ;
+    skos:prefLabel "Weaponization"@en ;
+    skos:definition "The adversary couples a remote access trojan with an exploit into a deliverable payload (e.g., creating a malicious PDF or Word document)."@en .
+
+###  https://cyberterrain.org/ns/frameworks/killchain#Delivery
+stonework:Delivery 
+    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    stones:killChainName "lockheed-martin-cyber-kill-chain" ;
+    stones:phaseName "delivery" ;
+    skos:prefLabel "Delivery"@en ;
+    skos:definition "The adversary transmits the weaponized payload to the target (e.g., spear-phishing email, USB drop, drive-by download)."@en .
+
+###  https://cyberterrain.org/ns/frameworks/killchain#Exploitation
+stonework:Exploitation 
+    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    stones:killChainName "lockheed-martin-cyber-kill-chain" ;
+    stones:phaseName "exploitation" ;
+    skos:prefLabel "Exploitation"@en ;
+    skos:definition "The adversary triggers a vulnerability or exploit on the target system to execute code."@en .
+
+###  https://cyberterrain.org/ns/frameworks/killchain#Installation
+stonework:Installation 
+    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    stones:killChainName "lockheed-martin-cyber-kill-chain" ;
+    stones:phaseName "installation" ;
+    skos:prefLabel "Installation"@en ;
+    skos:definition "The adversary installs malware on the target system to establish persistence."@en .
+
+###  https://cyberterrain.org/ns/frameworks/killchain#CommandAndControl
+stonework:CommandAndControl 
+    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    stones:killChainName "lockheed-martin-cyber-kill-chain" ;
+    stones:phaseName "command-and-control" ;
+    skos:prefLabel "Command and Control"@en ;
+    skos:definition "The adversary establishes a command channel to remotely control the compromised system."@en .
+
+###  https://cyberterrain.org/ns/frameworks/killchain#ActionsOnObjectives
+stonework:ActionsOnObjectives 
+    rdf:type owl:NamedIndividual , stonework:Category , stones:KillChainPhase ;
+    stones:killChainName "lockheed-martin-cyber-kill-chain" ;
+    stones:phaseName "actions-on-objectives" ;
+    skos:prefLabel "Actions on Objectives"@en ;
+    skos:definition "The adversary achieves their intended goals (data exfiltration, data destruction, encryption for ransom, etc.)."@en .
