@@ -126,7 +126,7 @@ stonework:downloads rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#drops
 stonework:drops rdf:type owl:ObjectProperty ;
                 rdfs:domain stonework:Malware ;
-                rdfs:range stonework:DigitalArtifact , stonework:File , stonework:Malware ;
+                rdfs:range stonework:DigitalArtifact ;
                 skos:prefLabel "drops" .
 
 ###  https://cyberterrain.org/ns/stonework#emailOf
@@ -137,8 +137,8 @@ stonework:emailOf rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#exploits
 stonework:exploits rdf:type owl:ObjectProperty ;
-                   rdfs:domain <https://cyberterrain.org/ns/stones#Malware> , stonework:Campaign , stonework:ThreatActor ;
-                   rdfs:range <https://cyberterrain.org/ns/stones#Vulnerability> ;
+                   rdfs:domain stonework:Campaign , stonework:Malware , stonework:ThreatActor ;
+                   rdfs:range stonework:Vulnerability ;
                    skos:prefLabel "exploits" ;
                    skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
 
@@ -226,6 +226,19 @@ stonework:originatesFrom rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#overlapsWith
 stonework:overlapsWith rdf:type owl:ObjectProperty ;
                        skos:prefLabel "overlapsWith" .
+
+###  https://cyberterrain.org/ns/stonework#playedBy
+stonework:playedBy rdf:type owl:ObjectProperty ;
+                   owl:inverseOf stonework:playsRole ;
+                   rdfs:domain stonework:Role ;
+                   rdfs:range stonework:CyberEntity ;
+                   skos:prefLabel "playedBy" .
+
+###  https://cyberterrain.org/ns/stonework#playsRole
+stonework:playsRole rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:CyberEntity ;
+                    rdfs:range stonework:Role ;
+                    skos:prefLabel "playsRole" .
 
 ###  https://cyberterrain.org/ns/stonework#precedes
 stonework:precedes rdf:type owl:ObjectProperty ;
@@ -472,6 +485,13 @@ stonework:Event rdf:type owl:Class ;
                 rdfs:subClassOf stonework:Activity ;
                 skos:prefLabel "Event" .
 
+###  https://cyberterrain.org/ns/stonework#Feed
+stonework:Feed rdf:type owl:Class ;
+               rdfs:subClassOf stonework:Provenance ;
+               skos:prefLabel "Feed" ;
+               skos:definition "A structured data source that provides indicators, intelligence, or enrichment data on a regular or continuous basis." ;
+               skos:scopeNote "Examples: URLHaus, AlienVault OTX, Abuse.ch, commercial threat feeds, etc."@en .
+
 ###  https://cyberterrain.org/ns/stonework#File
 stonework:File rdf:type owl:Class ;
                rdfs:subClassOf stonework:DigitalArtifact ;
@@ -496,6 +516,13 @@ stonework:Host rdf:type owl:Class ;
                rdfs:subClassOf stonework:Infrastructure ;
                skos:prefLabel "Host"@en ;
                skos:definition "A computing system, device, or endpoint (physical, virtual, container, or cloud instance) that can run processes, host files, and participate in networks."@en .
+
+###  https://cyberterrain.org/ns/stonework#HumanSource
+stonework:HumanSource rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:Provenance ;
+                      skos:prefLabel "Human Source" ;
+                      skos:definition "A person who provides information, intelligence, or a report (as opposed to automated feeds or technical artifacts)." ;
+                      skos:scopeNote "Often used in HUMINT or OSINT contexts. Reliability scoring is commonly applied to human sources."@en .
 
 ###  https://cyberterrain.org/ns/stonework#IPAddress
 stonework:IPAddress rdf:type owl:Class ;
@@ -584,6 +611,18 @@ stonework:NetworkTraffic rdf:type owl:Class ;
                          skos:prefLabel "Network Traffic"@en ;
                          skos:definition "Represents an arbitrary network traffic flow between source and destination endpoints. Supports extensions for HTTP, ICMP, socket, and TCP specifics." .
 
+###  https://cyberterrain.org/ns/stonework#Note
+stonework:Note rdf:type owl:Class ;
+               rdfs:subClassOf stonework:Information ;
+               skos:prefLabel "Note" ;
+               skos:definition "Conveys informational text to provide further context and/or to assess the accuracy of existing information." .
+
+###  https://cyberterrain.org/ns/stonework#OnlineReference
+stonework:OnlineReference rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:Provenance ;
+                          skos:prefLabel "Online Reference" ;
+                          skos:definition "A reference to an external online resource (URL, article, post, etc.) used for provenance." .
+
 ###  https://cyberterrain.org/ns/stonework#Operation
 stonework:Operation rdf:type owl:Class ;
                     rdfs:subClassOf stonework:Activity ;
@@ -650,6 +689,18 @@ stonework:Provenance rdf:type owl:Class ;
                      skos:definition "Structured source references used to record the origin and trustworthiness of data and relationships."@en ;
                      skos:scopeNote "Includes Feeds, Publications, and URL References."@en .
 
+###  https://cyberterrain.org/ns/stonework#Publication
+stonework:Publication rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:Provenance ;
+                      skos:prefLabel "Publication" ;
+                      skos:definition "A structured intelligence artifact such as a blog post, advisory, report, or news article." .
+
+###  https://cyberterrain.org/ns/stonework#Report
+stonework:Report rdf:type owl:Class ;
+                 rdfs:subClassOf stonework:Information ;
+                 skos:prefLabel "Report" ;
+                 skos:definition "A collection of threat intelligence focused on one or more topics, such as a description of a threat actor, malware, or attack technique." .
+
 ###  https://cyberterrain.org/ns/stonework#Risk
 stonework:Risk rdf:type owl:Class ;
                rdfs:subClassOf stonework:SecurityCondition ;
@@ -657,6 +708,13 @@ stonework:Risk rdf:type owl:Class ;
                skos:prefLabel "Risk" ;
                skos:definition "A measure of the potential for loss or adverse effects arising from the realization of a threat, expressed as a function of the impact of compromise and the likelihood that the compromise will occur." ;
                skos:scopeNote "This class represents the assessed or estimated level of exposure to harm for a specific asset, mission, or organization. Risk is typically derived from the combination of impact and likelihood, and may incorporate assumptions, uncertainty, and contextual factors." .
+
+###  https://cyberterrain.org/ns/stonework#Role
+stonework:Role rdf:type owl:Class ;
+               rdfs:subClassOf stonework:CyberEntity ;
+               skos:prefLabel "Role" ;
+               skos:definition "A function, capacity, or part played by an entity in a specific context, relationship, or operation." ;
+               skos:scopeNote "Roles are typically more stable and relational than Categories. An entity can play multiple Roles. Aligns with patterns in BFO, CCO, and D3FEND (e.g., functional roles of infrastructure or actors)."@en .
 
 ###  https://cyberterrain.org/ns/stonework#RuntimeProcess
 stonework:RuntimeProcess rdf:type owl:Class ;

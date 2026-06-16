@@ -10,9 +10,9 @@
 
 ###  https://cyberterrain.org/ns/frameworks/stix
 frameworks:stix rdf:type owl:Ontology ;
-                   owl:imports <https://cyberterrain.org/ns/stones#> , <https://cyberterrain.org/ns/stonework#> ;
-                   rdfs:label "STONES Framework Ontology"@en ;
-                   rdfs:comment "A mapping of the STONES Ontology to STONEWORK. Provides a class hierarchy for all STONES Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STONES properties."@en .
+                owl:imports <https://cyberterrain.org/ns/stones#> , <https://cyberterrain.org/ns/stonework#> ;
+                rdfs:label "STONES Framework Ontology"@en ;
+                rdfs:comment "A mapping of the STONES Ontology to STONEWORK. Provides a class hierarchy for all STONES Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STONES properties."@en .
 
 
 #################################################################
@@ -61,11 +61,17 @@ stones:EmailAddressObject rdfs:subClassOf stonework:EmailAddress .
 ###  https://cyberterrain.org/ns/stones#exploits
 stones:exploits rdfs:subPropertyOf stonework:exploits .
 
+###  https://cyberterrain.org/ns/stones#ExternalReference
+stones:ExternalReference rdfs:subClassOf stonework:Provenance .
+
 ###  https://cyberterrain.org/ns/stones#FileObject
 stones:FileObject rdfs:subClassOf stonework:File .
 
-###  https://cyberterrain.org/ns/stones#Hash
-stones:Hash rdfs:subClassOf stonework:Hash .
+###  https://cyberterrain.org/ns/stones#Grouping
+stones:Grouping rdfs:subClassOf stonework:Category .
+
+###  https://cyberterrain.org/ns/stones#HashEntry
+stones:HashEntry rdfs:subClassOf stonework:Hash .
 
 ###  https://cyberterrain.org/ns/stones#Identity
 stones:Identity rdfs:subClassOf stonework:Agent .
@@ -73,8 +79,14 @@ stones:Identity rdfs:subClassOf stonework:Agent .
 ###  https://cyberterrain.org/ns/stones#indicates
 stones:indicates rdfs:subPropertyOf stonework:indicates .
 
+###  https://cyberterrain.org/ns/stones#Indicator
+stones:Indicator rdfs:subClassOf stonework:DigitalArtifact .
+
 ###  https://cyberterrain.org/ns/stones#Infrastructure
 stones:Infrastructure rdfs:subClassOf stonework:Infrastructure .
+
+###  https://cyberterrain.org/ns/stones#IntrusionSet
+stones:IntrusionSet rdfs:subClassOf stonework:ThreatActor .
 
 ###  https://cyberterrain.org/ns/stones#IPv4AddressObject
 stones:IPv4AddressObject rdfs:subClassOf stonework:IPAddress .
@@ -91,6 +103,9 @@ stones:MACAddressObject rdfs:subClassOf stonework:Infrastructure .
 ###  https://cyberterrain.org/ns/stones#Malware
 stones:Malware rdfs:subClassOf stonework:Malware .
 
+###  https://cyberterrain.org/ns/stones#MalwareAnalysis
+stones:MalwareAnalysis rdfs:subClassOf stonework:Information .
+
 ###  https://cyberterrain.org/ns/stones#mitigates
 stones:mitigates rdfs:subPropertyOf stonework:mitigates .
 
@@ -100,17 +115,32 @@ stones:MutexObject rdfs:subClassOf stonework:DigitalArtifact .
 ###  https://cyberterrain.org/ns/stones#NetworkTrafficObject
 stones:NetworkTrafficObject rdfs:subClassOf stonework:NetworkTraffic .
 
+###  https://cyberterrain.org/ns/stones#Note
+stones:Note rdfs:subClassOf stonework:Note .
+
+###  https://cyberterrain.org/ns/stones#ObservedData
+stones:ObservedData rdfs:subClassOf stonework:DigitalArtifact .
+
+###  https://cyberterrain.org/ns/stones#Opinion
+stones:Opinion rdfs:subClassOf stonework:Information .
+
 ###  https://cyberterrain.org/ns/stones#ProcessObject
 stones:ProcessObject rdfs:subClassOf stonework:RuntimeProcess .
 
 ###  https://cyberterrain.org/ns/stones#related_to
 stones:related_to rdfs:subPropertyOf stonework:relatedTo .
 
+###  https://cyberterrain.org/ns/stones#Report
+stones:Report rdfs:subClassOf stonework:Report .
+
 ###  https://cyberterrain.org/ns/stones#revoked_by
 stones:revoked_by rdfs:subPropertyOf stonework:revokedBy .
 
 ###  https://cyberterrain.org/ns/stones#SoftwareObject
 stones:SoftwareObject rdfs:subClassOf stonework:Product .
+
+###  https://cyberterrain.org/ns/stones#StixSubType
+stones:StixSubType rdfs:subClassOf stonework:DigitalArtifact .
 
 ###  https://cyberterrain.org/ns/stones#subtechnique_of
 stones:subtechnique_of rdfs:subPropertyOf stonework:techniqueOf .
@@ -135,3 +165,6 @@ stones:uses rdfs:subPropertyOf stonework:uses .
 
 ###  https://cyberterrain.org/ns/stones#Vulnerability
 stones:Vulnerability rdfs:subClassOf stonework:Vulnerability .
+
+###  https://cyberterrain.org/ns/stones#WindowsRegistryKeyObject
+stones:WindowsRegistryKeyObject rdfs:subClassOf stonework:DigitalArtifact .
