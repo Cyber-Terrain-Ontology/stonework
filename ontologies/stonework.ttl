@@ -715,6 +715,12 @@ stonework:Publication rdf:type owl:Class ;
                       skos:prefLabel "Publication" ;
                       skos:definition "A structured intelligence artifact such as a blog post, advisory, report, or news article." .
 
+###  https://cyberterrain.org/ns/stonework#Registry
+stonework:Registry rdf:type owl:Class ;
+                   rdfs:subClassOf stonework:DigitalArtifact ;
+                   skos:prefLabel "Registry" ;
+                   skos:definition "Describes elements within the Windows configuration Registry system." .
+
 ###  https://cyberterrain.org/ns/stonework#Report
 stonework:Report rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Information ;
@@ -825,7 +831,13 @@ stonework:URL rdf:type owl:Class ;
 stonework:UserAccount rdf:type owl:Class ;
                       rdfs:subClassOf stonework:Identifier ;
                       skos:prefLabel "User Account"@en ;
-                      skos:definition "Represents a user account on a system or service, including local OS accounts, cloud accounts, and social media accounts. Supports a unix-account extension for POSIX attributes." .
+                      skos:definition "Represents a user account on a system or service, including local OS accounts, cloud accounts, and social media accounts."@en .
+
+###  https://cyberterrain.org/ns/stonework#UserGroup
+stonework:UserGroup rdf:type owl:Class ;
+                    rdfs:subClassOf stonework:Identifier ;
+                    skos:prefLabel "User Group" ;
+                    skos:definition "Represents a user group on a system or service, including local OS groups, cloud groups, and social media groups."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Vulnerability
 stonework:Vulnerability rdf:type owl:Class ;

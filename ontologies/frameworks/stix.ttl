@@ -170,4 +170,7 @@ stones:uses rdfs:subPropertyOf stonework:uses .
 stones:Vulnerability rdfs:subClassOf stonework:Vulnerability .
 
 ###  https://cyberterrain.org/ns/stones#WindowsRegistryKeyObject
-stones:WindowsRegistryKeyObject rdfs:subClassOf stonework:DigitalArtifact .
+stones:WindowsRegistryKeyObject rdfs:subClassOf stonework:Registry .
+
+###  https://cyberterrain.org/ns/stones#WindowsRegistryValue
+stones:WindowsRegistryValue rdfs:subClassOf stonework:Registry .
