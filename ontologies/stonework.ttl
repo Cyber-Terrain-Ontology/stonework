@@ -229,6 +229,12 @@ stonework:indicates rdf:type owl:ObjectProperty ;
 stonework:linkedTo rdf:type owl:ObjectProperty ;
                    skos:prefLabel "linkedTo" .
 
+###  https://cyberterrain.org/ns/stonework#markingRef
+stonework:markingRef rdf:type owl:ObjectProperty ;
+                     rdfs:range stonework:Markings ;
+                     skos:prefLabel "markingRef" ;
+                     skos:definition "Reference to the Markings applied by this marking entry." .
+
 ###  https://cyberterrain.org/ns/stonework#memberOf
 stonework:memberOf rdf:type owl:ObjectProperty ;
                    owl:inverseOf stonework:hasMember ;
@@ -528,6 +534,13 @@ stonework:CyberTechnique rdf:type owl:Class ;
                          skos:definition "A technique performed within or against cyberspace, encompassing both offensive and defensive cyber operations." ;
                          skos:scopeNote "Mirrors D3FEND's CyberTechnique class. Subclassed by stonework:AttackTechnique (offensive) and stonework:DefendTechnique (defensive), enabling a single property chain to span both ATT&CK and D3FEND individuals." .
 
+###  https://cyberterrain.org/ns/stonework#DataAsset
+stonework:DataAsset rdf:type owl:Class ;
+                    rdfs:subClassOf stonework:Infrastructure ;
+                    skos:prefLabel "Data Asset" ;
+                    skos:definition "A defender-owned collection of data or information with organizational value, such as databases, intellectual property, credentials stores, or PII collections."@en ;
+                    skos:scopeNote "Represents data as a targetable resource distinct from the systems that store or process it. Used to model what adversaries seek to access, exfiltrate, or destroy rather than the infrastructure they exploit to reach it."@en .
+
 ###  https://cyberterrain.org/ns/stonework#DefendTechnique
 stonework:DefendTechnique rdf:type owl:Class ;
                           rdfs:subClassOf stonework:CyberTechnique ;
@@ -723,7 +736,7 @@ Examples include: applying a security patch, enabling multi-factor authenticatio
 
 ###  https://cyberterrain.org/ns/stonework#MobileDevice
 stonework:MobileDevice rdf:type owl:Class ;
-                       rdfs:subClassOf stonework:Infrastructure ;
+                       rdfs:subClassOf stonework:Host ;
                        skos:prefLabel "Mobile Device" ;
                        skos:definition "A portable computing device with wireless connectivity, typically used for communication, data processing, and accessing networks (e.g., smartphones, tablets, or laptops with cellular capability)."@en ;
                        skos:scopeNote "In a cyber threat context, Mobile Devices are often treated as both endpoints (Infrastructure) and vectors for attacks (e.g., mobile malware, phishing, lost/stolen device risks). They may host UserAccounts, run Mobile Applications, and connect via cellular, Wi-Fi, or Bluetooth."@en .
