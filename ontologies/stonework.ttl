@@ -10,8 +10,8 @@
 
 ###  https://cyberterrain.org/ns/stonework#
 <https://cyberterrain.org/ns/stonework#> rdf:type owl:Ontology ;
-                                         owl:versionIRI <https://cyberterrain.org/ns/stonework/0.2.0> ;
-                                         owl:versionInfo "0.2.0" ;
+                                         owl:versionIRI <https://cyberterrain.org/ns/stonework/0.3.0> ;
+                                         owl:versionInfo "0.3.0" ;
                                          rdfs:label "STONEWORK"@en ;
                                          dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
                                          dcterms:description "A semantic threat ontology and research framework that serves as the evolutionary successor to the STONES ontology. It provides a forward-looking, extensible foundation for modeling next-generation cyber threat intelligence concepts, objects, relationships, workflows, and knowledge beyond the scope of STIX 2.1." ;
@@ -706,6 +706,12 @@ stonework:MalwareSample rdf:type owl:Class ;
                         skos:definition "A discrete, observable instance of malicious code — a specific binary, script, or executable artifact that can be identified by cryptographic hash, file characteristics, or behavioral signature."@en ;
                         skos:scopeNote "Represents a concrete sample rather than an abstract family concept. A single MalwareFamily may have thousands of associated samples across versions, packers, and dropper variants. Samples are linked to their family via stonework:memberOfFamily and to their file representation via stonework:hasHash or a direct stonework:File association. Properties such as stonework:drops, stonework:downloads, and stonework:communicatesWith describe the behavior of this specific sample, not the family in general."@en .
 
+###  https://cyberterrain.org/ns/stonework#Markings
+stonework:Markings rdf:type owl:Class ;
+                   rdfs:subClassOf stonework:Category ;
+                   skos:prefLabel "Markings"@en ;
+                   skos:definition "Defines a data handling marking used to restrict or label how data can be shared or handled, such as TLP markings. Referenced by object_marking_refs or granular_markings."@en .
+
 ###  https://cyberterrain.org/ns/stonework#Mitigation
 stonework:Mitigation rdf:type owl:Class ;
                      rdfs:subClassOf stonework:SecurityMeasure ;
@@ -892,12 +898,6 @@ stonework:Sighting rdf:type owl:Class ;
                    skos:prefLabel "Sighting" ;
                    skos:definition "Records that a object such as an indicator, malware, tool, or threat actor was seen. Wraps observation metadata around a reference to the sighted object."@en .
 
-###  https://cyberterrain.org/ns/stonework#TLPLabel
-stonework:TLPLabel rdf:type owl:Class ;
-                   rdfs:subClassOf stonework:Category ;
-                   skos:prefLabel "TLP Label"@en ;
-                   skos:definition "Traffic Light Protocol (TLP)"@en .
-
 ###  https://cyberterrain.org/ns/stonework#Tactic
 stonework:Tactic rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Behavior ;
@@ -996,26 +996,26 @@ stonework:indicator rdf:type owl:NamedIndividual , stonework:Category ;
                     skos:scopeNote "In STONEWORK, Indicators can be simple (single IOC like a hash or IP) or complex (full STIX patterns combining multiple artifacts and conditions)."@en .
 
 ###  https://cyberterrain.org/ns/stonework#tlpAmber
-stonework:tlpAmber rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+stonework:tlpAmber rdf:type owl:NamedIndividual , stonework:Markings ;
                    skos:prefLabel "TLP:AMBER"@en ;
                    skos:definition "Limited disclosure, restricted to participants’ organization and its clients."@en .
 
 ###  https://cyberterrain.org/ns/stonework#tlpAmberStrict
-stonework:tlpAmberStrict rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+stonework:tlpAmberStrict rdf:type owl:NamedIndividual , stonework:Markings ;
                          skos:prefLabel "TLP:AMBER+STRICT" ;
                          skos:definition "Limited disclosure, restricted to participants’ organization."@en .
 
 ###  https://cyberterrain.org/ns/stonework#tlpClear
-stonework:tlpClear rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+stonework:tlpClear rdf:type owl:NamedIndividual , stonework:Markings ;
                    skos:prefLabel "TLP:CLEAR"@en ;
                    skos:definition "Disclosure is not limited."@en .
 
 ###  https://cyberterrain.org/ns/stonework#tlpGreen
-stonework:tlpGreen rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+stonework:tlpGreen rdf:type owl:NamedIndividual , stonework:Markings ;
                    skos:prefLabel "TLP:GREEN"@en ;
                    skos:definition "Limited disclosure, restricted to the community."@en .
 
 ###  https://cyberterrain.org/ns/stonework#tlpRed
-stonework:tlpRed rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+stonework:tlpRed rdf:type owl:NamedIndividual , stonework:Markings ;
                  skos:prefLabel "TLP:RED"@en ;
                  skos:definition "Not for disclosure, restricted to participants only."@en .

@@ -11,6 +11,8 @@
 
 <https://cyberterrain.org/ns/frameworks/killchain>
     a owl:Ontology ;
+    owl:versionIRI <https://cyberterrain.org/ns/frameworks/killchain/0.1.0> ;
+    owl:versionInfo "0.1.0" ;
     rdfs:label "Cyber Kill Chain Framework Ontology"@en ;
     rdfs:comment "OWL vocabulary for the Lockheed Martin Cyber Kill Chain framework."@en ;
     owl:imports <https://cyberterrain.org/ns/stonework#> .
