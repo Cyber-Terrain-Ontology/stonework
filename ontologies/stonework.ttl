@@ -44,13 +44,6 @@ stonework:affected rdf:type owl:ObjectProperty ;
                    skos:definition "Relates a vulnerability to a product known to be affected by it." ;
                    skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
-###  https://cyberterrain.org/ns/stonework#dependencyOf
-stonework:dependencyOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
-                       rdfs:domain stonework:Product ;
-                       rdfs:range stonework:Product ;
-                       skos:prefLabel "dependencyOf"@en ;
-                       skos:definition "Relates a product to another product that depends on it. Transitive to support supply chain reasoning across deep dependency trees."@en .
-
 ###  https://cyberterrain.org/ns/stonework#affiliatedWith
 stonework:affiliatedWith rdf:type owl:ObjectProperty ;
                          rdfs:range stonework:Agent ;
@@ -125,6 +118,13 @@ stonework:counters rdf:type owl:ObjectProperty ;
                    rdfs:range stonework:AITechnique , stonework:AttackTechnique ;
                    skos:prefLabel "counters" .
 
+###  https://cyberterrain.org/ns/stonework#dependencyOf
+stonework:dependencyOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                       rdfs:domain stonework:Product ;
+                       rdfs:range stonework:Product ;
+                       skos:prefLabel "dependencyOf"@en ;
+                       skos:definition "Relates a product to another product that depends on it. Transitive to support supply chain reasoning across deep dependency trees."@en .
+
 ###  https://cyberterrain.org/ns/stonework#derivedFrom
 stonework:derivedFrom rdf:type owl:ObjectProperty ;
                       rdfs:domain stonework:DetectionRule ;
@@ -135,7 +135,7 @@ stonework:derivedFrom rdf:type owl:ObjectProperty ;
 stonework:detects rdf:type owl:ObjectProperty ;
                   rdfs:domain stonework:AnalyticTechnique , stonework:DefendTechnique , stonework:DetectionRule , stonework:Sensor ;
                   skos:prefLabel "detects" ;
-                  skos:definition "Shortcut triple: source CourseOfAction or Indicator detects target. Corresponds to STIX relationship_type 'detects'." .
+                  skos:definition "Relates a source DetectionRule, Sensor, Indicator, or defensive technique to the threat, activity, or artifact it is capable of detecting. Corresponds to STIX relationship_type 'detects'."@en .
 
 ###  https://cyberterrain.org/ns/stonework#downloads
 stonework:downloads rdf:type owl:ObjectProperty ;
@@ -156,6 +156,13 @@ stonework:emailOf rdf:type owl:ObjectProperty ;
                   rdfs:range stonework:Agent ;
                   skos:prefLabel "emailOf" .
 
+###  https://cyberterrain.org/ns/stonework#exploits
+stonework:exploits rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Campaign , stonework:MalwareSample , stonework:ThreatActor ;
+                   rdfs:range stonework:Vulnerability ;
+                   skos:prefLabel "exploits" ;
+                   skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
+
 ###  https://cyberterrain.org/ns/stonework#fixedInProduct
 stonework:fixedInProduct rdf:type owl:ObjectProperty ;
                          rdfs:domain stonework:Vulnerability ;
@@ -164,18 +171,19 @@ stonework:fixedInProduct rdf:type owl:ObjectProperty ;
                          skos:definition "Relates a vulnerability to the product version in which it was addressed."@en ;
                          skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. Populated by CVE/patch ingest."@en .
 
-###  https://cyberterrain.org/ns/stonework#exploits
-stonework:exploits rdf:type owl:ObjectProperty ;
-                   rdfs:domain stonework:Campaign , stonework:MalwareSample , stonework:ThreatActor ;
-                   rdfs:range stonework:Vulnerability ;
-                   skos:prefLabel "exploits" ;
-                   skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
-
 ###  https://cyberterrain.org/ns/stonework#hasAccount
 stonework:hasAccount rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Agent ;
                      rdfs:range stonework:UserAccount ;
                      skos:prefLabel "hasAccount"@en .
+
+###  https://cyberterrain.org/ns/stonework#hasDependency
+stonework:hasDependency rdf:type owl:ObjectProperty ;
+                        owl:inverseOf stonework:dependencyOf ;
+                        rdfs:domain stonework:Product ;
+                        rdfs:range stonework:Product ;
+                        skos:prefLabel "hasDependency"@en ;
+                        skos:definition "Relates a product to another product it depends on."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasEmail
 stonework:hasEmail rdf:type owl:ObjectProperty ;
@@ -196,10 +204,37 @@ stonework:hasIdentifier rdf:type owl:ObjectProperty ;
                         skos:prefLabel "hasIdentifier" ;
                         skos:definition "Links a Digital Identity to one or more atomic Identifiers that belong to it." .
 
+###  https://cyberterrain.org/ns/stonework#hasInfrastructureType
+stonework:hasInfrastructureType rdf:type owl:ObjectProperty ;
+                                rdfs:subPropertyOf stonework:categorizedBy ;
+                                rdfs:domain stonework:Infrastructure ;
+                                rdfs:range stonework:InfrastructureType ;
+                                skos:prefLabel "hasInfrastructureType"@en ;
+                                skos:definition "Relates an infrastructure individual to one or more classifications describing its operational role or purpose."@en ;
+                                skos:scopeNote "A piece of infrastructure may serve multiple roles (e.g. both C2 and staging). Aligns with the STIX 2.1 infrastructure-type open vocabulary."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasMalwareType
+stonework:hasMalwareType rdf:type owl:ObjectProperty ;
+                         rdfs:subPropertyOf stonework:categorizedBy ;
+                         rdfs:domain stonework:MalwareFamily , stonework:MalwareSample ;
+                         rdfs:range stonework:MalwareType ;
+                         skos:prefLabel "hasMalwareType"@en ;
+                         skos:definition "Relates a malware sample or family to one or more functional type classifications."@en ;
+                         skos:scopeNote "A malware sample may have multiple types (e.g. a trojan that also acts as a downloader). Aligns with the STIX 2.1 malware-type open vocabulary."@en .
+
 ###  https://cyberterrain.org/ns/stonework#hasMember
 stonework:hasMember rdf:type owl:ObjectProperty ;
                     rdfs:domain stonework:Group , stonework:Organization , stonework:ThreatActor ;
                     skos:prefLabel "hasMember"@en .
+
+###  https://cyberterrain.org/ns/stonework#hasMotivation
+stonework:hasMotivation rdf:type owl:ObjectProperty ;
+                        rdfs:subPropertyOf stonework:categorizedBy ;
+                        rdfs:domain stonework:ThreatActor ;
+                        rdfs:range stonework:Motivation ;
+                        skos:prefLabel "hasMotivation"@en ;
+                        skos:definition "Relates a threat actor to one or more motivations that drive their actions and operations."@en ;
+                        skos:scopeNote "A threat actor may have multiple motivations. Corresponds to the STIX 2.1 primary_motivation and secondary_motivations properties on ThreatActor."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasPhoneNumber
 stonework:hasPhoneNumber rdf:type owl:ObjectProperty ;
@@ -207,12 +242,46 @@ stonework:hasPhoneNumber rdf:type owl:ObjectProperty ;
                          rdfs:range stonework:PhoneNumber ;
                          skos:prefLabel "hasPhoneNumber"@en .
 
+###  https://cyberterrain.org/ns/stonework#hasProductType
+stonework:hasProductType rdf:type owl:ObjectProperty ;
+                         rdfs:subPropertyOf stonework:categorizedBy ;
+                         rdfs:domain stonework:ProductFamily ;
+                         rdfs:range stonework:ProductType ;
+                         skos:prefLabel "hasProductType"@en ;
+                         skos:definition "Relates a product family to one or more product type classifications describing its functional category."@en ;
+                         skos:scopeNote "A product may have multiple types. Corresponds to the CPE component type field (a, o, h) but extends it with finer-grained vocabulary."@en .
+
 ###  https://cyberterrain.org/ns/stonework#hasTechnique
 stonework:hasTechnique rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                        rdfs:domain stonework:Tactic , stonework:Technique ;
                        rdfs:range stonework:Technique ;
                        skos:prefLabel "hasTechnique" ;
                        skos:definition "Relates a tactic to an offensive technique that serves that tactic's goal." .
+
+###  https://cyberterrain.org/ns/stonework#hasThreatActorType
+stonework:hasThreatActorType rdf:type owl:ObjectProperty ;
+                             rdfs:subPropertyOf stonework:categorizedBy ;
+                             rdfs:domain stonework:ThreatActor ;
+                             rdfs:range stonework:ThreatActorType ;
+                             skos:prefLabel "hasThreatActorType"@en ;
+                             skos:definition "Relates a threat actor to one or more classifications describing their organizational form or primary mode of operation."@en ;
+                             skos:scopeNote "A threat actor may have multiple types (e.g. nation-state actor who is also a spy). Aligns with the STIX 2.1 threat-actor-type open vocabulary."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasVendor
+stonework:hasVendor rdf:type owl:ObjectProperty ;
+                    owl:inverseOf stonework:vendorOf ;
+                    rdfs:domain stonework:ProductFamily ;
+                    rdfs:range stonework:Agent ;
+                    skos:prefLabel "hasVendor"@en ;
+                    skos:definition "Relates a product family to the Agent (organization or person) that develops or maintains it."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasVersion
+stonework:hasVersion rdf:type owl:ObjectProperty ;
+                     owl:inverseOf stonework:versionOf ;
+                     rdfs:domain stonework:ProductFamily ;
+                     rdfs:range stonework:Product ;
+                     skos:prefLabel "hasVersion"@en ;
+                     skos:definition "Relates a product family to a specific versioned product instance."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasWeakness
 stonework:hasWeakness rdf:type owl:AsymmetricProperty , owl:ObjectProperty ;
@@ -250,80 +319,11 @@ stonework:markingRef rdf:type owl:ObjectProperty ;
                      skos:prefLabel "markingRef" ;
                      skos:definition "Reference to the Markings applied by this marking entry." .
 
-###  https://cyberterrain.org/ns/stonework#hasDependency
-stonework:hasDependency rdf:type owl:ObjectProperty ;
-                        owl:inverseOf stonework:dependencyOf ;
-                        rdfs:domain stonework:Product ;
-                        rdfs:range stonework:Product ;
-                        skos:prefLabel "hasDependency"@en ;
-                        skos:definition "Relates a product to another product it depends on."@en .
-
-###  https://cyberterrain.org/ns/stonework#hasVendor
-stonework:hasVendor rdf:type owl:ObjectProperty ;
-                    owl:inverseOf stonework:vendorOf ;
-                    rdfs:domain stonework:ProductFamily ;
-                    rdfs:range stonework:Agent ;
-                    skos:prefLabel "hasVendor"@en ;
-                    skos:definition "Relates a product family to the Agent (organization or person) that develops or maintains it."@en .
-
-###  https://cyberterrain.org/ns/stonework#hasVersion
-stonework:hasVersion rdf:type owl:ObjectProperty ;
-                     owl:inverseOf stonework:versionOf ;
-                     rdfs:domain stonework:ProductFamily ;
-                     rdfs:range stonework:Product ;
-                     skos:prefLabel "hasVersion"@en ;
-                     skos:definition "Relates a product family to a specific versioned product instance."@en .
-
 ###  https://cyberterrain.org/ns/stonework#memberOf
 stonework:memberOf rdf:type owl:ObjectProperty ;
                    owl:inverseOf stonework:hasMember ;
                    rdfs:range stonework:Group , stonework:Organization , stonework:ThreatActor ;
                    skos:prefLabel "memberOf"@en .
-
-###  https://cyberterrain.org/ns/stonework#hasInfrastructureType
-stonework:hasInfrastructureType rdf:type owl:ObjectProperty ;
-                                rdfs:subPropertyOf stonework:categorizedBy ;
-                                rdfs:domain stonework:Infrastructure ;
-                                rdfs:range stonework:InfrastructureType ;
-                                skos:prefLabel "hasInfrastructureType"@en ;
-                                skos:definition "Relates an infrastructure individual to one or more classifications describing its operational role or purpose."@en ;
-                                skos:scopeNote "A piece of infrastructure may serve multiple roles (e.g. both C2 and staging). Aligns with the STIX 2.1 infrastructure-type open vocabulary."@en .
-
-###  https://cyberterrain.org/ns/stonework#hasMalwareType
-stonework:hasMalwareType rdf:type owl:ObjectProperty ;
-                         rdfs:subPropertyOf stonework:categorizedBy ;
-                         rdfs:domain stonework:MalwareFamily , stonework:MalwareSample ;
-                         rdfs:range stonework:MalwareType ;
-                         skos:prefLabel "hasMalwareType"@en ;
-                         skos:definition "Relates a malware sample or family to one or more functional type classifications."@en ;
-                         skos:scopeNote "A malware sample may have multiple types (e.g. a trojan that also acts as a downloader). Aligns with the STIX 2.1 malware-type open vocabulary."@en .
-
-###  https://cyberterrain.org/ns/stonework#hasMotivation
-stonework:hasMotivation rdf:type owl:ObjectProperty ;
-                        rdfs:subPropertyOf stonework:categorizedBy ;
-                        rdfs:domain stonework:ThreatActor ;
-                        rdfs:range stonework:Motivation ;
-                        skos:prefLabel "hasMotivation"@en ;
-                        skos:definition "Relates a threat actor to one or more motivations that drive their actions and operations."@en ;
-                        skos:scopeNote "A threat actor may have multiple motivations. Corresponds to the STIX 2.1 primary_motivation and secondary_motivations properties on ThreatActor."@en .
-
-###  https://cyberterrain.org/ns/stonework#hasProductType
-stonework:hasProductType rdf:type owl:ObjectProperty ;
-                         rdfs:subPropertyOf stonework:categorizedBy ;
-                         rdfs:domain stonework:ProductFamily ;
-                         rdfs:range stonework:ProductType ;
-                         skos:prefLabel "hasProductType"@en ;
-                         skos:definition "Relates a product family to one or more product type classifications describing its functional category."@en ;
-                         skos:scopeNote "A product may have multiple types. Corresponds to the CPE component type field (a, o, h) but extends it with finer-grained vocabulary."@en .
-
-###  https://cyberterrain.org/ns/stonework#hasThreatActorType
-stonework:hasThreatActorType rdf:type owl:ObjectProperty ;
-                             rdfs:subPropertyOf stonework:categorizedBy ;
-                             rdfs:domain stonework:ThreatActor ;
-                             rdfs:range stonework:ThreatActorType ;
-                             skos:prefLabel "hasThreatActorType"@en ;
-                             skos:definition "Relates a threat actor to one or more classifications describing their organizational form or primary mode of operation."@en ;
-                             skos:scopeNote "A threat actor may have multiple types (e.g. nation-state actor who is also a spy). Aligns with the STIX 2.1 threat-actor-type open vocabulary."@en .
 
 ###  https://cyberterrain.org/ns/stonework#memberOfFamily
 stonework:memberOfFamily rdf:type owl:ObjectProperty ;
@@ -342,7 +342,7 @@ stonework:mitigates rdf:type owl:ObjectProperty ;
                     rdfs:domain stonework:SecurityMeasure ;
                     rdfs:range stonework:AttackPattern , stonework:Vulnerability ;
                     skos:prefLabel "mitigates" ;
-                    skos:definition "Shortcut triple: source CourseOfAction mitigates target AttackPattern or Vulnerability. Corresponds to STIX relationship_type 'mitigates'." .
+                    skos:definition "Relates a Mitigation, CourseOfAction, or Control to the AttackPattern or Vulnerability it addresses. Corresponds to STIX relationship_type 'mitigates'."@en .
 
 ###  https://cyberterrain.org/ns/stonework#observedIn
 stonework:observedIn rdf:type owl:ObjectProperty ;
@@ -402,8 +402,8 @@ stonework:relatedTechnique rdf:type owl:ObjectProperty ;
                            rdfs:domain stonework:CyberTechnique ;
                            rdfs:range stonework:CyberTechnique ;
                            skos:prefLabel "relatedTechnique" ;
-                           skos:definition "Relates any STIX object to a technique it exploits, instantiates, or operationalizes." ;
-                           skos:scopeNote "Covers two cross-dataset links: (1) CWE weakness → CAPEC technique (exploits/instantiates), and (2) CAPEC technique → ATT&CK technique (operationalizes). Both subjects are stones:StixObject individuals." .
+                           skos:definition "Relates a CyberTechnique to another related CyberTechnique via a cross-framework or cross-abstraction-level association."@en ;
+                           skos:scopeNote "Used for links such as CWE weakness → CAPEC technique (exploits/instantiates) and CAPEC technique → ATT&CK technique (operationalizes). Domain is CyberTechnique; framework-specific individuals populate the relationships at the framework mapping layer."@en .
 
 ###  https://cyberterrain.org/ns/stonework#relatedTo
 stonework:relatedTo rdf:type owl:ObjectProperty ;
@@ -442,6 +442,13 @@ stonework:subdomainOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                       rdfs:domain stonework:Domain ;
                       rdfs:range stonework:Domain ;
                       skos:prefLabel "subdomainOf" .
+
+###  https://cyberterrain.org/ns/stonework#supersedes
+stonework:supersedes rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                     rdfs:domain stonework:Product ;
+                     rdfs:range stonework:Product ;
+                     skos:prefLabel "supersedes"@en ;
+                     skos:definition "Relates a product version to an older version it replaces. Transitive to support full product lifecycle reasoning."@en .
 
 ###  https://cyberterrain.org/ns/stonework#targets
 stonework:targets rdf:type owl:ObjectProperty ;
@@ -486,13 +493,6 @@ stonework:variantOf rdf:type owl:ObjectProperty ;
                     rdfs:range stonework:File , stonework:Hash , stonework:MalwareFamily , stonework:MalwareSample ;
                     skos:prefLabel "variantOf" ;
                     skos:definition "Relates a malware sample or family to another sample or family from which it is derived, modified, or evolved — indicating shared code lineage, forked development, or deliberate repackaging."@en .
-
-###  https://cyberterrain.org/ns/stonework#supersedes
-stonework:supersedes rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
-                     rdfs:domain stonework:Product ;
-                     rdfs:range stonework:Product ;
-                     skos:prefLabel "supersedes"@en ;
-                     skos:definition "Relates a product version to an older version it replaces. Transitive to support full product lifecycle reasoning."@en .
 
 ###  https://cyberterrain.org/ns/stonework#vendorOf
 stonework:vendorOf rdf:type owl:ObjectProperty ;
@@ -548,14 +548,15 @@ stonework:Agent rdf:type owl:Class ;
 stonework:AnalyticTechnique rdf:type owl:Class ;
                             rdfs:subClassOf stonework:Technique ;
                             skos:prefLabel "Analytic Technique" ;
-                            skos:definition "Methods of analysis (part of the Analytic Characterization Framework)"@en .
+                            skos:definition "A prescribed analytical method used to process, evaluate, or reason over data to produce intelligence, detections, or assessments."@en ;
+                            skos:scopeNote "Covers structured analytic techniques (e.g., analysis of competing hypotheses, kill chain analysis, diamond model analysis) and computational analytic methods (e.g., clustering, anomaly detection). Distinct from DetectionRule — an AnalyticTechnique describes the method; a DetectionRule is a deployable artifact implementing it."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Assessment
 stonework:Assessment rdf:type owl:Class ;
                      rdfs:subClassOf stonework:Information ;
                      skos:prefLabel "Assessment" ;
-                     skos:definition "A process of evaluating, analyzing, or estimating risk, likelihood, impact, or other security-related attributes."@en ;
-                     skos:scopeNote "Covers risk assessments, vulnerability assessments, impact analyses, and similar evaluative processes. Not a static property but an active process that produces outputs (e.g. risk ratings) that can be represented as properties or linked individuals."@en .
+                     skos:definition "A structured knowledge artifact capturing the evaluation, analysis, or estimation of risk, likelihood, impact, or other security-relevant attributes."@en ;
+                     skos:scopeNote "Covers risk assessments, vulnerability assessments, and impact analyses. Assessment is an Information artifact — the output of an evaluative process — not the process itself. The process producing an Assessment may be modeled as a stonework:Process or stonework:Investigation."@en .
 
 ###  https://cyberterrain.org/ns/stonework#AttackPattern
 stonework:AttackPattern rdf:type owl:Class ;
@@ -581,7 +582,7 @@ stonework:Behavior rdf:type owl:Class ;
                    rdfs:subClassOf stonework:CyberEntity ;
                    skos:prefLabel "Behavior" ;
                    skos:definition "A pattern of actions or methods characteristic of an entity, particularly adversaries."@en ;
-                   skos:scopeNote "Groups TTP-related classes such as Tactics, Techniques, and Procedures. In BFO terms, Behaviors are GenericallyDependentContinuants — specifications or patterns that describe how actions are carried out. The execution of a Technique is an Activity; the Technique itself is a Behavior (Thing). Aligns with CCO DirectiveInformationContentEntity and IAO PlanSpecification."@en .
+                   skos:scopeNote "Groups TTP-related classes: Tactic, Technique (and subclasses), and Procedure. In BFO terms, Behaviors are GenericallyDependentContinuants — specifications or patterns describing how actions are carried out. The execution of a Technique is a CyberActivity; the Technique itself is a Behavior. Aligns with IAO PlanSpecification."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Campaign
 stonework:Campaign rdf:type owl:Class ;
@@ -595,6 +596,13 @@ stonework:Category rdf:type owl:Class ;
                    skos:prefLabel "Category" ;
                    skos:definition "A classification or tagging concept used to group or qualify other individuals in a particular context." ;
                    skos:scopeNote "Categories are reified so they can be referenced, versioned, or scoped. They are not rigid types." .
+
+###  https://cyberterrain.org/ns/stonework#Certificate
+stonework:Certificate rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:DigitalArtifact ;
+                      skos:prefLabel "Certificate"@en ;
+                      skos:definition "A structured digital document binding a public key to an identity, issued and signed by a certificate authority. Used for authentication, encryption, and trust establishment in networked systems."@en ;
+                      skos:scopeNote "Primarily represents X.509 certificates. May be used to cluster infrastructure sharing the same certificate or to link observed TLS/SSL artifacts to their issuing authority. Referenced by stonework:sharesCertificate on Infrastructure."@en .
 
 ###  https://cyberterrain.org/ns/stonework#City
 stonework:City rdf:type owl:Class ;
@@ -616,24 +624,24 @@ stonework:Country rdf:type owl:Class ;
                   skos:prefLabel "Country" ;
                   skos:definition "A sovereign state or top-level administrative entity recognized internationally." .
 
+###  https://cyberterrain.org/ns/stonework#CourseOfAction
+stonework:CourseOfAction rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:Mitigation ;
+                         skos:prefLabel "Course of Action"@en ;
+                         skos:definition "A specific, contextualized recommended action or set of steps to prevent or respond to a threat, attack, or incident."@en ;
+                         skos:scopeNote "More prescriptive and situational than a general Mitigation — a CourseOfAction packages guidance for a specific threat context. Corresponds to the STIX 2.1 CourseOfAction SDO. General reusable controls (e.g. ATT&CK mitigations) are modeled as Mitigation; specific incident response actions are CourseOfAction."@en .
+
 ###  https://cyberterrain.org/ns/stonework#CryptoAsset
 stonework:CryptoAsset rdf:type owl:Class ;
                       rdfs:subClassOf stonework:DigitalArtifact ;
                       skos:prefLabel "Crypto Asset"@en ;
                       skos:definition "A digital asset or wallet address used in cryptocurrency transactions, often relevant for tracking ransomware payments or illicit finance."@en .
 
-###  https://cyberterrain.org/ns/stonework#Certificate
-stonework:Certificate rdf:type owl:Class ;
-                      rdfs:subClassOf stonework:DigitalArtifact ;
-                      skos:prefLabel "Certificate"@en ;
-                      skos:definition "A structured digital document binding a public key to an identity, issued and signed by a certificate authority. Used for authentication, encryption, and trust establishment in networked systems."@en ;
-                      skos:scopeNote "Primarily represents X.509 certificates. May be used to cluster infrastructure sharing the same certificate or to link observed TLS/SSL artifacts to their issuing authority. Referenced by stonework:sharesCertificate on Infrastructure."@en .
-
 ###  https://cyberterrain.org/ns/stonework#CyberActivity
 stonework:CyberActivity rdf:type owl:Class ;
                         skos:prefLabel "Cyber Activity" ;
                         skos:definition "A specific occurrence or performance of actions by one or more agents over time within a cyber or sociotechnical context."@en ;
-                        skos:scopeNote "One of two root classes in STONEWORK alongside CyberEntity. Superclass for higher-level operational concepts such as Campaigns, Incidents, Operations, and Events. Aligns with BFO Occurrent and CCO Process."@en .
+                        skos:scopeNote "One of two root classes in STONEWORK alongside CyberEntity. Superclass for Campaigns, Incidents, Operations, Events, and Processes. Aligns with BFO Occurrent and BFO Process."@en .
 
 ###  https://cyberterrain.org/ns/stonework#CyberEntity
 stonework:CyberEntity rdf:type owl:Class ;
@@ -675,13 +683,6 @@ stonework:DetectionRule rdf:type owl:Class ;
                         skos:prefLabel "Detection Rule" ;
                         skos:definition "A structured, machine-readable rule designed to detect malicious or suspicious activity, techniques, or indicators. It may be signature-based, behavioral, correlation-based, or analytic."@en ;
                         skos:scopeNote "Encompasses pattern-matching signatures (YARA, Snort, Suricata), behavioral rules (Sigma), SIEM correlation logic, and analytic detections. Signature is a subclass for content-centric, indicator-matching rules."@en .
-
-###  https://cyberterrain.org/ns/stonework#Signature
-stonework:Signature rdf:type owl:Class ;
-                    rdfs:subClassOf stonework:DetectionRule ;
-                    skos:prefLabel "Signature"@en ;
-                    skos:definition "A content-centric detection rule that matches malicious activity by a specific pattern — a byte sequence, string, hash, regular expression, or network packet structure."@en ;
-                    skos:scopeNote "Includes YARA rules, Snort/Suricata rules, and AV signatures. Distinguished from broader DetectionRule subclasses (behavioral, correlation, analytic) by its tight binding to a specific known-bad indicator or artifact pattern."@en .
 
 ###  https://cyberterrain.org/ns/stonework#DigitalArtifact
 stonework:DigitalArtifact rdf:type owl:Class ;
@@ -727,7 +728,8 @@ stonework:Feed rdf:type owl:Class ;
 stonework:File rdf:type owl:Class ;
                rdfs:subClassOf stonework:DigitalArtifact ;
                skos:prefLabel "File"@en ;
-               skos:definition "Represents a file with its metadata and optional content reference. Supports extensions for archive files, NTFS streams, PE binaries, PDF documents, and raster images." .
+               skos:definition "A discrete unit of data stored on a filesystem, identified by name, path, and cryptographic hash. Includes executable binaries, scripts, documents, archives, and other file types relevant to cyber threat analysis."@en ;
+               skos:scopeNote "Linked to hash values via stonework:hasHash. A MalwareSample may be associated with its File representation. Framework-specific extensions (PE headers, NTFS streams, archive contents) are modeled at the framework layer."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Group
 stonework:Group rdf:type owl:Class ;
@@ -786,7 +788,8 @@ stonework:Impact rdf:type owl:Class ;
 stonework:Incident rdf:type owl:Class ;
                    rdfs:subClassOf stonework:CyberActivity ;
                    skos:prefLabel "Incident" ;
-                   skos:definition "A significant adverse event or series of related events that has caused, or has the potential to cause, harm to an organization’s operations, assets, or people." .
+                   skos:definition "A significant adverse event or series of related events that has caused, or has the potential to cause, harm to an organization’s operations, assets, or people."@en ;
+                   skos:scopeNote "Distinguished from stonework:Event (a raw, unassessed occurrence) by the presence of human or automated triage declaring significance and adversity. An Incident may aggregate multiple Events, involve one or more Campaigns, and trigger Investigation and Playbook execution."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Industry
 stonework:Industry rdf:type owl:Class ;
@@ -826,7 +829,8 @@ stonework:Investigation rdf:type owl:Class ;
 stonework:KillChainPhase rdf:type owl:Class ;
                          rdfs:subClassOf stonework:Category ;
                          skos:prefLabel "Kill Chain Phase" ;
-                         skos:definition "Represents a phase within a named kill chain framework, such as the MITRE ATT&CK or Lockheed Martin Cyber Kill Chain, used to categorise the stage of an attack." .
+                         skos:definition "A named phase within a kill chain or attack lifecycle framework used to categorize the stage of an offensive or defensive operation."@en ;
+                         skos:scopeNote "Applies to both offensive frameworks (Lockheed Martin Cyber Kill Chain, MITRE ATT&CK) and defensive lifecycle models. Used to tag AttackTechniques, Procedures, or Events with their operational phase."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Likelihood
 stonework:Likelihood rdf:type owl:Class ;
@@ -863,25 +867,18 @@ stonework:MalwareSample rdf:type owl:Class ;
                         skos:definition "A discrete, observable instance of malicious code — a specific binary, script, or executable artifact that can be identified by cryptographic hash, file characteristics, or behavioral signature."@en ;
                         skos:scopeNote "Represents a concrete sample rather than an abstract family concept. A single MalwareFamily may have thousands of associated samples across versions, packers, and dropper variants. Samples are linked to their family via stonework:memberOfFamily and to their file representation via stonework:hasHash or a direct stonework:File association. Properties such as stonework:drops, stonework:downloads, and stonework:communicatesWith describe the behavior of this specific sample, not the family in general."@en .
 
-###  https://cyberterrain.org/ns/stonework#Mutex
-stonework:Mutex rdf:type owl:Class ;
-                rdfs:subClassOf stonework:DigitalArtifact ;
-                skos:prefLabel "Mutex"@en ;
-                skos:definition "A named mutual exclusion object (mutex or semaphore) used by a process to prevent concurrent access to a shared resource. Commonly used as a malware indicator — malware families often create uniquely named mutexes to avoid re-infecting a host."@en ;
-                skos:scopeNote "Mutex names serve as host-based indicators of compromise. A specific mutex name found on a system can be attributed to a known malware family. Corresponds to the STIX 2.1 Mutex SCO."@en .
+###  https://cyberterrain.org/ns/stonework#MalwareType
+stonework:MalwareType rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:Category ;
+                      skos:prefLabel "Malware Type" ;
+                      skos:definition "A classification of malware by its primary functional category or behavioral characteristic." ;
+                      skos:scopeNote "Applied via stonework:categorizedBy to MalwareSample or MalwareFamily individuals. A sample may have multiple types (e.g. a trojan that also acts as a downloader). Aligns with the STIX 2.1 malware-type open vocabulary."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Markings
 stonework:Markings rdf:type owl:Class ;
                    rdfs:subClassOf stonework:Category ;
                    skos:prefLabel "Markings"@en ;
                    skos:definition "Defines a data handling marking used to restrict or label how data can be shared or handled, such as TLP markings. Referenced by object_marking_refs or granular_markings."@en .
-
-###  https://cyberterrain.org/ns/stonework#Motivation
-stonework:Motivation rdf:type owl:Class ;
-                     rdfs:subClassOf stonework:Category ;
-                     skos:prefLabel "Motivation" ;
-                     skos:definition "The reason or driving force behind an adversary's decision to conduct an attack or operation." ;
-                     skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor, Campaign, or Operation individuals. Named individuals cover the STIX 2.1 attack-motivation open vocabulary. Custom motivations may be added as additional individuals."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Mitigation
 stonework:Mitigation rdf:type owl:Class ;
@@ -891,26 +888,26 @@ stonework:Mitigation rdf:type owl:Class ;
                      skos:scopeNote "Mitigations are proactive or reactive measures applied to address weaknesses or threats. Examples include: applying a security patch, enabling MFA, deploying a firewall rule, isolating a compromised host, or training users. A Mitigation may be a reusable control (ATT&CK sense) or a specific situational action. CourseOfAction is a subclass for contextualized, packaged response actions."@en ;
                      rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> .
 
-###  https://cyberterrain.org/ns/stonework#CourseOfAction
-stonework:CourseOfAction rdf:type owl:Class ;
-                         rdfs:subClassOf stonework:Mitigation ;
-                         skos:prefLabel "Course of Action"@en ;
-                         skos:definition "A specific, contextualized recommended action or set of steps to prevent or respond to a threat, attack, or incident."@en ;
-                         skos:scopeNote "More prescriptive and situational than a general Mitigation — a CourseOfAction packages guidance for a specific threat context. Corresponds to the STIX 2.1 CourseOfAction SDO. General reusable controls (e.g. ATT&CK mitigations) are modeled as Mitigation; specific incident response actions are CourseOfAction."@en .
-
-###  https://cyberterrain.org/ns/stonework#MalwareType
-stonework:MalwareType rdf:type owl:Class ;
-                      rdfs:subClassOf stonework:Category ;
-                      skos:prefLabel "Malware Type" ;
-                      skos:definition "A classification of malware by its primary functional category or behavioral characteristic." ;
-                      skos:scopeNote "Applied via stonework:categorizedBy to MalwareSample or MalwareFamily individuals. A sample may have multiple types (e.g. a trojan that also acts as a downloader). Aligns with the STIX 2.1 malware-type open vocabulary."@en .
-
 ###  https://cyberterrain.org/ns/stonework#MobileDevice
 stonework:MobileDevice rdf:type owl:Class ;
                        rdfs:subClassOf stonework:Host ;
                        skos:prefLabel "Mobile Device" ;
                        skos:definition "A portable computing device with wireless connectivity, typically used for communication, data processing, and accessing networks (e.g., smartphones, tablets, or laptops with cellular capability)."@en ;
                        skos:scopeNote "In a cyber threat context, Mobile Devices are often treated as both endpoints (Infrastructure) and vectors for attacks (e.g., mobile malware, phishing, lost/stolen device risks). They may host UserAccounts, run Mobile Applications, and connect via cellular, Wi-Fi, or Bluetooth."@en .
+
+###  https://cyberterrain.org/ns/stonework#Motivation
+stonework:Motivation rdf:type owl:Class ;
+                     rdfs:subClassOf stonework:Category ;
+                     skos:prefLabel "Motivation" ;
+                     skos:definition "The reason or driving force behind an adversary's decision to conduct an attack or operation." ;
+                     skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor, Campaign, or Operation individuals. Named individuals cover the STIX 2.1 attack-motivation open vocabulary. Custom motivations may be added as additional individuals."@en .
+
+###  https://cyberterrain.org/ns/stonework#Mutex
+stonework:Mutex rdf:type owl:Class ;
+                rdfs:subClassOf stonework:DigitalArtifact ;
+                skos:prefLabel "Mutex"@en ;
+                skos:definition "A named mutual exclusion object (mutex or semaphore) used by a process to prevent concurrent access to a shared resource. Commonly used as a malware indicator — malware families often create uniquely named mutexes to avoid re-infecting a host."@en ;
+                skos:scopeNote "Mutex names serve as host-based indicators of compromise. A specific mutex name found on a system can be attributed to a known malware family. Corresponds to the STIX 2.1 Mutex SCO."@en .
 
 ###  https://cyberterrain.org/ns/stonework#NetworkService
 stonework:NetworkService rdf:type owl:Class ;
@@ -922,13 +919,15 @@ stonework:NetworkService rdf:type owl:Class ;
 stonework:NetworkTraffic rdf:type owl:Class ;
                          rdfs:subClassOf stonework:DigitalArtifact ;
                          skos:prefLabel "Network Traffic"@en ;
-                         skos:definition "Represents an arbitrary network traffic flow between source and destination endpoints. Supports extensions for HTTP, ICMP, socket, and TCP specifics." .
+                         skos:definition "A captured or observed network traffic flow between source and destination endpoints, including protocol, ports, payload characteristics, and timing."@en ;
+                         skos:scopeNote "Distinct from stonework:Log (which captures parsed event records) and stonework:Event (a security-relevant occurrence). NetworkTraffic is the raw flow artifact. May carry indicators such as user-agent strings, URI patterns, or certificate fingerprints observable in transit."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Note
 stonework:Note rdf:type owl:Class ;
                rdfs:subClassOf stonework:Information ;
                skos:prefLabel "Note" ;
-               skos:definition "Conveys informational text to provide further context and/or to assess the accuracy of existing information." .
+               skos:definition "A free-text annotation attached to one or more individuals to provide additional context, analyst commentary, caveats, or confidence assessments."@en ;
+               skos:scopeNote "Notes are analyst-authored rather than machine-generated. They may express uncertainty, sourcing context, or interpretive observations that do not fit structured properties. Corresponds to STIX 2.1 Note SDO."@en .
 
 ###  https://cyberterrain.org/ns/stonework#OffensiveTactic
 stonework:OffensiveTactic rdf:type owl:Class ;
@@ -969,7 +968,8 @@ stonework:Person rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#PhoneNumber
 stonework:PhoneNumber rdf:type owl:Class ;
                       rdfs:subClassOf stonework:Identifier ;
-                      skos:prefLabel "Phone Number" .
+                      skos:prefLabel "Phone Number"@en ;
+                      skos:definition "A telephone number used to contact or identify an Agent. Used for attribution, OSINT pivoting, and identity clustering."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Playbook
 stonework:Playbook rdf:type owl:Class ;
@@ -1068,7 +1068,8 @@ stonework:Role rdf:type owl:Class ;
 stonework:RuntimeProcess rdf:type owl:Class ;
                          rdfs:subClassOf stonework:DigitalArtifact ;
                          skos:prefLabel "Runtime Process"@en ;
-                         skos:definition "Represents a running or terminated process on a host. Supports extensions for operating system process and service attributes."@en .
+                         skos:definition "A running or terminated process instance on a host, identified by PID, executable path, command line, parent process, and associated user account."@en ;
+                         skos:scopeNote "Represents low-level OS process objects observed during execution — distinct from stonework:Process (enterprise-level workflows). Mutex objects created by a process are linked as stonework:Mutex individuals. Corresponds to STIX 2.1 Process SCO."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Sector
 stonework:Sector rdf:type owl:Class ;
@@ -1089,19 +1090,27 @@ stonework:SecurityMeasure rdf:type owl:Class ;
                           rdfs:subClassOf stonework:CyberEntity ;
                           skos:prefLabel "Security Measure" ;
                           skos:definition "Any control, mitigation, or safeguard intended to protect against, reduce, or respond to security risks."@en ;
-                          skos:scopeNote "Includes Controls and Mitigations."@en .
+                          skos:scopeNote "Includes Controls, Mitigations, CoursesOfAction, and DetectionRules. The two primary branches are preventive/reactive measures (Mitigation, CourseOfAction, Control) and detection logic (DetectionRule, Signature)."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Sensor
 stonework:Sensor rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Infrastructure ;
                  skos:prefLabel "Sensor" ;
-                 skos:definition "Sensors are deployed systems (software agents, appliances, virtual instances, network taps, etc.).  A tool, system, or method that collects data about digital artifacts or adversary activity." .
+                 skos:definition "A deployed system, appliance, agent, or network tap that collects data about digital artifacts, network activity, or adversary behavior for detection and investigation purposes."@en ;
+                 skos:scopeNote "Applies DetectionRules via stonework:usesRule. May be a software agent, physical appliance, virtual instance, or network sensor. Aligns with D3FEND Sensor."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Sighting
 stonework:Sighting rdf:type owl:Class ;
                    rdfs:subClassOf stonework:Information ;
                    skos:prefLabel "Sighting" ;
                    skos:definition "Records that a object such as an indicator, malware, tool, or threat actor was seen. Wraps observation metadata around a reference to the sighted object."@en .
+
+###  https://cyberterrain.org/ns/stonework#Signature
+stonework:Signature rdf:type owl:Class ;
+                    rdfs:subClassOf stonework:DetectionRule ;
+                    skos:prefLabel "Signature"@en ;
+                    skos:definition "A content-centric detection rule that matches malicious activity by a specific pattern — a byte sequence, string, hash, regular expression, or network packet structure."@en ;
+                    skos:scopeNote "Includes YARA rules, Snort/Suricata rules, and AV signatures. Distinguished from broader DetectionRule subclasses (behavioral, correlation, analytic) by its tight binding to a specific known-bad indicator or artifact pattern."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Tactic
 stonework:Tactic rdf:type owl:Class ;
@@ -1162,7 +1171,8 @@ stonework:ThreatScenario rdf:type owl:Class ;
 stonework:Tool rdf:type owl:Class ;
                rdfs:subClassOf stonework:DigitalArtifact ;
                skos:prefLabel "Tool"@en ;
-               skos:definition "Legitimate software that can be used by threat actors to perform attacks. Distinguishable from malware by being designed for benign purposes but repurposed maliciously." .
+               skos:definition "Legitimate software that can be used offensively by threat actors or defensively by security practitioners. Distinguishable from malware by being designed for benign or dual-use purposes rather than being inherently malicious."@en ;
+               skos:scopeNote "Includes commercial penetration testing tools, remote administration utilities, and living-off-the-land binaries (LOLBins) repurposed by adversaries, as well as defender-operated tools such as scanners, EDR agents, and forensic utilities. Corresponds to STIX 2.1 Tool SDO."@en .
 
 ###  https://cyberterrain.org/ns/stonework#URI
 stonework:URI rdf:type owl:Class ;
@@ -1170,18 +1180,18 @@ stonework:URI rdf:type owl:Class ;
               skos:prefLabel "URI"@en ;
               skos:definition "Represents a Uniform Resource Identifier conforming to RFC 3986."@en .
 
+###  https://cyberterrain.org/ns/stonework#UserAccount
+stonework:UserAccount rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:Identifier ;
+                      skos:prefLabel "User Account"@en ;
+                      skos:definition "Represents a user account on a system or service, including local OS accounts, cloud accounts, and social media accounts."@en .
+
 ###  https://cyberterrain.org/ns/stonework#UserAgent
 stonework:UserAgent rdf:type owl:Class ;
                     rdfs:subClassOf stonework:Identifier ;
                     skos:prefLabel "User Agent"@en ;
                     skos:definition "A string identifier transmitted by a client application in HTTP requests declaring the software, version, and platform making the request. Used for fingerprinting clients, identifying malware C2 beaconing patterns, and clustering infrastructure by shared tooling."@en ;
                     skos:scopeNote "User-agent strings are observable in network traffic, proxy logs, and web server logs. Distinctive or spoofed user-agent values are commonly used as indicators in threat intelligence. Distinct from stonework:UserAccount (an identity credential) — a UserAgent describes software behavior, not a user identity."@en .
-
-###  https://cyberterrain.org/ns/stonework#UserAccount
-stonework:UserAccount rdf:type owl:Class ;
-                      rdfs:subClassOf stonework:Identifier ;
-                      skos:prefLabel "User Account"@en ;
-                      skos:definition "Represents a user account on a system or service, including local OS accounts, cloud accounts, and social media accounts."@en .
 
 ###  https://cyberterrain.org/ns/stonework#UserGroup
 stonework:UserGroup rdf:type owl:Class ;
@@ -1193,8 +1203,8 @@ stonework:UserGroup rdf:type owl:Class ;
 stonework:Vulnerability rdf:type owl:Class ;
                         rdfs:subClassOf stonework:SecurityCondition ;
                         skos:prefLabel "Vulnerability" ;
-                        skos:definition "A mistake in software, hardware, or system architecture that can be directly used by a threat actor to gain access to a system or network." ;
-                        skos:scopeNote "This class represents a semantic representation for any type of cyber vulnerability." .
+                        skos:definition "A flaw or weakness in software, hardware, firmware, or system architecture that can be exploited by a threat actor to compromise confidentiality, integrity, or availability."@en ;
+                        skos:scopeNote "Represents specific exploitable instances (e.g., CVE-identified vulnerabilities) rather than weakness classes — those are modeled as stonework:Weakness. A Vulnerability is linked to its root Weakness via stonework:hasWeakness, to affected products via stonework:affected, to its fix via stonework:fixedInProduct, and to exploiting malware or actors via stonework:exploits. Aligns with D3FEND Vulnerability and NVD CVE."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Weakness
 stonework:Weakness rdf:type owl:Class ;
@@ -1221,35 +1231,170 @@ stonework:indicator rdf:type owl:NamedIndividual , stonework:Category ;
                     skos:definition "An assertion that a specific pattern or set of Digital Artifacts is associated with malicious behavior, enabling detection, correlation, and response."@en ;
                     skos:scopeNote "In STONEWORK, Indicators can be simple (single IOC like a hash or IP) or complex (full STIX patterns combining multiple artifacts and conditions)."@en .
 
-###  https://cyberterrain.org/ns/stonework#tlpAmber
-stonework:tlpAmber rdf:type owl:NamedIndividual , stonework:Markings ;
-                   skos:prefLabel "TLP:AMBER"@en ;
-                   skos:definition "Limited disclosure, restricted to participants’ organization and its clients."@en .
+###  https://cyberterrain.org/ns/stonework#infraTypeAmplification
+stonework:infraTypeAmplification rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                                 skos:prefLabel "Amplification"@en ;
+                                 skos:definition "Infrastructure used to amplify attack traffic, such as DNS or NTP amplification servers."@en .
 
-###  https://cyberterrain.org/ns/stonework#tlpAmberStrict
-stonework:tlpAmberStrict rdf:type owl:NamedIndividual , stonework:Markings ;
-                         skos:prefLabel "TLP:AMBER+STRICT" ;
-                         skos:definition "Limited disclosure, restricted to participants’ organization."@en .
+###  https://cyberterrain.org/ns/stonework#infraTypeAnonymization
+stonework:infraTypeAnonymization rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                                 skos:prefLabel "Anonymization"@en ;
+                                 skos:definition "Infrastructure used to obscure the origin of operations, such as VPNs, proxies, or Tor nodes."@en .
 
-###  https://cyberterrain.org/ns/stonework#tlpClear
-stonework:tlpClear rdf:type owl:NamedIndividual , stonework:Markings ;
-                   skos:prefLabel "TLP:CLEAR"@en ;
-                   skos:definition "Disclosure is not limited."@en .
+###  https://cyberterrain.org/ns/stonework#infraTypeBotnet
+stonework:infraTypeBotnet rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                          skos:prefLabel "Botnet"@en ;
+                          skos:definition "A network of compromised systems under adversary control, used to execute distributed attacks or other operations."@en .
 
-###  https://cyberterrain.org/ns/stonework#tlpGreen
-stonework:tlpGreen rdf:type owl:NamedIndividual , stonework:Markings ;
-                   skos:prefLabel "TLP:GREEN"@en ;
-                   skos:definition "Limited disclosure, restricted to the community."@en .
+###  https://cyberterrain.org/ns/stonework#infraTypeC2
+stonework:infraTypeC2 rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                      skos:prefLabel "Command and Control"@en ;
+                      skos:definition "Infrastructure used to communicate with and issue commands to compromised systems."@en .
 
-###  https://cyberterrain.org/ns/stonework#tlpRed
-stonework:tlpRed rdf:type owl:NamedIndividual , stonework:Markings ;
-                 skos:prefLabel "TLP:RED"@en ;
-                 skos:definition "Not for disclosure, restricted to participants only."@en .
+###  https://cyberterrain.org/ns/stonework#infraTypeExfiltration
+stonework:infraTypeExfiltration rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                                skos:prefLabel "Exfiltration"@en ;
+                                skos:definition "Infrastructure used as a destination or relay for stolen data."@en .
 
+###  https://cyberterrain.org/ns/stonework#infraTypeFirewall
+stonework:infraTypeFirewall rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                            skos:prefLabel "Firewall"@en ;
+                            skos:definition "Defensive infrastructure that filters and monitors network traffic."@en .
 
-#################################################################
-#    Motivation Individuals (STIX 2.1 attack-motivation vocabulary)
-#################################################################
+###  https://cyberterrain.org/ns/stonework#infraTypeHostingMalware
+stonework:infraTypeHostingMalware rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                                  skos:prefLabel "Hosting Malware"@en ;
+                                  skos:definition "Infrastructure used to host or distribute malicious payloads."@en .
+
+###  https://cyberterrain.org/ns/stonework#infraTypeHostingTargetLists
+stonework:infraTypeHostingTargetLists rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                                      skos:prefLabel "Hosting Target Lists"@en ;
+                                      skos:definition "Infrastructure used to store or distribute lists of targets for operations."@en .
+
+###  https://cyberterrain.org/ns/stonework#infraTypePhishing
+stonework:infraTypePhishing rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                            skos:prefLabel "Phishing"@en ;
+                            skos:definition "Infrastructure used to conduct phishing campaigns, including fake login pages or malicious email servers."@en .
+
+###  https://cyberterrain.org/ns/stonework#infraTypeReconnaissance
+stonework:infraTypeReconnaissance rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                                  skos:prefLabel "Reconnaissance"@en ;
+                                  skos:definition "Infrastructure used to gather information about targets prior to an operation."@en .
+
+###  https://cyberterrain.org/ns/stonework#infraTypeRoutersSwitches
+stonework:infraTypeRoutersSwitches rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                                   skos:prefLabel "Routers and Switches"@en ;
+                                   skos:definition "Network routing and switching equipment, often targeted or co-opted by adversaries."@en .
+
+###  https://cyberterrain.org/ns/stonework#infraTypeStaging
+stonework:infraTypeStaging rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                           skos:prefLabel "Staging"@en ;
+                           skos:definition "Infrastructure used as an intermediate point for storing tools, payloads, or exfiltrated data during an operation."@en .
+
+###  https://cyberterrain.org/ns/stonework#infraTypeWorkstation
+stonework:infraTypeWorkstation rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
+                               skos:prefLabel "Workstation"@en ;
+                               skos:definition "An end-user computing device, typically a target or pivot point in an operation."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeAdware
+stonework:malwareTypeAdware rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                            skos:prefLabel "Adware"@en ;
+                            skos:definition "Software that automatically displays or downloads advertising material, often without user consent."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeBackdoor
+stonework:malwareTypeBackdoor rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                              skos:prefLabel "Backdoor"@en ;
+                              skos:definition "Malware that provides covert, persistent remote access to a compromised system."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeBootkit
+stonework:malwareTypeBootkit rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                             skos:prefLabel "Bootkit"@en ;
+                             skos:definition "Malware that infects the boot sector or bootloader, enabling persistence before the OS loads."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeBot
+stonework:malwareTypeBot rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                         skos:prefLabel "Bot"@en ;
+                         skos:definition "Malware that turns the infected system into a node in an adversary-controlled botnet."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeDDoS
+stonework:malwareTypeDDoS rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                          skos:prefLabel "DDoS"@en ;
+                          skos:definition "Malware designed to participate in or conduct distributed denial-of-service attacks."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeDownloader
+stonework:malwareTypeDownloader rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                                skos:prefLabel "Downloader"@en ;
+                                skos:definition "Malware whose primary function is to retrieve and execute additional malicious payloads."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeDropper
+stonework:malwareTypeDropper rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                             skos:prefLabel "Dropper"@en ;
+                             skos:definition "Malware that installs or deploys other malicious components on a compromised system."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeExploitKit
+stonework:malwareTypeExploitKit rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                                skos:prefLabel "Exploit Kit"@en ;
+                                skos:definition "A toolkit that automates exploitation of vulnerabilities in web browsers and plugins."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeKeylogger
+stonework:malwareTypeKeylogger rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                               skos:prefLabel "Keylogger"@en ;
+                               skos:definition "Malware that records keystrokes to capture credentials or sensitive information."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeRAT
+stonework:malwareTypeRAT rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                         skos:prefLabel "Remote Access Trojan"@en ;
+                         skos:definition "Malware providing remote control capabilities over a compromised system, typically with stealth features."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeRansomware
+stonework:malwareTypeRansomware rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                                skos:prefLabel "Ransomware"@en ;
+                                skos:definition "Malware that encrypts or denies access to victim data and demands payment for restoration."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeResourceExploitation
+stonework:malwareTypeResourceExploitation rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                                          skos:prefLabel "Resource Exploitation"@en ;
+                                          skos:definition "Malware that uses victim system resources for adversary purposes, such as cryptomining."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeRootkit
+stonework:malwareTypeRootkit rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                             skos:prefLabel "Rootkit"@en ;
+                             skos:definition "Malware designed to hide its presence and other malicious activity by subverting OS or firmware mechanisms."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeScreenCapture
+stonework:malwareTypeScreenCapture rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                                   skos:prefLabel "Screen Capture"@en ;
+                                   skos:definition "Malware that captures screenshots or video of the victim's display for exfiltration."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeSpyware
+stonework:malwareTypeSpyware rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                             skos:prefLabel "Spyware"@en ;
+                             skos:definition "Malware that covertly monitors and exfiltrates user activity, credentials, or personal data."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeTrojan
+stonework:malwareTypeTrojan rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                            skos:prefLabel "Trojan"@en ;
+                            skos:definition "Malware disguised as or bundled with legitimate software to deceive users into executing it."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeVirus
+stonework:malwareTypeVirus rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                           skos:prefLabel "Virus"@en ;
+                           skos:definition "Malware that replicates by inserting copies of itself into other programs or files."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeWebshell
+stonework:malwareTypeWebshell rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                              skos:prefLabel "Webshell"@en ;
+                              skos:definition "A script placed on a web server to provide persistent remote access and command execution."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeWiper
+stonework:malwareTypeWiper rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                           skos:prefLabel "Wiper"@en ;
+                           skos:definition "Malware designed to irreversibly destroy data or render systems inoperable."@en .
+
+###  https://cyberterrain.org/ns/stonework#malwareTypeWorm
+stonework:malwareTypeWorm rdf:type owl:NamedIndividual , stonework:MalwareType ;
+                          skos:prefLabel "Worm"@en ;
+                          skos:definition "Malware that self-propagates across systems or networks without requiring user interaction."@en .
 
 ###  https://cyberterrain.org/ns/stonework#motivationAccidental
 stonework:motivationAccidental rdf:type owl:NamedIndividual , stonework:Motivation ;
@@ -1301,11 +1446,6 @@ stonework:motivationUnpredictable rdf:type owl:NamedIndividual , stonework:Motiv
                                   skos:prefLabel "Unpredictable"@en ;
                                   skos:definition "A threat actor whose motivation is unknown, unclear, or inconsistent; actions that do not fit a clear pattern of intent."@en .
 
-
-#################################################################
-#    ProductType Individuals (CPE-aligned component type vocabulary)
-#################################################################
-
 ###  https://cyberterrain.org/ns/stonework#productTypeAIModel
 stonework:productTypeAIModel rdf:type owl:NamedIndividual , stonework:ProductType ;
                              skos:prefLabel "AI Model"@en ;
@@ -1313,8 +1453,8 @@ stonework:productTypeAIModel rdf:type owl:NamedIndividual , stonework:ProductTyp
 
 ###  https://cyberterrain.org/ns/stonework#productTypeApplication
 stonework:productTypeApplication rdf:type owl:NamedIndividual , stonework:ProductType ;
-                                  skos:prefLabel "Application"@en ;
-                                  skos:definition "A software application designed to perform specific tasks for end users or other systems. Corresponds to CPE component type 'a'."@en .
+                                 skos:prefLabel "Application"@en ;
+                                 skos:definition "A software application designed to perform specific tasks for end users or other systems. Corresponds to CPE component type 'a'."@en .
 
 ###  https://cyberterrain.org/ns/stonework#productTypeContainerImage
 stonework:productTypeContainerImage rdf:type owl:NamedIndividual , stonework:ProductType ;
@@ -1331,11 +1471,6 @@ stonework:productTypeHardware rdf:type owl:NamedIndividual , stonework:ProductTy
                               skos:prefLabel "Hardware"@en ;
                               skos:definition "A physical computing device, component, or peripheral. Corresponds to CPE component type 'h'."@en .
 
-###  https://cyberterrain.org/ns/stonework#productTypePackage
-stonework:productTypePackage rdf:type owl:NamedIndividual , stonework:ProductType ;
-                             skos:prefLabel "Package"@en ;
-                             skos:definition "A distributable unit of software published to a package registry (e.g. npm, PyPI, Maven, NuGet). The primary unit of supply chain attack surface — distinct from Library in that a package has its own versioning, signing, provenance chain, and registry identity."@en .
-
 ###  https://cyberterrain.org/ns/stonework#productTypeLibrary
 stonework:productTypeLibrary rdf:type owl:NamedIndividual , stonework:ProductType ;
                              skos:prefLabel "Library"@en ;
@@ -1345,6 +1480,11 @@ stonework:productTypeLibrary rdf:type owl:NamedIndividual , stonework:ProductTyp
 stonework:productTypeOperatingSystem rdf:type owl:NamedIndividual , stonework:ProductType ;
                                      skos:prefLabel "Operating System"@en ;
                                      skos:definition "System software that manages hardware resources and provides common services for application software. Corresponds to CPE component type 'o'."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypePackage
+stonework:productTypePackage rdf:type owl:NamedIndividual , stonework:ProductType ;
+                             skos:prefLabel "Package"@en ;
+                             skos:definition "A distributable unit of software published to a package registry (e.g. npm, PyPI, Maven, NuGet). The primary unit of supply chain attack surface — distinct from Library in that a package has its own versioning, signing, provenance chain, and registry identity."@en .
 
 ###  https://cyberterrain.org/ns/stonework#productTypeSDK
 stonework:productTypeSDK rdf:type owl:NamedIndividual , stonework:ProductType ;
@@ -1356,222 +1496,112 @@ stonework:productTypeService rdf:type owl:NamedIndividual , stonework:ProductTyp
                              skos:prefLabel "Service"@en ;
                              skos:definition "A networked or cloud-hosted software capability consumed by other systems or users, such as a SaaS platform, API service, or managed infrastructure service."@en .
 
-
-#################################################################
-#    InfrastructureType Individuals (STIX 2.1 infrastructure-type vocabulary)
-#################################################################
-
-stonework:infraTypeAmplification rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                                 skos:prefLabel "Amplification"@en ;
-                                 skos:definition "Infrastructure used to amplify attack traffic, such as DNS or NTP amplification servers."@en .
-
-stonework:infraTypeAnonymization rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                                 skos:prefLabel "Anonymization"@en ;
-                                 skos:definition "Infrastructure used to obscure the origin of operations, such as VPNs, proxies, or Tor nodes."@en .
-
-stonework:infraTypeBotnet rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                          skos:prefLabel "Botnet"@en ;
-                          skos:definition "A network of compromised systems under adversary control, used to execute distributed attacks or other operations."@en .
-
-stonework:infraTypeC2 rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                      skos:prefLabel "Command and Control"@en ;
-                      skos:definition "Infrastructure used to communicate with and issue commands to compromised systems."@en .
-
-stonework:infraTypeExfiltration rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                                skos:prefLabel "Exfiltration"@en ;
-                                skos:definition "Infrastructure used as a destination or relay for stolen data."@en .
-
-stonework:infraTypeFirewall rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                            skos:prefLabel "Firewall"@en ;
-                            skos:definition "Defensive infrastructure that filters and monitors network traffic."@en .
-
-stonework:infraTypeHostingMalware rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                                  skos:prefLabel "Hosting Malware"@en ;
-                                  skos:definition "Infrastructure used to host or distribute malicious payloads."@en .
-
-stonework:infraTypeHostingTargetLists rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                                      skos:prefLabel "Hosting Target Lists"@en ;
-                                      skos:definition "Infrastructure used to store or distribute lists of targets for operations."@en .
-
-stonework:infraTypePhishing rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                            skos:prefLabel "Phishing"@en ;
-                            skos:definition "Infrastructure used to conduct phishing campaigns, including fake login pages or malicious email servers."@en .
-
-stonework:infraTypeReconnaissance rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                                  skos:prefLabel "Reconnaissance"@en ;
-                                  skos:definition "Infrastructure used to gather information about targets prior to an operation."@en .
-
-stonework:infraTypeRoutersSwitches rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                                   skos:prefLabel "Routers and Switches"@en ;
-                                   skos:definition "Network routing and switching equipment, often targeted or co-opted by adversaries."@en .
-
-stonework:infraTypeStaging rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                           skos:prefLabel "Staging"@en ;
-                           skos:definition "Infrastructure used as an intermediate point for storing tools, payloads, or exfiltrated data during an operation."@en .
-
-stonework:infraTypeWorkstation rdf:type owl:NamedIndividual , stonework:InfrastructureType ;
-                               skos:prefLabel "Workstation"@en ;
-                               skos:definition "An end-user computing device, typically a target or pivot point in an operation."@en .
-
-
-#################################################################
-#    MalwareType Individuals (STIX 2.1 malware-type vocabulary)
-#################################################################
-
-stonework:malwareTypeAdware rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                            skos:prefLabel "Adware"@en ;
-                            skos:definition "Software that automatically displays or downloads advertising material, often without user consent."@en .
-
-stonework:malwareTypeBackdoor rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                              skos:prefLabel "Backdoor"@en ;
-                              skos:definition "Malware that provides covert, persistent remote access to a compromised system."@en .
-
-stonework:malwareTypeBot rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                         skos:prefLabel "Bot"@en ;
-                         skos:definition "Malware that turns the infected system into a node in an adversary-controlled botnet."@en .
-
-stonework:malwareTypeBootkit rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                             skos:prefLabel "Bootkit"@en ;
-                             skos:definition "Malware that infects the boot sector or bootloader, enabling persistence before the OS loads."@en .
-
-stonework:malwareTypeDDoS rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                          skos:prefLabel "DDoS"@en ;
-                          skos:definition "Malware designed to participate in or conduct distributed denial-of-service attacks."@en .
-
-stonework:malwareTypeDownloader rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                                skos:prefLabel "Downloader"@en ;
-                                skos:definition "Malware whose primary function is to retrieve and execute additional malicious payloads."@en .
-
-stonework:malwareTypeDropper rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                             skos:prefLabel "Dropper"@en ;
-                             skos:definition "Malware that installs or deploys other malicious components on a compromised system."@en .
-
-stonework:malwareTypeExploitKit rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                                skos:prefLabel "Exploit Kit"@en ;
-                                skos:definition "A toolkit that automates exploitation of vulnerabilities in web browsers and plugins."@en .
-
-stonework:malwareTypeKeylogger rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                               skos:prefLabel "Keylogger"@en ;
-                               skos:definition "Malware that records keystrokes to capture credentials or sensitive information."@en .
-
-stonework:malwareTypeRansomware rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                                skos:prefLabel "Ransomware"@en ;
-                                skos:definition "Malware that encrypts or denies access to victim data and demands payment for restoration."@en .
-
-stonework:malwareTypeRAT rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                         skos:prefLabel "Remote Access Trojan"@en ;
-                         skos:definition "Malware providing remote control capabilities over a compromised system, typically with stealth features."@en .
-
-stonework:malwareTypeResourceExploitation rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                                          skos:prefLabel "Resource Exploitation"@en ;
-                                          skos:definition "Malware that uses victim system resources for adversary purposes, such as cryptomining."@en .
-
-stonework:malwareTypeRootkit rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                             skos:prefLabel "Rootkit"@en ;
-                             skos:definition "Malware designed to hide its presence and other malicious activity by subverting OS or firmware mechanisms."@en .
-
-stonework:malwareTypeScreenCapture rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                                   skos:prefLabel "Screen Capture"@en ;
-                                   skos:definition "Malware that captures screenshots or video of the victim's display for exfiltration."@en .
-
-stonework:malwareTypeSpyware rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                             skos:prefLabel "Spyware"@en ;
-                             skos:definition "Malware that covertly monitors and exfiltrates user activity, credentials, or personal data."@en .
-
-stonework:malwareTypeTrojan rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                            skos:prefLabel "Trojan"@en ;
-                            skos:definition "Malware disguised as or bundled with legitimate software to deceive users into executing it."@en .
-
-stonework:malwareTypeVirus rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                           skos:prefLabel "Virus"@en ;
-                           skos:definition "Malware that replicates by inserting copies of itself into other programs or files."@en .
-
-stonework:malwareTypeWebshell rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                              skos:prefLabel "Webshell"@en ;
-                              skos:definition "A script placed on a web server to provide persistent remote access and command execution."@en .
-
-stonework:malwareTypeWiper rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                           skos:prefLabel "Wiper"@en ;
-                           skos:definition "Malware designed to irreversibly destroy data or render systems inoperable."@en .
-
-stonework:malwareTypeWorm rdf:type owl:NamedIndividual , stonework:MalwareType ;
-                          skos:prefLabel "Worm"@en ;
-                          skos:definition "Malware that self-propagates across systems or networks without requiring user interaction."@en .
-
-
-#################################################################
-#    ThreatActorType Individuals (STIX 2.1 threat-actor-type vocabulary)
-#################################################################
-
-stonework:threatActorTypeActivist rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                  skos:prefLabel "Activist"@en ;
-                                  skos:definition "A threat actor motivated by political, social, or ideological causes, using cyber means to advance their agenda."@en .
-
-stonework:threatActorTypeCompetitor rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                    skos:prefLabel "Competitor"@en ;
-                                    skos:definition "A commercial entity conducting cyber espionage or sabotage against business rivals."@en .
-
-stonework:threatActorTypeCrimeSyndicate rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                        skos:prefLabel "Crime Syndicate"@en ;
-                                        skos:definition "An organized criminal group conducting cyber operations for financial gain."@en .
-
-stonework:threatActorTypeCriminal rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                  skos:prefLabel "Criminal"@en ;
-                                  skos:definition "An individual or loosely organized group conducting cyber crimes for personal financial benefit."@en .
-
-stonework:threatActorTypeHacker rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                skos:prefLabel "Hacker"@en ;
-                                skos:definition "An individual with technical skills conducting intrusions, ranging from hobbyist to professional."@en .
-
-stonework:threatActorTypeInsiderAccidental rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                           skos:prefLabel "Insider Accidental"@en ;
-                                           skos:definition "An insider who causes harm unintentionally through negligence or error."@en .
-
-stonework:threatActorTypeInsiderDisgruntled rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                            skos:prefLabel "Insider Disgruntled"@en ;
-                                            skos:definition "A current or former employee, contractor, or partner acting maliciously due to grievance."@en .
-
-stonework:threatActorTypeNationState rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                     skos:prefLabel "Nation State"@en ;
-                                     skos:definition "A government or state-sponsored actor conducting cyber operations for geopolitical objectives."@en .
-
-stonework:threatActorTypeSensationalist rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                        skos:prefLabel "Sensationalist"@en ;
-                                        skos:definition "A threat actor motivated primarily by notoriety, publicity, or the thrill of the attack."@en .
-
-stonework:threatActorTypeSpy rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                             skos:prefLabel "Spy"@en ;
-                             skos:definition "A threat actor conducting cyber espionage to collect intelligence for a state or organization."@en .
-
-stonework:threatActorTypeTerrorist rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
-                                   skos:prefLabel "Terrorist"@en ;
-                                   skos:definition "A threat actor using cyber means to cause fear, disruption, or harm in support of extremist goals."@en .
-
-
-#################################################################
-#    ThreatActorRole Individuals (STIX 2.1 threat-actor-role vocabulary)
-#################################################################
-
+###  https://cyberterrain.org/ns/stonework#threatActorRoleAgent
 stonework:threatActorRoleAgent rdf:type owl:NamedIndividual , stonework:ThreatActorRole ;
                                skos:prefLabel "Agent"@en ;
                                skos:definition "A threat actor who executes operations on behalf of a directing or sponsoring entity."@en .
 
+###  https://cyberterrain.org/ns/stonework#threatActorRoleDirector
 stonework:threatActorRoleDirector rdf:type owl:NamedIndividual , stonework:ThreatActorRole ;
                                   skos:prefLabel "Director"@en ;
                                   skos:definition "A threat actor who plans and directs operations without necessarily executing them."@en .
 
+###  https://cyberterrain.org/ns/stonework#threatActorRoleInfrastructureArchitect
 stonework:threatActorRoleInfrastructureArchitect rdf:type owl:NamedIndividual , stonework:ThreatActorRole ;
                                                  skos:prefLabel "Infrastructure Architect"@en ;
                                                  skos:definition "A threat actor responsible for designing and building the technical infrastructure supporting operations."@en .
 
+###  https://cyberterrain.org/ns/stonework#threatActorRoleInfrastructureOperator
 stonework:threatActorRoleInfrastructureOperator rdf:type owl:NamedIndividual , stonework:ThreatActorRole ;
                                                 skos:prefLabel "Infrastructure Operator"@en ;
                                                 skos:definition "A threat actor who maintains and operates technical infrastructure during an operation."@en .
 
+###  https://cyberterrain.org/ns/stonework#threatActorRoleMalwareAuthor
 stonework:threatActorRoleMalwareAuthor rdf:type owl:NamedIndividual , stonework:ThreatActorRole ;
                                        skos:prefLabel "Malware Author"@en ;
                                        skos:definition "A threat actor who develops malicious code used in operations."@en .
 
+###  https://cyberterrain.org/ns/stonework#threatActorRoleSponsor
 stonework:threatActorRoleSponsor rdf:type owl:NamedIndividual , stonework:ThreatActorRole ;
                                  skos:prefLabel "Sponsor"@en ;
                                  skos:definition "A threat actor who funds or otherwise enables operations without direct participation."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeActivist
+stonework:threatActorTypeActivist rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                  skos:prefLabel "Activist"@en ;
+                                  skos:definition "A threat actor motivated by political, social, or ideological causes, using cyber means to advance their agenda."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeCompetitor
+stonework:threatActorTypeCompetitor rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                    skos:prefLabel "Competitor"@en ;
+                                    skos:definition "A commercial entity conducting cyber espionage or sabotage against business rivals."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeCrimeSyndicate
+stonework:threatActorTypeCrimeSyndicate rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                        skos:prefLabel "Crime Syndicate"@en ;
+                                        skos:definition "An organized criminal group conducting cyber operations for financial gain."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeCriminal
+stonework:threatActorTypeCriminal rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                  skos:prefLabel "Criminal"@en ;
+                                  skos:definition "An individual or loosely organized group conducting cyber crimes for personal financial benefit."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeHacker
+stonework:threatActorTypeHacker rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                skos:prefLabel "Hacker"@en ;
+                                skos:definition "An individual with technical skills conducting intrusions, ranging from hobbyist to professional."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeInsiderAccidental
+stonework:threatActorTypeInsiderAccidental rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                           skos:prefLabel "Insider Accidental"@en ;
+                                           skos:definition "An insider who causes harm unintentionally through negligence or error."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeInsiderDisgruntled
+stonework:threatActorTypeInsiderDisgruntled rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                            skos:prefLabel "Insider Disgruntled"@en ;
+                                            skos:definition "A current or former employee, contractor, or partner acting maliciously due to grievance."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeNationState
+stonework:threatActorTypeNationState rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                     skos:prefLabel "Nation State"@en ;
+                                     skos:definition "A government or state-sponsored actor conducting cyber operations for geopolitical objectives."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeSensationalist
+stonework:threatActorTypeSensationalist rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                        skos:prefLabel "Sensationalist"@en ;
+                                        skos:definition "A threat actor motivated primarily by notoriety, publicity, or the thrill of the attack."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeSpy
+stonework:threatActorTypeSpy rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                             skos:prefLabel "Spy"@en ;
+                             skos:definition "A threat actor conducting cyber espionage to collect intelligence for a state or organization."@en .
+
+###  https://cyberterrain.org/ns/stonework#threatActorTypeTerrorist
+stonework:threatActorTypeTerrorist rdf:type owl:NamedIndividual , stonework:ThreatActorType ;
+                                   skos:prefLabel "Terrorist"@en ;
+                                   skos:definition "A threat actor using cyber means to cause fear, disruption, or harm in support of extremist goals."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpAmber
+stonework:tlpAmber rdf:type owl:NamedIndividual , stonework:Markings ;
+                   skos:prefLabel "TLP:AMBER"@en ;
+                   skos:definition "Limited disclosure, restricted to participants’ organization and its clients."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpAmberStrict
+stonework:tlpAmberStrict rdf:type owl:NamedIndividual , stonework:Markings ;
+                         skos:prefLabel "TLP:AMBER+STRICT" ;
+                         skos:definition "Limited disclosure, restricted to participants’ organization."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpClear
+stonework:tlpClear rdf:type owl:NamedIndividual , stonework:Markings ;
+                   skos:prefLabel "TLP:CLEAR"@en ;
+                   skos:definition "Disclosure is not limited."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpGreen
+stonework:tlpGreen rdf:type owl:NamedIndividual , stonework:Markings ;
+                   skos:prefLabel "TLP:GREEN"@en ;
+                   skos:definition "Limited disclosure, restricted to the community."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpRed
+stonework:tlpRed rdf:type owl:NamedIndividual , stonework:Markings ;
+                 skos:prefLabel "TLP:RED"@en ;
+                 skos:definition "Not for disclosure, restricted to participants only."@en .
