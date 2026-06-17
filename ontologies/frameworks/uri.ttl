@@ -5,7 +5,7 @@
 @prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
 @prefix stones:    <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
-@prefix uri:  <https://cyberterrain.org/ns/frameworks/uri#> .
+@prefix uri:       <https://cyberterrain.org/ns/frameworks/uri#> .
 
 # --- Ontology declaration -------------------------------------------
 

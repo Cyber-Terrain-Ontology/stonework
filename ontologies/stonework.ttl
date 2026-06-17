@@ -241,6 +241,14 @@ stonework:memberOf rdf:type owl:ObjectProperty ;
                    rdfs:range stonework:Group , stonework:Organization , stonework:ThreatActor ;
                    skos:prefLabel "memberOf"@en .
 
+###  https://cyberterrain.org/ns/stonework#hasMotivation
+stonework:hasMotivation rdf:type owl:ObjectProperty ;
+                        rdfs:domain stonework:ThreatActor ;
+                        rdfs:range stonework:Motivation ;
+                        skos:prefLabel "hasMotivation"@en ;
+                        skos:definition "Relates a threat actor to one or more motivations that drive their actions and operations."@en ;
+                        skos:scopeNote "A threat actor may have multiple motivations. Corresponds to the STIX 2.1 primary_motivation and secondary_motivations properties on ThreatActor."@en .
+
 ###  https://cyberterrain.org/ns/stonework#memberOfFamily
 stonework:memberOfFamily rdf:type owl:ObjectProperty ;
                          rdfs:domain stonework:MalwareSample ;
