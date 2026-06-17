@@ -50,7 +50,7 @@ stones:AutonomousSystemObject rdfs:subClassOf stonework:AutonomousSystem .
 stones:Campaign rdfs:subClassOf stonework:Campaign .
 
 ###  https://cyberterrain.org/ns/stones#CourseOfAction
-stones:CourseOfAction rdfs:subClassOf stonework:Mitigation .
+stones:CourseOfAction rdfs:subClassOf stonework:CourseOfAction .
 
 ###  https://cyberterrain.org/ns/stones#detects
 stones:detects rdfs:subPropertyOf stonework:detects .
@@ -128,7 +128,7 @@ stones:markingRef rdfs:subPropertyOf stonework:markingRef .
 stones:mitigates rdfs:subPropertyOf stonework:mitigates .
 
 ###  https://cyberterrain.org/ns/stones#MutexObject
-stones:MutexObject rdfs:subClassOf stonework:DigitalArtifact .
+stones:MutexObject rdfs:subClassOf stonework:Mutex .
 
 ###  https://cyberterrain.org/ns/stones#NetworkTrafficObject
 stones:NetworkTrafficObject rdfs:subClassOf stonework:NetworkTraffic .
@@ -165,6 +165,9 @@ stones:SoftwareObject rdfs:subClassOf stonework:Product .
 
 ###  https://cyberterrain.org/ns/stones#StixSubType
 stones:StixSubType rdfs:subClassOf stonework:DigitalArtifact .
+
+###  https://cyberterrain.org/ns/stones#X509CertificateObject
+stones:X509CertificateObject rdfs:subClassOf stonework:Certificate .
 
 ###  https://cyberterrain.org/ns/stones#subtechnique_of
 stones:subtechnique_of rdfs:subPropertyOf stonework:techniqueOf .

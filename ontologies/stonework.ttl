@@ -429,6 +429,7 @@ stonework:revokedBy rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#sharesCertificate
 stonework:sharesCertificate rdf:type owl:ObjectProperty ;
                             rdfs:domain stonework:Infrastructure ;
+                            rdfs:range stonework:Certificate ;
                             skos:prefLabel "sharesCertificate" .
 
 ###  https://cyberterrain.org/ns/stonework#sharesRegistrant
@@ -621,6 +622,13 @@ stonework:CryptoAsset rdf:type owl:Class ;
                       skos:prefLabel "Crypto Asset"@en ;
                       skos:definition "A digital asset or wallet address used in cryptocurrency transactions, often relevant for tracking ransomware payments or illicit finance."@en .
 
+###  https://cyberterrain.org/ns/stonework#Certificate
+stonework:Certificate rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:DigitalArtifact ;
+                      skos:prefLabel "Certificate"@en ;
+                      skos:definition "A structured digital document binding a public key to an identity, issued and signed by a certificate authority. Used for authentication, encryption, and trust establishment in networked systems."@en ;
+                      skos:scopeNote "Primarily represents X.509 certificates. May be used to cluster infrastructure sharing the same certificate or to link observed TLS/SSL artifacts to their issuing authority. Referenced by stonework:sharesCertificate on Infrastructure."@en .
+
 ###  https://cyberterrain.org/ns/stonework#CyberActivity
 stonework:CyberActivity rdf:type owl:Class ;
                         skos:prefLabel "Cyber Activity" ;
@@ -665,7 +673,15 @@ stonework:DefensiveTactic rdf:type owl:Class ;
 stonework:DetectionRule rdf:type owl:Class ;
                         rdfs:subClassOf stonework:SecurityMeasure ;
                         skos:prefLabel "Detection Rule" ;
-                        skos:definition "A structured, machine-readable rule designed to detect malicious or suspicious activity, techniques, or indicators. It may be signature-based, behavioral, correlation-based, or analytic." .
+                        skos:definition "A structured, machine-readable rule designed to detect malicious or suspicious activity, techniques, or indicators. It may be signature-based, behavioral, correlation-based, or analytic."@en ;
+                        skos:scopeNote "Encompasses pattern-matching signatures (YARA, Snort, Suricata), behavioral rules (Sigma), SIEM correlation logic, and analytic detections. Signature is a subclass for content-centric, indicator-matching rules."@en .
+
+###  https://cyberterrain.org/ns/stonework#Signature
+stonework:Signature rdf:type owl:Class ;
+                    rdfs:subClassOf stonework:DetectionRule ;
+                    skos:prefLabel "Signature"@en ;
+                    skos:definition "A content-centric detection rule that matches malicious activity by a specific pattern — a byte sequence, string, hash, regular expression, or network packet structure."@en ;
+                    skos:scopeNote "Includes YARA rules, Snort/Suricata rules, and AV signatures. Distinguished from broader DetectionRule subclasses (behavioral, correlation, analytic) by its tight binding to a specific known-bad indicator or artifact pattern."@en .
 
 ###  https://cyberterrain.org/ns/stonework#DigitalArtifact
 stonework:DigitalArtifact rdf:type owl:Class ;
@@ -847,6 +863,13 @@ stonework:MalwareSample rdf:type owl:Class ;
                         skos:definition "A discrete, observable instance of malicious code — a specific binary, script, or executable artifact that can be identified by cryptographic hash, file characteristics, or behavioral signature."@en ;
                         skos:scopeNote "Represents a concrete sample rather than an abstract family concept. A single MalwareFamily may have thousands of associated samples across versions, packers, and dropper variants. Samples are linked to their family via stonework:memberOfFamily and to their file representation via stonework:hasHash or a direct stonework:File association. Properties such as stonework:drops, stonework:downloads, and stonework:communicatesWith describe the behavior of this specific sample, not the family in general."@en .
 
+###  https://cyberterrain.org/ns/stonework#Mutex
+stonework:Mutex rdf:type owl:Class ;
+                rdfs:subClassOf stonework:DigitalArtifact ;
+                skos:prefLabel "Mutex"@en ;
+                skos:definition "A named mutual exclusion object (mutex or semaphore) used by a process to prevent concurrent access to a shared resource. Commonly used as a malware indicator — malware families often create uniquely named mutexes to avoid re-infecting a host."@en ;
+                skos:scopeNote "Mutex names serve as host-based indicators of compromise. A specific mutex name found on a system can be attributed to a known malware family. Corresponds to the STIX 2.1 Mutex SCO."@en .
+
 ###  https://cyberterrain.org/ns/stonework#Markings
 stonework:Markings rdf:type owl:Class ;
                    rdfs:subClassOf stonework:Category ;
@@ -864,10 +887,16 @@ stonework:Motivation rdf:type owl:Class ;
 stonework:Mitigation rdf:type owl:Class ;
                      rdfs:subClassOf stonework:SecurityMeasure ;
                      skos:prefLabel "Mitigation" ;
-                     skos:definition "A deliberate Process or set of activities intended to reduce the likelihood, impact, or severity of a risk, threat, vulnerability, or adverse event."@en ;
-                     skos:scopeNote """Mitigations are proactive or reactive actions taken to address weaknesses or threats. 
-Examples include: applying a security patch, enabling multi-factor authentication, deploying a firewall rule, isolating a compromised host, or training users.  A Mitigation may be a one-time action or a repeatable control."""@en ;
+                     skos:definition "A deliberate action or control intended to reduce the likelihood, impact, or severity of a risk, threat, vulnerability, or adverse event."@en ;
+                     skos:scopeNote "Mitigations are proactive or reactive measures applied to address weaknesses or threats. Examples include: applying a security patch, enabling MFA, deploying a firewall rule, isolating a compromised host, or training users. A Mitigation may be a reusable control (ATT&CK sense) or a specific situational action. CourseOfAction is a subclass for contextualized, packaged response actions."@en ;
                      rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> .
+
+###  https://cyberterrain.org/ns/stonework#CourseOfAction
+stonework:CourseOfAction rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:Mitigation ;
+                         skos:prefLabel "Course of Action"@en ;
+                         skos:definition "A specific, contextualized recommended action or set of steps to prevent or respond to a threat, attack, or incident."@en ;
+                         skos:scopeNote "More prescriptive and situational than a general Mitigation — a CourseOfAction packages guidance for a specific threat context. Corresponds to the STIX 2.1 CourseOfAction SDO. General reusable controls (e.g. ATT&CK mitigations) are modeled as Mitigation; specific incident response actions are CourseOfAction."@en .
 
 ###  https://cyberterrain.org/ns/stonework#MalwareType
 stonework:MalwareType rdf:type owl:Class ;
@@ -1140,6 +1169,13 @@ stonework:URI rdf:type owl:Class ;
               rdfs:subClassOf stonework:Identifier ;
               skos:prefLabel "URI"@en ;
               skos:definition "Represents a Uniform Resource Identifier conforming to RFC 3986."@en .
+
+###  https://cyberterrain.org/ns/stonework#UserAgent
+stonework:UserAgent rdf:type owl:Class ;
+                    rdfs:subClassOf stonework:Identifier ;
+                    skos:prefLabel "User Agent"@en ;
+                    skos:definition "A string identifier transmitted by a client application in HTTP requests declaring the software, version, and platform making the request. Used for fingerprinting clients, identifying malware C2 beaconing patterns, and clustering infrastructure by shared tooling."@en ;
+                    skos:scopeNote "User-agent strings are observable in network traffic, proxy logs, and web server logs. Distinctive or spoofed user-agent values are commonly used as indicators in threat intelligence. Distinct from stonework:UserAccount (an identity credential) — a UserAgent describes software behavior, not a user identity."@en .
 
 ###  https://cyberterrain.org/ns/stonework#UserAccount
 stonework:UserAccount rdf:type owl:Class ;

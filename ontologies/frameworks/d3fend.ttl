@@ -40,6 +40,9 @@ d3f:Group rdfs:subClassOf stonework:Group .
 #    Artifact Mappings
 #################################################################
 
+###  d3f:Certificate → stonework:Certificate
+d3f:Certificate rdfs:subClassOf stonework:Certificate .
+
 ###  d3f:DigitalArtifact → stonework:DigitalArtifact
 d3f:DigitalArtifact rdfs:subClassOf stonework:DigitalArtifact .
 
