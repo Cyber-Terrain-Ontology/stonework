@@ -121,7 +121,7 @@ stonework:counters rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#derivedFrom
 stonework:derivedFrom rdf:type owl:ObjectProperty ;
                       rdfs:domain stonework:DetectionRule ;
-                      rdfs:range stonework:Activity , stonework:DigitalArtifact , stonework:Infrastructure ;
+                      rdfs:range stonework:CyberActivity , stonework:DigitalArtifact , stonework:Infrastructure ;
                       skos:prefLabel "derivedFrom" .
 
 ###  https://cyberterrain.org/ns/stonework#detects
@@ -429,12 +429,11 @@ stonework:AITechnique rdf:type owl:Class ;
                       skos:prefLabel "AI Technique"@en ;
                       skos:definition "A specific method by which adversaries attack AI/ML systems (e.g., training data poisoning, adversarial examples, model extraction)."@en .
 
-###  https://cyberterrain.org/ns/stonework#Activity
-stonework:Activity rdf:type owl:Class ;
-                   rdfs:subClassOf stonework:CyberEntity ;
-                   skos:prefLabel "Activity" ;
-                   skos:definition "A specific occurrence or performance of actions by one or more agents over time."@en ;
-                   skos:scopeNote "Superclass for higher-level operational concepts such as Campaigns, Incidents, and Events."@en .
+###  https://cyberterrain.org/ns/stonework#CyberActivity
+stonework:CyberActivity rdf:type owl:Class ;
+                        skos:prefLabel "Cyber Activity" ;
+                        skos:definition "A specific occurrence or performance of actions by one or more agents over time within a cyber or sociotechnical context."@en ;
+                        skos:scopeNote "One of two root classes in STONEWORK alongside CyberEntity. Superclass for higher-level operational concepts such as Campaigns, Incidents, Operations, and Events. Aligns with BFO Occurrent and CCO Process."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Agent
 stonework:Agent rdf:type owl:Class ;
@@ -480,11 +479,11 @@ stonework:Behavior rdf:type owl:Class ;
                    rdfs:subClassOf stonework:CyberEntity ;
                    skos:prefLabel "Behavior" ;
                    skos:definition "A pattern of actions or methods characteristic of an entity, particularly adversaries."@en ;
-                   skos:scopeNote "Groups TTP-related classes such as Tactics, Techniques, and Procedures."@en .
+                   skos:scopeNote "Groups TTP-related classes such as Tactics, Techniques, and Procedures. In BFO terms, Behaviors are GenericallyDependentContinuants — specifications or patterns that describe how actions are carried out. The execution of a Technique is an Activity; the Technique itself is a Behavior (Thing). Aligns with CCO DirectiveInformationContentEntity and IAO PlanSpecification."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Campaign
 stonework:Campaign rdf:type owl:Class ;
-                   rdfs:subClassOf stonework:Activity ;
+                   rdfs:subClassOf stonework:CyberActivity ;
                    skos:prefLabel "Campaign"@en ;
                    skos:definition "A grouping of adversary behaviours and resources with a common objective pursued over a period of time. Campaigns may be attributed to intrusion sets or threat actors." .
 
@@ -525,7 +524,7 @@ stonework:CryptoAsset rdf:type owl:Class ;
 stonework:CyberEntity rdf:type owl:Class ;
                       skos:prefLabel "Cyber Entity" ;
                       skos:definition "Any concept, object, or resource that exists or operates within a cyber or sociotechnical domain."@en ;
-                      skos:scopeNote "Serves as the root superclass for the STONEWORK ontology."@en .
+                      skos:scopeNote "One of two root classes in STONEWORK. Groups all persistent entities — Agents, Infrastructure, DigitalArtifacts, Information, Behaviors, SecurityConditions, and related classes. Aligns with BFO Continuant. The sibling root class CyberActivity covers happenings (Campaigns, Incidents, Operations, etc.)."@en .
 
 ###  https://cyberterrain.org/ns/stonework#CyberTechnique
 stonework:CyberTechnique rdf:type owl:Class ;
@@ -580,11 +579,12 @@ stonework:EmailAddress rdf:type owl:Class ;
                        skos:prefLabel "Email Address"@en ;
                        skos:definition "Represents a single email address, optionally associating it with a display name and a user account." .
 
-###  https://cyberterrain.org/ns/stonework#Event
-stonework:Event rdf:type owl:Class ;
-                rdfs:subClassOf stonework:Activity ;
-                skos:prefLabel "Event" ;
-                skos:definition "Any observable occurrence or activity in a system, network, or environment that has security relevance."@en .
+###  https://cyberterrain.org/ns/stonework#SecurityEvent
+stonework:SecurityEvent rdf:type owl:Class ;
+                        rdfs:subClassOf stonework:CyberActivity ;
+                        skos:prefLabel "Security Event"@en ;
+                        skos:definition "An atomic, observable occurrence in a system, network, or environment that has potential security relevance but has not yet been assessed or declared as an Incident."@en ;
+                        skos:scopeNote "Represents the pre-triage state — a raw log entry, alert, or sensor observation. Distinguished from Incident by the absence of human or automated assessment declaring it significant and adverse. Useful for SIEM, log-based, and threat hunting use cases."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Feed
 stonework:Feed rdf:type owl:Class ;
@@ -654,7 +654,7 @@ stonework:Impact rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Incident
 stonework:Incident rdf:type owl:Class ;
-                   rdfs:subClassOf stonework:Activity ;
+                   rdfs:subClassOf stonework:CyberActivity ;
                    skos:prefLabel "Incident" ;
                    skos:definition "A significant adverse event or series of related events that has caused, or has the potential to cause, harm to an organization’s operations, assets, or people." .
 
@@ -767,7 +767,7 @@ stonework:OnlineReference rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Operation
 stonework:Operation rdf:type owl:Class ;
-                    rdfs:subClassOf stonework:Activity ;
+                    rdfs:subClassOf stonework:CyberActivity ;
                     skos:prefLabel "Operation" ;
                     skos:definition "A coordinated set of activities conducted by one or more agents toward a defined objective, typically spanning multiple campaigns, incidents, or phases and characterized by unified command, intent, or resourcing."@en ;
                     skos:scopeNote "Operations are broader in scope than Campaigns — a single Operation may encompass multiple Campaigns executed over an extended period. Applies to both offensive operations (e.g. state-sponsored cyber operations) and defensive operations (e.g. incident response operations, threat hunting operations)."@en .
@@ -812,7 +812,7 @@ stonework:Procedure rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Process
 stonework:Process rdf:type owl:Class ;
-                  rdfs:subClassOf stonework:Activity ;
+                  rdfs:subClassOf stonework:CyberActivity ;
                   skos:prefLabel "Process"@en ;
                   skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
                   skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is intended for modeling Controls, Playbooks, Mitigations, Threat Scenarios, and other repeatable or planned workflows."@en ;

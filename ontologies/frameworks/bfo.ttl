@@ -1,0 +1,106 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix frameworks: <https://cyberterrain.org/ns/frameworks/> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
+@base <https://cyberterrain.org/ns/frameworks/bfo> .
+
+###  https://cyberterrain.org/ns/frameworks/bfo
+frameworks:bfo rdf:type owl:Ontology ;
+               owl:versionIRI <https://cyberterrain.org/ns/frameworks/bfo/0.1.0> ;
+               owl:versionInfo "0.1.0" ;
+               owl:imports <https://cyberterrain.org/ns/stonework#> ;
+               rdfs:label "STONEWORK: BFO 2020 Mapping"@en ;
+               dcterms:description "Declares subclass mappings from STONEWORK classes to Basic Formal Ontology (BFO) 2020. This file carries no dependency on BFO imports — it asserts alignment axioms only. Load alongside BFO 2020 when formal BFO reasoning is required."@en ;
+               rdfs:seeAlso <http://purl.obolibrary.org/obo/bfo/2020/bfo.owl> .
+
+
+#################################################################
+#    BFO Top-Level Branch Mappings
+#################################################################
+
+###  CyberEntity → bfo:Continuant (BFO_0000002)
+stonework:CyberEntity rdfs:subClassOf bfo:0000002 .
+
+###  CyberActivity → bfo:Occurrent (BFO_0000003)
+###  CyberActivity is the sibling root class representing happenings
+stonework:CyberActivity rdfs:subClassOf bfo:0000003 .
+
+
+#################################################################
+#    Independent Continuant Mappings (BFO_0000004)
+#################################################################
+
+###  Agent → bfo:MaterialEntity (BFO_0000040)
+###  Agents are material entities — they have physical or social presence
+stonework:Agent rdfs:subClassOf bfo:0000040 .
+
+###  Infrastructure → bfo:MaterialEntity (BFO_0000040)
+###  Infrastructure comprises physical and virtual material systems
+stonework:Infrastructure rdfs:subClassOf bfo:0000040 .
+
+
+#################################################################
+#    Generically Dependent Continuant Mappings (BFO_0000031)
+#################################################################
+
+###  Information → bfo:GenericallyDependentContinuant (BFO_0000031)
+###  Information content entities depend generically on physical substrates
+stonework:Information rdfs:subClassOf bfo:0000031 .
+
+###  DigitalArtifact → bfo:GenericallyDependentContinuant (BFO_0000031)
+###  Digital artifacts are generically dependent — they can be copied across substrates
+stonework:DigitalArtifact rdfs:subClassOf bfo:0000031 .
+
+###  Behavior → bfo:GenericallyDependentContinuant (BFO_0000031)
+###  Behaviors (Tactics, Techniques, Procedures) are plan specifications —
+###  generically dependent information entities describing how actions are carried out
+stonework:Behavior rdfs:subClassOf bfo:0000031 .
+
+
+#################################################################
+#    Specifically Dependent Continuant Mappings (BFO_0000020)
+#################################################################
+
+###  SecurityCondition → bfo:SpecificallyDependentContinuant (BFO_0000020)
+###  Security conditions (risk, likelihood, impact) inhere in a bearer
+stonework:SecurityCondition rdfs:subClassOf bfo:0000020 .
+
+###  Risk → bfo:Disposition (BFO_0000016)
+###  Risk is a disposition of a system or asset to be harmed under certain conditions
+stonework:Risk rdfs:subClassOf bfo:0000016 .
+
+###  Vulnerability → bfo:Disposition (BFO_0000016)
+###  Vulnerabilities are dispositions of systems to be exploited
+stonework:Vulnerability rdfs:subClassOf bfo:0000016 .
+
+###  Weakness → bfo:Disposition (BFO_0000016)
+###  Weaknesses are dispositions toward exploitable behavior
+stonework:Weakness rdfs:subClassOf bfo:0000016 .
+
+###  Likelihood → bfo:Quality (BFO_0000019)
+###  Likelihood is a measurable quality of a threat or scenario
+stonework:Likelihood rdfs:subClassOf bfo:0000019 .
+
+###  Impact → bfo:Quality (BFO_0000019)
+###  Impact is a measurable quality of a compromise outcome
+stonework:Impact rdfs:subClassOf bfo:0000019 .
+
+###  Role → bfo:Role (BFO_0000023)
+stonework:Role rdfs:subClassOf bfo:0000023 .
+
+
+#################################################################
+#    Occurrent Mappings (BFO_0000003)
+#################################################################
+
+###  CyberActivity → bfo:Process (BFO_0000015)
+stonework:CyberActivity rdfs:subClassOf bfo:0000015 .
+
+###  Process → bfo:Process (BFO_0000015)
+###  stonework:Process (enterprise workflow) is also a BFO Process
+stonework:Process rdfs:subClassOf bfo:0000015 .

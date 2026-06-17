@@ -1,0 +1,135 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix frameworks: <https://cyberterrain.org/ns/frameworks/> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix cco: <https://www.ontologyrepository.com/CommonCoreOntologies/> .
+@base <https://cyberterrain.org/ns/frameworks/cco> .
+
+###  https://cyberterrain.org/ns/frameworks/cco
+frameworks:cco rdf:type owl:Ontology ;
+               owl:versionIRI <https://cyberterrain.org/ns/frameworks/cco/0.1.0> ;
+               owl:versionInfo "0.1.0" ;
+               owl:imports <https://cyberterrain.org/ns/stonework#> ;
+               rdfs:label "STONEWORK: CCO Mapping"@en ;
+               dcterms:description "Declares subclass mappings from STONEWORK classes to the Common Core Ontologies (CCO). This file carries no hard dependency on CCO imports — it asserts alignment axioms only. Load alongside CCO when US Government interoperability or formal mid-level ontology reasoning is required."@en ;
+               rdfs:seeAlso <https://www.ontologyrepository.com/CommonCoreOntologies/> .
+
+
+#################################################################
+#    Agent Ontology Mappings
+#################################################################
+
+###  Agent → cco:Agent
+stonework:Agent rdfs:subClassOf cco:Agent .
+
+###  Person → cco:Person
+stonework:Person rdfs:subClassOf cco:Person .
+
+###  Organization → cco:Organization
+stonework:Organization rdfs:subClassOf cco:Organization .
+
+###  Group → cco:GroupAgent
+###  CCO GroupAgent covers informal collectives and ad-hoc groups
+stonework:Group rdfs:subClassOf cco:GroupAgent .
+
+
+#################################################################
+#    Artifact Ontology Mappings
+#################################################################
+
+###  Infrastructure → cco:Artifact
+###  Infrastructure comprises artifacts — intentionally created physical/virtual systems
+stonework:Infrastructure rdfs:subClassOf cco:Artifact .
+
+###  DigitalArtifact → cco:InformationBearingArtifact
+###  Digital artifacts bear and transmit information content
+stonework:DigitalArtifact rdfs:subClassOf cco:InformationBearingArtifact .
+
+###  File → cco:InformationBearingArtifact
+stonework:File rdfs:subClassOf cco:InformationBearingArtifact .
+
+###  MalwareSample → cco:InformationBearingArtifact
+stonework:MalwareSample rdfs:subClassOf cco:InformationBearingArtifact .
+
+
+#################################################################
+#    Information Entity Ontology Mappings
+#################################################################
+
+###  Information → cco:InformationContentEntity
+stonework:Information rdfs:subClassOf cco:InformationContentEntity .
+
+###  Provenance → cco:InformationContentEntity
+stonework:Provenance rdfs:subClassOf cco:InformationContentEntity .
+
+###  Publication → cco:Document
+stonework:Publication rdfs:subClassOf cco:Document .
+
+###  Report → cco:Document
+stonework:Report rdfs:subClassOf cco:Document .
+
+###  Note → cco:InformationContentEntity
+stonework:Note rdfs:subClassOf cco:InformationContentEntity .
+
+###  Behavior → cco:DirectiveInformationContentEntity
+###  Behaviors (Tactics, Techniques, Procedures) are directives — they prescribe
+###  how actions are to be carried out, aligning with CCO's DirectiveInformationContentEntity
+stonework:Behavior rdfs:subClassOf cco:DirectiveInformationContentEntity .
+
+###  DetectionRule → cco:DirectiveInformationContentEntity
+stonework:DetectionRule rdfs:subClassOf cco:DirectiveInformationContentEntity .
+
+###  Playbook → cco:DirectiveInformationContentEntity
+stonework:Playbook rdfs:subClassOf cco:DirectiveInformationContentEntity .
+
+###  Assessment → cco:DescriptiveInformationContentEntity
+stonework:Assessment rdfs:subClassOf cco:DescriptiveInformationContentEntity .
+
+###  Sighting → cco:DescriptiveInformationContentEntity
+stonework:Sighting rdfs:subClassOf cco:DescriptiveInformationContentEntity .
+
+
+#################################################################
+#    Event Ontology Mappings
+#################################################################
+
+###  Activity → cco:Process
+stonework:CyberActivity rdfs:subClassOf cco:Process .
+
+###  SecurityEvent → cco:Event
+stonework:SecurityEvent rdfs:subClassOf cco:Event .
+
+###  Incident → cco:Event
+stonework:Incident rdfs:subClassOf cco:Event .
+
+###  Campaign → cco:Process
+stonework:Campaign rdfs:subClassOf cco:Process .
+
+###  Operation → cco:Process
+stonework:Operation rdfs:subClassOf cco:Process .
+
+###  Investigation → cco:Process
+stonework:Investigation rdfs:subClassOf cco:Process .
+
+
+#################################################################
+#    Role Mappings
+#################################################################
+
+###  Role → cco:Role
+stonework:Role rdfs:subClassOf cco:Role .
+
+
+#################################################################
+#    Geospatial Mappings
+#################################################################
+
+###  Location → cco:GeospatialRegion
+stonework:Location rdfs:subClassOf cco:GeospatialRegion .
+
+###  Country → cco:GeopoliticalEntity
+stonework:Country rdfs:subClassOf cco:GeopoliticalEntity .
