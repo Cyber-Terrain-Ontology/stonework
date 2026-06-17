@@ -32,7 +32,7 @@ stonework:accountOf rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#achieves
 stonework:achieves rdf:type owl:ObjectProperty ;
-                   rdfs:domain stonework:Malware , stonework:Tool ;
+                   rdfs:domain stonework:MalwareSample , stonework:Tool ;
                    rdfs:range stonework:AITechnique , stonework:AttackTechnique ;
                    skos:prefLabel "achieves" .
 
@@ -69,8 +69,8 @@ stonework:attributedToAgent rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#authoredBy
 stonework:authoredBy rdf:type owl:ObjectProperty ;
-                     rdfs:domain stonework:Agent ;
-                     rdfs:range stonework:Provenance ;
+                     rdfs:domain stonework:Provenance ;
+                     rdfs:range stonework:Agent ;
                      skos:prefLabel "authoredBy"@en .
 
 ###  https://cyberterrain.org/ns/stonework#categorizedBy
@@ -92,7 +92,7 @@ stonework:clusteredWith rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#communicatesWith
 stonework:communicatesWith rdf:type owl:ObjectProperty , owl:SymmetricProperty ;
-                           rdfs:domain stonework:Malware , stonework:Tool ;
+                           rdfs:domain stonework:MalwareSample , stonework:Tool ;
                            rdfs:range stonework:Infrastructure , stonework:URL ;
                            skos:prefLabel "communicatesWith" .
 
@@ -132,13 +132,13 @@ stonework:detects rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#downloads
 stonework:downloads rdf:type owl:ObjectProperty ;
-                    rdfs:domain stonework:File , stonework:Malware , stonework:Tool ;
-                    rdfs:range stonework:File , stonework:Malware , stonework:Tool ;
+                    rdfs:domain stonework:File , stonework:MalwareSample , stonework:Tool ;
+                    rdfs:range stonework:File , stonework:MalwareSample , stonework:Tool ;
                     skos:prefLabel "downloads" .
 
 ###  https://cyberterrain.org/ns/stonework#drops
 stonework:drops rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
-                rdfs:domain stonework:Malware ;
+                rdfs:domain stonework:MalwareSample ;
                 rdfs:range stonework:DigitalArtifact ;
                 skos:prefLabel "drops" .
 
@@ -151,7 +151,7 @@ stonework:emailOf rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#exploits
 stonework:exploits rdf:type owl:ObjectProperty ;
-                   rdfs:domain stonework:Campaign , stonework:Malware , stonework:ThreatActor ;
+                   rdfs:domain stonework:Campaign , stonework:MalwareSample , stonework:ThreatActor ;
                    rdfs:range stonework:Vulnerability ;
                    skos:prefLabel "exploits" ;
                    skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
@@ -183,7 +183,7 @@ stonework:hasIdentifier rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#hasMember
 stonework:hasMember rdf:type owl:ObjectProperty ;
-                    rdfs:domain stonework:Group , stonework:Organization , stonework:ThreatActor ;
+                    rdfs:domain stonework:Group , stonework:Organization , stonework:Sector , stonework:ThreatActor ;
                     skos:prefLabel "hasMember"@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasPhoneNumber
@@ -232,8 +232,15 @@ stonework:linkedTo rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#memberOf
 stonework:memberOf rdf:type owl:ObjectProperty ;
                    owl:inverseOf stonework:hasMember ;
-                   rdfs:range stonework:Group , stonework:Organization , stonework:ThreatActor ;
+                   rdfs:range stonework:Group , stonework:Organization , stonework:Sector , stonework:ThreatActor ;
                    skos:prefLabel "memberOf"@en .
+
+###  https://cyberterrain.org/ns/stonework#memberOfFamily
+stonework:memberOfFamily rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:MalwareSample ;
+                         rdfs:range stonework:MalwareFamily ;
+                         skos:prefLabel "memberOfFamily" ;
+                         skos:definition "Relates a specific malware sample to the malware family it has been classified as belonging to, based on shared behavioral patterns, code similarity, infrastructure overlap, or analyst attribution." .
 
 ###  https://cyberterrain.org/ns/stonework#mentions
 stonework:mentions rdf:type owl:ObjectProperty ;
@@ -243,7 +250,7 @@ stonework:mentions rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#mitigates
 stonework:mitigates rdf:type owl:ObjectProperty ;
                     rdfs:domain stonework:SecurityMeasure ;
-                    rdfs:range stonework:AttackPattern ;
+                    rdfs:range stonework:AttackPattern , stonework:Vulnerability ;
                     skos:prefLabel "mitigates" ;
                     skos:definition "Shortcut triple: source CourseOfAction mitigates target AttackPattern or Vulnerability. Corresponds to STIX relationship_type 'mitigates'." .
 
@@ -277,9 +284,10 @@ stonework:playsRole rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#precedes
 stonework:precedes rdf:type owl:ObjectProperty ;
-                   rdfs:domain stonework:Publication ;
-                   rdfs:range stonework:Publication ;
-                   skos:prefLabel "precedes" .
+                   rdfs:domain stonework:Information ;
+                   rdfs:range stonework:Information ;
+                   skos:prefLabel "precedes" ;
+                   skos:definition "Temporal succession of Information (v1 precedes v2 of a report)"@en .
 
 ###  https://cyberterrain.org/ns/stonework#references
 stonework:references rdf:type owl:ObjectProperty ;
@@ -316,7 +324,7 @@ stonework:remediates rdf:type owl:ObjectProperty ;
                      skos:prefLabel "remediates" .
 
 ###  https://cyberterrain.org/ns/stonework#resolvesTo
-stonework:resolvesTo rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+stonework:resolvesTo rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Infrastructure ;
                      rdfs:range stonework:Infrastructure ;
                      skos:prefLabel "resolvesTo"@en .
@@ -344,8 +352,8 @@ stonework:subdomainOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#targets
 stonework:targets rdf:type owl:ObjectProperty ;
-                  rdfs:domain stonework:Campaign , stonework:Malware , stonework:ThreatActor ;
-                  rdfs:range stonework:Location ;
+                  rdfs:domain stonework:Campaign , stonework:MalwareSample , stonework:ThreatActor ;
+                  rdfs:range stonework:Agent , stonework:Location , stonework:Sector , stonework:Vulnerability ;
                   skos:prefLabel "targets" ;
                   skos:definition "Shortcut triple: source targets the target Identity, Vulnerability, or Location. Corresponds to STIX relationship_type 'targets'." .
 
@@ -366,7 +374,7 @@ stonework:urlOf rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#uses
 stonework:uses rdf:type owl:ObjectProperty ;
-               rdfs:domain stonework:Campaign , stonework:Malware , stonework:ThreatActor ;
+               rdfs:domain stonework:Campaign , stonework:MalwareSample , stonework:ThreatActor ;
                rdfs:range stonework:AttackTechnique ;
                skos:prefLabel "uses" ;
                skos:definition "Relates a threat actor group or campaign to an offensive technique they are known to employ." ;
@@ -381,9 +389,10 @@ stonework:usesRule rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#variantOf
 stonework:variantOf rdf:type owl:ObjectProperty ;
-                    rdfs:domain stonework:Malware ;
-                    rdfs:range stonework:File , stonework:Hash , stonework:Malware ;
-                    skos:prefLabel "variantOf" .
+                    rdfs:domain stonework:MalwareSample , stonework:MalwareFamily ;
+                    rdfs:range stonework:File , stonework:Hash , stonework:MalwareSample , stonework:MalwareFamily ;
+                    skos:prefLabel "variantOf" ;
+                    skos:definition "Relates a malware sample or family to another sample or family from which it is derived, modified, or evolved — indicating shared code lineage, forked development, or deliberate repackaging."@en .
 
 ###  https://cyberterrain.org/ns/stonework#weaknessOf
 stonework:weaknessOf rdf:type owl:ObjectProperty ;
@@ -398,6 +407,13 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 #################################################################
 #    Classes
 #################################################################
+
+###  https://cyberterrain.org/ns/stonework#AIAgent
+stonework:AIAgent rdf:type owl:Class ;
+                  rdfs:subClassOf stonework:Agent ;
+                  skos:prefLabel "AI Agent" ;
+                  skos:definition "An autonomous or semi-autonomous system driven by AI/ML that can act, make decisions, or be attributed responsibility in a cyber or sociotechnical context." ;
+                  skos:scopeNote "Covers both offensive uses (AI-assisted or autonomous threat actors) and defensive uses (AI-driven detection, response, or hunting systems). Distinct from Tool — an AIAgent has a degree of autonomous decision-making rather than being a passively invoked artifact."@en .
 
 ###  https://cyberterrain.org/ns/stonework#AITechnique
 stonework:AITechnique rdf:type owl:Class ;
@@ -417,8 +433,7 @@ stonework:Agent rdf:type owl:Class ;
                 rdfs:subClassOf stonework:CyberEntity ;
                 skos:prefLabel "Agent" ;
                 skos:definition "Any entity that can act, perform actions, or be attributed responsibility in a cyber or sociotechnical context."@en ;
-                skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
-                rdfs:seeAlso prov:Agent .
+                skos:scopeNote "Covers AI, human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en .
 
 ###  https://cyberterrain.org/ns/stonework#AnalyticTechnique
 stonework:AnalyticTechnique rdf:type owl:Class ;
@@ -675,11 +690,19 @@ stonework:Location rdf:type owl:Class ;
                    skos:prefLabel "Location"@en ;
                    skos:definition "Represents a geographic location. May be as specific as a latitude/longitude coordinate or as broad as a continent. At least one of region, country, or latitude/longitude must be provided." .
 
-###  https://cyberterrain.org/ns/stonework#Malware
-stonework:Malware rdf:type owl:Class ;
-                  rdfs:subClassOf stonework:DigitalArtifact ;
-                  skos:prefLabel "Malware"@en ;
-                  skos:definition "A type of TTP that represents malicious code. Captures both malware families (when is_family is true) and specific instances or samples." .
+###  https://cyberterrain.org/ns/stonework#MalwareFamily
+stonework:MalwareFamily rdf:type owl:Class ;
+                        rdfs:subClassOf stonework:Category ;
+                        skos:prefLabel "Malware Family" ;
+                        skos:definition "A named classification of malware sharing common code lineage, capabilities, behavioral patterns, or authorship. Represents the abstract family concept rather than any specific sample or binary." ;
+                        skos:scopeNote "Samples are modeled as stonework:MalwareSample individuals linked to their family via stonework:memberOfFamily. A family may have associated TTPs, infrastructure, and threat actor attribution independent of any specific sample."@en .
+
+###  https://cyberterrain.org/ns/stonework#MalwareSample
+stonework:MalwareSample rdf:type owl:Class ;
+                        rdfs:subClassOf stonework:DigitalArtifact ;
+                        skos:prefLabel "Malware Sample"@en ;
+                        skos:definition "A discrete, observable instance of malicious code — a specific binary, script, or executable artifact that can be identified by cryptographic hash, file characteristics, or behavioral signature."@en ;
+                        skos:scopeNote "Represents a concrete sample rather than an abstract family concept. A single MalwareFamily may have thousands of associated samples across versions, packers, and dropper variants. Samples are linked to their family via stonework:memberOfFamily and to their file representation via stonework:hasHash or a direct stonework:File association. Properties such as stonework:drops, stonework:downloads, and stonework:communicatesWith describe the behavior of this specific sample, not the family in general."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Mitigation
 stonework:Mitigation rdf:type owl:Class ;
@@ -693,7 +716,9 @@ Examples include: applying a security patch, enabling multi-factor authenticatio
 ###  https://cyberterrain.org/ns/stonework#MobileDevice
 stonework:MobileDevice rdf:type owl:Class ;
                        rdfs:subClassOf stonework:Infrastructure ;
-                       skos:prefLabel "Mobile Device" .
+                       skos:prefLabel "Mobile Device" ;
+                       skos:definition "A portable computing device with wireless connectivity, typically used for communication, data processing, and accessing networks (e.g., smartphones, tablets, or laptops with cellular capability)."@en ;
+                       skos:scopeNote "In a cyber threat context, Mobile Devices are often treated as both endpoints (Infrastructure) and vectors for attacks (e.g., mobile malware, phishing, lost/stolen device risks). They may host UserAccounts, run Mobile Applications, and connect via cellular, Wi-Fi, or Bluetooth."@en .
 
 ###  https://cyberterrain.org/ns/stonework#NetworkService
 stonework:NetworkService rdf:type owl:Class ;

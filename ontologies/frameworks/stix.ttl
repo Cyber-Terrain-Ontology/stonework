@@ -104,7 +104,7 @@ stones:Location rdfs:subClassOf stonework:Location .
 stones:MACAddressObject rdfs:subClassOf stonework:Infrastructure .
 
 ###  https://cyberterrain.org/ns/stones#Malware
-stones:Malware rdfs:subClassOf stonework:Malware .
+stones:Malware rdfs:subClassOf stonework:MalwareSample , stonework:MalwareFamily .
 
 ###  https://cyberterrain.org/ns/stones#MalwareAnalysis
 stones:MalwareAnalysis rdfs:subClassOf stonework:Information .
