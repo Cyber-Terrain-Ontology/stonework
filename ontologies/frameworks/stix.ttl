@@ -215,3 +215,85 @@ stonex:_personal-gain owl:sameAs stonework:motivationPersonalGain .
 stonex:_personal-satisfaction owl:sameAs stonework:motivationPersonalSatisfaction .
 stonex:_revenge owl:sameAs stonework:motivationRevenge .
 stonex:_unpredictable owl:sameAs stonework:motivationUnpredictable .
+
+
+#################################################################
+#    Infrastructure Type Vocabulary Mappings
+#################################################################
+
+stones:InfrastuctureTypeVocabulary rdfs:subClassOf stonework:InfrastructureType .
+
+stonex:_amplification owl:sameAs stonework:infraTypeAmplification .
+stonex:_anonymization owl:sameAs stonework:infraTypeAnonymization .
+stonex:_botnet owl:sameAs stonework:infraTypeBotnet .
+stonex:_command-and-control owl:sameAs stonework:infraTypeC2 .
+stonex:_exfiltration owl:sameAs stonework:infraTypeExfiltration .
+stonex:_firewall owl:sameAs stonework:infraTypeFirewall .
+stonex:_hosting-malware owl:sameAs stonework:infraTypeHostingMalware .
+stonex:_hosting-target-lists owl:sameAs stonework:infraTypeHostingTargetLists .
+stonex:_phishing owl:sameAs stonework:infraTypePhishing .
+stonex:_reconnaissance owl:sameAs stonework:infraTypeReconnaissance .
+stonex:_routers-switches owl:sameAs stonework:infraTypeRoutersSwitches .
+stonex:_staging owl:sameAs stonework:infraTypeStaging .
+stonex:_workstation owl:sameAs stonework:infraTypeWorkstation .
+
+
+#################################################################
+#    Malware Type Vocabulary Mappings
+#################################################################
+
+stones:MalwareTypeVocabulary rdfs:subClassOf stonework:MalwareType .
+
+stonex:_adware owl:sameAs stonework:malwareTypeAdware .
+stonex:_backdoor owl:sameAs stonework:malwareTypeBackdoor .
+stonex:_bot owl:sameAs stonework:malwareTypeBot .
+stonex:_bootkit owl:sameAs stonework:malwareTypeBootkit .
+stonex:_ddos owl:sameAs stonework:malwareTypeDDoS .
+stonex:_downloader owl:sameAs stonework:malwareTypeDownloader .
+stonex:_dropper owl:sameAs stonework:malwareTypeDropper .
+stonex:_exploit-kit owl:sameAs stonework:malwareTypeExploitKit .
+stonex:_keylogger owl:sameAs stonework:malwareTypeKeylogger .
+stonex:_ransomware owl:sameAs stonework:malwareTypeRansomware .
+stonex:_remote-access-trojan owl:sameAs stonework:malwareTypeRAT .
+stonex:_resource-exploitation owl:sameAs stonework:malwareTypeResourceExploitation .
+stonex:_rootkit owl:sameAs stonework:malwareTypeRootkit .
+stonex:_screen-capture owl:sameAs stonework:malwareTypeScreenCapture .
+stonex:_spyware owl:sameAs stonework:malwareTypeSpyware .
+stonex:_trojan owl:sameAs stonework:malwareTypeTrojan .
+stonex:_virus owl:sameAs stonework:malwareTypeVirus .
+stonex:_webshell owl:sameAs stonework:malwareTypeWebshell .
+stonex:_wiper owl:sameAs stonework:malwareTypeWiper .
+stonex:_worm owl:sameAs stonework:malwareTypeWorm .
+
+
+#################################################################
+#    Threat Actor Type Vocabulary Mappings
+#################################################################
+
+stones:ThreatActorTypeVocabulary rdfs:subClassOf stonework:ThreatActorType .
+
+stonex:_activist owl:sameAs stonework:threatActorTypeActivist .
+stonex:_competitor owl:sameAs stonework:threatActorTypeCompetitor .
+stonex:_crime-syndicate owl:sameAs stonework:threatActorTypeCrimeSyndicate .
+stonex:_criminal owl:sameAs stonework:threatActorTypeCriminal .
+stonex:_hacker owl:sameAs stonework:threatActorTypeHacker .
+stonex:_insider-accidental owl:sameAs stonework:threatActorTypeInsiderAccidental .
+stonex:_insider-disgruntled owl:sameAs stonework:threatActorTypeInsiderDisgruntled .
+stonex:_nation-state owl:sameAs stonework:threatActorTypeNationState .
+stonex:_sensationalist owl:sameAs stonework:threatActorTypeSensationalist .
+stonex:_spy owl:sameAs stonework:threatActorTypeSpy .
+stonex:_terrorist owl:sameAs stonework:threatActorTypeTerrorist .
+
+
+#################################################################
+#    Threat Actor Role Vocabulary Mappings
+#################################################################
+
+stones:ThreatActorRoleVocabulary rdfs:subClassOf stonework:ThreatActorRole .
+
+stonex:_agent owl:sameAs stonework:threatActorRoleAgent .
+stonex:_director owl:sameAs stonework:threatActorRoleDirector .
+stonex:_infrastructure-architect owl:sameAs stonework:threatActorRoleInfrastructureArchitect .
+stonex:_infrastructure-operator owl:sameAs stonework:threatActorRoleInfrastructureOperator .
+stonex:_malware-author owl:sameAs stonework:threatActorRoleMalwareAuthor .
+stonex:_sponsor owl:sameAs stonework:threatActorRoleSponsor .
