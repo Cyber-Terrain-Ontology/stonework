@@ -16,8 +16,7 @@
 <https://cyberterrain.org/ns/frameworks/cve>
     a owl:Ontology ;
     rdfs:label "CVE Unified Ontology"@en ;
-    rdfs:comment "Unified OWL ontology for CVE records. Derived from the framework_cve Pydantic model, supporting both CVE JSON 2.x and CVE JSON 5.x source schemas."@en ;
-    owl:imports <https://cyberterrain.org/ns/stonework#> .
+    rdfs:comment "Unified OWL ontology for CVE records. Derived from the framework_cve Pydantic model, supporting both CVE JSON 2.x and CVE JSON 5.x source schemas."@en .
 
 # --- Enumeration classes -------------------------------------------
 

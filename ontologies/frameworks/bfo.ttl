@@ -13,7 +13,6 @@
 frameworks:bfo rdf:type owl:Ontology ;
                owl:versionIRI <https://cyberterrain.org/ns/frameworks/bfo/0.1.0> ;
                owl:versionInfo "0.1.0" ;
-               owl:imports <https://cyberterrain.org/ns/stonework#> ;
                rdfs:label "STONEWORK: BFO 2020 Mapping"@en ;
                dcterms:description "Declares subclass mappings from STONEWORK classes to Basic Formal Ontology (BFO) 2020. This file carries no dependency on BFO imports — it asserts alignment axioms only. Load alongside BFO 2020 when formal BFO reasoning is required."@en ;
                rdfs:seeAlso <http://purl.obolibrary.org/obo/bfo/2020/bfo.owl> .

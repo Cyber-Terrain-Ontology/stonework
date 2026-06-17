@@ -12,8 +12,7 @@
 <https://cyberterrain.org/ns/frameworks/cwe>
     a owl:Ontology ;
     rdfs:label "CWE Framework Ontology"@en ;
-    rdfs:comment "OWL vocabulary for MITRE Common Weakness Enumeration (CWE) data as represented in the CTI Encyclopedia."@en ;
-    owl:imports <https://cyberterrain.org/ns/stonework#> .
+    rdfs:comment "OWL vocabulary for MITRE Common Weakness Enumeration (CWE) data as represented in the CTI Encyclopedia."@en  .
 
 # --- Classes --------------------------------------------------------
 

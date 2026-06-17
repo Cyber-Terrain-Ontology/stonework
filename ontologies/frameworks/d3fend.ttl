@@ -15,7 +15,7 @@ frameworks:d3fend rdf:type owl:Ontology ;
                   owl:versionInfo "0.1.0" ;
                   owl:imports <https://cyberterrain.org/ns/stonework#> ;
                   rdfs:label "STONEWORK: D3FEND Mapping"@en ;
-                  dcterms:description "Declares subclass mappings from STONEWORK classes to MITRE D3FEND. This file carries no hard dependency on D3FEND imports — it asserts alignment axioms only. Load alongside D3FEND when countermeasure knowledge graph reasoning is required."@en ;
+                  dcterms:description "Declares subclass mappings from D3FEND classes into STONEWORK. D3FEND classes are mapped as subclasses of their STONEWORK counterparts, consistent with STONEWORK's role as the middle-tier ontology. Load alongside D3FEND when countermeasure knowledge graph reasoning is required."@en ;
                   rdfs:seeAlso <http://d3fend.mitre.org/ontologies/d3fend.owl> .
 
 
@@ -23,128 +23,131 @@ frameworks:d3fend rdf:type owl:Ontology ;
 #    Agent Mappings
 #################################################################
 
-###  Agent → d3f:Agent
-stonework:Agent rdfs:subClassOf d3f:Agent .
+###  d3f:Agent → stonework:Agent
+d3f:Agent rdfs:subClassOf stonework:Agent .
 
-###  Person → d3f:Person
-stonework:Person rdfs:subClassOf d3f:Person .
+###  d3f:Person → stonework:Person
+d3f:Person rdfs:subClassOf stonework:Person .
 
-###  Organization → d3f:Organization
-stonework:Organization rdfs:subClassOf d3f:Organization .
+###  d3f:Organization → stonework:Organization
+d3f:Organization rdfs:subClassOf stonework:Organization .
 
-###  Group → d3f:Group
-stonework:Group rdfs:subClassOf d3f:Group .
+###  d3f:Group → stonework:Group
+d3f:Group rdfs:subClassOf stonework:Group .
 
 
 #################################################################
 #    Artifact Mappings
 #################################################################
 
-###  DigitalArtifact → d3f:DigitalArtifact
-stonework:DigitalArtifact rdfs:subClassOf d3f:DigitalArtifact .
+###  d3f:DigitalArtifact → stonework:DigitalArtifact
+d3f:DigitalArtifact rdfs:subClassOf stonework:DigitalArtifact .
 
-###  File → d3f:File
-stonework:File rdfs:subClassOf d3f:File .
+###  d3f:File → stonework:File
+d3f:File rdfs:subClassOf stonework:File .
 
-###  MalwareSample → d3f:DigitalArtifact
-###  D3FEND has no generic MaliciousCode superclass; DigitalArtifact is the nearest mid-level class
-stonework:MalwareSample rdfs:subClassOf d3f:DigitalArtifact .
+###  d3f:Log → stonework:Log
+d3f:Log rdfs:subClassOf stonework:Log .
 
-###  Log → d3f:Log
-stonework:Log rdfs:subClassOf d3f:Log .
+###  d3f:NetworkTraffic → stonework:NetworkTraffic
+d3f:NetworkTraffic rdfs:subClassOf stonework:NetworkTraffic .
 
-###  NetworkTraffic → d3f:NetworkTraffic
-stonework:NetworkTraffic rdfs:subClassOf d3f:NetworkTraffic .
-
-###  UserAccount → d3f:UserAccount
-stonework:UserAccount rdfs:subClassOf d3f:UserAccount .
+###  d3f:UserAccount → stonework:UserAccount
+d3f:UserAccount rdfs:subClassOf stonework:UserAccount .
 
 
 #################################################################
 #    Infrastructure Mappings
 #################################################################
 
-###  Infrastructure → d3f:Artifact
-###  D3FEND has no direct Infrastructure superclass; Artifact is the nearest mid-level class
-stonework:Infrastructure rdfs:subClassOf d3f:Artifact .
+###  d3f:PhysicalArtifact → stonework:Infrastructure
+###  D3FEND PhysicalArtifact covers physical and virtual systems — maps to Infrastructure
+###  d3f:Artifact is too broad (also parents DigitalArtifact and System) to map here
+d3f:PhysicalArtifact rdfs:subClassOf stonework:Infrastructure .
 
-###  Host → d3f:Host
-stonework:Host rdfs:subClassOf d3f:Host .
+###  d3f:System → stonework:Infrastructure
+###  D3FEND System (interrelated artifacts working as a coherent entity) aligns with Infrastructure
+d3f:System rdfs:subClassOf stonework:Infrastructure .
 
-###  NetworkService → d3f:NetworkService
-stonework:NetworkService rdfs:subClassOf d3f:NetworkService .
+###  d3f:Host → stonework:Host
+d3f:Host rdfs:subClassOf stonework:Host .
 
-###  IPAddress → d3f:IPAddress
-stonework:IPAddress rdfs:subClassOf d3f:IPAddress .
+###  d3f:NetworkService → stonework:NetworkService
+d3f:NetworkService rdfs:subClassOf stonework:NetworkService .
 
-###  Sensor → d3f:Sensor
-stonework:Sensor rdfs:subClassOf d3f:Sensor .
+###  d3f:IPAddress → stonework:IPAddress
+d3f:IPAddress rdfs:subClassOf stonework:IPAddress .
+
+###  d3f:Sensor → stonework:Sensor
+d3f:Sensor rdfs:subClassOf stonework:Sensor .
 
 
 #################################################################
 #    Technique Mappings
 #################################################################
 
-###  Technique → d3f:Technique
-stonework:Technique rdfs:subClassOf d3f:Technique .
+###  d3f:Technique → stonework:Technique
+d3f:Technique rdfs:subClassOf stonework:Technique .
 
-###  CyberTechnique → d3f:CyberTechnique
-stonework:CyberTechnique rdfs:subClassOf d3f:CyberTechnique .
+###  d3f:CyberTechnique → stonework:CyberTechnique
+d3f:CyberTechnique rdfs:subClassOf stonework:CyberTechnique .
 
-###  AttackTechnique → d3f:OffensiveTechnique
-stonework:AttackTechnique rdfs:subClassOf d3f:OffensiveTechnique .
+###  d3f:OffensiveTechnique → stonework:AttackTechnique
+d3f:OffensiveTechnique rdfs:subClassOf stonework:AttackTechnique .
 
-###  DefendTechnique → d3f:DefensiveTechnique
-stonework:DefendTechnique rdfs:subClassOf d3f:DefensiveTechnique .
+###  d3f:DefensiveTechnique → stonework:DefendTechnique
+d3f:DefensiveTechnique rdfs:subClassOf stonework:DefendTechnique .
+
+###  d3f:AnalyticTechnique → stonework:AnalyticTechnique
+d3f:AnalyticTechnique rdfs:subClassOf stonework:AnalyticTechnique .
 
 
 #################################################################
 #    Tactic Mappings
 #################################################################
 
-###  Tactic → d3f:Goal
-###  D3FEND has no plain Tactic superclass; OffensiveTactic and DefensiveTactic both subclass Goal
-stonework:Tactic rdfs:subClassOf d3f:Goal .
+###  d3f:Goal → stonework:Tactic
+###  D3FEND Goal is the shared superclass of OffensiveTactic and DefensiveTactic
+d3f:Goal rdfs:subClassOf stonework:Tactic .
 
-###  OffensiveTactic → d3f:OffensiveTactic
-stonework:OffensiveTactic rdfs:subClassOf d3f:OffensiveTactic .
+###  d3f:OffensiveTactic → stonework:OffensiveTactic
+d3f:OffensiveTactic rdfs:subClassOf stonework:OffensiveTactic .
 
-###  DefensiveTactic → d3f:DefensiveTactic
-stonework:DefensiveTactic rdfs:subClassOf d3f:DefensiveTactic .
+###  d3f:DefensiveTactic → stonework:DefensiveTactic
+d3f:DefensiveTactic rdfs:subClassOf stonework:DefensiveTactic .
 
 
 #################################################################
 #    Security Condition Mappings
 #################################################################
 
-###  Vulnerability → d3f:Vulnerability
-stonework:Vulnerability rdfs:subClassOf d3f:Vulnerability .
+###  d3f:Vulnerability → stonework:Vulnerability
+d3f:Vulnerability rdfs:subClassOf stonework:Vulnerability .
 
-###  Weakness → d3f:Weakness
-stonework:Weakness rdfs:subClassOf d3f:Weakness .
+###  d3f:Weakness → stonework:Weakness
+d3f:Weakness rdfs:subClassOf stonework:Weakness .
 
 
 #################################################################
 #    Security Measure Mappings
 #################################################################
 
-###  DetectionRule → d3f:Plan
-###  D3FEND has no generic DetectionRule class; Plan (structured specification) is the nearest alignment
-stonework:DetectionRule rdfs:subClassOf d3f:Plan .
+###  d3f:Procedure → stonework:Procedure
+###  D3FEND Procedure (implements a Technique via Steps) maps directly to stonework:Procedure
+d3f:Procedure rdfs:subClassOf stonework:Procedure .
+
+###  d3f:OperationalActivityPlan → stonework:Process
+###  D3FEND OperationalActivityPlan (business process / activity plan) maps to stonework:Process
+d3f:OperationalActivityPlan rdfs:subClassOf stonework:Process .
 
 
 #################################################################
-#    Process / Activity Mappings
+#    Event / Activity Mappings
 #################################################################
 
-###  Event → d3f:Event
-###  stonework:Event (atomic security-relevant occurrence) aligns with D3FEND's top-level Event class
-stonework:Event rdfs:subClassOf d3f:Event .
+###  d3f:Event → stonework:Event
+d3f:Event rdfs:subClassOf stonework:Event .
 
-###  CyberActivity → d3f:DigitalEvent
-###  D3FEND models happenings as DigitalEvent subtypes; CyberActivity aligns at that level
-stonework:CyberActivity rdfs:subClassOf d3f:DigitalEvent .
-
-###  Process → d3f:Plan
-###  STONEWORK Process (enterprise workflow) aligns with D3FEND Plan (structured action specification)
-stonework:Process rdfs:subClassOf d3f:Plan .
+###  d3f:DigitalEvent → stonework:CyberActivity
+###  D3FEND DigitalEvent covers happenings in cyberspace, aligning with CyberActivity
+d3f:DigitalEvent rdfs:subClassOf stonework:CyberActivity .

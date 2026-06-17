@@ -12,8 +12,7 @@
 <https://cyberterrain.org/ns/frameworks/capec>
     a owl:Ontology ;
     rdfs:label "CAPEC Framework Ontology"@en ;
-    rdfs:comment "OWL vocabulary for MITRE Common Attack Pattern Enumeration and Classification (CAPEC) data as represented in the CTI Encyclopedia."@en ;
-    owl:imports <https://cyberterrain.org/ns/stonework#> .
+    rdfs:comment "OWL vocabulary for MITRE Common Attack Pattern Enumeration and Classification (CAPEC) data as represented in the CTI Encyclopedia."@en .
 
 # --- Classes --------------------------------------------------------
 

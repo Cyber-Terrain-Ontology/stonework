@@ -11,8 +11,7 @@
 <https://cyberterrain.org/ns/frameworks/cpe>
     a owl:Ontology ;
     rdfs:label "CPE Framework Ontology"@en ;
-    rdfs:comment "OWL vocabulary for NVD Common Platform Enumeration (CPE) 2.3 data as represented in the CTI Encyclopedia. Stub stonework:Product individuals are created by the CVE serializer; this ontology describes the enrichment properties added by the CPE ingest."@en ;
-    owl:imports <https://cyberterrain.org/ns/stonework#> .
+    rdfs:comment "OWL vocabulary for NVD Common Platform Enumeration (CPE) 2.3 data as represented in the CTI Encyclopedia. Stub stonework:Product individuals are created by the CVE serializer; this ontology describes the enrichment properties added by the CPE ingest."@en .
 
 # --- Datatype Properties --------------------------------------------
 

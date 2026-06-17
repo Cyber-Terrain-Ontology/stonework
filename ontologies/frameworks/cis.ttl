@@ -12,8 +12,7 @@
 <https://cyberterrain.org/ns/frameworks/cis>
     a owl:Ontology ;
     rdfs:label "CIS Controls Framework Ontology"@en ;
-    rdfs:comment "OWL vocabulary for CIS Controls v8.1 data as represented in the CTI Encyclopedia. Top-level controls and safeguards (sub-controls) are both modeled as cis:Control individuals. Safeguards carry a cis:subcontrolOf link to their parent control."@en ;
-    owl:imports <https://cyberterrain.org/ns/stonework#> .
+    rdfs:comment "OWL vocabulary for CIS Controls v8.1 data as represented in the CTI Encyclopedia. Top-level controls and safeguards (sub-controls) are both modeled as cis:Control individuals. Safeguards carry a cis:subcontrolOf link to their parent control."@en .
 
 # --- Classes --------------------------------------------------------
 
