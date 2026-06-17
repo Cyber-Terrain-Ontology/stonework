@@ -892,6 +892,12 @@ stonework:Sighting rdf:type owl:Class ;
                    skos:prefLabel "Sighting" ;
                    skos:definition "Records that a object such as an indicator, malware, tool, or threat actor was seen. Wraps observation metadata around a reference to the sighted object."@en .
 
+###  https://cyberterrain.org/ns/stonework#TLPLabel
+stonework:TLPLabel rdf:type owl:Class ;
+                   rdfs:subClassOf stonework:Category ;
+                   skos:prefLabel "TLP Label"@en ;
+                   skos:definition "Traffic Light Protocol (TLP)"@en .
+
 ###  https://cyberterrain.org/ns/stonework#Tactic
 stonework:Tactic rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Behavior ;
@@ -988,3 +994,28 @@ stonework:indicator rdf:type owl:NamedIndividual , stonework:Category ;
                     skos:prefLabel "Indicator" ;
                     skos:definition "An assertion that a specific pattern or set of Digital Artifacts is associated with malicious behavior, enabling detection, correlation, and response."@en ;
                     skos:scopeNote "In STONEWORK, Indicators can be simple (single IOC like a hash or IP) or complex (full STIX patterns combining multiple artifacts and conditions)."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpAmber
+stonework:tlpAmber rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+                   skos:prefLabel "TLP:AMBER"@en ;
+                   skos:definition "Limited disclosure, restricted to participants’ organization and its clients."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpAmberStrict
+stonework:tlpAmberStrict rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+                         skos:prefLabel "TLP:AMBER+STRICT" ;
+                         skos:definition "Limited disclosure, restricted to participants’ organization."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpClear
+stonework:tlpClear rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+                   skos:prefLabel "TLP:CLEAR"@en ;
+                   skos:definition "Disclosure is not limited."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpGreen
+stonework:tlpGreen rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+                   skos:prefLabel "TLP:GREEN"@en ;
+                   skos:definition "Limited disclosure, restricted to the community."@en .
+
+###  https://cyberterrain.org/ns/stonework#tlpRed
+stonework:tlpRed rdf:type owl:NamedIndividual , stonework:TLPLabel ;
+                 skos:prefLabel "TLP:RED"@en ;
+                 skos:definition "Not for disclosure, restricted to participants only."@en .
