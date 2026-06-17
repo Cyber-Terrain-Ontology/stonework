@@ -14,8 +14,7 @@
     owl:versionIRI <https://cyberterrain.org/ns/frameworks/registry/0.1.0> ;
     owl:versionInfo "0.1.0" ;
     rdfs:comment "Describes elements within  the Windows configuration Registry system."@en ;
-    rdfs:label "Windows Registry Framework Ontology"@en ;
-    owl:imports <https://cyberterrain.org/ns/stonework#> .
+    rdfs:label "Windows Registry Framework Ontology"@en .
 
 # --- Classes --------------------------------------------------------
 

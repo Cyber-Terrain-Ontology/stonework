@@ -249,6 +249,14 @@ stonework:hasMotivation rdf:type owl:ObjectProperty ;
                         skos:definition "Relates a threat actor to one or more motivations that drive their actions and operations."@en ;
                         skos:scopeNote "A threat actor may have multiple motivations. Corresponds to the STIX 2.1 primary_motivation and secondary_motivations properties on ThreatActor."@en .
 
+###  https://cyberterrain.org/ns/stonework#hasProductType
+stonework:hasProductType rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:Product ;
+                         rdfs:range stonework:ProductType ;
+                         skos:prefLabel "hasProductType"@en ;
+                         skos:definition "Relates a product to one or more product type classifications describing its functional category."@en ;
+                         skos:scopeNote "A product may have multiple types. Corresponds to the CPE component type field (a, o, h) but extends it with finer-grained vocabulary."@en .
+
 ###  https://cyberterrain.org/ns/stonework#memberOfFamily
 stonework:memberOfFamily rdf:type owl:ObjectProperty ;
                          rdfs:domain stonework:MalwareSample ;
@@ -862,6 +870,13 @@ stonework:Product rdf:type owl:Class ;
                   skos:definition "A software, hardware, or firmware entity identified by its vendor, product name, and version characteristics, used to represent a specific platform or component within vulnerability, configuration, or threat‑intelligence contexts."@en ;
                   skos:scopeNote "This class provides a semantic representation of platform entities commonly identified using CPE naming schemes. It does not require the use of CPE, but supports mapping to CPE identifiers when available."@en .
 
+###  https://cyberterrain.org/ns/stonework#ProductType
+stonework:ProductType rdf:type owl:Class ;
+                      rdfs:subClassOf stonework:Category ;
+                      skos:prefLabel "Product Type" ;
+                      skos:definition "A classification of a product by its primary functional category within a system or architecture." ;
+                      skos:scopeNote "Applied via stonework:hasProductType to Product individuals. Aligns with CPE component type designations. A product may have more than one type (e.g. an embedded OS is both firmware and operating-system)."@en .
+
 ###  https://cyberterrain.org/ns/stonework#Provenance
 stonework:Provenance rdf:type owl:Class ;
                      rdfs:subClassOf stonework:Information ;
@@ -1123,3 +1138,58 @@ stonework:motivationRevenge rdf:type owl:NamedIndividual , stonework:Motivation 
 stonework:motivationUnpredictable rdf:type owl:NamedIndividual , stonework:Motivation ;
                                   skos:prefLabel "Unpredictable"@en ;
                                   skos:definition "A threat actor whose motivation is unknown, unclear, or inconsistent; actions that do not fit a clear pattern of intent."@en .
+
+
+#################################################################
+#    ProductType Individuals (CPE-aligned component type vocabulary)
+#################################################################
+
+###  https://cyberterrain.org/ns/stonework#productTypeAIModel
+stonework:productTypeAIModel rdf:type owl:NamedIndividual , stonework:ProductType ;
+                             skos:prefLabel "AI Model"@en ;
+                             skos:definition "A trained machine learning or AI model distributed as a deployable artifact, subject to threats such as model poisoning, extraction, inversion, and adversarial evasion."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypeApplication
+stonework:productTypeApplication rdf:type owl:NamedIndividual , stonework:ProductType ;
+                                  skos:prefLabel "Application"@en ;
+                                  skos:definition "A software application designed to perform specific tasks for end users or other systems. Corresponds to CPE component type 'a'."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypeContainerImage
+stonework:productTypeContainerImage rdf:type owl:NamedIndividual , stonework:ProductType ;
+                                    skos:prefLabel "Container Image"@en ;
+                                    skos:definition "A packaged, layered filesystem image used to instantiate containers. Subject to threats including image tampering, malicious base layers, and registry poisoning."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypeFirmware
+stonework:productTypeFirmware rdf:type owl:NamedIndividual , stonework:ProductType ;
+                              skos:prefLabel "Firmware"@en ;
+                              skos:definition "Software permanently programmed into a hardware device, typically stored in non-volatile memory and providing low-level control of the device. Corresponds to CPE component type 'o' when used in embedded contexts."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypeHardware
+stonework:productTypeHardware rdf:type owl:NamedIndividual , stonework:ProductType ;
+                              skos:prefLabel "Hardware"@en ;
+                              skos:definition "A physical computing device, component, or peripheral. Corresponds to CPE component type 'h'."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypePackage
+stonework:productTypePackage rdf:type owl:NamedIndividual , stonework:ProductType ;
+                             skos:prefLabel "Package"@en ;
+                             skos:definition "A distributable unit of software published to a package registry (e.g. npm, PyPI, Maven, NuGet). The primary unit of supply chain attack surface — distinct from Library in that a package has its own versioning, signing, provenance chain, and registry identity."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypeLibrary
+stonework:productTypeLibrary rdf:type owl:NamedIndividual , stonework:ProductType ;
+                             skos:prefLabel "Library"@en ;
+                             skos:definition "A reusable collection of code, routines, or resources linked into applications or other software components, often a source of transitive vulnerabilities."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypeOperatingSystem
+stonework:productTypeOperatingSystem rdf:type owl:NamedIndividual , stonework:ProductType ;
+                                     skos:prefLabel "Operating System"@en ;
+                                     skos:definition "System software that manages hardware resources and provides common services for application software. Corresponds to CPE component type 'o'."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypeSDK
+stonework:productTypeSDK rdf:type owl:NamedIndividual , stonework:ProductType ;
+                         skos:prefLabel "SDK"@en ;
+                         skos:definition "A software development kit providing tools, libraries, and APIs used to build applications for a specific platform or framework."@en .
+
+###  https://cyberterrain.org/ns/stonework#productTypeService
+stonework:productTypeService rdf:type owl:NamedIndividual , stonework:ProductType ;
+                             skos:prefLabel "Service"@en ;
+                             skos:definition "A networked or cloud-hosted software capability consumed by other systems or users, such as a SaaS platform, API service, or managed infrastructure service."@en .
