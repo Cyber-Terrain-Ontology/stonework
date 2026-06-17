@@ -44,6 +44,13 @@ stonework:affected rdf:type owl:ObjectProperty ;
                    skos:definition "Relates a vulnerability to a product known to be affected by it." ;
                    skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
+###  https://cyberterrain.org/ns/stonework#dependencyOf
+stonework:dependencyOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                       rdfs:domain stonework:Product ;
+                       rdfs:range stonework:Product ;
+                       skos:prefLabel "dependencyOf"@en ;
+                       skos:definition "Relates a product to another product that depends on it. Transitive to support supply chain reasoning across deep dependency trees."@en .
+
 ###  https://cyberterrain.org/ns/stonework#affiliatedWith
 stonework:affiliatedWith rdf:type owl:ObjectProperty ;
                          rdfs:range stonework:Agent ;
@@ -149,6 +156,14 @@ stonework:emailOf rdf:type owl:ObjectProperty ;
                   rdfs:range stonework:Agent ;
                   skos:prefLabel "emailOf" .
 
+###  https://cyberterrain.org/ns/stonework#fixedInProduct
+stonework:fixedInProduct rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:Vulnerability ;
+                         rdfs:range stonework:Product ;
+                         skos:prefLabel "fixedInProduct"@en ;
+                         skos:definition "Relates a vulnerability to the product version in which it was addressed."@en ;
+                         skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. Populated by CVE/patch ingest."@en .
+
 ###  https://cyberterrain.org/ns/stonework#exploits
 stonework:exploits rdf:type owl:ObjectProperty ;
                    rdfs:domain stonework:Campaign , stonework:MalwareSample , stonework:ThreatActor ;
@@ -235,6 +250,30 @@ stonework:markingRef rdf:type owl:ObjectProperty ;
                      skos:prefLabel "markingRef" ;
                      skos:definition "Reference to the Markings applied by this marking entry." .
 
+###  https://cyberterrain.org/ns/stonework#hasDependency
+stonework:hasDependency rdf:type owl:ObjectProperty ;
+                        owl:inverseOf stonework:dependencyOf ;
+                        rdfs:domain stonework:Product ;
+                        rdfs:range stonework:Product ;
+                        skos:prefLabel "hasDependency"@en ;
+                        skos:definition "Relates a product to another product it depends on."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasVendor
+stonework:hasVendor rdf:type owl:ObjectProperty ;
+                    owl:inverseOf stonework:vendorOf ;
+                    rdfs:domain stonework:ProductFamily ;
+                    rdfs:range stonework:Agent ;
+                    skos:prefLabel "hasVendor"@en ;
+                    skos:definition "Relates a product family to the Agent (organization or person) that develops or maintains it."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasVersion
+stonework:hasVersion rdf:type owl:ObjectProperty ;
+                     owl:inverseOf stonework:versionOf ;
+                     rdfs:domain stonework:ProductFamily ;
+                     rdfs:range stonework:Product ;
+                     skos:prefLabel "hasVersion"@en ;
+                     skos:definition "Relates a product family to a specific versioned product instance."@en .
+
 ###  https://cyberterrain.org/ns/stonework#memberOf
 stonework:memberOf rdf:type owl:ObjectProperty ;
                    owl:inverseOf stonework:hasMember ;
@@ -251,7 +290,7 @@ stonework:hasMotivation rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#hasProductType
 stonework:hasProductType rdf:type owl:ObjectProperty ;
-                         rdfs:domain stonework:Product ;
+                         rdfs:domain stonework:ProductFamily ;
                          rdfs:range stonework:ProductType ;
                          skos:prefLabel "hasProductType"@en ;
                          skos:definition "Relates a product to one or more product type classifications describing its functional category."@en ;
@@ -417,6 +456,29 @@ stonework:variantOf rdf:type owl:ObjectProperty ;
                     rdfs:range stonework:File , stonework:Hash , stonework:MalwareFamily , stonework:MalwareSample ;
                     skos:prefLabel "variantOf" ;
                     skos:definition "Relates a malware sample or family to another sample or family from which it is derived, modified, or evolved — indicating shared code lineage, forked development, or deliberate repackaging."@en .
+
+###  https://cyberterrain.org/ns/stonework#supersedes
+stonework:supersedes rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                     rdfs:domain stonework:Product ;
+                     rdfs:range stonework:Product ;
+                     skos:prefLabel "supersedes"@en ;
+                     skos:definition "Relates a product version to an older version it replaces. Transitive to support full product lifecycle reasoning."@en .
+
+###  https://cyberterrain.org/ns/stonework#vendorOf
+stonework:vendorOf rdf:type owl:ObjectProperty ;
+                   owl:inverseOf stonework:hasVendor ;
+                   rdfs:domain stonework:Agent ;
+                   rdfs:range stonework:ProductFamily ;
+                   skos:prefLabel "vendorOf"@en ;
+                   skos:definition "Relates an Agent to a product family it develops or maintains."@en .
+
+###  https://cyberterrain.org/ns/stonework#versionOf
+stonework:versionOf rdf:type owl:ObjectProperty ;
+                    owl:inverseOf stonework:hasVersion ;
+                    rdfs:domain stonework:Product ;
+                    rdfs:range stonework:ProductFamily ;
+                    skos:prefLabel "versionOf"@en ;
+                    skos:definition "Links a specific versioned product instance back to its abstract product family."@en .
 
 ###  https://cyberterrain.org/ns/stonework#weaknessOf
 stonework:weaknessOf rdf:type owl:ObjectProperty ;
@@ -865,10 +927,17 @@ stonework:Process rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#Product
 stonework:Product rdf:type owl:Class ;
                   rdfs:subClassOf stonework:CyberEntity ;
-                  rdfs:comment "Instances of stonework:Product may include operating systems, applications, libraries, devices, or embedded components. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
+                  rdfs:comment "Version is represented as a datatype property string. Vendor and family relationships are expressed via stonework:versionOf and stonework:hasVendor on the parent ProductFamily rather than on this class directly."@en ;
                   skos:prefLabel "Product" ;
-                  skos:definition "A software, hardware, or firmware entity identified by its vendor, product name, and version characteristics, used to represent a specific platform or component within vulnerability, configuration, or threat‑intelligence contexts."@en ;
-                  skos:scopeNote "This class provides a semantic representation of platform entities commonly identified using CPE naming schemes. It does not require the use of CPE, but supports mapping to CPE identifiers when available."@en .
+                  skos:definition "A specific versioned release of a software, hardware, or firmware artifact. The primary unit for vulnerability applicability and patch tracking."@en ;
+                  skos:scopeNote "May be identified by CPE, PURL, or any other product identification scheme — no single standard is assumed. When a CPE IRI is available, it is typically used as the individual's IRI for deterministic ingest. The abstract grouping concept is modeled as stonework:ProductFamily, linked via stonework:versionOf."@en .
+
+###  https://cyberterrain.org/ns/stonework#ProductFamily
+stonework:ProductFamily rdf:type owl:Class ;
+                        rdfs:subClassOf stonework:CyberEntity ;
+                        skos:prefLabel "Product Family" ;
+                        skos:definition "An abstract grouping of related product versions sharing a common name, vendor, and lineage — independent of any specific release or version."@en ;
+                        skos:scopeNote "Examples: 'Apache Log4j', 'Microsoft Windows', 'OpenSSL'. Vendor is asserted here via stonework:hasVendor; product type via stonework:hasProductType. Specific versioned releases are modeled as stonework:Product individuals linked back via stonework:versionOf."@en .
 
 ###  https://cyberterrain.org/ns/stonework#ProductType
 stonework:ProductType rdf:type owl:Class ;
