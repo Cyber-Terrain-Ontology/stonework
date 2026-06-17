@@ -183,7 +183,7 @@ stonework:hasIdentifier rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#hasMember
 stonework:hasMember rdf:type owl:ObjectProperty ;
-                    rdfs:domain stonework:Group , stonework:Organization , stonework:Sector , stonework:ThreatActor ;
+                    rdfs:domain stonework:Group , stonework:Organization , stonework:ThreatActor ;
                     skos:prefLabel "hasMember"@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasPhoneNumber
@@ -232,7 +232,7 @@ stonework:linkedTo rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#memberOf
 stonework:memberOf rdf:type owl:ObjectProperty ;
                    owl:inverseOf stonework:hasMember ;
-                   rdfs:range stonework:Group , stonework:Organization , stonework:Sector , stonework:ThreatActor ;
+                   rdfs:range stonework:Group , stonework:Organization , stonework:ThreatActor ;
                    skos:prefLabel "memberOf"@en .
 
 ###  https://cyberterrain.org/ns/stonework#memberOfFamily
@@ -297,13 +297,15 @@ stonework:references rdf:type owl:ObjectProperty ;
 stonework:registeredTo rdf:type owl:ObjectProperty ;
                        rdfs:domain stonework:Infrastructure ;
                        rdfs:range stonework:Agent ;
-                       skos:prefLabel "registeredTo" .
+                       skos:prefLabel "registeredTo" ;
+                       skos:definition "Relates infrastructure to the Agent recorded as its owner or registrant of record — the entity in whose name the resource is officially registered."@en .
 
 ###  https://cyberterrain.org/ns/stonework#registeredWith
 stonework:registeredWith rdf:type owl:ObjectProperty ;
                          rdfs:domain stonework:Infrastructure ;
                          rdfs:range stonework:Agent ;
-                         skos:prefLabel "registeredWith" .
+                         skos:prefLabel "registeredWith" ;
+                         skos:definition "Relates infrastructure to the registrar, registry, or administrative authority through which the registration was processed or is maintained."@en .
 
 ###  https://cyberterrain.org/ns/stonework#relatedTechnique
 stonework:relatedTechnique rdf:type owl:ObjectProperty ;
@@ -389,8 +391,8 @@ stonework:usesRule rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#variantOf
 stonework:variantOf rdf:type owl:ObjectProperty ;
-                    rdfs:domain stonework:MalwareSample , stonework:MalwareFamily ;
-                    rdfs:range stonework:File , stonework:Hash , stonework:MalwareSample , stonework:MalwareFamily ;
+                    rdfs:domain stonework:MalwareFamily , stonework:MalwareSample ;
+                    rdfs:range stonework:File , stonework:Hash , stonework:MalwareFamily , stonework:MalwareSample ;
                     skos:prefLabel "variantOf" ;
                     skos:definition "Relates a malware sample or family to another sample or family from which it is derived, modified, or evolved — indicating shared code lineage, forked development, or deliberate repackaging."@en .
 
@@ -593,7 +595,7 @@ stonework:Group rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Hash
 stonework:Hash rdf:type owl:Class ;
-               rdfs:subClassOf stonework:DigitalArtifact ;
+               rdfs:subClassOf stonework:Identifier ;
                skos:prefLabel "Hash"@en ;
                skos:definition "A single cryptographic hash entry associating a hashing algorithm with its hex-encoded digest value. Used to represent entries in the STIX hashes dictionary." .
 
@@ -747,7 +749,9 @@ stonework:OnlineReference rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#Operation
 stonework:Operation rdf:type owl:Class ;
                     rdfs:subClassOf stonework:Activity ;
-                    skos:prefLabel "Operation" .
+                    skos:prefLabel "Operation" ;
+                    skos:definition "A coordinated set of activities conducted by one or more agents toward a defined objective, typically spanning multiple campaigns, incidents, or phases and characterized by unified command, intent, or resourcing."@en ;
+                    skos:scopeNote "Operations are broader in scope than Campaigns — a single Operation may encompass multiple Campaigns executed over an extended period. Applies to both offensive operations (e.g. state-sponsored cyber operations) and defensive operations (e.g. incident response operations, threat hunting operations)."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Organization
 stonework:Organization rdf:type owl:Class ;
