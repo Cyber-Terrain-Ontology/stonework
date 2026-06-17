@@ -21,7 +21,6 @@
 ###  https://cyberterrain.org/ns/frameworks/killchain#killChainPhase
 killchain:killChainPhase 
     rdf:type owl:ObjectProperty ;
-    rdfs:domain stonework:CyberEntity ;
     rdfs:range stonework:KillChainPhase ;
     skos:prefLabel "kill chain phase"@en ;
     skos:definition "Links an entity to one or more phases of a kill chain framework."@en ;
