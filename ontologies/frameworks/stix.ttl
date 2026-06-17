@@ -6,6 +6,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix stonex: <https://cyberterrain.org/ns/stonex#> .
 @base <https://cyberterrain.org/ns/frameworks/stix> .
 
 ###  https://cyberterrain.org/ns/frameworks/stix
@@ -178,7 +179,7 @@ stones:ThreatActor rdfs:subClassOf stonework:ThreatActor .
 stones:Tool rdfs:subClassOf stonework:Tool .
 
 ###  https://cyberterrain.org/ns/stones#URLObject
-stones:URLObject rdfs:subClassOf stonework:URL .
+stones:URLObject rdfs:subClassOf stonework:URI .
 
 ###  https://cyberterrain.org/ns/stones#UserAccountObject
 stones:UserAccountObject rdfs:subClassOf stonework:UserAccount .
@@ -194,3 +195,23 @@ stones:WindowsRegistryKeyObject rdfs:subClassOf stonework:Registry .
 
 ###  https://cyberterrain.org/ns/stones#WindowsRegistryValue
 stones:WindowsRegistryValue rdfs:subClassOf stonework:Registry .
+
+
+#################################################################
+#    Attack Motivation Vocabulary Mappings
+#################################################################
+
+###  Map stones:AttackMotivationVocabulary to stonework:Motivation
+stones:AttackMotivationVocabulary rdfs:subClassOf stonework:Motivation .
+
+###  Map stonex vocabulary individuals to stonework Motivation named individuals
+stonex:_accidental owl:sameAs stonework:motivationAccidental .
+stonex:_coercion owl:sameAs stonework:motivationCoercion .
+stonex:_dominance owl:sameAs stonework:motivationDominance .
+stonex:_ideology owl:sameAs stonework:motivationIdeology .
+stonex:_notoriety owl:sameAs stonework:motivationNotoriety .
+stonex:_organizational-gain owl:sameAs stonework:motivationOrganizationalGain .
+stonex:_personal-gain owl:sameAs stonework:motivationPersonalGain .
+stonex:_personal-satisfaction owl:sameAs stonework:motivationPersonalSatisfaction .
+stonex:_revenge owl:sameAs stonework:motivationRevenge .
+stonex:_unpredictable owl:sameAs stonework:motivationUnpredictable .

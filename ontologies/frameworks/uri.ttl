@@ -1,0 +1,58 @@
+@prefix owl:       <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix stones:    <https://cyberterrain.org/ns/stones#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix registry:  <https://cyberterrain.org/ns/frameworks/uriy#> .
+
+# --- Ontology declaration -------------------------------------------
+
+<https://cyberterrain.org/ns/frameworks/uri>
+    a owl:Ontology ;
+    owl:versionIRI <https://cyberterrain.org/ns/frameworks/uri/0.1.0> ;
+    owl:versionInfo "0.1.0" ;
+    rdfs:comment "Ontology describing the structure and nature of URI sequences."@en ;
+    rdfs:label "URI Framework Ontology"@en ;
+    owl:imports <https://cyberterrain.org/ns/stonework#> .
+
+# --- Classes --------------------------------------------------------
+
+uri:CURIE
+    a owl:Class ;
+    rdfs:label "Compact URI"@en ;
+    rdfs:comment "A CURIE (Compact URI) is a shortened form of a URI that uses a prefix to represent a namespace, allowing for more concise references to resources within that namespace."@en ;
+    rdfs:subClassOf stonework:URI .
+
+uri:IRI
+    a owl:Class ;
+    rdfs:label "IRI"@en ;
+    rdfs:comment "An IRI (Internationalized Resource Indicator) is a generalization of a URI that allows for a wider range of characters, including non-ASCII characters."@en ;
+    rdfs:subClassOf stonework:URI .
+
+uri:URL
+    a owl:Class ;
+    rdfs:label "URL"@en ;
+    rdfs:comment "A URL (Uniform Resource Locator) is a specific type of URI that provides a means of locating a resource by describing its primary access mechanism (e.g., its network location)."@en ;
+    rdfs:subClassOf stonework:URI .
+
+uri:URN
+    a owl:Class ;
+    rdfs:label "URN"@en ;
+    rdfs:comment "A URN (Uniform Resource Name) is a specific type of URI that provides a means of identifying a resource by name in a given namespace, without implying its location or how to access it."@en ;
+    rdfs:subClassOf stonework:URI .
+
+uri:location
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:comment "The complete absolute location for this URI"@en ;
+    rdfs:domain stonework:URI ;
+    rdfs:label "URI Location"@en ;
+    rdfs:range xsd:anyURI .
+
+uri:servedFrom
+    a owl:ObjectProperty ;
+    rdfs:comment "the specific IP or Host the URI connects to"@en ;
+    rdfs:domain stonework:URI ;
+    rdfs:label "uri:servedFrom"@en ;
+    rdfs:range stonework:Host, stonework:IPAddress .

@@ -93,7 +93,7 @@ stonework:clusteredWith rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#communicatesWith
 stonework:communicatesWith rdf:type owl:ObjectProperty , owl:SymmetricProperty ;
                            rdfs:domain stonework:MalwareSample , stonework:Tool ;
-                           rdfs:range stonework:Infrastructure , stonework:URL ;
+                           rdfs:range stonework:Infrastructure , stonework:URI ;
                            skos:prefLabel "communicatesWith" .
 
 ###  https://cyberterrain.org/ns/stonework#compromisedIn
@@ -377,7 +377,7 @@ stonework:techniqueOf rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#urlOf
 stonework:urlOf rdf:type owl:ObjectProperty ;
-                rdfs:domain stonework:URL ;
+                rdfs:domain stonework:URI ;
                 skos:prefLabel "urlOf" .
 
 ###  https://cyberterrain.org/ns/stonework#uses
@@ -739,6 +739,13 @@ stonework:Markings rdf:type owl:Class ;
                    skos:prefLabel "Markings"@en ;
                    skos:definition "Defines a data handling marking used to restrict or label how data can be shared or handled, such as TLP markings. Referenced by object_marking_refs or granular_markings."@en .
 
+###  https://cyberterrain.org/ns/stonework#Motivation
+stonework:Motivation rdf:type owl:Class ;
+                     rdfs:subClassOf stonework:Category ;
+                     skos:prefLabel "Motivation" ;
+                     skos:definition "The reason or driving force behind an adversary's decision to conduct an attack or operation." ;
+                     skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor, Campaign, or Operation individuals. Named individuals cover the STIX 2.1 attack-motivation open vocabulary. Custom motivations may be added as additional individuals."@en .
+
 ###  https://cyberterrain.org/ns/stonework#Mitigation
 stonework:Mitigation rdf:type owl:Class ;
                      rdfs:subClassOf stonework:SecurityMeasure ;
@@ -979,11 +986,11 @@ stonework:Tool rdf:type owl:Class ;
                skos:prefLabel "Tool"@en ;
                skos:definition "Legitimate software that can be used by threat actors to perform attacks. Distinguishable from malware by being designed for benign purposes but repurposed maliciously." .
 
-###  https://cyberterrain.org/ns/stonework#URL
-stonework:URL rdf:type owl:Class ;
+###  https://cyberterrain.org/ns/stonework#URI
+stonework:URI rdf:type owl:Class ;
               rdfs:subClassOf stonework:Identifier ;
-              skos:prefLabel "URL"@en ;
-              skos:definition "Represents a Uniform Resource Locator conforming to RFC 3986." .
+              skos:prefLabel "URI"@en ;
+              skos:definition "Represents a Uniform Resource Identifier conforming to RFC 3986."@en .
 
 ###  https://cyberterrain.org/ns/stonework#UserAccount
 stonework:UserAccount rdf:type owl:Class ;
@@ -1053,3 +1060,58 @@ stonework:tlpGreen rdf:type owl:NamedIndividual , stonework:Markings ;
 stonework:tlpRed rdf:type owl:NamedIndividual , stonework:Markings ;
                  skos:prefLabel "TLP:RED"@en ;
                  skos:definition "Not for disclosure, restricted to participants only."@en .
+
+
+#################################################################
+#    Motivation Individuals (STIX 2.1 attack-motivation vocabulary)
+#################################################################
+
+###  https://cyberterrain.org/ns/stonework#motivationAccidental
+stonework:motivationAccidental rdf:type owl:NamedIndividual , stonework:Motivation ;
+                               skos:prefLabel "Accidental"@en ;
+                               skos:definition "A threat actor who did not have intent to cause harm; unintentional or inadvertent actions that result in a security incident."@en .
+
+###  https://cyberterrain.org/ns/stonework#motivationCoercion
+stonework:motivationCoercion rdf:type owl:NamedIndividual , stonework:Motivation ;
+                             skos:prefLabel "Coercion"@en ;
+                             skos:definition "A threat actor who is being forced to act against their will; actions taken under duress or threat."@en .
+
+###  https://cyberterrain.org/ns/stonework#motivationDominance
+stonework:motivationDominance rdf:type owl:NamedIndividual , stonework:Motivation ;
+                              skos:prefLabel "Dominance"@en ;
+                              skos:definition "A threat actor seeking to assert superiority or control over a target, competitor, or adversary; establishing authority or influence."@en .
+
+###  https://cyberterrain.org/ns/stonework#motivationIdeology
+stonework:motivationIdeology rdf:type owl:NamedIndividual , stonework:Motivation ;
+                             skos:prefLabel "Ideology"@en ;
+                             skos:definition "A threat actor motivated by political, religious, or social beliefs; actions intended to advance or defend a particular worldview."@en .
+
+###  https://cyberterrain.org/ns/stonework#motivationNotoriety
+stonework:motivationNotoriety rdf:type owl:NamedIndividual , stonework:Motivation ;
+                              skos:prefLabel "Notoriety"@en ;
+                              skos:definition "A threat actor seeking fame, recognition, or infamy; actions intended to demonstrate capability or gain public attention."@en .
+
+###  https://cyberterrain.org/ns/stonework#motivationOrganizationalGain
+stonework:motivationOrganizationalGain rdf:type owl:NamedIndividual , stonework:Motivation ;
+                                       skos:prefLabel "Organizational Gain"@en ;
+                                       skos:definition "A threat actor seeking to benefit their organization, nation-state, or group through espionage, competitive intelligence, or strategic advantage."@en .
+
+###  https://cyberterrain.org/ns/stonework#motivationPersonalGain
+stonework:motivationPersonalGain rdf:type owl:NamedIndividual , stonework:Motivation ;
+                                 skos:prefLabel "Personal Gain"@en ;
+                                 skos:definition "A threat actor motivated by financial reward or material benefit for themselves."@en .
+
+###  https://cyberterrain.org/ns/stonework#motivationPersonalSatisfaction
+stonework:motivationPersonalSatisfaction rdf:type owl:NamedIndividual , stonework:Motivation ;
+                                         skos:prefLabel "Personal Satisfaction"@en ;
+                                         skos:definition "A threat actor driven by curiosity, intellectual challenge, or the intrinsic satisfaction of successfully executing an attack."@en .
+
+###  https://cyberterrain.org/ns/stonework#motivationRevenge
+stonework:motivationRevenge rdf:type owl:NamedIndividual , stonework:Motivation ;
+                            skos:prefLabel "Revenge"@en ;
+                            skos:definition "A threat actor seeking retaliation for a perceived wrong; actions motivated by grievance against a specific target."@en .
+
+###  https://cyberterrain.org/ns/stonework#motivationUnpredictable
+stonework:motivationUnpredictable rdf:type owl:NamedIndividual , stonework:Motivation ;
+                                  skos:prefLabel "Unpredictable"@en ;
+                                  skos:definition "A threat actor whose motivation is unknown, unclear, or inconsistent; actions that do not fit a clear pattern of intent."@en .
