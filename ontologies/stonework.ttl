@@ -425,7 +425,7 @@ stonework:AIAgent rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#AITechnique
 stonework:AITechnique rdf:type owl:Class ;
-                      rdfs:subClassOf stonework:CyberTechnique ;
+                      rdfs:subClassOf stonework:Technique ;
                       skos:prefLabel "AI Technique"@en ;
                       skos:definition "A specific method by which adversaries attack AI/ML systems (e.g., training data poisoning, adversarial examples, model extraction)."@en .
 
@@ -438,7 +438,7 @@ stonework:Agent rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#AnalyticTechnique
 stonework:AnalyticTechnique rdf:type owl:Class ;
-                            rdfs:subClassOf stonework:CyberTechnique ;
+                            rdfs:subClassOf stonework:Technique ;
                             skos:prefLabel "Analytic Technique" ;
                             skos:definition "Methods of analysis (part of the Analytic Characterization Framework)"@en .
 
@@ -546,6 +546,13 @@ stonework:DefendTechnique rdf:type owl:Class ;
                           skos:prefLabel "Defend Technique" ;
                           skos:definition "A prescribed defensive method used to detect, prevent, or respond to adversary behavior within a target environment." ;
                           skos:scopeNote "Aligns with MITRE D3FEND DefensiveTechnique. Framework-specific subclasses (e.g. d3fend:DefensiveTechnique) extend this class when D3FEND data is loaded." .
+
+###  https://cyberterrain.org/ns/stonework#DefensiveTactic
+stonework:DefensiveTactic rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:Tactic ;
+                          skos:prefLabel "Defensive Tactic" ;
+                          skos:definition "A high-level defensive objective that groups related countermeasure techniques by the protection goal they serve." ;
+                          skos:scopeNote "Aligns with MITRE D3FEND defensive tactics (e.g. Harden, Detect, Isolate, Evict, Restore). Individuals are typically drawn from D3FEND or similar defensive frameworks via the framework mapping layer."@en .
 
 ###  https://cyberterrain.org/ns/stonework#DetectionRule
 stonework:DetectionRule rdf:type owl:Class ;
@@ -766,6 +773,13 @@ stonework:Note rdf:type owl:Class ;
                skos:prefLabel "Note" ;
                skos:definition "Conveys informational text to provide further context and/or to assess the accuracy of existing information." .
 
+###  https://cyberterrain.org/ns/stonework#OffensiveTactic
+stonework:OffensiveTactic rdf:type owl:Class ;
+                          rdfs:subClassOf stonework:Tactic ;
+                          skos:prefLabel "Offensive Tactic" ;
+                          skos:definition "A high-level adversary objective that groups related attack techniques by the goal they serve during an intrusion or operation." ;
+                          skos:scopeNote "Aligns with MITRE ATT&CK tactics (e.g. Initial Access, Execution, Lateral Movement) and D3FEND OffensiveTactic. Individuals are typically drawn from ATT&CK or similar offensive frameworks via the STONES or framework mapping layers."@en .
+
 ###  https://cyberterrain.org/ns/stonework#OnlineReference
 stonework:OnlineReference rdf:type owl:Class ;
                           rdfs:subClassOf stonework:Provenance ;
@@ -925,20 +939,6 @@ stonework:Tactic rdf:type owl:Class ;
                  skos:prefLabel "Tactic" ;
                  skos:definition "A high‑level objective or strategic goal that groups related techniques by the purpose they serve during an operation." ;
                  skos:scopeNote "Superclass for OffensiveTactic and DefensiveTactic. Tactics represent the strategic intent behind behavior — gaining initial access, exfiltrating data, or hardening a system. They serve as conceptual categories for techniques." .
-
-###  https://cyberterrain.org/ns/stonework#OffensiveTactic
-stonework:OffensiveTactic rdf:type owl:Class ;
-                          rdfs:subClassOf stonework:Tactic ;
-                          skos:prefLabel "Offensive Tactic" ;
-                          skos:definition "A high-level adversary objective that groups related attack techniques by the goal they serve during an intrusion or operation." ;
-                          skos:scopeNote "Aligns with MITRE ATT&CK tactics (e.g. Initial Access, Execution, Lateral Movement) and D3FEND OffensiveTactic. Individuals are typically drawn from ATT&CK or similar offensive frameworks via the STONES or framework mapping layers."@en .
-
-###  https://cyberterrain.org/ns/stonework#DefensiveTactic
-stonework:DefensiveTactic rdf:type owl:Class ;
-                          rdfs:subClassOf stonework:Tactic ;
-                          skos:prefLabel "Defensive Tactic" ;
-                          skos:definition "A high-level defensive objective that groups related countermeasure techniques by the protection goal they serve." ;
-                          skos:scopeNote "Aligns with MITRE D3FEND defensive tactics (e.g. Harden, Detect, Isolate, Evict, Restore). Individuals are typically drawn from D3FEND or similar defensive frameworks via the framework mapping layer."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Technique
 stonework:Technique rdf:type owl:Class ;
