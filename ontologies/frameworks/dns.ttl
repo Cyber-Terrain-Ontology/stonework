@@ -10,7 +10,7 @@
     a owl:Ontology ;
     owl:versionIRI <https://cyberterrain.org/ns/frameworks/dns/0.1.0> ;
     owl:versionInfo "0.1.0" ;
-    rdfs:comment "Describes elements within  the DNS system."@en ;
+    rdfs:comment "Describes elements within the DNS system."@en ;
     rdfs:label "DNS Framework Ontology"@en .
 
 dns:A
