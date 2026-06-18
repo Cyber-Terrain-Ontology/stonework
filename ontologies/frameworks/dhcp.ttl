@@ -27,7 +27,7 @@ dhcp:Lease
 
 dhcp:Pool
     a owl:Class ;
-    rdfs:subClassOf stonework:DigitalArtifact ;
+    rdfs:subClassOf stonework:Infrastructure ;
     rdfs:label "DHCP Address Pool"@en ;
     rdfs:comment "A configured range of IP addresses managed by a DHCP service and available for dynamic allocation to requesting hosts. Defines the address space from which leases are issued."@en .
 
