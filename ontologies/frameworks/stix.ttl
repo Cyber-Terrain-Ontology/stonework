@@ -116,7 +116,7 @@ stones:MACAddressObject rdfs:subClassOf stonework:Infrastructure .
 stones:Malware rdfs:subClassOf stonework:MalwareFamily , stonework:MalwareSample .
 
 ###  https://cyberterrain.org/ns/stones#MalwareAnalysis
-stones:MalwareAnalysis rdfs:subClassOf stonework:AnalyticRecord .
+stones:MalwareAnalysis rdfs:subClassOf stonework:IntelligenceProduct .
 
 ###  https://cyberterrain.org/ns/stones#MarkingDefinitionObject
 stones:MarkingDefinitionObject rdfs:subClassOf stonework:Markings .
@@ -143,7 +143,7 @@ stones:objectMarkingRefs rdfs:subPropertyOf stonework:markingRef .
 stones:ObservedData rdfs:subClassOf stonework:DigitalArtifact .
 
 ###  https://cyberterrain.org/ns/stones#Opinion
-stones:Opinion rdfs:subClassOf stonework:AnalyticRecord .
+stones:Opinion rdfs:subClassOf stonework:IntelligenceProduct .
 
 ###  https://cyberterrain.org/ns/stones#ProcessObject
 stones:ProcessObject rdfs:subClassOf stonework:RuntimeProcess .
