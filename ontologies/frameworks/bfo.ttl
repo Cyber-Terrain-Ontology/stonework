@@ -47,9 +47,9 @@ stonework:Infrastructure rdfs:subClassOf bfo:0000040 .
 #    Generically Dependent Continuant Mappings (BFO_0000031)
 #################################################################
 
-###  Information → bfo:GenericallyDependentContinuant (BFO_0000031)
-###  Information content entities depend generically on physical substrates
-stonework:Information rdfs:subClassOf bfo:0000031 .
+###  IntelligenceProduct → bfo:GenericallyDependentContinuant (BFO_0000031)
+###  Intelligence products depend generically on physical substrates
+stonework:IntelligenceProduct rdfs:subClassOf bfo:0000031 .
 
 ###  DigitalArtifact → bfo:GenericallyDependentContinuant (BFO_0000031)
 ###  Digital artifacts are generically dependent — they can be copied across substrates

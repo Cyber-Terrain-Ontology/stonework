@@ -329,8 +329,8 @@ stonework:playsRole rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#precedes
 stonework:precedes rdf:type owl:ObjectProperty ;
-                   rdfs:domain stonework:Information ;
-                   rdfs:range stonework:Information ;
+                   rdfs:domain stonework:IntelligenceProduct ;
+                   rdfs:range stonework:IntelligenceProduct ;
                    skos:prefLabel "precedes" ;
                    skos:definition "Temporal succession of Information (v1 precedes v2 of a report)"@en .
 
@@ -508,7 +508,7 @@ stonework:AnalyticTechnique rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Assessment
 stonework:Assessment rdf:type owl:Class ;
-                     rdfs:subClassOf stonework:Information ;
+                     rdfs:subClassOf stonework:IntelligenceProduct ;
                      skos:prefLabel "Assessment" ;
                      skos:definition "A structured knowledge artifact capturing the evaluation, analysis, or estimation of risk, likelihood, impact, or other security-relevant attributes."@en ;
                      skos:scopeNote "Covers risk assessments, vulnerability assessments, and impact analyses. Assessment is an Information artifact — the output of an evaluative process — not the process itself. The process producing an Assessment may be modeled as a stonework:Process or stonework:Investigation."@en .
@@ -746,12 +746,12 @@ stonework:Incident rdf:type owl:Class ;
                    skos:definition "A significant adverse event or series of related events that has caused, or has the potential to cause, harm to an organization’s operations, assets, or people."@en ;
                    skos:scopeNote "Distinguished from stonework:Event (a raw, unassessed occurrence) by the presence of human or automated triage declaring significance and adversity. An Incident may aggregate multiple Events, involve one or more Campaigns, and trigger Investigation and Playbook execution."@en .
 
-###  https://cyberterrain.org/ns/stonework#Information
-stonework:Information rdf:type owl:Class ;
-                      rdfs:subClassOf stonework:CyberEntity ;
-                      skos:prefLabel "Information" ;
-                      skos:definition "Data or knowledge artifacts that convey meaning, facts, or intelligence."@en ;
-                      skos:scopeNote "Superclass for structured knowledge such as Assessments, Provenance, and Threat Scenarios."@en .
+###  https://cyberterrain.org/ns/stonework#IntelligenceProduct
+stonework:IntelligenceProduct rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:CyberEntity ;
+                         skos:prefLabel "Intelligence Product"@en ;
+                         skos:definition "A structured artifact produced by an intelligence or analytical process, intended to convey findings, assessments, observations, or sourcing context to support decision-making."@en ;
+                         skos:scopeNote "The intelligence product hierarchy covers the outputs of the intelligence lifecycle: Reports, Assessments, Sightings, Notes, and Provenance records. Distinguished from stonework:DigitalArtifact (raw observable technical data) and stonework:Behavior (plan specifications and TTP patterns). Intelligence products are the result of human or automated analytical work applied to raw data — they carry judgment, context, and traceability that raw artifacts do not."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Infrastructure
 stonework:Infrastructure rdf:type owl:Class ;
@@ -831,7 +831,7 @@ stonework:NetworkTraffic rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Note
 stonework:Note rdf:type owl:Class ;
-               rdfs:subClassOf stonework:Information ;
+               rdfs:subClassOf stonework:IntelligenceProduct ;
                skos:prefLabel "Note" ;
                skos:definition "A free-text annotation attached to one or more individuals to provide additional context, analyst commentary, caveats, or confidence assessments."@en ;
                skos:scopeNote "Notes are analyst-authored rather than machine-generated. They may express uncertainty, sourcing context, or interpretive observations that do not fit structured properties. Corresponds to STIX 2.1 Note SDO."@en .
@@ -920,7 +920,7 @@ stonework:ProductFamily rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Provenance
 stonework:Provenance rdf:type owl:Class ;
-                     rdfs:subClassOf stonework:Information ;
+                     rdfs:subClassOf stonework:IntelligenceProduct ;
                      skos:prefLabel "Provenance"@en ;
                      skos:definition "Structured source references used to record the origin and trustworthiness of data and relationships."@en ;
                      skos:scopeNote "Includes Feeds, Publications, and URL References."@en .
@@ -945,7 +945,7 @@ stonework:Registry rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Report
 stonework:Report rdf:type owl:Class ;
-                 rdfs:subClassOf stonework:Information ;
+                 rdfs:subClassOf stonework:IntelligenceProduct ;
                  skos:prefLabel "Report" ;
                  skos:definition "A collection of threat intelligence focused on one or more topics, such as a description of a threat actor, malware, or attack technique." .
 
@@ -994,7 +994,7 @@ stonework:Sensor rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Sighting
 stonework:Sighting rdf:type owl:Class ;
-                   rdfs:subClassOf stonework:Information ;
+                   rdfs:subClassOf stonework:IntelligenceProduct ;
                    skos:prefLabel "Sighting" ;
                    skos:definition "Records that a object such as an indicator, malware, tool, or threat actor was seen. Wraps observation metadata around a reference to the sighted object."@en .
 
@@ -1040,11 +1040,11 @@ stonework:ThreatActor rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#ThreatScenario
 stonework:ThreatScenario rdf:type owl:Class ;
-                         rdfs:subClassOf stonework:Information ;
-                         rdfs:comment "Instances of stonework:ThreatScenario may include assumptions, triggering conditions, targeted assets, adversary profiles, attack paths, and expected impacts. Threat scenarios are distinct from threats, attacks, or incidents; they represent hypothetical or anticipated sequences rather than observed events." ;
-                         skos:prefLabel "Threat Scenario" ;
-                         skos:definition "A structured description of how a threat could materialize against specific assets or missions, incorporating adversary intent, capability, opportunity, preconditions, and potential consequences." ;
-                         skos:scopeNote "Threat scenarios describe plausible or anticipated sequences of adversarial behavior and environmental conditions that could lead to harmful outcomes. They support risk assessment, prioritization, and strategic planning by expressing how threats may be realized in a given organizational context." .
+                         rdfs:subClassOf stonework:Behavior ;
+                         skos:prefLabel "Threat Scenario"@en ;
+                         skos:definition "A plan specification describing how a threat could materialize against specific assets or missions — incorporating adversary intent, capability, opportunity, preconditions, attack path, and expected consequences."@en ;
+                         skos:scopeNote "A ThreatScenario is prescriptive and forward-looking: it specifies a potential sequence of adversary behaviors and environmental conditions rather than recording observed events. Used to guide defensive planning, risk assessment, and Playbook development. Distinct from stonework:Incident (an observed occurrence) and stonework:Threat (an abstract source of harm). Aligns with prov:Plan and P-Plan scenario specifications."@en ;
+                         rdfs:seeAlso prov:Plan .
 
 ###  https://cyberterrain.org/ns/stonework#Tool
 stonework:Tool rdf:type owl:Class ;
