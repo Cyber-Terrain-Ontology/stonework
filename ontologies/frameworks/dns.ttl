@@ -1,0 +1,247 @@
+@prefix owl:       <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix dns:       <https://cyberterrain.org/ns/frameworks/dns#> .
+
+<https://cyberterrain.org/ns/frameworks/dns>
+    a owl:Ontology ;
+    owl:versionIRI <https://cyberterrain.org/ns/frameworks/dns/0.1.0> ;
+    owl:versionInfo "0.1.0" ;
+    rdfs:comment "Describes elements within  the DNS system."@en ;
+    rdfs:label "DNS Framework Ontology"@en .
+
+dns:A
+    a owl:Class ;
+    rdfs:comment "Resolves a text hostname to an IPv4 Address"@en ;
+    rdfs:label "A Record"@en ;
+    rdfs:subClassOf dns:DNSrecord ;
+    owl:disjointWith dns:AAAA, dns:CNAME, dns:MX, dns:NS, dns:PTR, dns:TXT .
+
+dns:AAAA
+    a owl:Class ;
+    rdfs:comment "Resolves a text hostname to an IPv6 Address"@en ;
+    rdfs:label "AAAA Record"@en ;
+    rdfs:subClassOf dns:DNSrecord .
+
+dns:CNAME
+    a owl:Class ;
+    rdfs:comment "a CNAME record (Canonical Name) acts as an alias from one DNS host entry to another, allowing multiple names to resolve to the same address"@en ;
+    rdfs:label "CNAME Record"@en ;
+    rdfs:subClassOf dns:DNSrecord .
+
+dns:DNSrecord
+    a owl:Class ;
+    rdfs:comment "A Generic DNS Record, within a DNS Zone"@en ;
+    rdfs:label "DNS Record"@en ;
+    rdfs:subClassOf dns:DNSService .
+
+dns:DNSService
+    a owl:Class ;
+    rdfs:comment "A DNS Service is a network service that resolves names to addresses and other information about domains and hosts. It is commonly used for domain name resolution, email routing, and other functions related to the Domain Name System."@en ;
+    rdfs:label "DNS Service"@en ;
+    rdfs:subClassOf stonework:NetworkService .
+
+dns:MX
+    a owl:Class ;
+    rdfs:comment "MX records indicate where an SMTP server to receive email sent tot the domain can be connected to at"@en ;
+    rdfs:label "MX Record"@en ;
+    rdfs:subClassOf dns:DNSrecord .
+
+dns:NIChandle
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:comment "A NIC Handle is a unique string for identify domain registrants. Domains registered via the same NIC Handle may be implied to be owned and operated by the same person/organization"@en ;
+    rdfs:domain dns:Registrant ;
+    rdfs:label "NIC Handle"@en ;
+    rdfs:range xsd:normalizedString ;
+    rdfs:subClassOf dns:DNSService .
+
+dns:NS
+    a owl:Class ;
+    rdfs:comment "NS records indicate the Name Server IP address for a given domain"@en ;
+    rdfs:label "NS Record"@en ;
+    rdfs:subClassOf dns:DNSrecord .
+
+dns:PTR
+    a owl:Class ;
+    rdfs:comment "PTR records resolve an IP Address to hostname"@en ;
+    rdfs:label "PTR Record"@en ;
+    rdfs:subClassOf dns:DNSrecord .
+
+dns:Query
+    a owl:Class ;
+    rdfs:comment "this is the content of a DNS resolution request transmitted via TCP. "@en ;
+    rdfs:label "DNS Query"@en ;
+    rdfs:subClassOf dns:DNSService .
+
+dns:Registrant
+    a owl:Class ;
+    rdfs:comment "A Person or Organization that is the registered owner of a DNS Domain Name within a TLD zone"@en ;
+    rdfs:label "Domain Registrant"@en ;
+    rdfs:subClassOf dns:DNSService .
+
+dns:Registrar
+    a owl:Class ;
+    rdfs:comment "An organization that arbitrates the acquisition and global registration of DNS Domains"@en ;
+    rdfs:label "Domain Registrar"@en ;
+    rdfs:subClassOf dns:DNSService .
+
+dns:TXT
+    a owl:Class ;
+    rdfs:comment "TXT records encode human-readable information into DNS Zones. They may be used for extended information about zones for use by other programs, such as geographic location data, or cryptographic signing keys (DNSSEC)"@en ;
+    rdfs:label "TXT Record"@en ;
+    rdfs:subClassOf dns:DNSrecord .
+
+dns:Zone
+    a owl:Class ;
+    rdfs:comment "a dns zone is a specific namespace within DNS, assigned to a finite set of authoritive nameservers to determine the records within it."@en ;
+    rdfs:label "DNS Zone"@en ;
+    rdfs:subClassOf dns:DNSService .
+
+dns:hasAuthNS
+    a owl:ObjectProperty ;
+    rdfs:comment "These nameservers are listed as the official servers to resolve addresses and zones in this domain, all other nameservers should only cache the resolution from these servers"@en ;
+    rdfs:domain stonework:Domain ;
+    rdfs:label "dns:hasAuthNS"@en ;
+    rdfs:range dns:NS ;
+    owl:inverseOf dns:isAuthNSfor .
+
+dns:hasContactInfo
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "Registrant name and (mailing) address"@en ;
+    rdfs:domain dns:Registrant ;
+    rdfs:label "dns:hasContactInfo"@en ;
+    rdfs:range stonework:Agent .
+
+dns:hasCustomer
+    a owl:ObjectProperty ;
+    rdfs:comment "this domain registrar has registered a domain on the root DNS servers for this customer"@en ;
+    rdfs:domain dns:Registrar ;
+    rdfs:label "dns:hasCustomer"@en ;
+    rdfs:range dns:Registrant ;
+    owl:inverseOf dns:hasRegistrar .
+
+dns:hasRecord
+    a owl:InverseFunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "DNS records exist within a specified zone (usually a domain or subdomain) and are commonly written it in a way that makes them relative to the base address of the zone. (ie, a hostname will then have the zone name appended to the right of it)"@en ;
+    rdfs:domain dns:Zone ;
+    rdfs:label "dns:hasRecord"@en ;
+    rdfs:range dns:DNSrecord ;
+    owl:inverseOf dns:inZone .
+
+dns:hasRegistrant
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "The company or individual who purchased and registered this domain"@en ;
+    rdfs:domain stonework:Domain ;
+    rdfs:label "dns:hasRegistrant"@en ;
+    rdfs:range dns:Registrant ;
+    owl:inverseOf dns:hasRegistrar .
+
+dns:hasRegistrar
+    a owl:ObjectProperty ;
+    rdfs:comment "the domain registrar  the domain has been registered with"@en ;
+    rdfs:domain stonework:Domain ;
+    rdfs:label "dns:hasRegistrar"@en ;
+    rdfs:range dns:Registrar ;
+    owl:inverseOf dns:hasRegistrant .
+
+dns:hasRegistrarURL
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "the URL for the registrar's public website"@en ;
+    rdfs:domain dns:Registrar ;
+    rdfs:label "dns:hasRegistrarURL"@en ;
+    rdfs:range stonework:URI .
+
+dns:hasRegistrarWHOIS
+    a owl:ObjectProperty ;
+    rdfs:comment "The address for the WHOIS server containing information about domains registered through this registrar"@en ;
+    rdfs:domain dns:Registrar ;
+    rdfs:label "dns:hasRegistrarWHOIS"@en ;
+    rdfs:range dns:A .
+
+dns:hasZone
+    a owl:InverseFunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "domains may contain multiple zones ('subdomains') defining a range of records that will resolve, with names relative to the name of the zone."@en ;
+    rdfs:domain stonework:Domain ;
+    rdfs:label "dns:hasZone"@en ;
+    rdfs:range dns:Zone ;
+    owl:inverseOf dns:inDomain .
+
+dns:inDomain
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "this DNS zone is attached to (and relative to) this zone or domain"@en ;
+    rdfs:domain dns:Zone ;
+    rdfs:label "dns:inDomain"@en ;
+    rdfs:range stonework:Domain ;
+    owl:inverseOf dns:hasZone .
+
+dns:inZone
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "this DNS record is attached to (and relative to) this DNS zone."@en ;
+    rdfs:domain dns:DNSrecord ;
+    rdfs:label "dns:inZone"@en ;
+    rdfs:range dns:Zone .
+
+dns:isAliasOf
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "This DNS Record acts as an alias or pointer to another DNS Record, and does not actually resolve to a distinct IP Address by itself"@en ;
+    rdfs:domain dns:CNAME, dns:MX, dns:NS, dns:PTR ;
+    rdfs:label "dns:isAliasOf"@en ;
+    rdfs:range dns:A .
+
+dns:isAuthNSfor
+    a owl:ObjectProperty ;
+    rdfs:domain dns:NS ;
+    rdfs:label "dns:isAuthNSfor"@en ;
+    rdfs:range stonework:Domain ;
+    owl:inverseOf dns:hasAuthNS .
+
+dns:isAuthoritativeResponse
+    a owl:DatatypeProperty ;
+    rdfs:comment "Is this DNS Query coming from an Authoritative Nameserver for the listed resource?"@en ;
+    rdfs:domain dns:Query ;
+    rdfs:label "dns:isAuthoritativeResponse"@en ;
+    rdfs:range xsd:boolean .
+
+dns:recievedFrom
+    a owl:ObjectProperty ;
+    rdfs:comment "the IP address this resolver query came from."@en ;
+    rdfs:domain dns:Query ;
+    rdfs:label "dns:recievedFrom"@en ;
+    rdfs:range stonework:IPAddress .
+
+dns:registeredDomain
+    a owl:ObjectProperty ;
+    rdfs:comment "this person or organization is the listed owner of this domain"@en ;
+    rdfs:domain dns:Registrant ;
+    rdfs:label "dns:registeredDomain"@en ;
+    rdfs:range stonework:Domain ;
+    owl:inverseOf dns:hasRegistrant .
+
+dns:registeredOn
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:comment "the date the domain was registered on"@en ;
+    rdfs:domain stonework:Domain ;
+    rdfs:label "dns:registeredOn"@en ;
+    rdfs:range xsd:dateTime .
+
+dns:resolvesToAddress
+    a owl:ObjectProperty ;
+    rdfs:domain dns:A, dns:AAAA ;
+    rdfs:label "dns:resolvesToAddress"@en ;
+    rdfs:range stonework:IPAddress .
+
+dns:resolvesToRecord
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:domain stonework:IPAddress ;
+    rdfs:label "dns:resolvesToRecord"@en ;
+    rdfs:range dns:PTR .
+
+dns:usingMX
+    a owl:ObjectProperty ;
+    rdfs:comment "Mail Relays use MX Records to determine what host to deliver email to, when only a domain or zones and not a specific hostname is not mentioned in the email address"@en ;
+    rdfs:domain stonework:Domain, dns:Zone ;
+    rdfs:label "dns:usingMX"@en ;
+    rdfs:range dns:MX .
