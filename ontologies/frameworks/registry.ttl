@@ -52,7 +52,8 @@ registry:existsAsFile
     a owl:FunctionalProperty, owl:ObjectProperty ;
     rdfs:comment "the filesystem location this registry hive is stored at."@en ;
     rdfs:domain registry:Hive ;
-    rdfs:label "registry:existsAsFile"@en .
+    rdfs:label "registry:existsAsFile"@en ;
+    rdfs:range stonework:File .
 
 registry:expandablestringValue
     a rdfs:Datatype ;
@@ -61,23 +62,27 @@ registry:expandablestringValue
 
 registry:hasAcl
     a owl:FunctionalProperty, owl:ObjectProperty ;
-    rdfs:comment "All versions of Microsoft windows from XP onwards enable access control on the contents of their registry."@en ;
+    rdfs:comment "All versions of Microsoft Windows from XP onwards enable access control on the contents of their registry."@en ;
     rdfs:domain registry:Key ;
-    rdfs:label "registry:hasAcl"@en .
+    rdfs:label "registry:hasAcl"@en ;
+    rdfs:range stonework:AccessControlList .
 
 registry:hasContent
     a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:comment "the contents of a value within a registry key"@en ;
     rdfs:domain registry:Value ;
     rdfs:label "registry:hasContent"@en ;
-    rdfs:range registry:binaryValue, registry:dwordValue, registry:expandablestringValue, registry:multistringValue, registry:qwordValue, registry:stringValue .
+    rdfs:range [
+        a rdfs:Datatype ;
+        owl:unionOf ( registry:binaryValue registry:dwordValue registry:expandablestringValue registry:multistringValue registry:qwordValue registry:stringValue )
+    ] .
 
 # --- Object Properties ----------------------------------------------
 
 registry:hasHive
     a owl:InverseFunctionalProperty, owl:ObjectProperty ;
     rdfs:comment "Indicates that the listed Hive is loaded into this registry"@en ;
-    rdfs:domain registry:Registry ;
+    rdfs:domain stonework:Registry ;
     rdfs:label "registry:hasHive"@en ;
     rdfs:range registry:Hive .
 
@@ -86,7 +91,7 @@ registry:hasRegistry
     rdfs:comment "All Microsoft Windows Operating systems store configuration information in a centralization store called the Registry."@en ;
     rdfs:domain stonework:Host ;
     rdfs:label "registry:hasRegistry"@en ;
-    rdfs:range registry:Registry ;
+    rdfs:range stonework:Registry ;
     owl:inverseOf registry:isOnHost .
 
 registry:hasSubKey
@@ -115,13 +120,13 @@ registry:isLoadedInto
     rdfs:comment "The active registry this Hive is loaded into"@en ;
     rdfs:domain registry:Hive ;
     rdfs:label "registry:isLoadedInto"@en ;
-    rdfs:range registry:Registry ;
+    rdfs:range stonework:Registry ;
     owl:inverseOf registry:hasHive .
 
 registry:isOnHost
     a owl:FunctionalProperty, owl:ObjectProperty ;
     rdfs:comment "the host this registry is from"@en ;
-    rdfs:domain registry:Registry ;
+    rdfs:domain stonework:Registry ;
     rdfs:label "registry:isOnHost"@en ;
     rdfs:range stonework:Host .
 
@@ -159,7 +164,7 @@ registry:qwordValue
 registry:referencesPath
     a owl:FunctionalProperty, owl:ObjectProperty ;
     rdfs:comment "the specified value is a path to a specific file or directory"@en ;
-    rdfs:domain registry:Value, registry:stringValue ;
+    rdfs:domain registry:Value ;
     rdfs:label "registry:referencesPath"@en .
 
 registry:stringValue

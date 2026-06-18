@@ -21,15 +21,15 @@ dhcp:DHCPService
 
 dhcp:Lease
     a owl:Class ;
-    rdfs:comment "A Lease for a single IP Address from a DHCP Pool to a Network Interface on a Host"@en ;
+    rdfs:subClassOf stonework:DigitalArtifact ;
     rdfs:label "DHCP Lease"@en ;
-    rdfs:subClassOf dhcp:DHCPService .
+    rdfs:comment "A time-bound assignment record granting a single IP address from a DHCP Pool to a network interface on a host. Captures the binding between IP address and MAC address for the duration of the lease period."@en .
 
 dhcp:Pool
     a owl:Class ;
-    rdfs:comment "DHCP assigns addresses to systems from a pool of assigned addresses. "@en ;
+    rdfs:subClassOf stonework:DigitalArtifact ;
     rdfs:label "DHCP Address Pool"@en ;
-    rdfs:subClassOf dhcp:DHCPService .
+    rdfs:comment "A configured range of IP addresses managed by a DHCP service and available for dynamic allocation to requesting hosts. Defines the address space from which leases are issued."@en .
 
 dhcp:containsAddress
     a owl:InverseFunctionalProperty, owl:ObjectProperty ;

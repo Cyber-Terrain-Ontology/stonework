@@ -36,7 +36,7 @@ dns:DNSrecord
     a owl:Class ;
     rdfs:comment "A Generic DNS Record, within a DNS Zone"@en ;
     rdfs:label "DNS Record"@en ;
-    rdfs:subClassOf dns:DNSService .
+    rdfs:subClassOf stonework:DigitalArtifact .
 
 dns:DNSService
     a owl:Class ;
@@ -50,13 +50,18 @@ dns:MX
     rdfs:label "MX Record"@en ;
     rdfs:subClassOf dns:DNSrecord .
 
-dns:NIChandle
-    a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:comment "A NIC Handle is a unique string for identify domain registrants. Domains registered via the same NIC Handle may be implied to be owned and operated by the same person/organization"@en ;
-    rdfs:domain dns:Registrant ;
+dns:NICHandle
+    a owl:Class ;
+    rdfs:subClassOf stonework:Identifier ;
     rdfs:label "NIC Handle"@en ;
+    rdfs:comment "A unique alphanumeric token assigned by a domain registrar or registry to identify a registrant contact record. Domains sharing a NIC Handle may be attributed to the same person or organization."@en .
+
+dns:hasNICHandle
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:domain dns:Registrant ;
     rdfs:range xsd:normalizedString ;
-    rdfs:subClassOf dns:DNSService .
+    rdfs:label "dns:hasNICHandle"@en ;
+    rdfs:comment "The NIC Handle string value assigned to this registrant by their registrar or registry."@en .
 
 dns:NS
     a owl:Class ;
@@ -72,21 +77,34 @@ dns:PTR
 
 dns:Query
     a owl:Class ;
-    rdfs:comment "this is the content of a DNS resolution request transmitted via TCP. "@en ;
+    rdfs:subClassOf stonework:Event ;
     rdfs:label "DNS Query"@en ;
-    rdfs:subClassOf dns:DNSService .
+    rdfs:comment "An observable DNS name resolution request — the act of a client asking a resolver to look up a name or record type. A Query is a network occurrence at a point in time, not a stored artifact."@en .
+
+dns:QueryRecord
+    a owl:Class ;
+    rdfs:subClassOf stonework:Log ;
+    rdfs:label "DNS Query Record"@en ;
+    rdfs:comment "A persisted log entry capturing the details of a specific DNS Query event, as recorded by a resolver, DNS server, or network sensor. Represents the artifact form of the query — the data at rest — as distinct from the Query itself (the network occurrence). Typically includes the queried name, record type requested, source IP, timestamp, response code, and resolved values returned."@en .
+
+dns:queryRecordOf
+    a owl:ObjectProperty ;
+    rdfs:domain dns:QueryRecord ;
+    rdfs:range dns:Query ;
+    rdfs:label "dns:queryRecordOf"@en ;
+    rdfs:comment "Links a persisted QueryRecord to the DNS Query event it captures."@en .
 
 dns:Registrant
     a owl:Class ;
     rdfs:comment "A Person or Organization that is the registered owner of a DNS Domain Name within a TLD zone"@en ;
     rdfs:label "Domain Registrant"@en ;
-    rdfs:subClassOf dns:DNSService .
+    rdfs:subClassOf stonework:Agent .
 
 dns:Registrar
     a owl:Class ;
     rdfs:comment "An organization that arbitrates the acquisition and global registration of DNS Domains"@en ;
     rdfs:label "Domain Registrar"@en ;
-    rdfs:subClassOf dns:DNSService .
+    rdfs:subClassOf stonework:Organization .
 
 dns:TXT
     a owl:Class ;
@@ -96,9 +114,9 @@ dns:TXT
 
 dns:Zone
     a owl:Class ;
-    rdfs:comment "a dns zone is a specific namespace within DNS, assigned to a finite set of authoritive nameservers to determine the records within it."@en ;
+    rdfs:subClassOf stonework:DigitalArtifact ;
     rdfs:label "DNS Zone"@en ;
-    rdfs:subClassOf dns:DNSService .
+    rdfs:comment "A specific namespace within DNS assigned to a finite set of authoritative nameservers, defining the set of records that resolve within it. A Zone is a data artifact — a configuration boundary — not itself a service."@en .
 
 dns:hasAuthNS
     a owl:ObjectProperty ;

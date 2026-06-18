@@ -479,6 +479,13 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 #    Classes
 #################################################################
 
+###  https://cyberterrain.org/ns/stonework#AccessControlList
+stonework:AccessControlList rdf:type owl:Class ;
+                            rdfs:subClassOf stonework:DigitalArtifact ;
+                            skos:prefLabel "Access Control List"@en ;
+                            skos:definition "A structured list of access control entries (ACEs) that governs which principals (users, groups, or system accounts) are permitted or denied specific operations on a resource."@en ;
+                            skos:scopeNote "Applies across filesystems, operating system objects (registry keys, processes), network devices (firewall rules), cloud IAM policies, and APIs. In a CTI context, adversaries frequently modify ACLs to establish persistence, escalate privileges, or deny defenders access to compromised resources. Framework-specific extensions (e.g. Windows DACL/SACL structure) are modeled at the framework layer."@en .
+
 ###  https://cyberterrain.org/ns/stonework#AIAgent
 stonework:AIAgent rdf:type owl:Class ;
                   rdfs:subClassOf stonework:Agent ;
@@ -653,6 +660,11 @@ stonework:DigitalIdentity rdf:type owl:Class ;
                           skos:definition "A digital representation or persona inferred from one or more identifiers (email, phone, account, etc.). It may or may not be attributed to a known real-world Agent." ;
                           skos:scopeNote "Useful when you observe identifiers without confirmed attribution. Can aggregate multiple Identifiers and later be linked to an Agent."@en .
 
+###  https://cyberterrain.org/ns/stonework#Directory
+stonework:Directory rdf:type owl:Class ;
+                    rdfs:subClassOf stonework:DigitalArtifact ;
+                    skos:prefLabel "Directory" .
+
 ###  https://cyberterrain.org/ns/stonework#Domain
 stonework:Domain rdf:type owl:Class ;
                  rdfs:subClassOf stonework:Infrastructure ;
@@ -733,7 +745,7 @@ stonework:Identifier rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Impact
 stonework:Impact rdf:type owl:Class ;
-                 rdfs:subClassOf stonework:SecurityCondition ;
+                 rdfs:subClassOf stonework:SecurityMeasure ;
                  rdfs:comment "Instances of stonework:Impact SHOULD specify the affected asset or mission, the type of consequence, and the severity level. Impact SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
                  skos:prefLabel "Impact" ;
                  skos:definition "The magnitude of harm, loss, or adverse effects that would result if a threat were realized and a compromise occurred, expressed in terms of mission, business, operational, or technical consequences." ;
@@ -746,18 +758,18 @@ stonework:Incident rdf:type owl:Class ;
                    skos:definition "A significant adverse event or series of related events that has caused, or has the potential to cause, harm to an organization’s operations, assets, or people."@en ;
                    skos:scopeNote "Distinguished from stonework:Event (a raw, unassessed occurrence) by the presence of human or automated triage declaring significance and adversity. An Incident may aggregate multiple Events, involve one or more Campaigns, and trigger Investigation and Playbook execution."@en .
 
-###  https://cyberterrain.org/ns/stonework#IntelligenceProduct
-stonework:IntelligenceProduct rdf:type owl:Class ;
-                         rdfs:subClassOf stonework:CyberEntity ;
-                         skos:prefLabel "Intelligence Product"@en ;
-                         skos:definition "A structured artifact produced by an intelligence or analytical process, intended to convey findings, assessments, observations, or sourcing context to support decision-making."@en ;
-                         skos:scopeNote "The intelligence product hierarchy covers the outputs of the intelligence lifecycle: Reports, Assessments, Sightings, Notes, and Provenance records. Distinguished from stonework:DigitalArtifact (raw observable technical data) and stonework:Behavior (plan specifications and TTP patterns). Intelligence products are the result of human or automated analytical work applied to raw data — they carry judgment, context, and traceability that raw artifacts do not."@en .
-
 ###  https://cyberterrain.org/ns/stonework#Infrastructure
 stonework:Infrastructure rdf:type owl:Class ;
                          rdfs:subClassOf stonework:CyberEntity ;
                          skos:prefLabel "Infrastructure"@en ;
                          skos:definition "Represents systems, software services, or any group of resources used to conduct cyber operations. Infrastructure is used by threat actors and intrusion sets both offensively and defensively." .
+
+###  https://cyberterrain.org/ns/stonework#IntelligenceProduct
+stonework:IntelligenceProduct rdf:type owl:Class ;
+                              rdfs:subClassOf stonework:CyberEntity ;
+                              skos:prefLabel "Intelligence Product"@en ;
+                              skos:definition "A structured artifact produced by an intelligence or analytical process, intended to convey findings, assessments, observations, or sourcing context to support decision-making."@en ;
+                              skos:scopeNote "The intelligence product hierarchy covers the outputs of the intelligence lifecycle: Reports, Assessments, Sightings, Notes, and Provenance records. Distinguished from stonework:DigitalArtifact (raw observable technical data) and stonework:Behavior (plan specifications and TTP patterns). Intelligence products are the result of human or automated analytical work applied to raw data — they carry judgment, context, and traceability that raw artifacts do not."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Investigation
 stonework:Investigation rdf:type owl:Class ;
@@ -768,7 +780,7 @@ stonework:Investigation rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Likelihood
 stonework:Likelihood rdf:type owl:Class ;
-                     rdfs:subClassOf stonework:SecurityCondition ;
+                     rdfs:subClassOf stonework:SecurityMeasure ;
                      rdfs:comment "Instances of stonework:Likelihood may incorporate assumptions, uncertainty, adversary behavior, historical frequency, or environmental conditions. Likelihood SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
                      skos:prefLabel "Likelihood" ;
                      skos:definition "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
