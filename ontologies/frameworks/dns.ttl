@@ -151,6 +151,7 @@ dns:hasRecord
 
 dns:hasRegistrant
     a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:subPropertyOf stonework:registeredTo ;
     rdfs:comment "The company or individual who purchased and registered this domain"@en ;
     rdfs:domain stonework:Domain ;
     rdfs:label "dns:hasRegistrant"@en ;
@@ -159,7 +160,8 @@ dns:hasRegistrant
 
 dns:hasRegistrar
     a owl:ObjectProperty ;
-    rdfs:comment "the domain registrar  the domain has been registered with"@en ;
+    rdfs:subPropertyOf stonework:registeredWith ;
+    rdfs:comment "The domain registrar the domain has been registered with"@en ;
     rdfs:domain stonework:Domain ;
     rdfs:label "dns:hasRegistrar"@en ;
     rdfs:range dns:Registrar ;

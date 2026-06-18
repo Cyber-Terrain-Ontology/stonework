@@ -294,7 +294,7 @@ stonework:mentions rdf:type owl:ObjectProperty ;
 
 ###  https://cyberterrain.org/ns/stonework#mitigates
 stonework:mitigates rdf:type owl:ObjectProperty ;
-                    rdfs:domain stonework:SecurityMeasure ;
+                    rdfs:domain stonework:Countermeasure ;
                     rdfs:range stonework:AttackPattern , stonework:Vulnerability ;
                     skos:prefLabel "mitigates" ;
                     skos:definition "Relates a Mitigation, CourseOfAction, or Control to the AttackPattern or Vulnerability it addresses. Corresponds to STIX relationship_type 'mitigates'."@en .
@@ -479,13 +479,6 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 #    Classes
 #################################################################
 
-###  https://cyberterrain.org/ns/stonework#AccessControlList
-stonework:AccessControlList rdf:type owl:Class ;
-                            rdfs:subClassOf stonework:DigitalArtifact ;
-                            skos:prefLabel "Access Control List"@en ;
-                            skos:definition "A structured list of access control entries (ACEs) that governs which principals (users, groups, or system accounts) are permitted or denied specific operations on a resource."@en ;
-                            skos:scopeNote "Applies across filesystems, operating system objects (registry keys, processes), network devices (firewall rules), cloud IAM policies, and APIs. In a CTI context, adversaries frequently modify ACLs to establish persistence, escalate privileges, or deny defenders access to compromised resources. Framework-specific extensions (e.g. Windows DACL/SACL structure) are modeled at the framework layer."@en .
-
 ###  https://cyberterrain.org/ns/stonework#AIAgent
 stonework:AIAgent rdf:type owl:Class ;
                   rdfs:subClassOf stonework:Agent ;
@@ -498,6 +491,13 @@ stonework:AITechnique rdf:type owl:Class ;
                       rdfs:subClassOf stonework:Technique ;
                       skos:prefLabel "AI Technique"@en ;
                       skos:definition "A specific method by which adversaries attack AI/ML systems (e.g., training data poisoning, adversarial examples, model extraction)."@en .
+
+###  https://cyberterrain.org/ns/stonework#AccessControlList
+stonework:AccessControlList rdf:type owl:Class ;
+                            rdfs:subClassOf stonework:DigitalArtifact ;
+                            skos:prefLabel "Access Control List"@en ;
+                            skos:definition "A structured list of access control entries (ACEs) that governs which principals (users, groups, or system accounts) are permitted or denied specific operations on a resource."@en ;
+                            skos:scopeNote "Applies across filesystems, operating system objects (registry keys, processes), network devices (firewall rules), cloud IAM policies, and APIs. In a CTI context, adversaries frequently modify ACLs to establish persistence, escalate privileges, or deny defenders access to compromised resources. Framework-specific extensions (e.g. Windows DACL/SACL structure) are modeled at the framework layer."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Agent
 stonework:Agent rdf:type owl:Class ;
@@ -574,11 +574,18 @@ stonework:City rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Control
 stonework:Control rdf:type owl:Class ;
-                  rdfs:subClassOf stonework:SecurityMeasure ;
+                  rdfs:subClassOf stonework:Countermeasure ;
                   rdfs:comment """Instances of stonework:Control may represent individual controls, control enhancements, or sub‑controls. Framework‑specific identifiers (e.g., \"AC‑2\", \"CIS 4.1\") SHOULD be modeled using explicit properties rather than encoded in the class IRI. Control text SHOULD be referenced via citations rather than reproduced verbatim.""" ;
                   skos:prefLabel "Control" ;
                   skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
                   skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." .
+
+###  https://cyberterrain.org/ns/stonework#Countermeasure
+stonework:Countermeasure rdf:type owl:Class ;
+                         rdfs:subClassOf stonework:CyberEntity ;
+                         skos:prefLabel "Countermeasure" ;
+                         skos:definition "Any control, mitigation, or safeguard applied to protect against, reduce, or respond to security risks."@en ;
+                         skos:scopeNote "Includes Controls, Mitigations, CoursesOfAction, and DetectionRules. The two primary branches are preventive/reactive measures (Mitigation, CourseOfAction, Control) and detection logic (DetectionRule, Signature)."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Country
 stonework:Country rdf:type owl:Class ;
@@ -609,7 +616,7 @@ stonework:CyberActivity rdf:type owl:Class ;
 stonework:CyberEntity rdf:type owl:Class ;
                       skos:prefLabel "Cyber Entity" ;
                       skos:definition "Any concept, object, or resource that exists or operates within a cyber or sociotechnical domain."@en ;
-                      skos:scopeNote "One of two root classes in STONEWORK. Groups all persistent entities — Agents, Infrastructure, DigitalArtifacts, Information, Behaviors, SecurityConditions, and related classes. Aligns with BFO Continuant. The sibling root class CyberActivity covers happenings (Campaigns, Incidents, Operations, etc.)."@en .
+                      skos:scopeNote "One of two root classes in STONEWORK. Groups all persistent entities — Agents, Infrastructure, DigitalArtifacts, Behaviors, IntelligenceProducts, SecurityConditions, RiskFactors, Countermeasures, and related classes. Aligns with BFO Continuant. The sibling root class CyberActivity covers happenings (Campaigns, Incidents, Operations, etc.)."@en .
 
 ###  https://cyberterrain.org/ns/stonework#CyberTechnique
 stonework:CyberTechnique rdf:type owl:Class ;
@@ -620,7 +627,7 @@ stonework:CyberTechnique rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#DataAsset
 stonework:DataAsset rdf:type owl:Class ;
-                    rdfs:subClassOf stonework:Infrastructure ;
+                    rdfs:subClassOf stonework:CyberEntity ;
                     skos:prefLabel "Data Asset" ;
                     skos:definition "A defender-owned collection of data or information with organizational value, such as databases, intellectual property, credentials stores, or PII collections."@en ;
                     skos:scopeNote "Represents data as a targetable resource distinct from the systems that store or process it. Used to model what adversaries seek to access, exfiltrate, or destroy rather than the infrastructure they exploit to reach it."@en .
@@ -641,7 +648,7 @@ stonework:DefensiveTactic rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#DetectionRule
 stonework:DetectionRule rdf:type owl:Class ;
-                        rdfs:subClassOf stonework:SecurityMeasure ;
+                        rdfs:subClassOf stonework:Countermeasure ;
                         skos:prefLabel "Detection Rule" ;
                         skos:definition "A structured, machine-readable rule designed to detect malicious or suspicious activity, techniques, or indicators. It may be signature-based, behavioral, correlation-based, or analytic."@en ;
                         skos:scopeNote "Encompasses pattern-matching signatures (YARA, Snort, Suricata), behavioral rules (Sigma), SIEM correlation logic, and analytic detections. Signature is a subclass for content-centric, indicator-matching rules."@en .
@@ -745,7 +752,7 @@ stonework:Identifier rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Impact
 stonework:Impact rdf:type owl:Class ;
-                 rdfs:subClassOf stonework:SecurityMeasure ;
+                 rdfs:subClassOf stonework:RiskFactor ;
                  rdfs:comment "Instances of stonework:Impact SHOULD specify the affected asset or mission, the type of consequence, and the severity level. Impact SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
                  skos:prefLabel "Impact" ;
                  skos:definition "The magnitude of harm, loss, or adverse effects that would result if a threat were realized and a compromise occurred, expressed in terms of mission, business, operational, or technical consequences." ;
@@ -780,7 +787,7 @@ stonework:Investigation rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Likelihood
 stonework:Likelihood rdf:type owl:Class ;
-                     rdfs:subClassOf stonework:SecurityMeasure ;
+                     rdfs:subClassOf stonework:RiskFactor ;
                      rdfs:comment "Instances of stonework:Likelihood may incorporate assumptions, uncertainty, adversary behavior, historical frequency, or environmental conditions. Likelihood SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
                      skos:prefLabel "Likelihood" ;
                      skos:definition "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
@@ -808,7 +815,7 @@ stonework:MalwareSample rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Mitigation
 stonework:Mitigation rdf:type owl:Class ;
-                     rdfs:subClassOf stonework:SecurityMeasure ;
+                     rdfs:subClassOf stonework:Countermeasure ;
                      skos:prefLabel "Mitigation" ;
                      skos:definition "A deliberate action or control intended to reduce the likelihood, impact, or severity of a risk, threat, vulnerability, or adverse event."@en ;
                      skos:scopeNote "Mitigations are proactive or reactive measures applied to address weaknesses or threats. Examples include: applying a security patch, enabling MFA, deploying a firewall rule, isolating a compromised host, or training users. A Mitigation may be a reusable control (ATT&CK sense) or a specific situational action. CourseOfAction is a subclass for contextualized, packaged response actions."@en ;
@@ -932,7 +939,7 @@ stonework:ProductFamily rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Provenance
 stonework:Provenance rdf:type owl:Class ;
-                     rdfs:subClassOf stonework:IntelligenceProduct ;
+                     rdfs:subClassOf stonework:CyberEntity ;
                      skos:prefLabel "Provenance"@en ;
                      skos:definition "Structured source references used to record the origin and trustworthiness of data and relationships."@en ;
                      skos:scopeNote "Includes Feeds, Publications, and URL References."@en .
@@ -963,11 +970,18 @@ stonework:Report rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Risk
 stonework:Risk rdf:type owl:Class ;
-               rdfs:subClassOf stonework:SecurityCondition ;
+               rdfs:subClassOf stonework:RiskFactor ;
                rdfs:comment "Instances of stonework:Risk may reference the threat being considered, the assets affected, the expected impact of compromise, and the likelihood of occurrence. Risk values may be qualitative or quantitative, and SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
                skos:prefLabel "Risk" ;
                skos:definition "A measure of the potential for loss or adverse effects arising from the realization of a threat, expressed as a function of the impact of compromise and the likelihood that the compromise will occur." ;
                skos:scopeNote "This class represents the assessed or estimated level of exposure to harm for a specific asset, mission, or organization. Risk is typically derived from the combination of impact and likelihood, and may incorporate assumptions, uncertainty, and contextual factors." .
+
+###  https://cyberterrain.org/ns/stonework#RiskFactor
+stonework:RiskFactor rdf:type owl:Class ;
+                     rdfs:subClassOf stonework:CyberEntity ;
+                     skos:prefLabel "Risk Factor" ;
+                     skos:definition "A calculated or assessed component used to quantify or characterize security risk, including the potential for harm and the probability of its occurrence."@en ;
+                     skos:scopeNote "Includes Risk (overall assessed exposure), Impact (magnitude of harm if realized), and Likelihood (probability of occurrence). These are analytical outputs derived from threat and vulnerability data, distinct from the conditions (SecurityCondition) that give rise to them and the countermeasures (Countermeasure) that address them."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Role
 stonework:Role rdf:type owl:Class ;
@@ -987,15 +1001,8 @@ stonework:RuntimeProcess rdf:type owl:Class ;
 stonework:SecurityCondition rdf:type owl:Class ;
                             rdfs:subClassOf stonework:CyberEntity ;
                             skos:prefLabel "Security Condition" ;
-                            skos:definition "A state, circumstance, or factor relevant to the security posture of a system, asset, or mission."@en ;
-                            skos:scopeNote "Includes Threats, Vulnerabilities, Risks, Impacts, and Likelihoods."@en .
-
-###  https://cyberterrain.org/ns/stonework#SecurityMeasure
-stonework:SecurityMeasure rdf:type owl:Class ;
-                          rdfs:subClassOf stonework:CyberEntity ;
-                          skos:prefLabel "Security Measure" ;
-                          skos:definition "Any control, mitigation, or safeguard intended to protect against, reduce, or respond to security risks."@en ;
-                          skos:scopeNote "Includes Controls, Mitigations, CoursesOfAction, and DetectionRules. The two primary branches are preventive/reactive measures (Mitigation, CourseOfAction, Control) and detection logic (DetectionRule, Signature)."@en .
+                            skos:definition "A state, circumstance, or disposition relevant to the security posture of a system, asset, or mission — existing independently of any measurement or assessment."@en ;
+                            skos:scopeNote "Includes Threats, Vulnerabilities, and Weaknesses. Risk, Impact, and Likelihood are assessed/calculated concepts and are modeled under stonework:RiskFactor."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Sensor
 stonework:Sensor rdf:type owl:Class ;
@@ -1060,7 +1067,7 @@ stonework:ThreatScenario rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#Tool
 stonework:Tool rdf:type owl:Class ;
-               rdfs:subClassOf stonework:DigitalArtifact ;
+               rdfs:subClassOf stonework:Product ;
                skos:prefLabel "Tool"@en ;
                skos:definition "Legitimate software that can be used offensively by threat actors or defensively by security practitioners. Distinguishable from malware by being designed for benign or dual-use purposes rather than being inherently malicious."@en ;
                skos:scopeNote "Includes commercial penetration testing tools, remote administration utilities, and living-off-the-land binaries (LOLBins) repurposed by adversaries, as well as defender-operated tools such as scanners, EDR agents, and forensic utilities. Corresponds to STIX 2.1 Tool SDO."@en .

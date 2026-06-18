@@ -66,11 +66,18 @@ stonework:Behavior rdfs:subClassOf bfo:0000031 .
 #################################################################
 
 ###  SecurityCondition → bfo:SpecificallyDependentContinuant (BFO_0000020)
-###  Security conditions (risk, likelihood, impact) inhere in a bearer
+###  Security conditions (Vulnerability, Weakness, Threat) are dispositions that inhere in a bearer
 stonework:SecurityCondition rdfs:subClassOf bfo:0000020 .
 
+###  RiskFactor → bfo:SpecificallyDependentContinuant (BFO_0000020)
+###  Risk factors (Risk, Impact, Likelihood) are assessed/calculated qualities and dispositions
+###  that inhere in a bearer — Risk and its components are specifically dependent on the
+###  systems and threats they characterize
+stonework:RiskFactor rdfs:subClassOf bfo:0000020 .
+
 ###  Risk → bfo:Disposition (BFO_0000016)
-###  Risk is a disposition of a system or asset to be harmed under certain conditions
+###  Risk is a disposition of a system or asset to be harmed under certain conditions;
+###  it inheres in the asset and is realized when a threat exploits a vulnerability
 stonework:Risk rdfs:subClassOf bfo:0000016 .
 
 ###  Vulnerability → bfo:Disposition (BFO_0000016)
@@ -88,6 +95,11 @@ stonework:Likelihood rdfs:subClassOf bfo:0000019 .
 ###  Impact → bfo:Quality (BFO_0000019)
 ###  Impact is a measurable quality of a compromise outcome
 stonework:Impact rdfs:subClassOf bfo:0000019 .
+
+###  Countermeasure → bfo:GenericallyDependentContinuant (BFO_0000031)
+###  Countermeasures (Controls, DetectionRules, Mitigations) are information artifacts —
+###  plan specifications and rules that can be instantiated across multiple substrates
+stonework:Countermeasure rdfs:subClassOf bfo:0000031 .
 
 ###  Role → bfo:Role (BFO_0000023)
 stonework:Role rdfs:subClassOf bfo:0000023 .

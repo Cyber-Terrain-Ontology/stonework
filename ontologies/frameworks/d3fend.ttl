@@ -132,7 +132,7 @@ d3f:Weakness rdfs:subClassOf stonework:Weakness .
 
 
 #################################################################
-#    Security Measure Mappings
+#    Behavior / Process Mappings
 #################################################################
 
 ###  d3f:Procedure → stonework:Procedure
@@ -142,6 +142,16 @@ d3f:Procedure rdfs:subClassOf stonework:Procedure .
 ###  d3f:OperationalActivityPlan → stonework:Process
 ###  D3FEND OperationalActivityPlan (business process / activity plan) maps to stonework:Process
 d3f:OperationalActivityPlan rdfs:subClassOf stonework:Process .
+
+
+#################################################################
+#    Countermeasure Mappings
+#################################################################
+
+###  d3f:DefensiveArtifact → stonework:Countermeasure
+###  D3FEND DefensiveArtifact covers artifacts deployed as part of a defensive measure
+###  (e.g. firewall rules, detection signatures, access control configurations)
+d3f:DefensiveArtifact rdfs:subClassOf stonework:Countermeasure .
 
 
 #################################################################
