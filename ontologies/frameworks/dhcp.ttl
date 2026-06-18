@@ -28,7 +28,7 @@ dhcp:Lease
 dhcp:Pool
     a owl:Class ;
     rdfs:comment "DHCP assigns addresses to systems from a pool of assigned addresses. "@en ;
-    rdfs:label "DHCP IP Address Pool"@en ;
+    rdfs:label "DHCP Address Pool"@en ;
     rdfs:subClassOf dhcp:DHCPService .
 
 dhcp:containsAddress
