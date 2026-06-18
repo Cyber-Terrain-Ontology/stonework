@@ -662,10 +662,10 @@ stonework:DigitalArtifact rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#DigitalIdentity
 stonework:DigitalIdentity rdf:type owl:Class ;
-                          rdfs:subClassOf stonework:CyberEntity ;
+                          rdfs:subClassOf stonework:Agent ;
                           skos:prefLabel "Digital Identity" ;
-                          skos:definition "A digital representation or persona inferred from one or more identifiers (email, phone, account, etc.). It may or may not be attributed to a known real-world Agent." ;
-                          skos:scopeNote "Useful when you observe identifiers without confirmed attribution. Can aggregate multiple Identifiers and later be linked to an Agent."@en .
+                          skos:definition "A digital representation or persona of an Agent, inferred from one or more identifiers (email, phone, account, etc.). It may or may not be attributed to a known real-world Agent." ;
+                          skos:scopeNote "Useful when you observe identifiers without confirmed attribution. Can aggregate multiple Identifiers and later be linked to a real-worldAgent."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Directory
 stonework:Directory rdf:type owl:Class ;
