@@ -1080,7 +1080,7 @@ stonework:URI rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#UserAccount
 stonework:UserAccount rdf:type owl:Class ;
-                      rdfs:subClassOf stonework:Identifier ;
+                      rdfs:subClassOf stonework:DigitalIdentity ;
                       skos:prefLabel "User Account"@en ;
                       skos:definition "Represents a user account on a system or service, including local OS accounts, cloud accounts, and social media accounts."@en .
 
@@ -1093,7 +1093,7 @@ stonework:UserAgent rdf:type owl:Class ;
 
 ###  https://cyberterrain.org/ns/stonework#UserGroup
 stonework:UserGroup rdf:type owl:Class ;
-                    rdfs:subClassOf stonework:Identifier ;
+                    rdfs:subClassOf stonework:DigitalIdentity ;
                     skos:prefLabel "User Group" ;
                     skos:definition "Represents a user group on a system or service, including local OS groups, cloud groups, and social media groups."@en .
 
