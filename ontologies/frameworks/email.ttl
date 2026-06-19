@@ -39,8 +39,20 @@ email:EmailHeader
 
 email:SMTPService
     a owl:Class ;
-    rdfs:comment "An SMTP Service is a mail server that accepts email messages from a mail client or another mail server, and relays them towards their destination."@en ;
+    rdfs:comment "An SMTP (Simple Mail Transfer Protocol) Service is a mail server that accepts email messages from a mail client or another mail server, and relays them towards their destination."@en ;
     rdfs:label "SMTP Service"@en ;
+    rdfs:subClassOf stonework:NetworkService .
+
+email:POP3Service
+    a owl:Class ;
+    rdfs:comment "A POP3 (Post Office Protocol) Service is a mail server that accepts email messages from a mail client, and allows the client to download them for local storage and access."@en ;
+    rdfs:label "POP3 Service"@en ;
+    rdfs:subClassOf stonework:NetworkService .
+
+email:IMAPService
+    a owl:Class ;
+    rdfs:comment "An IMAP (Internet Message Access Protocol) Service is a mail server that accepts email messages from a mail client, and allows the client to access and manage them on the server without downloading them."@en ;
+    rdfs:label "IMAP Service"@en ;
     rdfs:subClassOf stonework:NetworkService .
 
 # --- Object Properties -------------------------------------------
