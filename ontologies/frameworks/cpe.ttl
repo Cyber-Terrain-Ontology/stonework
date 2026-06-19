@@ -11,7 +11,7 @@
 <https://cyberterrain.org/ns/frameworks/cpe>
     a owl:Ontology ;
     rdfs:label "CPE Framework Ontology"@en ;
-    rdfs:comment "OWL vocabulary for NVD Common Platform Enumeration (CPE) 2.3 data as represented in the CTI Encyclopedia. Stub stonework:Product individuals are created by the CVE serializer; this ontology describes the enrichment properties added by the CPE ingest."@en .
+    rdfs:comment "OWL vocabulary for NVD Common Platform Enumeration (CPE) 2.3 data as represented in the CTI Encyclopedia. Stub stonework:ProductVersion individuals are created by the CVE serializer; this ontology describes the enrichment properties added by the CPE ingest."@en .
 
 # --- Datatype Properties --------------------------------------------
 
@@ -19,42 +19,42 @@ cpe:cpeName
     a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "CPE name"@en ;
     rdfs:comment "Full CPE 2.3 URI string, e.g. 'cpe:2.3:a:autodesk:autocad:2025:*:*:*:*:*:*:*'."@en ;
-    rdfs:domain stonework:Product ;
+    rdfs:domain stonework:ProductVersion ;
     rdfs:range xsd:string .
 
 cpe:cpeNameId
     a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "CPE name ID"@en ;
     rdfs:comment "NVD-assigned UUID for this CPE entry."@en ;
-    rdfs:domain stonework:Product ;
+    rdfs:domain stonework:ProductVersion ;
     rdfs:range xsd:string .
 
 cpe:title
     a owl:DatatypeProperty ;
     rdfs:label "title"@en ;
     rdfs:comment "Human-readable product title with language tag, as supplied by NVD. May appear in multiple languages."@en ;
-    rdfs:domain stonework:Product ;
+    rdfs:domain stonework:ProductVersion ;
     rdfs:range rdf:langString .
 
 cpe:deprecated
     a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "deprecated"@en ;
     rdfs:comment "True if NVD has deprecated this CPE entry."@en ;
-    rdfs:domain stonework:Product ;
+    rdfs:domain stonework:ProductVersion ;
     rdfs:range xsd:boolean .
 
 cpe:created
     a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "created"@en ;
     rdfs:comment "Date this CPE entry was created in the NVD dictionary."@en ;
-    rdfs:domain stonework:Product ;
+    rdfs:domain stonework:ProductVersion ;
     rdfs:range xsd:dateTime .
 
 cpe:lastModified
     a owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:label "last modified"@en ;
     rdfs:comment "Date this CPE entry was last modified in the NVD dictionary."@en ;
-    rdfs:domain stonework:Product ;
+    rdfs:domain stonework:ProductVersion ;
     rdfs:range xsd:dateTime .
 
 # --- Object Properties ----------------------------------------------
@@ -63,5 +63,5 @@ cpe:deprecatedBy
     a owl:ObjectProperty ;
     rdfs:label "deprecated by"@en ;
     rdfs:comment "Links a deprecated CPE to the successor CPE that replaces it."@en ;
-    rdfs:domain stonework:Product ;
-    rdfs:range stonework:Product .
+    rdfs:domain stonework:ProductVersion ;
+    rdfs:range stonework:ProductVersion .

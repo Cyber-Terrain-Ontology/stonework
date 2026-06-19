@@ -50,7 +50,7 @@ stonework:hasMotivation rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#hasProductType
 stonework:hasProductType rdf:type owl:ObjectProperty ;
                          rdfs:subPropertyOf stonework:categorizedBy ;
-                         rdfs:domain stonework:ProductFamily ;
+                         rdfs:domain stonework:Product ;
                          rdfs:range stonework:ProductType ;
                          skos:prefLabel "hasProductType"@en ;
                          skos:definition "Relates a product family to one or more product type classifications describing its functional category."@en ;
