@@ -1,0 +1,68 @@
+@prefix owl:       <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix nist:      <https://cyberterrain.org/ns/frameworks/nist#> .
+
+# --- Ontology declaration -------------------------------------------
+
+<https://cyberterrain.org/ns/frameworks/nist>
+    a owl:Ontology ;
+    rdfs:label "NIST SP 800-53 Framework Ontology"@en ;
+    rdfs:comment "OWL vocabulary for NIST SP 800-53 Rev 5 security controls as represented in the CTI Encyclopedia. Base controls and control enhancements are both modeled as nist:Control individuals. Enhancements carry a nist:enhancementOf link to their parent control. Withdrawn controls are excluded from the data graph."@en .
+
+# --- Classes --------------------------------------------------------
+
+nist:Control
+    a owl:Class ;
+    rdfs:subClassOf stonework:Control ;
+    rdfs:label "NIST SP 800-53 Control"@en ;
+    rdfs:comment "A NIST SP 800-53 Rev 5 security control or control enhancement. Base controls (e.g. AC-1) and enhancements (e.g. AC-2(1)) are both instances of this class; enhancements are distinguished by the presence of a nist:enhancementOf triple."@en .
+
+# --- Datatype Properties --------------------------------------------
+
+nist:nistId
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "NIST ID"@en ;
+    rdfs:comment "OSCAL identifier string in lowercase, e.g. 'ac-1' for AC-1 or 'ac-2.1' for AC-2(1)."@en ;
+    rdfs:domain nist:Control ;
+    rdfs:range xsd:string .
+
+nist:label
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "label"@en ;
+    rdfs:comment "Human-readable control identifier, e.g. 'AC-1' or 'AC-2(1)'."@en ;
+    rdfs:domain nist:Control ;
+    rdfs:range xsd:string .
+
+nist:title
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "title"@en ;
+    rdfs:comment "Human-readable control title as supplied in the OSCAL catalog, e.g. 'Access Control Policy and Procedures'."@en ;
+    rdfs:domain nist:Control ;
+    rdfs:range xsd:string .
+
+nist:family
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "control family"@en ;
+    rdfs:comment "Two-letter control family code derived from the control identifier, e.g. 'AC' for Access Control, 'SI' for System and Information Integrity."@en ;
+    rdfs:domain nist:Control ;
+    rdfs:range xsd:string .
+
+nist:sortId
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "sort ID"@en ;
+    rdfs:comment "Zero-padded sort key from the OSCAL catalog, e.g. 'ac-02'. Used for stable ordering within a control family."@en ;
+    rdfs:domain nist:Control ;
+    rdfs:range xsd:string .
+
+# --- Object Properties ----------------------------------------------
+
+nist:enhancementOf
+    a owl:ObjectProperty ;
+    rdfs:label "enhancement of"@en ;
+    rdfs:comment "Links a control enhancement to its parent base control."@en ;
+    rdfs:domain nist:Control ;
+    rdfs:range nist:Control .

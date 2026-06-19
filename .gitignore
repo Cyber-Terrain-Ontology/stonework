@@ -8,3 +8,5 @@ ontologies/catalog-backup-*.xml
 # OS
 Thumbs.db
 .DS_Store
+
+catalog-v*.xml

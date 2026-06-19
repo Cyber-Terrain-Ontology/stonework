@@ -1,0 +1,108 @@
+@prefix owl:       <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix dhcp:      <https://cyberterrain.org/ns/frameworks/dhcp#> .
+
+<https://cyberterrain.org/ns/frameworks/dhcp>
+    a owl:Ontology ;
+    owl:versionIRI <https://cyberterrain.org/ns/frameworks/dhcp/0.1.0> ;
+    owl:versionInfo "0.1.0" ;
+    rdfs:comment "Describes elements within the DHCP (Dynamic Host Configuration Protocol) system."@en ;
+    rdfs:label "DHCP Framework Ontology"@en .
+
+dhcp:DHCPService
+    a owl:Class ;
+    rdfs:comment "A DHCP Service is a network service that dynamically assigns IP addresses and other network configuration parameters to devices on a network, allowing them to communicate effectively. It is commonly used in local area networks (LANs) to manage IP address allocation and simplify network administration."@en ;
+    rdfs:label "DHCP Service"@en ;
+    rdfs:subClassOf stonework:NetworkService .
+
+dhcp:Lease
+    a owl:Class ;
+    rdfs:subClassOf stonework:DigitalArtifact ;
+    rdfs:label "DHCP Lease"@en ;
+    rdfs:comment "A time-bound assignment record granting a single IP address from a DHCP Pool to a network interface on a host. Captures the binding between IP address and MAC address for the duration of the lease period."@en .
+
+dhcp:Pool
+    a owl:Class ;
+    rdfs:subClassOf stonework:Infrastructure ;
+    rdfs:label "DHCP Address Pool"@en ;
+    rdfs:comment "A configured range of IP addresses managed by a DHCP service and available for dynamic allocation to requesting hosts. Defines the address space from which leases are issued."@en .
+
+dhcp:containsAddress
+    a owl:InverseFunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "this DHCP address pool is authoritative for this IP address, and controls leasing of it to client systems."@en ;
+    rdfs:domain dhcp:Pool ;
+    rdfs:label "controls assignment of"@en ;
+    rdfs:range stonework:IPAddress ;
+    owl:inverseOf dhcp:inPool .
+
+dhcp:forAddress
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "the IP Address that was granted via a successful DHCP Lease"@en ;
+    rdfs:domain dhcp:Lease ;
+    rdfs:label "for address"@en ;
+    rdfs:range stonework:IPAddress .
+
+dhcp:forHostName
+    a owl:ObjectProperty ;
+    rdfs:comment "leases may identify themselves with a particular hostname, which may have its associated DNS Entry updated once the lease is granted. This is used extensively in Microsoft Active Directory"@en ;
+    rdfs:domain stonework:Host ;
+    rdfs:label "for hostname"@en ;
+    rdfs:range dhcp:Lease .
+
+dhcp:fromAuthority
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "the NIC (and therefore MAC) address this lease was issued by."@en ;
+    rdfs:domain dhcp:Lease ;
+    rdfs:label "issued from"@en ;
+    rdfs:range stonework:Host ;
+    owl:inverseOf dhcp:issuedLease .
+
+dhcp:inPool
+    a owl:ObjectProperty ;
+    rdfs:comment "this address has been allocated to a DHCP Pool, and is not permanently assigned to any particular host"@en ;
+    rdfs:domain stonework:IPAddress ;
+    rdfs:label "belongs to DHCP Pool"@en ;
+    rdfs:range dhcp:Pool ;
+    owl:inverseOf dhcp:containsAddress .
+
+dhcp:issuedLease
+    a owl:ObjectProperty ;
+    rdfs:comment "This NIC issued a DHCP to the requesting NIC"@en ;
+    rdfs:domain stonework:Host ;
+    rdfs:label "issued lease"@en ;
+    rdfs:range dhcp:Lease ;
+    owl:inverseOf dhcp:fromAuthority .
+
+dhcp:leaseEnd
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:comment "when the lease expired"@en ;
+    rdfs:domain dhcp:Lease ;
+    rdfs:label "lease ended on"@en ;
+    rdfs:range xsd:dateTimeStamp .
+
+dhcp:leaseStart
+    a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:comment "when the lease was granted"@en ;
+    rdfs:domain dhcp:Lease ;
+    rdfs:label "lease started on"@en ;
+    rdfs:range xsd:dateTimeStamp .
+
+dhcp:leased
+    a owl:ObjectProperty ;
+    rdfs:comment "this NIC was successfully granted this DHCP lease for an IP Address"@en ;
+    rdfs:domain stonework:Host ;
+    rdfs:label "was granted lease"@en ;
+    rdfs:range dhcp:Lease ;
+    owl:inverseOf dhcp:leasedTo .
+
+dhcp:leasedTo
+    a owl:FunctionalProperty, owl:ObjectProperty ;
+    rdfs:comment "this lease was succesfully issued to a requesting NIC to grant it a temporary IP Address"@en ;
+    rdfs:domain dhcp:Lease ;
+    rdfs:label "was issued to"@en ;
+    rdfs:range stonework:Host ;
+    owl:inverseOf dhcp:leased .
