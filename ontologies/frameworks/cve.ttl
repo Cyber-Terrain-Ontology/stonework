@@ -152,7 +152,7 @@ cve:ProblemType
 # AffectedProduct
 cve:AffectedProduct
     a owl:Class ;
-    rdfs:subClassOf stonework:ProductVersion ;
+    rdfs:subClassOf stonework:VersionedProduct ;
     rdfs:label "Affected Product"@en ;
     rdfs:comment "A product/component affected by (or fixed for) the vulnerability.\n\nv2  → DWF.AFFECTS[]\nv5  → cnaContainer.affected[]"@en .
 
@@ -549,6 +549,7 @@ cve:problemTypes
 
 cve:affected
     a owl:ObjectProperty ;
+    rdfs:subPropertyOf stonework:affected ;
     rdfs:label "affected"@en ;
     rdfs:domain cve:CveRecord ;
     rdfs:range cve:AffectedProduct .
@@ -626,9 +627,9 @@ cve:affectsProduct
     a owl:ObjectProperty ;
     rdfs:subPropertyOf stonework:affected ;
     rdfs:label "affects product"@en ;
-    rdfs:comment "Links a CVE record to a stonework:ProductVersion individual identified by a normalized CPE IRI. The IRI is derived deterministically: colons→underscore, dots→hyphen, asterisks→X. The product version individual is fully populated when CPE data is ingested."@en ;
+    rdfs:comment "Links a CVE record to a stonework:VersionedProduct individual identified by a normalized CPE IRI. The IRI is derived deterministically: colons→underscore, dots→hyphen, asterisks→X. The product version individual is fully populated when CPE data is ingested."@en ;
     rdfs:domain cve:CveRecord ;
-    rdfs:range stonework:ProductVersion .
+    rdfs:range stonework:VersionedProduct .
 
 cve:exploitsWeakness
     a owl:ObjectProperty ;
