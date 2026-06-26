@@ -23,18 +23,48 @@
 #    Object Properties
 #################################################################
 
+###  https://cyberterrain.org/ns/stonework#accessesFile
+stonework:accessesFile rdf:type owl:ObjectProperty ;
+                       rdfs:domain stonework:RuntimeProcess ;
+                       rdfs:range stonework:File ;
+                       skos:prefLabel "accessesFile"@en ;
+                       skos:definition "Relates a RuntimeProcess to Files it reads, writes, or executes."@en .
+
+###  https://cyberterrain.org/ns/stonework#accessesRegistry
+stonework:accessesRegistry rdf:type owl:ObjectProperty ;
+                           rdfs:domain stonework:MalwareSample , stonework:RuntimeProcess ;
+                           rdfs:range stonework:Registry ;
+                           skos:prefLabel "accessesRegistry"@en ;
+                           skos:definition "Relates a RuntimeProcess or MalwareSample to Registry keys it reads or modifies."@en .
+
 ###  https://cyberterrain.org/ns/stonework#accountOf
 stonework:accountOf rdf:type owl:ObjectProperty ;
                     owl:inverseOf stonework:hasAccount ;
                     rdfs:domain stonework:UserAccount ;
                     rdfs:range stonework:Agent ;
-                    skos:prefLabel "accountOf" .
+                    skos:prefLabel "accountOf" ;
+                    skos:definition "A UserAccount belonging to this Agent. Inverse of stonework:hasAccount."@en .
 
 ###  https://cyberterrain.org/ns/stonework#achieves
 stonework:achieves rdf:type owl:ObjectProperty ;
                    rdfs:domain stonework:MalwareSample , stonework:Tool ;
                    rdfs:range stonework:AITechnique , stonework:AttackTechnique ;
-                   skos:prefLabel "achieves" .
+                   skos:prefLabel "achieves" ;
+                   skos:definition "The AttackTechnique or AITechnique goal accomplished by this MalwareSample or Tool during execution."@en .
+
+###  https://cyberterrain.org/ns/stonework#addresses
+stonework:addresses rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:Playbook , stonework:ThreatScenario ;
+                    rdfs:range stonework:AttackTechnique , stonework:MalwareFamily , stonework:ThreatActor ;
+                    skos:prefLabel "addresses"@en ;
+                    skos:definition "Relates a Playbook or ThreatScenario to the threats, techniques, or actors it is designed to address."@en .
+
+###  https://cyberterrain.org/ns/stonework#addressesAttack
+stonework:addressesAttack rdf:type owl:ObjectProperty ;
+                          rdfs:domain stonework:CourseOfAction ;
+                          rdfs:range stonework:AttackPattern ;
+                          skos:prefLabel "addressesAttack"@en ;
+                          skos:definition "A CourseOfAction prescribes a defensive response to this AttackPattern." .
 
 ###  https://cyberterrain.org/ns/stonework#affected
 stonework:affected rdf:type owl:ObjectProperty ;
@@ -44,14 +74,43 @@ stonework:affected rdf:type owl:ObjectProperty ;
                    skos:definition "Relates a vulnerability to a product version known to be affected by it." ;
                    skos:scopeNote "The range is a stonework:VersionedProduct individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
 
+###  https://cyberterrain.org/ns/stonework#affectsAsset
+stonework:affectsAsset rdf:type owl:ObjectProperty ;
+                       rdfs:domain stonework:Campaign , stonework:Impact , stonework:Incident , stonework:Risk ;
+                       rdfs:range stonework:DataAsset , stonework:Infrastructure ;
+                       skos:prefLabel "affectsAsset"@en ;
+                       skos:definition "Relates an Incident, Campaign, Risk, or Impact to the assets it threatens or impacts."@en .
+
 ###  https://cyberterrain.org/ns/stonework#affiliatedWith
 stonework:affiliatedWith rdf:type owl:ObjectProperty ;
                          rdfs:range stonework:Agent ;
-                         skos:prefLabel "affiliatedWith" .
+                         skos:prefLabel "affiliatedWith" ;
+                         skos:definition "Associates an entity with a related Agent through organizational membership, alliance, sponsorship, or informal association."@en .
+
+###  https://cyberterrain.org/ns/stonework#appliesControl
+stonework:appliesControl rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:CourseOfAction ;
+                         rdfs:range stonework:Control ;
+                         skos:prefLabel "appliesControl"@en ;
+                         skos:definition "A CourseOfAction specifies this Control as part of its recommended defensive posture. Primary arc into the Control class." .
+
+###  https://cyberterrain.org/ns/stonework#appliesTo
+stonework:appliesTo rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:Control , stonework:DetectionRule ;
+                    rdfs:range stonework:DataAsset , stonework:Host , stonework:Infrastructure , stonework:VersionedProduct ;
+                    skos:prefLabel "appliesTo"@en ;
+                    skos:definition "Relates a Control or DetectionRule to the systems or assets it applies to."@en .
+
+###  https://cyberterrain.org/ns/stonework#assessmentOf
+stonework:assessmentOf rdf:type owl:ObjectProperty ;
+                       rdfs:domain stonework:Assessment ;
+                       skos:prefLabel "assessmentOf"@en ;
+                       skos:definition "Relates an Assessment to the entity being assessed."@en .
 
 ###  https://cyberterrain.org/ns/stonework#associatedWith
 stonework:associatedWith rdf:type owl:ObjectProperty ;
-                         skos:prefLabel "associatedWith" .
+                         skos:prefLabel "associatedWith" ;
+                         skos:definition "Generic association between two entities. Use a more specific property where one exists."@en .
 
 ###  https://cyberterrain.org/ns/stonework#attributedTo
 stonework:attributedTo rdf:type owl:ObjectProperty ;
@@ -71,7 +130,8 @@ stonework:attributedToAgent rdf:type owl:ObjectProperty ;
 stonework:authoredBy rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Provenance ;
                      rdfs:range stonework:Agent ;
-                     skos:prefLabel "authoredBy"@en .
+                     skos:prefLabel "authoredBy"@en ;
+                     skos:definition "The Agent who authored or produced this provenance record, source document, or intelligence artifact."@en .
 
 ###  https://cyberterrain.org/ns/stonework#categorizedBy
 stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
@@ -84,39 +144,116 @@ stonework:categorizedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
 stonework:circumvents rdf:type owl:ObjectProperty ;
                       rdfs:domain stonework:AITechnique , stonework:AttackPattern ;
                       rdfs:range stonework:AnalyticTechnique , stonework:DefendTechnique ;
-                      skos:prefLabel "circumvents" .
+                      skos:prefLabel "circumvents" ;
+                      skos:definition "An AITechnique that bypasses or evades this AnalyticTechnique during adversarial ML attacks."@en .
 
 ###  https://cyberterrain.org/ns/stonework#clusteredWith
 stonework:clusteredWith rdf:type owl:ObjectProperty ;
-                        skos:prefLabel "clusteredWith" .
+                        skos:prefLabel "clusteredWith" ;
+                        skos:definition "Indicates two entities have been analytically grouped together based on shared characteristics or behaviour, without implying a stronger semantic relationship."@en .
+
+###  https://cyberterrain.org/ns/stonework#collects
+stonework:collects rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Investigation ;
+                   rdfs:range stonework:DigitalArtifact ;
+                   skos:prefLabel "collects"@en ;
+                   skos:definition "Relates an Investigation to the digital artifacts it collects as evidence."@en .
 
 ###  https://cyberterrain.org/ns/stonework#communicatesWith
 stonework:communicatesWith rdf:type owl:ObjectProperty , owl:SymmetricProperty ;
                            rdfs:domain stonework:MalwareSample , stonework:Tool ;
                            rdfs:range stonework:Infrastructure , stonework:URI ;
-                           skos:prefLabel "communicatesWith" .
+                           skos:prefLabel "communicatesWith" ;
+                           skos:definition "Command-and-control or exfiltration Infrastructure used by this MalwareSample post-infection. Distinct from stonework:deliveredVia, which covers initial delivery."@en .
 
 ###  https://cyberterrain.org/ns/stonework#compromisedIn
 stonework:compromisedIn rdf:type owl:ObjectProperty ;
                         rdfs:domain stonework:Agent ;
                         rdfs:range stonework:Incident ;
-                        skos:prefLabel "compromisedIn" .
+                        skos:prefLabel "compromisedIn" ;
+                        skos:definition "The Incident during which this Agent (user, system, or organization) was compromised."@en .
+
+###  https://cyberterrain.org/ns/stonework#conductedBy
+stonework:conductedBy rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:Campaign , stonework:Operation ;
+                      rdfs:range stonework:Agent ;
+                      skos:prefLabel "conductedBy"@en ;
+                      skos:definition "Relates an Operation or Campaign to the Agent(s) conducting it."@en .
 
 ###  https://cyberterrain.org/ns/stonework#consistsOf
 stonework:consistsOf rdf:type owl:ObjectProperty ;
-                     skos:prefLabel "consistsOf" .
+                     skos:prefLabel "consistsOf" ;
+                     skos:definition "Generic composition relationship. Use stonework:consistsOfCampaign or a more specific property where possible."@en .
+
+###  https://cyberterrain.org/ns/stonework#consistsOfCampaign
+stonework:consistsOfCampaign rdf:type owl:ObjectProperty ;
+                             rdfs:domain stonework:Operation ;
+                             rdfs:range stonework:Campaign ;
+                             skos:prefLabel "consistsOfCampaign"@en ;
+                             skos:definition "Relates an Operation to the Campaigns that compose it."@en .
+
+###  https://cyberterrain.org/ns/stonework#containedIn
+stonework:containedIn rdf:type owl:ObjectProperty ;
+                      owl:inverseOf stonework:containsFile ;
+                      rdfs:domain stonework:File ;
+                      rdfs:range stonework:Directory ;
+                      skos:prefLabel "containedIn"@en ;
+                      skos:definition "A File resides in this Directory. Inverse of stonework:containsFile; enables upward traversal of the file system tree." .
 
 ###  https://cyberterrain.org/ns/stonework#contains
 stonework:contains rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                    rdfs:domain stonework:AutonomousSystem , stonework:IPBlock ;
                    rdfs:range stonework:IPAddress , stonework:IPBlock ;
-                   skos:prefLabel "contains" .
+                   skos:prefLabel "contains" ;
+                   skos:definition "An IPAddress that falls within the address space announced by this AutonomousSystem."@en .
+
+###  https://cyberterrain.org/ns/stonework#containsDirectory
+stonework:containsDirectory rdf:type owl:ObjectProperty ;
+                            rdfs:domain stonework:Directory ;
+                            rdfs:range stonework:Directory ;
+                            skos:prefLabel "containsDirectory"@en ;
+                            skos:definition "Relates a Directory to subdirectories it contains."@en .
+
+###  https://cyberterrain.org/ns/stonework#containsFile
+stonework:containsFile rdf:type owl:ObjectProperty ;
+                       rdfs:domain stonework:Directory ;
+                       rdfs:range stonework:File ;
+                       skos:prefLabel "containsFile"@en ;
+                       skos:definition "Relates a Directory to the Files it contains."@en .
 
 ###  https://cyberterrain.org/ns/stonework#counters
 stonework:counters rdf:type owl:ObjectProperty ;
                    rdfs:domain stonework:AnalyticTechnique , stonework:DefendTechnique ;
                    rdfs:range stonework:AITechnique , stonework:AttackTechnique ;
-                   skos:prefLabel "counters" .
+                   skos:prefLabel "counters" ;
+                   skos:definition "An AnalyticTechnique designed to detect, neutralize, or mitigate this AITechnique."@en .
+
+###  https://cyberterrain.org/ns/stonework#covers
+stonework:covers rdf:type owl:ObjectProperty ;
+                 rdfs:domain stonework:Assessment , stonework:Report ;
+                 skos:prefLabel "covers"@en ;
+                 skos:definition "Relates a Report or Assessment to the entities it describes."@en .
+
+###  https://cyberterrain.org/ns/stonework#createdBy
+stonework:createdBy rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:IntelligenceProduct ;
+                    rdfs:range stonework:Agent ;
+                    skos:prefLabel "createdBy"@en ;
+                    skos:definition "Relates an Intelligence Product to the Agent that created it."@en .
+
+###  https://cyberterrain.org/ns/stonework#createsMutex
+stonework:createsMutex rdf:type owl:ObjectProperty ;
+                       rdfs:domain stonework:MalwareSample , stonework:RuntimeProcess ;
+                       rdfs:range stonework:Mutex ;
+                       skos:prefLabel "createsMutex"@en ;
+                       skos:definition "Relates a RuntimeProcess or MalwareSample to a Mutex it creates."@en .
+
+###  https://cyberterrain.org/ns/stonework#deliveredVia
+stonework:deliveredVia rdf:type owl:ObjectProperty ;
+                       rdfs:domain stonework:MalwareSample ;
+                       rdfs:range stonework:Infrastructure ;
+                       skos:prefLabel "deliveredVia"@en ;
+                       skos:definition "Initial delivery Infrastructure for this MalwareSample. Semantically distinct from stonework:communicatesWith, which models C2 channels post-infection." .
 
 ###  https://cyberterrain.org/ns/stonework#dependencyOf
 stonework:dependencyOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
@@ -129,7 +266,15 @@ stonework:dependencyOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
 stonework:derivedFrom rdf:type owl:ObjectProperty ;
                       rdfs:domain stonework:DetectionRule ;
                       rdfs:range stonework:CyberActivity , stonework:DigitalArtifact , stonework:Infrastructure ;
-                      skos:prefLabel "derivedFrom" .
+                      skos:prefLabel "derivedFrom" ;
+                      skos:definition "The observed CyberActivity, data source, or artifact from which this DetectionRule was written or derived."@en .
+
+###  https://cyberterrain.org/ns/stonework#detectedBy
+stonework:detectedBy rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:Event ;
+                     rdfs:range stonework:DetectionRule , stonework:Sensor ;
+                     skos:prefLabel "detectedBy"@en ;
+                     skos:definition "Relates an Event to the Sensor or DetectionRule that identified it."@en .
 
 ###  https://cyberterrain.org/ns/stonework#detects
 stonework:detects rdf:type owl:ObjectProperty ;
@@ -141,20 +286,45 @@ stonework:detects rdf:type owl:ObjectProperty ;
 stonework:downloads rdf:type owl:ObjectProperty ;
                     rdfs:domain stonework:File , stonework:MalwareSample , stonework:Tool ;
                     rdfs:range stonework:File , stonework:MalwareSample , stonework:Tool ;
-                    skos:prefLabel "downloads" .
+                    skos:prefLabel "downloads" ;
+                    skos:definition "A File retrieved or fetched by this File during execution, e.g. a dropper stage pulling a subsequent payload."@en .
 
 ###  https://cyberterrain.org/ns/stonework#drops
 stonework:drops rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                 rdfs:domain stonework:MalwareSample ;
                 rdfs:range stonework:DigitalArtifact ;
-                skos:prefLabel "drops" .
+                skos:prefLabel "drops" ;
+                skos:definition "A DigitalArtifact written to the filesystem or memory by this MalwareSample during execution."@en .
 
 ###  https://cyberterrain.org/ns/stonework#emailOf
 stonework:emailOf rdf:type owl:ObjectProperty ;
                   owl:inverseOf stonework:hasEmail ;
                   rdfs:domain stonework:EmailAddress ;
                   rdfs:range stonework:Agent ;
-                  skos:prefLabel "emailOf" .
+                  skos:prefLabel "emailOf" ;
+                  skos:definition "The Agent that owns or is associated with this EmailAddress. Inverse of stonework:hasEmail."@en .
+
+###  https://cyberterrain.org/ns/stonework#employs
+stonework:employs rdf:type owl:ObjectProperty ;
+                  rdfs:domain stonework:ThreatActor ;
+                  rdfs:range stonework:AttackPattern ;
+                  skos:prefLabel "employs"@en ;
+                  skos:definition "A ThreatActor directly employs an AttackPattern. Enables actor-level technique profiling independent of any specific Campaign." .
+
+###  https://cyberterrain.org/ns/stonework#evidencedBy
+stonework:evidencedBy rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:Sighting ;
+                      rdfs:range stonework:DigitalArtifact ;
+                      skos:prefLabel "evidencedBy"@en ;
+                      skos:definition "A Sighting is substantiated by this DigitalArtifact (memory dump, PCAP, log excerpt, sample). Connects analytical observation to forensic evidence." .
+
+###  https://cyberterrain.org/ns/stonework#executedOn
+stonework:executedOn rdf:type owl:ObjectProperty ;
+                     owl:inverseOf stonework:runs ;
+                     rdfs:domain stonework:RuntimeProcess ;
+                     rdfs:range stonework:Host ;
+                     skos:prefLabel "executedOn"@en ;
+                     skos:definition "Relates a RuntimeProcess to the Host it ran on."@en .
 
 ###  https://cyberterrain.org/ns/stonework#exploits
 stonework:exploits rdf:type owl:ObjectProperty ;
@@ -162,6 +332,13 @@ stonework:exploits rdf:type owl:ObjectProperty ;
                    rdfs:range stonework:Vulnerability ;
                    skos:prefLabel "exploits" ;
                    skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
+
+###  https://cyberterrain.org/ns/stonework#exposesService
+stonework:exposesService rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:Host ;
+                         rdfs:range stonework:NetworkService ;
+                         skos:prefLabel "exposesService"@en ;
+                         skos:definition "Relates a Host to the NetworkServices it provides."@en .
 
 ###  https://cyberterrain.org/ns/stonework#fixedInProduct
 stonework:fixedInProduct rdf:type owl:ObjectProperty ;
@@ -171,11 +348,40 @@ stonework:fixedInProduct rdf:type owl:ObjectProperty ;
                          skos:definition "Relates a vulnerability to the product version in which it was addressed."@en ;
                          skos:scopeNote "The range is a stonework:VersionedProduct individual whose IRI is derived deterministically from the CPE identifier. Populated by CVE/patch ingest."@en .
 
+###  https://cyberterrain.org/ns/stonework#generatedBy
+stonework:generatedBy rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:Log , stonework:NetworkTraffic ;
+                      rdfs:range stonework:Host , stonework:NetworkService , stonework:Sensor ;
+                      skos:prefLabel "generatedBy"@en ;
+                      skos:definition "Relates a Log or NetworkTraffic to the system that produced it."@en .
+
+###  https://cyberterrain.org/ns/stonework#generatedFrom
+stonework:generatedFrom rdf:type owl:ObjectProperty ;
+                        rdfs:domain stonework:Event ;
+                        rdfs:range stonework:Log , stonework:NetworkTraffic ;
+                        skos:prefLabel "generatedFrom"@en ;
+                        skos:definition "Links an Event to the raw log or network traffic from which it was derived."@en .
+
+###  https://cyberterrain.org/ns/stonework#grantedTo
+stonework:grantedTo rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:AccessControlList ;
+                    rdfs:range stonework:UserAccount , stonework:UserGroup ;
+                    skos:prefLabel "grantedTo"@en ;
+                    skos:definition "Relates an ACL to the UserAccount or UserGroup that has been granted access."@en .
+
 ###  https://cyberterrain.org/ns/stonework#hasAccount
 stonework:hasAccount rdf:type owl:ObjectProperty ;
+                     owl:inverseOf stonework:accountOf ;
                      rdfs:domain stonework:Agent ;
                      rdfs:range stonework:UserAccount ;
-                     skos:prefLabel "hasAccount"@en .
+                     skos:prefLabel "hasAccount"@en ;
+                     skos:definition "A UserAccount belonging to or controlled by this Agent."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasBehavior
+stonework:hasBehavior rdf:type owl:ObjectProperty ;
+                      rdfs:range stonework:Behavior ;
+                      skos:prefLabel "hasBehavior"@en ;
+                      skos:definition "Associates a MalwareSample, AttackPattern, ThreatActor, or Campaign with an observed Behavior. Enables behavioral clustering and similarity reasoning." .
 
 ###  https://cyberterrain.org/ns/stonework#hasDependency
 stonework:hasDependency rdf:type owl:ObjectProperty ;
@@ -185,17 +391,41 @@ stonework:hasDependency rdf:type owl:ObjectProperty ;
                         skos:prefLabel "hasDependency"@en ;
                         skos:definition "Relates a product version to another product version it depends on."@en .
 
+###  https://cyberterrain.org/ns/stonework#hasDestinationAddress
+stonework:hasDestinationAddress rdf:type owl:ObjectProperty ;
+                                rdfs:domain stonework:NetworkTraffic ;
+                                rdfs:range stonework:IPAddress ;
+                                skos:prefLabel "hasDestinationAddress"@en ;
+                                skos:definition "Relates NetworkTraffic to the destination IP address."@en .
+
 ###  https://cyberterrain.org/ns/stonework#hasEmail
 stonework:hasEmail rdf:type owl:ObjectProperty ;
+                   owl:inverseOf stonework:emailOf ;
                    rdfs:domain stonework:Agent ;
                    rdfs:range stonework:EmailAddress ;
-                   skos:prefLabel "hasEmail" .
+                   skos:prefLabel "hasEmail" ;
+                   skos:definition "An EmailAddress associated with this Agent."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasEvent
+stonework:hasEvent rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Incident ;
+                   rdfs:range stonework:Event ;
+                   skos:prefLabel "hasEvent"@en ;
+                   skos:definition "Relates an Incident to one or more Events that constitute or triggered it."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasHash
 stonework:hasHash rdf:type owl:ObjectProperty ;
                   rdfs:range stonework:Hash ;
                   skos:prefLabel "hasHash" ;
                   skos:definition "Relates an entity to its hash entries. The range is a stonework:Hash individual representing a single hash algorithm and digest value." .
+
+###  https://cyberterrain.org/ns/stonework#hasIPBlock
+stonework:hasIPBlock rdf:type owl:ObjectProperty ;
+                     owl:inverseOf stonework:inBlock ;
+                     rdfs:domain stonework:AutonomousSystem ;
+                     rdfs:range stonework:IPBlock ;
+                     skos:prefLabel "hasIPBlock"@en ;
+                     skos:definition "An AutonomousSystem announces or owns this IPBlock (CIDR prefix). Complements stonework:contains (AutonomousSystem → IPAddress) with prefix-level granularity for BGP and attribution queries." .
 
 ###  https://cyberterrain.org/ns/stonework#hasIdentifier
 stonework:hasIdentifier rdf:type owl:ObjectProperty ;
@@ -204,19 +434,90 @@ stonework:hasIdentifier rdf:type owl:ObjectProperty ;
                         skos:prefLabel "hasIdentifier" ;
                         skos:definition "Links a Digital Identity to one or more atomic Identifiers that belong to it." .
 
+###  https://cyberterrain.org/ns/stonework#hasImpact
+stonework:hasImpact rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:Risk ;
+                    rdfs:range stonework:Impact ;
+                    skos:prefLabel "hasImpact"@en ;
+                    skos:definition "Relates a Risk to its associated Impact component."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasInput
+stonework:hasInput rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Process ;
+                   skos:prefLabel "hasInput"@en ;
+                   skos:definition "Relates a Process to its input data or artifacts."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasInstalledProduct
+stonework:hasInstalledProduct rdf:type owl:ObjectProperty ;
+                              rdfs:domain stonework:Host ;
+                              rdfs:range stonework:VersionedProduct ;
+                              skos:prefLabel "hasInstalledProduct"@en ;
+                              skos:definition "Relates a Host to the VersionedProducts installed on it."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasLikelihood
+stonework:hasLikelihood rdf:type owl:ObjectProperty ;
+                        rdfs:domain stonework:Risk ;
+                        rdfs:range stonework:Likelihood ;
+                        skos:prefLabel "hasLikelihood"@en ;
+                        skos:definition "Relates a Risk to its associated Likelihood component."@en .
+
 ###  https://cyberterrain.org/ns/stonework#hasMember
 stonework:hasMember rdf:type owl:ObjectProperty ;
+                    owl:inverseOf stonework:memberOf ;
                     rdfs:domain stonework:Group , stonework:Organization , stonework:ThreatActor ;
-                    skos:prefLabel "hasMember"@en .
+                    skos:prefLabel "hasMember"@en ;
+                    skos:definition "A member of this Group. Multiple values represented as multiple triples."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasOnlineReference
+stonework:hasOnlineReference rdf:type owl:ObjectProperty ;
+                             rdfs:range stonework:OnlineReference ;
+                             skos:prefLabel "hasOnlineReference"@en ;
+                             skos:definition "Associates any object with an OnlineReference (blog post, advisory URL, disclosure, vendor bulletin). Primary arc into the OnlineReference class." .
+
+###  https://cyberterrain.org/ns/stonework#hasOutput
+stonework:hasOutput rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:Process ;
+                    skos:prefLabel "hasOutput"@en ;
+                    skos:definition "Relates a Process to the data or artifacts it produces."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasParentProcess
+stonework:hasParentProcess rdf:type owl:ObjectProperty ;
+                           rdfs:domain stonework:RuntimeProcess ;
+                           rdfs:range stonework:RuntimeProcess ;
+                           skos:prefLabel "hasParentProcess"@en ;
+                           skos:definition "Relates a RuntimeProcess to the parent process that spawned it."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasPhoneNumber
 stonework:hasPhoneNumber rdf:type owl:ObjectProperty ;
+                         owl:inverseOf stonework:phoneNumberOf ;
                          rdfs:domain stonework:Agent ;
                          rdfs:range stonework:PhoneNumber ;
-                         skos:prefLabel "hasPhoneNumber"@en .
+                         skos:prefLabel "hasPhoneNumber"@en ;
+                         skos:definition "A PhoneNumber associated with this Agent."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasRisk
+stonework:hasRisk rdf:type owl:ObjectProperty ;
+                  rdfs:domain stonework:DataAsset , stonework:Infrastructure , stonework:Organization ;
+                  rdfs:range stonework:Risk ;
+                  skos:prefLabel "hasRisk"@en ;
+                  skos:definition "Relates an asset or organization to an assessed Risk."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasSignature
+stonework:hasSignature rdf:type owl:ObjectProperty ;
+                       rdfs:range stonework:Signature ;
+                       skos:prefLabel "hasSignature"@en ;
+                       skos:definition "Associates a Campaign, ThreatActor, MalwareSample, or Infrastructure with a detection Signature. Primary arc into the Signature class." .
+
+###  https://cyberterrain.org/ns/stonework#hasSourceAddress
+stonework:hasSourceAddress rdf:type owl:ObjectProperty ;
+                           rdfs:domain stonework:NetworkTraffic ;
+                           rdfs:range stonework:IPAddress ;
+                           skos:prefLabel "hasSourceAddress"@en ;
+                           skos:definition "Relates NetworkTraffic to the source IP address."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasTechnique
 stonework:hasTechnique rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+                       owl:inverseOf stonework:techniqueOf ;
                        rdfs:domain stonework:Tactic , stonework:Technique ;
                        rdfs:range stonework:Technique ;
                        skos:prefLabel "hasTechnique" ;
@@ -253,20 +554,144 @@ stonework:hashOf rdf:type owl:ObjectProperty ;
                  skos:prefLabel "hashOf" ;
                  skos:definition "Relates a hash entry to the entity it describes. The domain is a stonework:Hash individual representing a single hash algorithm and digest value." .
 
+###  https://cyberterrain.org/ns/stonework#headquarteredIn
+stonework:headquarteredIn rdf:type owl:ObjectProperty ;
+                          rdfs:domain stonework:Organization ;
+                          rdfs:range stonework:Location ;
+                          skos:prefLabel "headquarteredIn"@en ;
+                          skos:definition "Relates an Organization to its primary headquarters Location."@en .
+
 ###  https://cyberterrain.org/ns/stonework#hostedBy
 stonework:hostedBy rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                    rdfs:domain stonework:Infrastructure ;
                    rdfs:range stonework:Agent ;
-                   skos:prefLabel "hostedBy" .
+                   skos:prefLabel "hostedBy" ;
+                   skos:definition "The Agent (hosting provider, organization, or individual) that operates or administers this Infrastructure."@en .
+
+###  https://cyberterrain.org/ns/stonework#hostedOn
+stonework:hostedOn rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Infrastructure ;
+                   rdfs:range stonework:Host ;
+                   skos:prefLabel "hostedOn"@en ;
+                   skos:definition "The logical Infrastructure entity runs on this physical or virtual Host. Bridges the abstract infrastructure layer to the concrete system for configuration and vulnerability queries." .
+
+###  https://cyberterrain.org/ns/stonework#implants
+stonework:implants rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:MalwareSample ;
+                   rdfs:range stonework:MalwareSample ;
+                   skos:prefLabel "implants"@en ;
+                   skos:definition "A dropper or loader MalwareSample installs another MalwareSample payload. Models multi-stage delivery chains for reasoners tracking infection sequences." .
+
+###  https://cyberterrain.org/ns/stonework#implementedBy
+stonework:implementedBy rdf:type owl:ObjectProperty ;
+                        rdfs:domain stonework:Control ;
+                        rdfs:range stonework:Agent ;
+                        skos:prefLabel "implementedBy"@en ;
+                        skos:definition "Relates a Control to the Agent (organization or person) responsible for implementing it."@en .
+
+###  https://cyberterrain.org/ns/stonework#inBlock
+stonework:inBlock rdf:type owl:ObjectProperty ;
+                  owl:inverseOf stonework:hasIPBlock ;
+                  rdfs:domain stonework:IPAddress ;
+                  rdfs:range stonework:IPBlock ;
+                  skos:prefLabel "inBlock"@en ;
+                  skos:definition "An IPAddress falls within this IPBlock CIDR range. Inverse of stonework:hasIPBlock." .
 
 ###  https://cyberterrain.org/ns/stonework#indicates
 stonework:indicates rdf:type owl:ObjectProperty ;
                     skos:prefLabel "indicates" ;
                     skos:definition "Shortcut triple: source Indicator indicates presence of target. Corresponds to STIX relationship_type 'indicates'." .
 
+###  https://cyberterrain.org/ns/stonework#initiatedBy
+stonework:initiatedBy rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:NetworkTraffic ;
+                      rdfs:range stonework:RuntimeProcess ;
+                      skos:prefLabel "initiatedBy"@en ;
+                      skos:definition "The RuntimeProcess that opened this NetworkTraffic flow. Core process-to-network correlation arc for host-based forensics and lateral movement analysis." .
+
+###  https://cyberterrain.org/ns/stonework#investigatedBy
+stonework:investigatedBy rdf:type owl:ObjectProperty ;
+                         owl:inverseOf stonework:investigates ;
+                         rdfs:domain stonework:Incident ;
+                         rdfs:range stonework:Investigation ;
+                         skos:prefLabel "investigatedBy"@en ;
+                         skos:definition "Links an Incident to the Investigation conducted to understand or resolve it."@en .
+
+###  https://cyberterrain.org/ns/stonework#investigates
+stonework:investigates rdf:type owl:ObjectProperty ;
+                       owl:inverseOf stonework:investigatedBy ;
+                       rdfs:domain stonework:Investigation ;
+                       rdfs:range stonework:Campaign , stonework:Incident , stonework:MalwareSample , stonework:ThreatActor ;
+                       skos:prefLabel "investigates"@en ;
+                       skos:definition "Relates an Investigation to the subject being investigated."@en .
+
+###  https://cyberterrain.org/ns/stonework#involvesCampaign
+stonework:involvesCampaign rdf:type owl:ObjectProperty ;
+                           rdfs:domain stonework:Incident ;
+                           rdfs:range stonework:Campaign ;
+                           skos:prefLabel "involvesCampaign"@en ;
+                           skos:definition "Links an Incident to a Campaign it is part of or attributed to."@en .
+
+###  https://cyberterrain.org/ns/stonework#isSampleOf
+stonework:isSampleOf rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:DigitalArtifact ;
+                     rdfs:range stonework:MalwareSample ;
+                     skos:prefLabel "isSampleOf"@en ;
+                     skos:definition "A DigitalArtifact (binary, script, document) is a concrete observable instance of this MalwareSample family or variant. Primary path from artifact evidence to malware classification." .
+
+###  https://cyberterrain.org/ns/stonework#isVulnerableTo
+stonework:isVulnerableTo rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:Host , stonework:NetworkService , stonework:VersionedProduct ;
+                         rdfs:range stonework:Vulnerability ;
+                         skos:prefLabel "isVulnerableTo"@en ;
+                         skos:definition "Relates infrastructure or a product version to known Vulnerabilities it contains."@en .
+
+###  https://cyberterrain.org/ns/stonework#issuedBy
+stonework:issuedBy rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Certificate ;
+                   rdfs:range stonework:Agent ;
+                   skos:prefLabel "issuedBy"@en ;
+                   skos:definition "Relates a Certificate to the Certificate Authority that issued it."@en .
+
+###  https://cyberterrain.org/ns/stonework#issuedTo
+stonework:issuedTo rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Certificate ;
+                   rdfs:range stonework:Agent , stonework:Domain ;
+                   skos:prefLabel "issuedTo"@en ;
+                   skos:definition "Relates a Certificate to the entity (Agent or Domain) it was issued to."@en .
+
+###  https://cyberterrain.org/ns/stonework#launchedBy
+stonework:launchedBy rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:RuntimeProcess ;
+                     rdfs:range stonework:UserAccount ;
+                     skos:prefLabel "launchedBy"@en ;
+                     skos:definition "Relates a RuntimeProcess to the UserAccount under whose context it was launched."@en .
+
 ###  https://cyberterrain.org/ns/stonework#linkedTo
 stonework:linkedTo rdf:type owl:ObjectProperty ;
-                   skos:prefLabel "linkedTo" .
+                   skos:prefLabel "linkedTo" ;
+                   skos:definition "Generic link between two entities. Use a more specific property where one exists."@en .
+
+###  https://cyberterrain.org/ns/stonework#locatedAt
+stonework:locatedAt rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:Host , stonework:Infrastructure , stonework:Organization ;
+                    rdfs:range stonework:Location ;
+                    skos:prefLabel "locatedAt"@en ;
+                    skos:definition "Relates an entity to its physical or logical location."@en .
+
+###  https://cyberterrain.org/ns/stonework#loggedInTo
+stonework:loggedInTo rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:UserAccount ;
+                     rdfs:range stonework:Host , stonework:NetworkService ;
+                     skos:prefLabel "loggedInTo"@en ;
+                     skos:definition "Relates a UserAccount to the Hosts or NetworkServices it has authenticated to."@en .
+
+###  https://cyberterrain.org/ns/stonework#manifestsAs
+stonework:manifestsAs rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:Threat ;
+                      rdfs:range stonework:ThreatScenario ;
+                      skos:prefLabel "manifestsAs"@en ;
+                      skos:definition "A Threat is concretely expressed as a ThreatScenario with defined actor, asset, and technique. Connects abstract threat to actionable scenario modelling." .
 
 ###  https://cyberterrain.org/ns/stonework#markingRef
 stonework:markingRef rdf:type owl:ObjectProperty ;
@@ -278,7 +703,8 @@ stonework:markingRef rdf:type owl:ObjectProperty ;
 stonework:memberOf rdf:type owl:ObjectProperty ;
                    owl:inverseOf stonework:hasMember ;
                    rdfs:range stonework:Group , stonework:Organization , stonework:ThreatActor ;
-                   skos:prefLabel "memberOf"@en .
+                   skos:prefLabel "memberOf"@en ;
+                   skos:definition "The Group that this entity belongs to."@en .
 
 ###  https://cyberterrain.org/ns/stonework#memberOfFamily
 stonework:memberOfFamily rdf:type owl:ObjectProperty ;
@@ -290,7 +716,8 @@ stonework:memberOfFamily rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#mentions
 stonework:mentions rdf:type owl:ObjectProperty ;
                    rdfs:domain stonework:Provenance ;
-                   skos:prefLabel "mentions" .
+                   skos:prefLabel "mentions" ;
+                   skos:definition "An entity referenced or cited within this Provenance record."@en .
 
 ###  https://cyberterrain.org/ns/stonework#mitigates
 stonework:mitigates rdf:type owl:ObjectProperty ;
@@ -299,33 +726,93 @@ stonework:mitigates rdf:type owl:ObjectProperty ;
                     skos:prefLabel "mitigates" ;
                     skos:definition "Relates a Mitigation, CourseOfAction, or Control to the AttackPattern or Vulnerability it addresses. Corresponds to STIX relationship_type 'mitigates'."@en .
 
+###  https://cyberterrain.org/ns/stonework#mitigatesVulnerability
+stonework:mitigatesVulnerability rdf:type owl:ObjectProperty ;
+                                 rdfs:domain stonework:CourseOfAction ;
+                                 rdfs:range stonework:Vulnerability ;
+                                 skos:prefLabel "mitigatesVulnerability"@en ;
+                                 skos:definition "A CourseOfAction (patch, workaround, compensating control) addresses this Vulnerability. Distinct from stonework:mitigates (Countermeasure → AttackPattern)." .
+
+###  https://cyberterrain.org/ns/stonework#noteAbout
+stonework:noteAbout rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:Note ;
+                    skos:prefLabel "noteAbout"@en ;
+                    skos:definition "Relates a Note to the entities it annotates."@en .
+
 ###  https://cyberterrain.org/ns/stonework#observedIn
 stonework:observedIn rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:DigitalArtifact , stonework:Infrastructure ;
                      rdfs:range stonework:Campaign ;
-                     skos:prefLabel "observedIn" .
+                     skos:prefLabel "observedIn" ;
+                     skos:definition "The Campaign context in which this DigitalArtifact was encountered or collected."@en .
+
+###  https://cyberterrain.org/ns/stonework#occursOn
+stonework:occursOn rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Event ;
+                   rdfs:range stonework:Host ;
+                   skos:prefLabel "occursOn"@en ;
+                   skos:definition "Relates an Event to the Host on which it was observed."@en .
+
+###  https://cyberterrain.org/ns/stonework#operatesIn
+stonework:operatesIn rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:Organization , stonework:ThreatActor ;
+                     rdfs:range stonework:Location , stonework:Sector ;
+                     skos:prefLabel "operatesIn"@en ;
+                     skos:definition "Relates an Organization or ThreatActor to the Locations or Sectors they operate in."@en .
 
 ###  https://cyberterrain.org/ns/stonework#originatesFrom
 stonework:originatesFrom rdf:type owl:ObjectProperty ;
                          rdfs:domain stonework:Agent ;
                          rdfs:range stonework:Location ;
-                         skos:prefLabel "originatesFrom" .
+                         skos:prefLabel "originatesFrom" ;
+                         skos:definition "The geographic Location from which this Agent originates, operates, or is attributed to."@en .
+
+###  https://cyberterrain.org/ns/stonework#originatesInAS
+stonework:originatesInAS rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:IPAddress ;
+                         rdfs:range stonework:AutonomousSystem ;
+                         skos:prefLabel "originatesInAS"@en ;
+                         skos:definition "The AutonomousSystem that originates this IPAddress per BGP routing. Key property for network-layer attribution and geolocation inference." .
 
 ###  https://cyberterrain.org/ns/stonework#overlapsWith
 stonework:overlapsWith rdf:type owl:ObjectProperty ;
-                       skos:prefLabel "overlapsWith" .
+                       skos:prefLabel "overlapsWith" ;
+                       skos:definition "Indicates two entities share common attributes, infrastructure, or behaviour, suggesting possible connection without asserting a specific relationship type."@en .
+
+###  https://cyberterrain.org/ns/stonework#ownedBy
+stonework:ownedBy rdf:type owl:ObjectProperty ;
+                  rdfs:domain stonework:DataAsset , stonework:Infrastructure ;
+                  rdfs:range stonework:Agent ;
+                  skos:prefLabel "ownedBy"@en ;
+                  skos:definition "Relates a DataAsset or Infrastructure to its owning Agent."@en .
+
+###  https://cyberterrain.org/ns/stonework#performedBy
+stonework:performedBy rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:Playbook , stonework:Process ;
+                      rdfs:range stonework:Agent ;
+                      skos:prefLabel "performedBy"@en ;
+                      skos:definition "Relates a Process or Playbook to the Agent responsible for executing it."@en .
 
 ###  https://cyberterrain.org/ns/stonework#phoneNumberOf
 stonework:phoneNumberOf rdf:type owl:ObjectProperty ;
                         owl:inverseOf stonework:hasPhoneNumber ;
                         rdfs:domain stonework:PhoneNumber ;
                         rdfs:range stonework:Agent ;
-                        skos:prefLabel "phoneNumberOf" .
+                        skos:prefLabel "phoneNumberOf" ;
+                        skos:definition "The Agent associated with this PhoneNumber. Inverse of stonework:hasPhoneNumber."@en .
 
 ###  https://cyberterrain.org/ns/stonework#playsRole
 stonework:playsRole rdf:type owl:ObjectProperty ;
                     rdfs:range stonework:Role ;
-                    skos:prefLabel "playsRole" .
+                    skos:prefLabel "playsRole" ;
+                    skos:definition "The Role this entity plays in a given context or operation."@en .
+
+###  https://cyberterrain.org/ns/stonework#posesThreat
+stonework:posesThreat rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:Campaign , stonework:ThreatActor ;
+                      rdfs:range stonework:Threat ;
+                      skos:prefLabel "posesThreat"@en ;
+                      skos:definition "Relates a ThreatActor or Campaign to the Threats they represent."@en .
 
 ###  https://cyberterrain.org/ns/stonework#precedes
 stonework:precedes rdf:type owl:ObjectProperty ;
@@ -334,9 +821,38 @@ stonework:precedes rdf:type owl:ObjectProperty ;
                    skos:prefLabel "precedes" ;
                    skos:definition "Temporal succession of Information (v1 precedes v2 of a report)"@en .
 
+###  https://cyberterrain.org/ns/stonework#procedureFor
+stonework:procedureFor rdf:type owl:ObjectProperty ;
+                       rdfs:domain stonework:Procedure ;
+                       rdfs:range stonework:Technique ;
+                       skos:prefLabel "procedureFor"@en ;
+                       skos:definition "A Procedure is a specific, step-by-step implementation of a Technique. Analogous to ATT&CK procedure example. Connects implementation detail to the abstract technique concept." .
+
+###  https://cyberterrain.org/ns/stonework#producesReport
+stonework:producesReport rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:Investigation , stonework:Process ;
+                         rdfs:range stonework:Assessment , stonework:Report ;
+                         skos:prefLabel "producesReport"@en ;
+                         skos:definition "Relates a Process or Investigation to the intelligence product it generates."@en .
+
+###  https://cyberterrain.org/ns/stonework#protects
+stonework:protects rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:AccessControlList , stonework:Countermeasure ;
+                   rdfs:range stonework:DataAsset , stonework:DigitalArtifact ;
+                   skos:prefLabel "protects"@en ;
+                   skos:definition "Relates a Countermeasure or ACL to the resource it protects."@en .
+
 ###  https://cyberterrain.org/ns/stonework#references
 stonework:references rdf:type owl:ObjectProperty ;
-                     skos:prefLabel "references" .
+                     skos:prefLabel "references" ;
+                     skos:definition "Generic reference from one entity to another. Use a more specific property where one exists."@en .
+
+###  https://cyberterrain.org/ns/stonework#refines
+stonework:refines rdf:type owl:ObjectProperty ;
+                  rdfs:domain stonework:AttackTechnique ;
+                  rdfs:range stonework:AttackPattern ;
+                  skos:prefLabel "refines"@en ;
+                  skos:definition "An AttackTechnique is a concrete, operationalised instance of an abstract AttackPattern. Analogous to ATT&CK sub-technique → technique. Enables rollup reasoning from observed technique to pattern family." .
 
 ###  https://cyberterrain.org/ns/stonework#registeredTo
 stonework:registeredTo rdf:type owl:ObjectProperty ;
@@ -368,35 +884,146 @@ stonework:relatedTo rdf:type owl:ObjectProperty ;
 ###  https://cyberterrain.org/ns/stonework#remediates
 stonework:remediates rdf:type owl:ObjectProperty ;
                      rdfs:range stonework:Vulnerability , stonework:Weakness ;
-                     skos:prefLabel "remediates" .
+                     skos:prefLabel "remediates" ;
+                     skos:definition "Associates a Mitigation, Control, or CourseOfAction with the Vulnerability it addresses."@en .
+
+###  https://cyberterrain.org/ns/stonework#reportedBy
+stonework:reportedBy rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:Report , stonework:Sighting ;
+                     rdfs:range stonework:Agent ;
+                     skos:prefLabel "reportedBy"@en ;
+                     skos:definition "Relates a Report or Sighting to the Agent who created it."@en .
+
+###  https://cyberterrain.org/ns/stonework#reportedIn
+stonework:reportedIn rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:Vulnerability ;
+                     rdfs:range stonework:Publication ;
+                     skos:prefLabel "reportedIn"@en ;
+                     skos:definition "A Vulnerability is formally disclosed in this Publication (advisory, CVE NVD entry, security bulletin). Primary arc into the Publication class." .
+
+###  https://cyberterrain.org/ns/stonework#resolvedTo
+stonework:resolvedTo rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:Domain ;
+                     rdfs:range stonework:IPAddress ;
+                     skos:prefLabel "resolvedTo"@en ;
+                     skos:definition "A Domain resolves to this IPAddress via DNS. More specific than stonework:resolvesTo (Infrastructure → Infrastructure); use this for explicit domain-to-IP mappings." .
 
 ###  https://cyberterrain.org/ns/stonework#resolvesTo
 stonework:resolvesTo rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Infrastructure ;
                      rdfs:range stonework:Infrastructure ;
-                     skos:prefLabel "resolvesTo"@en .
+                     skos:prefLabel "resolvesTo"@en ;
+                     skos:definition "Associates a Mitigation, Control, or CourseOfAction with the Vulnerability it addresses."@en .
 
 ###  https://cyberterrain.org/ns/stonework#revokedBy
 stonework:revokedBy rdf:type owl:ObjectProperty ;
                     skos:prefLabel "revokedBy" ;
                     skos:definition "Shortcut triple: source STIX object is revoked and superseded by target. Corresponds to STIX relationship_type 'revoked-by'." .
 
+###  https://cyberterrain.org/ns/stonework#runs
+stonework:runs rdf:type owl:ObjectProperty ;
+               owl:inverseOf stonework:executedOn ;
+               rdfs:domain stonework:Host ;
+               rdfs:range stonework:RuntimeProcess ;
+               skos:prefLabel "runs"@en ;
+               skos:definition "Relates a Host to the RuntimeProcesses executing on it."@en .
+
+###  https://cyberterrain.org/ns/stonework#scenarioActor
+stonework:scenarioActor rdf:type owl:ObjectProperty ;
+                        rdfs:domain stonework:ThreatScenario ;
+                        rdfs:range stonework:ThreatActor ;
+                        skos:prefLabel "scenarioActor"@en ;
+                        skos:definition "Relates a ThreatScenario to the threat actor type or group it models."@en .
+
+###  https://cyberterrain.org/ns/stonework#scenarioAsset
+stonework:scenarioAsset rdf:type owl:ObjectProperty ;
+                        rdfs:domain stonework:ThreatScenario ;
+                        rdfs:range stonework:DataAsset , stonework:Infrastructure ;
+                        skos:prefLabel "scenarioAsset"@en ;
+                        skos:definition "Relates a ThreatScenario to the targeted assets in the scenario."@en .
+
+###  https://cyberterrain.org/ns/stonework#scenarioTechnique
+stonework:scenarioTechnique rdf:type owl:ObjectProperty ;
+                            rdfs:domain stonework:ThreatScenario ;
+                            rdfs:range stonework:AttackTechnique ;
+                            skos:prefLabel "scenarioTechnique"@en ;
+                            skos:definition "Relates a ThreatScenario to the AttackTechniques in the attack path."@en .
+
 ###  https://cyberterrain.org/ns/stonework#sharesCertificate
 stonework:sharesCertificate rdf:type owl:ObjectProperty ;
                             rdfs:domain stonework:Infrastructure ;
                             rdfs:range stonework:Certificate ;
-                            skos:prefLabel "sharesCertificate" .
+                            skos:prefLabel "sharesCertificate" ;
+                            skos:definition "Links Infrastructure instances that share a TLS/SSL Certificate, indicating possible common ownership or operator."@en .
 
 ###  https://cyberterrain.org/ns/stonework#sharesRegistrant
 stonework:sharesRegistrant rdf:type owl:ObjectProperty ;
                            rdfs:domain stonework:Infrastructure ;
-                           skos:prefLabel "sharesRegistrant" .
+                           skos:prefLabel "sharesRegistrant" ;
+                           skos:definition "Links Infrastructure entities sharing a common domain registrant record, supporting operator attribution clustering."@en .
+
+###  https://cyberterrain.org/ns/stonework#sightedAt
+stonework:sightedAt rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:Sighting ;
+                    rdfs:range stonework:Infrastructure , stonework:Location ;
+                    skos:prefLabel "sightedAt"@en ;
+                    skos:definition "Relates a Sighting to the infrastructure or location where the observation was made."@en .
+
+###  https://cyberterrain.org/ns/stonework#sightedBy
+stonework:sightedBy rdf:type owl:ObjectProperty ;
+                    rdfs:domain stonework:Sighting ;
+                    rdfs:range stonework:Agent ;
+                    skos:prefLabel "sightedBy"@en ;
+                    skos:definition "Relates a Sighting to the Agent who made the observation."@en .
+
+###  https://cyberterrain.org/ns/stonework#sightedObject
+stonework:sightedObject rdf:type owl:ObjectProperty ;
+                        rdfs:domain stonework:Sighting ;
+                        skos:prefLabel "sightedObject"@en ;
+                        skos:definition "Relates a Sighting to the entity that was observed."@en .
+
+###  https://cyberterrain.org/ns/stonework#signedWith
+stonework:signedWith rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:File ;
+                     rdfs:range stonework:Certificate ;
+                     skos:prefLabel "signedWith"@en ;
+                     skos:definition "A File is code-signed with this Certificate. Supports trust chain analysis, publisher attribution of binaries, and detection of certificate abuse or misuse." .
+
+###  https://cyberterrain.org/ns/stonework#spawns
+stonework:spawns rdf:type owl:ObjectProperty ;
+                 owl:inverseOf stonework:hasParentProcess ;
+                 rdfs:domain stonework:RuntimeProcess ;
+                 rdfs:range stonework:RuntimeProcess ;
+                 skos:prefLabel "spawns"@en ;
+                 skos:definition "A RuntimeProcess creates a child process. Inverse of stonework:hasParentProcess; enables top-down process tree traversal for execution chain analysis." .
+
+###  https://cyberterrain.org/ns/stonework#storedIn
+stonework:storedIn rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:DataAsset ;
+                   rdfs:range stonework:Infrastructure ;
+                   skos:prefLabel "storedIn"@en ;
+                   skos:definition "Relates a DataAsset to the Infrastructure system that stores it."@en .
+
+###  https://cyberterrain.org/ns/stonework#storedOn
+stonework:storedOn rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:DigitalArtifact , stonework:File , stonework:Registry ;
+                   rdfs:range stonework:Host ;
+                   skos:prefLabel "storedOn"@en ;
+                   skos:definition "Relates a DigitalArtifact to the Host on which it is stored."@en .
 
 ###  https://cyberterrain.org/ns/stonework#subdomainOf
 stonework:subdomainOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                       rdfs:domain stonework:Domain ;
                       rdfs:range stonework:Domain ;
-                      skos:prefLabel "subdomainOf" .
+                      skos:prefLabel "subdomainOf" ;
+                      skos:definition "This Domain is a subdomain of the specified parent Domain. Transitive: if A is a subdomain of B and B of C, then A is a subdomain of C."@en .
+
+###  https://cyberterrain.org/ns/stonework#subsidiary
+stonework:subsidiary rdf:type owl:ObjectProperty ;
+                     rdfs:domain stonework:Organization ;
+                     rdfs:range stonework:Organization ;
+                     skos:prefLabel "subsidiary"@en ;
+                     skos:definition "Relates an Organization to a subsidiary organization it owns or controls."@en .
 
 ###  https://cyberterrain.org/ns/stonework#supersedes
 stonework:supersedes rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
@@ -412,6 +1039,20 @@ stonework:targets rdf:type owl:ObjectProperty ;
                   skos:prefLabel "targets" ;
                   skos:definition "Shortcut triple: source targets the target Identity, Vulnerability, or Location. Corresponds to STIX relationship_type 'targets'." .
 
+###  https://cyberterrain.org/ns/stonework#targetsPlatform
+stonework:targetsPlatform rdf:type owl:ObjectProperty ;
+                          rdfs:range stonework:VersionedProduct ;
+                          skos:prefLabel "targetsPlatform"@en ;
+                          skos:definition "A MalwareSample or Tool is engineered to run on or exploit this VersionedProduct (OS, application, firmware version). Supports exposure and blast-radius queries." .
+
+###  https://cyberterrain.org/ns/stonework#targetsService
+stonework:targetsService rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:NetworkTraffic ;
+                         rdfs:range stonework:NetworkService ;
+                         skos:prefLabel "targetsService"@en ;
+                         skos:definition "The NetworkService this traffic addresses." ;
+                         skos:scopeNote "⚑ Category: service *type* (HTTP, SSH, RDP, SMB, DNS) is better expressed as stonework:categorizedBy → Category named individual than as subclasses of NetworkService. NetworkService as a class is appropriate only when the instance has its own properties (port, vulnerability linkage)." .
+
 ###  https://cyberterrain.org/ns/stonework#techniqueOf
 stonework:techniqueOf rdf:type owl:ObjectProperty ;
                       owl:inverseOf stonework:hasTechnique ;
@@ -422,10 +1063,32 @@ stonework:techniqueOf rdf:type owl:ObjectProperty ;
                       skos:scopeNote "This is the inverse of hasTechnique. A single Technique may support multiple Tactics (e.g. 'Phishing' supports both Initial Access and Credential Access)."@en ;
                       rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> .
 
+###  https://cyberterrain.org/ns/stonework#transfersFile
+stonework:transfersFile rdf:type owl:ObjectProperty ;
+                        rdfs:domain stonework:NetworkTraffic ;
+                        rdfs:range stonework:File ;
+                        skos:prefLabel "transfersFile"@en ;
+                        skos:definition "A File carried as payload in this NetworkTraffic flow. Covers both delivery (malware download) and exfiltration scenarios." .
+
+###  https://cyberterrain.org/ns/stonework#triggeredBy
+stonework:triggeredBy rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:Playbook ;
+                      rdfs:range stonework:Event , stonework:Incident ;
+                      skos:prefLabel "triggeredBy"@en ;
+                      skos:definition "Relates a Playbook to the triggering Event or Incident type that initiates its execution."@en .
+
+###  https://cyberterrain.org/ns/stonework#triggersPlaybook
+stonework:triggersPlaybook rdf:type owl:ObjectProperty ;
+                           rdfs:domain stonework:Event , stonework:Incident ;
+                           rdfs:range stonework:Playbook ;
+                           skos:prefLabel "triggersPlaybook"@en ;
+                           skos:definition "Relates an Incident or Event to a Playbook invoked in response."@en .
+
 ###  https://cyberterrain.org/ns/stonework#urlOf
 stonework:urlOf rdf:type owl:ObjectProperty ;
                 rdfs:domain stonework:URI ;
-                skos:prefLabel "urlOf" .
+                skos:prefLabel "urlOf" ;
+                skos:definition "The entity this URI serves as a locator or persistent identifier for."@en .
 
 ###  https://cyberterrain.org/ns/stonework#uses
 stonework:uses rdf:type owl:ObjectProperty ;
@@ -441,6 +1104,13 @@ stonework:usesRule rdf:type owl:ObjectProperty ;
                    rdfs:range stonework:DetectionRule ;
                    skos:prefLabel "usesRule" ;
                    skos:definition "Relates a Sensor to the Detection Rules it applies." .
+
+###  https://cyberterrain.org/ns/stonework#usesTool
+stonework:usesTool rdf:type owl:ObjectProperty ;
+                   rdfs:range stonework:Tool ;
+                   skos:prefLabel "usesTool"@en ;
+                   skos:definition "Associates a ThreatActor, Campaign, or Operation with a Tool it uses. Distinct from stonework:uses (Campaign → AttackTechnique)." ;
+                   skos:scopeNote "⚑ Category: tool *type* classification (loader, RAT, stealer, C2 framework) belongs as stonework:categorizedBy → Category named individual." .
 
 ###  https://cyberterrain.org/ns/stonework#variantOf
 stonework:variantOf rdf:type owl:ObjectProperty ;
@@ -473,6 +1143,13 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
                      skos:prefLabel "weaknessOf"@en ;
                      skos:definition "Relates a weakness to the vulnerability that exploits or instantiates it."@en ;
                      skos:scopeNote "The range is a vulnerability individual. The weakness individual (domain) is a stonework:Weakness whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
+
+###  https://cyberterrain.org/ns/stonework#worksFor
+stonework:worksFor rdf:type owl:ObjectProperty ;
+                   rdfs:domain stonework:Person ;
+                   rdfs:range stonework:Organization ;
+                   skos:prefLabel "worksFor"@en ;
+                   skos:definition "Relates a Person to the Organization they work for."@en .
 
 
 #################################################################
@@ -929,14 +1606,6 @@ stonework:Product rdf:type owl:Class ;
                   skos:definition "An abstract grouping of related product versions sharing a common name, vendor, and lineage — independent of any specific release or version."@en ;
                   skos:scopeNote "Examples: 'Apache Log4j', 'Microsoft Windows', 'OpenSSL'. Vendor is asserted here via stonework:hasVendor; product type via stonework:hasProductType. Specific versioned releases are modeled as stonework:VersionedProduct individuals linked back via stonework:versionOf."@en .
 
-###  https://cyberterrain.org/ns/stonework#VersionedProduct
-stonework:VersionedProduct rdf:type owl:Class ;
-                         rdfs:subClassOf stonework:Product ;
-                         rdfs:comment "Version is represented as a datatype property string. Vendor and family relationships are expressed via stonework:versionOf and stonework:hasVendor on the parent Product rather than on this VersionedProduct class directly."@en ;
-                         skos:prefLabel "Product Version" ;
-                         skos:definition "A specific versioned release of a software, hardware, or firmware artifact. The primary unit for vulnerability applicability and patch tracking."@en ;
-                         skos:scopeNote "May be identified by CPE, PURL, or any other product identification scheme — no single standard is assumed. When a CPE IRI is available, it is typically used as the individual's IRI for deterministic ingest. The abstract grouping concept is modeled as stonework:Product, linked via stonework:versionOf."@en .
-
 ###  https://cyberterrain.org/ns/stonework#Provenance
 stonework:Provenance rdf:type owl:Class ;
                      rdfs:subClassOf stonework:CyberEntity ;
@@ -1096,6 +1765,14 @@ stonework:UserGroup rdf:type owl:Class ;
                     rdfs:subClassOf stonework:DigitalIdentity ;
                     skos:prefLabel "User Group" ;
                     skos:definition "Represents a user group on a system or service, including local OS groups, cloud groups, and social media groups."@en .
+
+###  https://cyberterrain.org/ns/stonework#VersionedProduct
+stonework:VersionedProduct rdf:type owl:Class ;
+                           rdfs:subClassOf stonework:Product ;
+                           rdfs:comment "Version is represented as a datatype property string. Vendor and family relationships are expressed via stonework:versionOf and stonework:hasVendor on the parent Product rather than on this VersionedProduct class directly."@en ;
+                           skos:prefLabel "Product Version" ;
+                           skos:definition "A specific versioned release of a software, hardware, or firmware artifact. The primary unit for vulnerability applicability and patch tracking."@en ;
+                           skos:scopeNote "May be identified by CPE, PURL, or any other product identification scheme — no single standard is assumed. When a CPE IRI is available, it is typically used as the individual's IRI for deterministic ingest. The abstract grouping concept is modeled as stonework:Product, linked via stonework:versionOf."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Vulnerability
 stonework:Vulnerability rdf:type owl:Class ;
