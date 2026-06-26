@@ -476,6 +476,819 @@ stonework:weaknessOf rdf:type owl:ObjectProperty ;
 
 
 #################################################################
+#    Data Properties
+#################################################################
+
+###  https://cyberterrain.org/ns/stonework#accountName
+stonework:accountName rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:UserAccount ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "accountName"@en ;
+                      skos:definition "The username or account identifier on the target system or service."@en .
+
+###  https://cyberterrain.org/ns/stonework#accountType
+stonework:accountType rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:UserAccount ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "accountType"@en ;
+                      skos:definition "The type of account (e.g. local, domain, cloud, service, privileged)."@en .
+
+###  https://cyberterrain.org/ns/stonework#alias
+stonework:alias rdf:type owl:DatatypeProperty ;
+                rdfs:range xsd:string ;
+                skos:prefLabel "alias"@en ;
+                skos:definition "An alternative name or pseudonym used by or associated with the entity."@en .
+
+###  https://cyberterrain.org/ns/stonework#asName
+stonework:asName rdf:type owl:DatatypeProperty ;
+                 rdfs:domain stonework:AutonomousSystem ;
+                 rdfs:range xsd:string ;
+                 skos:prefLabel "asName"@en ;
+                 skos:definition "The registered name or handle of the autonomous system."@en .
+
+###  https://cyberterrain.org/ns/stonework#asNumber
+stonework:asNumber rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:AutonomousSystem ;
+                   rdfs:range xsd:integer ;
+                   skos:prefLabel "asNumber"@en ;
+                   skos:definition "The Autonomous System Number (ASN) assigned by IANA."@en .
+
+###  https://cyberterrain.org/ns/stonework#blockchainNetwork
+stonework:blockchainNetwork rdf:type owl:DatatypeProperty ;
+                            rdfs:domain stonework:CryptoAsset ;
+                            rdfs:range xsd:string ;
+                            skos:prefLabel "blockchainNetwork"@en ;
+                            skos:definition "The blockchain network on which the asset exists (e.g. Bitcoin, Ethereum, Monero)."@en .
+
+###  https://cyberterrain.org/ns/stonework#byteCount
+stonework:byteCount rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:NetworkTraffic ;
+                    rdfs:range xsd:long ;
+                    skos:prefLabel "byteCount"@en ;
+                    skos:definition "The total number of bytes transmitted in the traffic flow."@en .
+
+###  https://cyberterrain.org/ns/stonework#certIssuerDN
+stonework:certIssuerDN rdf:type owl:DatatypeProperty ;
+                       rdfs:domain stonework:Certificate ;
+                       rdfs:range xsd:string ;
+                       skos:prefLabel "certIssuerDN"@en ;
+                       skos:definition "The Distinguished Name of the Certificate Authority that issued the certificate."@en .
+
+###  https://cyberterrain.org/ns/stonework#certSHA1Fingerprint
+stonework:certSHA1Fingerprint rdf:type owl:DatatypeProperty ;
+                              rdfs:domain stonework:Certificate ;
+                              rdfs:range xsd:string ;
+                              skos:prefLabel "certSHA1Fingerprint"@en ;
+                              skos:definition "The SHA-1 fingerprint (thumbprint) of the certificate."@en .
+
+###  https://cyberterrain.org/ns/stonework#certSerialNumber
+stonework:certSerialNumber rdf:type owl:DatatypeProperty ;
+                           rdfs:domain stonework:Certificate ;
+                           rdfs:range xsd:string ;
+                           skos:prefLabel "certSerialNumber"@en ;
+                           skos:definition "The unique serial number assigned to the certificate by the issuing CA."@en .
+
+###  https://cyberterrain.org/ns/stonework#certSubjectDN
+stonework:certSubjectDN rdf:type owl:DatatypeProperty ;
+                        rdfs:domain stonework:Certificate ;
+                        rdfs:range xsd:string ;
+                        skos:prefLabel "certSubjectDN"@en ;
+                        skos:definition "The Distinguished Name of the certificate subject."@en .
+
+###  https://cyberterrain.org/ns/stonework#certValidNotAfter
+stonework:certValidNotAfter rdf:type owl:DatatypeProperty ;
+                            rdfs:domain stonework:Certificate ;
+                            rdfs:range xsd:dateTime ;
+                            skos:prefLabel "certValidNotAfter"@en ;
+                            skos:definition "The end of the certificate's validity period."@en .
+
+###  https://cyberterrain.org/ns/stonework#certValidNotBefore
+stonework:certValidNotBefore rdf:type owl:DatatypeProperty ;
+                             rdfs:domain stonework:Certificate ;
+                             rdfs:range xsd:dateTime ;
+                             skos:prefLabel "certValidNotBefore"@en ;
+                             skos:definition "The start of the certificate's validity period."@en .
+
+###  https://cyberterrain.org/ns/stonework#cidrNotation
+stonework:cidrNotation rdf:type owl:DatatypeProperty ;
+                       rdfs:domain stonework:IPBlock ;
+                       rdfs:range xsd:string ;
+                       skos:prefLabel "cidrNotation"@en ;
+                       skos:definition "The CIDR notation representing the IP address block (e.g. 192.168.0.0/16)."@en .
+
+###  https://cyberterrain.org/ns/stonework#commandLine
+stonework:commandLine rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:RuntimeProcess ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "commandLine"@en ;
+                      skos:definition "The full command line string used to launch the process."@en .
+
+###  https://cyberterrain.org/ns/stonework#compilationTimestamp
+stonework:compilationTimestamp rdf:type owl:DatatypeProperty ;
+                               rdfs:domain stonework:MalwareSample ;
+                               rdfs:range xsd:dateTime ;
+                               skos:prefLabel "compilationTimestamp"@en ;
+                               skos:definition "The timestamp embedded in the binary indicating when the malware was compiled."@en .
+
+###  https://cyberterrain.org/ns/stonework#confidence
+stonework:confidence rdf:type owl:DatatypeProperty ;
+                     rdfs:range xsd:integer ;
+                     skos:prefLabel "confidence"@en ;
+                     skos:definition "An integer score from 0–100 representing the analyst's confidence in the accuracy of this assertion."@en .
+
+###  https://cyberterrain.org/ns/stonework#content
+stonework:content rdf:type owl:DatatypeProperty ;
+                  rdfs:domain stonework:Note ;
+                  rdfs:range xsd:string ;
+                  skos:prefLabel "content"@en ;
+                  skos:definition "The full text content of the note."@en .
+
+###  https://cyberterrain.org/ns/stonework#controlBaseline
+stonework:controlBaseline rdf:type owl:DatatypeProperty ;
+                          rdfs:domain stonework:Control ;
+                          rdfs:range xsd:string ;
+                          skos:prefLabel "controlBaseline"@en ;
+                          skos:definition "The security baseline(s) in which this control is required (e.g. Low, Moderate, High for NIST 800-53)."@en .
+
+###  https://cyberterrain.org/ns/stonework#controlFamily
+stonework:controlFamily rdf:type owl:DatatypeProperty ;
+                        rdfs:domain stonework:Control ;
+                        rdfs:range xsd:string ;
+                        skos:prefLabel "controlFamily"@en ;
+                        skos:definition "The control family or category grouping (e.g. Access Control, Incident Response)."@en .
+
+###  https://cyberterrain.org/ns/stonework#controlId
+stonework:controlId rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Control ;
+                    rdfs:range xsd:string ;
+                    skos:prefLabel "controlId"@en ;
+                    skos:definition "The framework-specific identifier for the control (e.g. AC-2, CIS 4.1)."@en .
+
+###  https://cyberterrain.org/ns/stonework#countryCode
+stonework:countryCode rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:Country ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "countryCode"@en ;
+                      skos:definition "The ISO 3166-1 alpha-2 country code (e.g. US, CN, RU)."@en .
+
+###  https://cyberterrain.org/ns/stonework#cpeUri
+stonework:cpeUri rdf:type owl:DatatypeProperty ;
+                 rdfs:domain stonework:VersionedProduct ;
+                 rdfs:range xsd:string ;
+                 skos:prefLabel "cpeUri"@en ;
+                 skos:definition "The CPE 2.3 formatted string identifying this product version."@en .
+
+###  https://cyberterrain.org/ns/stonework#created
+stonework:created rdf:type owl:DatatypeProperty ;
+                  rdfs:range xsd:dateTime ;
+                  skos:prefLabel "created"@en ;
+                  skos:definition "The timestamp when this individual was first created or recorded."@en .
+
+###  https://cyberterrain.org/ns/stonework#cryptoCurrency
+stonework:cryptoCurrency rdf:type owl:DatatypeProperty ;
+                         rdfs:domain stonework:CryptoAsset ;
+                         rdfs:range xsd:string ;
+                         skos:prefLabel "cryptoCurrency"@en ;
+                         skos:definition "The cryptocurrency type (e.g. BTC, ETH, XMR)."@en .
+
+###  https://cyberterrain.org/ns/stonework#cveId
+stonework:cveId rdf:type owl:DatatypeProperty ;
+                rdfs:domain stonework:Vulnerability ;
+                rdfs:range xsd:string ;
+                skos:prefLabel "cveId"@en ;
+                skos:definition "The CVE identifier in the format CVE-YYYY-NNNNN."@en .
+
+###  https://cyberterrain.org/ns/stonework#cvssScore
+stonework:cvssScore rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Vulnerability ;
+                    rdfs:range xsd:decimal ;
+                    skos:prefLabel "cvssScore"@en ;
+                    skos:definition "The CVSS base score (0.0–10.0) for the vulnerability."@en .
+
+###  https://cyberterrain.org/ns/stonework#cvssVector
+stonework:cvssVector rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:Vulnerability ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "cvssVector"@en ;
+                     skos:definition "The CVSS vector string encoding the metric values."@en .
+
+###  https://cyberterrain.org/ns/stonework#cweAbstractionLevel
+stonework:cweAbstractionLevel rdf:type owl:DatatypeProperty ;
+                              rdfs:domain stonework:Weakness ;
+                              rdfs:range xsd:string ;
+                              skos:prefLabel "cweAbstractionLevel"@en ;
+                              skos:definition "The CWE abstraction level: Pillar, Class, Base, or Variant."@en .
+
+###  https://cyberterrain.org/ns/stonework#cweId
+stonework:cweId rdf:type owl:DatatypeProperty ;
+                rdfs:domain stonework:Weakness ;
+                rdfs:range xsd:string ;
+                skos:prefLabel "cweId"@en ;
+                skos:definition "The CWE identifier in the format CWE-NNN."@en .
+
+###  https://cyberterrain.org/ns/stonework#displayName
+stonework:displayName rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:EmailAddress ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "displayName"@en ;
+                      skos:definition "The display name associated with the email address."@en .
+
+###  https://cyberterrain.org/ns/stonework#domainName
+stonework:domainName rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:Domain ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "domainName"@en ;
+                     skos:definition "The fully qualified domain name string (e.g. malicious-site.com)."@en .
+
+###  https://cyberterrain.org/ns/stonework#dstPort
+stonework:dstPort rdf:type owl:DatatypeProperty ;
+                  rdfs:domain stonework:NetworkTraffic ;
+                  rdfs:range xsd:integer ;
+                  skos:prefLabel "dstPort"@en ;
+                  skos:definition "The destination TCP/UDP port number."@en .
+
+###  https://cyberterrain.org/ns/stonework#emailValue
+stonework:emailValue rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:EmailAddress ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "emailValue"@en ;
+                     skos:definition "The email address string (local@domain)."@en .
+
+###  https://cyberterrain.org/ns/stonework#endTime
+stonework:endTime rdf:type owl:DatatypeProperty ;
+                  rdfs:range xsd:dateTime ;
+                  skos:prefLabel "endTime"@en ;
+                  skos:definition "The timestamp of the last observed event in the activity or flow."@en .
+
+###  https://cyberterrain.org/ns/stonework#epssScore
+stonework:epssScore rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Vulnerability ;
+                    rdfs:range xsd:decimal ;
+                    skos:prefLabel "epssScore"@en ;
+                    skos:definition "The EPSS (Exploit Prediction Scoring System) score (0.0–1.0), estimating the probability of exploitation in the wild within 30 days."@en .
+
+###  https://cyberterrain.org/ns/stonework#executablePath
+stonework:executablePath rdf:type owl:DatatypeProperty ;
+                         rdfs:domain stonework:RuntimeProcess ;
+                         rdfs:range xsd:string ;
+                         skos:prefLabel "executablePath"@en ;
+                         skos:definition "The filesystem path of the process executable image."@en .
+
+###  https://cyberterrain.org/ns/stonework#expirationDate
+stonework:expirationDate rdf:type owl:DatatypeProperty ;
+                         rdfs:domain stonework:Domain ;
+                         rdfs:range xsd:date ;
+                         skos:prefLabel "expirationDate"@en ;
+                         skos:definition "The date the domain registration expires."@en .
+
+###  https://cyberterrain.org/ns/stonework#externalId
+stonework:externalId rdf:type owl:DatatypeProperty ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "externalId"@en ;
+                     skos:definition "An identifier from an external system or framework (e.g. STIX ID, MITRE ATT&CK ID, NVD CVE ID)."@en .
+
+###  https://cyberterrain.org/ns/stonework#falsePositiveRate
+stonework:falsePositiveRate rdf:type owl:DatatypeProperty ;
+                            rdfs:domain stonework:DetectionRule ;
+                            rdfs:range xsd:string ;
+                            skos:prefLabel "falsePositiveRate"@en ;
+                            skos:definition "Estimated false positive rate for this rule: low, medium, or high."@en .
+
+###  https://cyberterrain.org/ns/stonework#fileExtension
+stonework:fileExtension rdf:type owl:DatatypeProperty ;
+                        rdfs:domain stonework:File ;
+                        rdfs:range xsd:string ;
+                        skos:prefLabel "fileExtension"@en ;
+                        skos:definition "The file extension without the leading dot (e.g. exe, dll, ps1)."@en .
+
+###  https://cyberterrain.org/ns/stonework#fileName
+stonework:fileName rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:File ;
+                   rdfs:range xsd:string ;
+                   skos:prefLabel "fileName"@en ;
+                   skos:definition "The name of the file without path."@en .
+
+###  https://cyberterrain.org/ns/stonework#filePath
+stonework:filePath rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:File ;
+                   rdfs:range xsd:string ;
+                   skos:prefLabel "filePath"@en ;
+                   skos:definition "The full filesystem path of the file."@en .
+
+###  https://cyberterrain.org/ns/stonework#fileSize
+stonework:fileSize rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:File ;
+                   rdfs:range xsd:long ;
+                   skos:prefLabel "fileSize"@en ;
+                   skos:definition "The size of the file in bytes."@en .
+
+###  https://cyberterrain.org/ns/stonework#firstSeen
+stonework:firstSeen rdf:type owl:DatatypeProperty ;
+                    rdfs:range xsd:date ;
+                    skos:prefLabel "firstSeen"@en ;
+                    skos:definition "The date the entity was first observed."@en .
+
+###  https://cyberterrain.org/ns/stonework#fqdn
+stonework:fqdn rdf:type owl:DatatypeProperty ;
+               rdfs:domain stonework:Host ;
+               rdfs:range xsd:string ;
+               skos:prefLabel "fqdn"@en ;
+               skos:definition "The fully qualified domain name of the host."@en .
+
+###  https://cyberterrain.org/ns/stonework#groupName
+stonework:groupName rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:UserGroup ;
+                    rdfs:range xsd:string ;
+                    skos:prefLabel "groupName"@en ;
+                    skos:definition "The name of the user group."@en .
+
+###  https://cyberterrain.org/ns/stonework#hashAlgorithm
+stonework:hashAlgorithm rdf:type owl:DatatypeProperty ;
+                        rdfs:domain stonework:Hash ;
+                        rdfs:range xsd:string ;
+                        skos:prefLabel "hashAlgorithm"@en ;
+                        skos:definition "The cryptographic hash algorithm used (e.g. MD5, SHA-1, SHA-256, SHA-512, SSDEEP)."@en .
+
+###  https://cyberterrain.org/ns/stonework#hashValue
+stonework:hashValue rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Hash ;
+                    rdfs:range xsd:string ;
+                    skos:prefLabel "hashValue"@en ;
+                    skos:definition "The hex-encoded digest produced by the hash algorithm."@en .
+
+###  https://cyberterrain.org/ns/stonework#hostname
+stonework:hostname rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:Host ;
+                   rdfs:range xsd:string ;
+                   skos:prefLabel "hostname"@en ;
+                   skos:definition "The system hostname or NetBIOS name."@en .
+
+###  https://cyberterrain.org/ns/stonework#impactLevel
+stonework:impactLevel rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:Impact ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "impactLevel"@en ;
+                      skos:definition "A qualitative impact level (e.g. catastrophic, severe, moderate, limited)."@en .
+
+###  https://cyberterrain.org/ns/stonework#impactType
+stonework:impactType rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:Impact ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "impactType"@en ;
+                     skos:definition "The type of impact (e.g. confidentiality, integrity, availability, financial, reputational, safety)."@en .
+
+###  https://cyberterrain.org/ns/stonework#incidentStatus
+stonework:incidentStatus rdf:type owl:DatatypeProperty ;
+                         rdfs:domain stonework:Incident ;
+                         rdfs:range xsd:string ;
+                         skos:prefLabel "incidentStatus"@en ;
+                         skos:definition "The current lifecycle status of the incident (e.g. open, in-progress, contained, closed)."@en .
+
+###  https://cyberterrain.org/ns/stonework#ipValue
+stonework:ipValue rdf:type owl:DatatypeProperty ;
+                  rdfs:domain stonework:IPAddress ;
+                  rdfs:range xsd:string ;
+                  skos:prefLabel "ipValue"@en ;
+                  skos:definition "The dotted-decimal or colon-hex string representation of the IP address."@en .
+
+###  https://cyberterrain.org/ns/stonework#ipVersion
+stonework:ipVersion rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:IPAddress ;
+                    rdfs:range xsd:integer ;
+                    skos:prefLabel "ipVersion"@en ;
+                    skos:definition "The IP protocol version: 4 or 6."@en .
+
+###  https://cyberterrain.org/ns/stonework#isKnownExploited
+stonework:isKnownExploited rdf:type owl:DatatypeProperty ;
+                           rdfs:domain stonework:Vulnerability ;
+                           rdfs:range xsd:boolean ;
+                           skos:prefLabel "isKnownExploited"@en ;
+                           skos:definition "Indicates whether this vulnerability appears in CISA's Known Exploited Vulnerabilities (KEV) catalog."@en .
+
+###  https://cyberterrain.org/ns/stonework#isPacked
+stonework:isPacked rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:MalwareSample ;
+                   rdfs:range xsd:boolean ;
+                   skos:prefLabel "isPacked"@en ;
+                   skos:definition "Indicates whether the sample has been packed or obfuscated."@en .
+
+###  https://cyberterrain.org/ns/stonework#isPrivileged
+stonework:isPrivileged rdf:type owl:DatatypeProperty ;
+                       rdfs:domain stonework:UserAccount ;
+                       rdfs:range xsd:boolean ;
+                       skos:prefLabel "isPrivileged"@en ;
+                       skos:definition "Indicates whether the account has elevated or administrative privileges."@en .
+
+###  https://cyberterrain.org/ns/stonework#lastSeen
+stonework:lastSeen rdf:type owl:DatatypeProperty ;
+                   rdfs:range xsd:date ;
+                   skos:prefLabel "lastSeen"@en ;
+                   skos:definition "The most recent date the entity was observed."@en .
+
+###  https://cyberterrain.org/ns/stonework#latitude
+stonework:latitude rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:Location ;
+                   rdfs:range xsd:decimal ;
+                   skos:prefLabel "latitude"@en ;
+                   skos:definition "The geographic latitude in decimal degrees (WGS 84)."@en .
+
+###  https://cyberterrain.org/ns/stonework#likelihoodLevel
+stonework:likelihoodLevel rdf:type owl:DatatypeProperty ;
+                          rdfs:domain stonework:Likelihood ;
+                          rdfs:range xsd:string ;
+                          skos:prefLabel "likelihoodLevel"@en ;
+                          skos:definition "A qualitative likelihood level (e.g. almost certain, likely, possible, unlikely, rare)."@en .
+
+###  https://cyberterrain.org/ns/stonework#likelihoodScore
+stonework:likelihoodScore rdf:type owl:DatatypeProperty ;
+                          rdfs:domain stonework:Likelihood ;
+                          rdfs:range xsd:decimal ;
+                          skos:prefLabel "likelihoodScore"@en ;
+                          skos:definition "A numeric score (0.0–1.0) representing the estimated probability of occurrence."@en .
+
+###  https://cyberterrain.org/ns/stonework#logSource
+stonework:logSource rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Log ;
+                    rdfs:range xsd:string ;
+                    skos:prefLabel "logSource"@en ;
+                    skos:definition "The system, component, or application that generated the log (e.g. Windows Security, syslog, Apache)."@en .
+
+###  https://cyberterrain.org/ns/stonework#longitude
+stonework:longitude rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Location ;
+                    rdfs:range xsd:decimal ;
+                    skos:prefLabel "longitude"@en ;
+                    skos:definition "The geographic longitude in decimal degrees (WGS 84)."@en .
+
+###  https://cyberterrain.org/ns/stonework#mimeType
+stonework:mimeType rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:File ;
+                   rdfs:range xsd:string ;
+                   skos:prefLabel "mimeType"@en ;
+                   skos:definition "The MIME type of the file (e.g. application/x-executable, text/html)."@en .
+
+###  https://cyberterrain.org/ns/stonework#modified
+stonework:modified rdf:type owl:DatatypeProperty ;
+                   rdfs:range xsd:dateTime ;
+                   skos:prefLabel "modified"@en ;
+                   skos:definition "The timestamp when this individual was last modified."@en .
+
+###  https://cyberterrain.org/ns/stonework#mutexName
+stonework:mutexName rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Mutex ;
+                    rdfs:range xsd:string ;
+                    skos:prefLabel "mutexName"@en ;
+                    skos:definition "The name string of the mutex object."@en .
+
+###  https://cyberterrain.org/ns/stonework#networkProtocol
+stonework:networkProtocol rdf:type owl:DatatypeProperty ;
+                          rdfs:domain stonework:NetworkTraffic ;
+                          rdfs:range xsd:string ;
+                          skos:prefLabel "networkProtocol"@en ;
+                          skos:definition "The network or transport protocol (e.g. TCP, UDP, ICMP, HTTP, DNS)."@en .
+
+###  https://cyberterrain.org/ns/stonework#objective
+stonework:objective rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Campaign , stonework:Operation , stonework:ThreatActor ;
+                    rdfs:range xsd:string ;
+                    skos:prefLabel "objective"@en ;
+                    skos:definition "A description of the strategic goal or objective being pursued."@en .
+
+###  https://cyberterrain.org/ns/stonework#osName
+stonework:osName rdf:type owl:DatatypeProperty ;
+                 rdfs:domain stonework:Host ;
+                 rdfs:range xsd:string ;
+                 skos:prefLabel "osName"@en ;
+                 skos:definition "The name of the operating system running on the host (e.g. Windows, Linux, macOS)."@en .
+
+###  https://cyberterrain.org/ns/stonework#osVersion
+stonework:osVersion rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Host ;
+                    rdfs:range xsd:string ;
+                    skos:prefLabel "osVersion"@en ;
+                    skos:definition "The version string of the operating system."@en .
+
+###  https://cyberterrain.org/ns/stonework#packerName
+stonework:packerName rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:MalwareSample ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "packerName"@en ;
+                     skos:definition "The name of the packer or obfuscator used (e.g. UPX, Themida)."@en .
+
+###  https://cyberterrain.org/ns/stonework#packetCount
+stonework:packetCount rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:NetworkTraffic ;
+                      rdfs:range xsd:integer ;
+                      skos:prefLabel "packetCount"@en ;
+                      skos:definition "The total number of packets observed in the traffic flow."@en .
+
+###  https://cyberterrain.org/ns/stonework#parentPid
+stonework:parentPid rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:RuntimeProcess ;
+                    rdfs:range xsd:integer ;
+                    skos:prefLabel "parentPid"@en ;
+                    skos:definition "The process identifier of the parent process."@en .
+
+###  https://cyberterrain.org/ns/stonework#phoneValue
+stonework:phoneValue rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:PhoneNumber ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "phoneValue"@en ;
+                     skos:definition "The phone number string in E.164 or local format."@en .
+
+###  https://cyberterrain.org/ns/stonework#pid
+stonework:pid rdf:type owl:DatatypeProperty ;
+              rdfs:domain stonework:RuntimeProcess ;
+              rdfs:range xsd:integer ;
+              skos:prefLabel "pid"@en ;
+              skos:definition "The process identifier assigned by the OS."@en .
+
+###  https://cyberterrain.org/ns/stonework#playbookFormat
+stonework:playbookFormat rdf:type owl:DatatypeProperty ;
+                         rdfs:domain stonework:Playbook ;
+                         rdfs:range xsd:string ;
+                         skos:prefLabel "playbookFormat"@en ;
+                         skos:definition "The machine-readable format of the playbook (e.g. CACAO JSON, BPMN, YAML)."@en .
+
+###  https://cyberterrain.org/ns/stonework#playbookVersion
+stonework:playbookVersion rdf:type owl:DatatypeProperty ;
+                          rdfs:domain stonework:Playbook ;
+                          rdfs:range xsd:string ;
+                          skos:prefLabel "playbookVersion"@en ;
+                          skos:definition "The version string of the playbook."@en .
+
+###  https://cyberterrain.org/ns/stonework#port
+stonework:port rdf:type owl:DatatypeProperty ;
+               rdfs:domain stonework:NetworkService ;
+               rdfs:range xsd:integer ;
+               skos:prefLabel "port"@en ;
+               skos:definition "The TCP/UDP port number on which the service listens."@en .
+
+###  https://cyberterrain.org/ns/stonework#postalCode
+stonework:postalCode rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:Location ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "postalCode"@en ;
+                     skos:definition "The postal or ZIP code of the location."@en .
+
+###  https://cyberterrain.org/ns/stonework#productName
+stonework:productName rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:Product ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "productName"@en ;
+                      skos:definition "The canonical product name."@en .
+
+###  https://cyberterrain.org/ns/stonework#publishedDate
+stonework:publishedDate rdf:type owl:DatatypeProperty ;
+                        rdfs:range xsd:date ;
+                        skos:prefLabel "publishedDate"@en ;
+                        skos:definition "The date the item was first publicly published or disclosed."@en .
+
+###  https://cyberterrain.org/ns/stonework#purl
+stonework:purl rdf:type owl:DatatypeProperty ;
+               rdfs:domain stonework:VersionedProduct ;
+               rdfs:range xsd:anyURI ;
+               skos:prefLabel "purl"@en ;
+               skos:definition "The Package URL (PURL) identifying this software package version."@en .
+
+###  https://cyberterrain.org/ns/stonework#rawEntry
+stonework:rawEntry rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:Log ;
+                   rdfs:range xsd:string ;
+                   skos:prefLabel "rawEntry"@en ;
+                   skos:definition "The raw, unprocessed log line or record."@en .
+
+###  https://cyberterrain.org/ns/stonework#regionCode
+stonework:regionCode rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:Region ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "regionCode"@en ;
+                     skos:definition "The ISO 3166-2 region code (e.g. US-CA, GB-ENG)."@en .
+
+###  https://cyberterrain.org/ns/stonework#registrationDate
+stonework:registrationDate rdf:type owl:DatatypeProperty ;
+                           rdfs:domain stonework:Domain ;
+                           rdfs:range xsd:date ;
+                           skos:prefLabel "registrationDate"@en ;
+                           skos:definition "The date the domain was first registered."@en .
+
+###  https://cyberterrain.org/ns/stonework#registryKeyPath
+stonework:registryKeyPath rdf:type owl:DatatypeProperty ;
+                          rdfs:domain stonework:Registry ;
+                          rdfs:range xsd:string ;
+                          skos:prefLabel "registryKeyPath"@en ;
+                          skos:definition "The full registry key path (e.g. HKEY_LOCAL_MACHINE\\SOFTWARE\\...)."@en .
+
+###  https://cyberterrain.org/ns/stonework#registryValueData
+stonework:registryValueData rdf:type owl:DatatypeProperty ;
+                            rdfs:domain stonework:Registry ;
+                            rdfs:range xsd:string ;
+                            skos:prefLabel "registryValueData"@en ;
+                            skos:definition "The data stored in the registry value."@en .
+
+###  https://cyberterrain.org/ns/stonework#registryValueName
+stonework:registryValueName rdf:type owl:DatatypeProperty ;
+                            rdfs:domain stonework:Registry ;
+                            rdfs:range xsd:string ;
+                            skos:prefLabel "registryValueName"@en ;
+                            skos:definition "The name of the registry value."@en .
+
+###  https://cyberterrain.org/ns/stonework#registryValueType
+stonework:registryValueType rdf:type owl:DatatypeProperty ;
+                            rdfs:domain stonework:Registry ;
+                            rdfs:range xsd:string ;
+                            skos:prefLabel "registryValueType"@en ;
+                            skos:definition "The type of the registry value (e.g. REG_SZ, REG_DWORD, REG_BINARY)."@en .
+
+###  https://cyberterrain.org/ns/stonework#reliability
+stonework:reliability rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:HumanSource , stonework:Provenance ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "reliability"@en ;
+                      skos:definition "The assessed reliability of the source (e.g. using the NATO Admiralty Code A–F)."@en .
+
+###  https://cyberterrain.org/ns/stonework#resourceLevel
+stonework:resourceLevel rdf:type owl:DatatypeProperty ;
+                        rdfs:domain stonework:ThreatActor ;
+                        rdfs:range xsd:string ;
+                        skos:prefLabel "resourceLevel"@en ;
+                        skos:definition "The assessed level of resources available to the threat actor (e.g. individual, club, contest, team, organization, government)."@en .
+
+###  https://cyberterrain.org/ns/stonework#riskLevel
+stonework:riskLevel rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Risk ;
+                    rdfs:range xsd:string ;
+                    skos:prefLabel "riskLevel"@en ;
+                    skos:definition "A qualitative risk level (e.g. critical, high, medium, low)."@en .
+
+###  https://cyberterrain.org/ns/stonework#riskScore
+stonework:riskScore rdf:type owl:DatatypeProperty ;
+                    rdfs:domain stonework:Risk ;
+                    rdfs:range xsd:decimal ;
+                    skos:prefLabel "riskScore"@en ;
+                    skos:definition "A numeric risk score expressing combined impact and likelihood."@en .
+
+###  https://cyberterrain.org/ns/stonework#ruleContent
+stonework:ruleContent rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:DetectionRule ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "ruleContent"@en ;
+                      skos:definition "The full text content of the detection rule."@en .
+
+###  https://cyberterrain.org/ns/stonework#ruleFormat
+stonework:ruleFormat rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:DetectionRule ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "ruleFormat"@en ;
+                     skos:definition "The format or language of the rule (e.g. YARA, Sigma, Snort, KQL, SPL)."@en .
+
+###  https://cyberterrain.org/ns/stonework#ruleName
+stonework:ruleName rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:DetectionRule ;
+                   rdfs:range xsd:string ;
+                   skos:prefLabel "ruleName"@en ;
+                   skos:definition "The human-readable name of the detection rule."@en .
+
+###  https://cyberterrain.org/ns/stonework#ruleVersion
+stonework:ruleVersion rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:DetectionRule ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "ruleVersion"@en ;
+                      skos:definition "The version string of the detection rule."@en .
+
+###  https://cyberterrain.org/ns/stonework#serviceBanner
+stonework:serviceBanner rdf:type owl:DatatypeProperty ;
+                        rdfs:domain stonework:NetworkService ;
+                        rdfs:range xsd:string ;
+                        skos:prefLabel "serviceBanner"@en ;
+                        skos:definition "The banner string returned by the service upon connection."@en .
+
+###  https://cyberterrain.org/ns/stonework#serviceName
+stonework:serviceName rdf:type owl:DatatypeProperty ;
+                      rdfs:domain stonework:NetworkService ;
+                      rdfs:range xsd:string ;
+                      skos:prefLabel "serviceName"@en ;
+                      skos:definition "The name of the network service (e.g. HTTP, SSH, RDP, SMB)."@en .
+
+###  https://cyberterrain.org/ns/stonework#serviceProtocol
+stonework:serviceProtocol rdf:type owl:DatatypeProperty ;
+                          rdfs:domain stonework:NetworkService ;
+                          rdfs:range xsd:string ;
+                          skos:prefLabel "serviceProtocol"@en ;
+                          skos:definition "The transport protocol used by the service (e.g. TCP, UDP)."@en .
+
+###  https://cyberterrain.org/ns/stonework#serviceVersion
+stonework:serviceVersion rdf:type owl:DatatypeProperty ;
+                         rdfs:domain stonework:NetworkService ;
+                         rdfs:range xsd:string ;
+                         skos:prefLabel "serviceVersion"@en ;
+                         skos:definition "The version string of the service software."@en .
+
+###  https://cyberterrain.org/ns/stonework#severity
+stonework:severity rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:Event , stonework:Incident ;
+                   rdfs:range xsd:string ;
+                   skos:prefLabel "severity"@en ;
+                   skos:definition "The assessed severity of the incident or event (e.g. critical, high, medium, low, informational)."@en .
+
+###  https://cyberterrain.org/ns/stonework#sightingCount
+stonework:sightingCount rdf:type owl:DatatypeProperty ;
+                        rdfs:domain stonework:Sighting ;
+                        rdfs:range xsd:integer ;
+                        skos:prefLabel "sightingCount"@en ;
+                        skos:definition "The number of times the sighted object was observed."@en .
+
+###  https://cyberterrain.org/ns/stonework#sophisticationLevel
+stonework:sophisticationLevel rdf:type owl:DatatypeProperty ;
+                              rdfs:domain stonework:ThreatActor ;
+                              rdfs:range xsd:string ;
+                              skos:prefLabel "sophisticationLevel"@en ;
+                              skos:definition "The assessed technical sophistication level of the threat actor (e.g. minimal, intermediate, advanced, expert, innovator, strategic)."@en .
+
+###  https://cyberterrain.org/ns/stonework#srcPort
+stonework:srcPort rdf:type owl:DatatypeProperty ;
+                  rdfs:domain stonework:NetworkTraffic ;
+                  rdfs:range xsd:integer ;
+                  skos:prefLabel "srcPort"@en ;
+                  skos:definition "The source TCP/UDP port number."@en .
+
+###  https://cyberterrain.org/ns/stonework#ssdeepHash
+stonework:ssdeepHash rdf:type owl:DatatypeProperty ;
+                     rdfs:domain stonework:MalwareSample ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "ssdeepHash"@en ;
+                     skos:definition "The ssdeep fuzzy hash value enabling similarity clustering of malware samples."@en .
+
+###  https://cyberterrain.org/ns/stonework#startTime
+stonework:startTime rdf:type owl:DatatypeProperty ;
+                    rdfs:range xsd:dateTime ;
+                    skos:prefLabel "startTime"@en ;
+                    skos:definition "The timestamp of the first observed event in the activity or flow."@en .
+
+###  https://cyberterrain.org/ns/stonework#summary
+stonework:summary rdf:type owl:DatatypeProperty ;
+                  rdfs:domain stonework:IntelligenceProduct ;
+                  rdfs:range xsd:string ;
+                  skos:prefLabel "summary"@en ;
+                  skos:definition "A brief summary of the intelligence product's key findings."@en .
+
+###  https://cyberterrain.org/ns/stonework#timestamp
+stonework:timestamp rdf:type owl:DatatypeProperty ;
+                    rdfs:range xsd:dateTime ;
+                    skos:prefLabel "timestamp"@en ;
+                    skos:definition "The date and time at which this observation or event occurred."@en .
+
+###  https://cyberterrain.org/ns/stonework#title
+stonework:title rdf:type owl:DatatypeProperty ;
+                rdfs:domain stonework:IntelligenceProduct , stonework:Provenance ;
+                rdfs:range xsd:string ;
+                skos:prefLabel "title"@en ;
+                skos:definition "The human-readable title of the intelligence product or publication."@en .
+
+###  https://cyberterrain.org/ns/stonework#updateFrequency
+stonework:updateFrequency rdf:type owl:DatatypeProperty ;
+                          rdfs:domain stonework:Feed ;
+                          rdfs:range xsd:string ;
+                          skos:prefLabel "updateFrequency"@en ;
+                          skos:definition "How often the feed is updated (e.g. hourly, daily, real-time)."@en .
+
+###  https://cyberterrain.org/ns/stonework#uriValue
+stonework:uriValue rdf:type owl:DatatypeProperty ;
+                   rdfs:domain stonework:URI ;
+                   rdfs:range xsd:anyURI ;
+                   skos:prefLabel "uriValue"@en ;
+                   skos:definition "The full URI string conforming to RFC 3986."@en .
+
+###  https://cyberterrain.org/ns/stonework#url
+stonework:url rdf:type owl:DatatypeProperty ;
+              rdfs:domain stonework:Feed , stonework:OnlineReference , stonework:Publication ;
+              rdfs:range xsd:anyURI ;
+              skos:prefLabel "url"@en ;
+              skos:definition "The URL of the online resource."@en .
+
+###  https://cyberterrain.org/ns/stonework#userAgentString
+stonework:userAgentString rdf:type owl:DatatypeProperty ;
+                          rdfs:domain stonework:UserAgent ;
+                          rdfs:range xsd:string ;
+                          skos:prefLabel "userAgentString"@en ;
+                          skos:definition "The raw HTTP User-Agent header string."@en .
+
+###  https://cyberterrain.org/ns/stonework#version
+stonework:version rdf:type owl:DatatypeProperty ;
+                  rdfs:domain stonework:VersionedProduct ;
+                  rdfs:range xsd:string ;
+                  skos:prefLabel "version"@en ;
+                  skos:definition "The version string for this specific product release."@en .
+
+###  https://cyberterrain.org/ns/stonework#walletAddress
+stonework:walletAddress rdf:type owl:DatatypeProperty ;
+                        rdfs:domain stonework:CryptoAsset ;
+                        rdfs:range xsd:string ;
+                        skos:prefLabel "walletAddress"@en ;
+                        skos:definition "The cryptocurrency wallet address string."@en .
+
+
+#################################################################
 #    Classes
 #################################################################
 
