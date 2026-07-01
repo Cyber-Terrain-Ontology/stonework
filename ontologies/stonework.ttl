@@ -10,8 +10,8 @@
 
 ###  https://cyberterrain.org/ns/stonework#
 <https://cyberterrain.org/ns/stonework#> rdf:type owl:Ontology ;
-                                         owl:versionIRI <https://cyberterrain.org/ns/stonework/0.3.0> ;
-                                         owl:versionInfo "0.3.0" ;
+                                         owl:versionIRI <https://cyberterrain.org/ns/stonework/0.3.1> ;
+                                         owl:versionInfo "0.3.1" ;
                                          rdfs:label "STONEWORK"@en ;
                                          dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
                                          dcterms:description "A semantic threat ontology and research framework that serves as the evolutionary successor to the STONES ontology. It provides a forward-looking, extensible foundation for modeling next-generation cyber threat intelligence concepts, objects, relationships, workflows, and knowledge beyond the scope of STIX 2.1." ;
@@ -237,6 +237,20 @@ stonework:hasVersion rdf:type owl:ObjectProperty ;
                      rdfs:range stonework:VersionedProduct ;
                      skos:prefLabel "hasVersion"@en ;
                      skos:definition "Relates a product family to a specific versioned product instance."@en .
+
+###  https://cyberterrain.org/ns/stonework#installationOf
+stonework:installationOf rdf:type owl:ObjectProperty ;
+                         rdfs:domain stonework:ProductInstallation ;
+                         rdfs:range stonework:VersionedProduct ;
+                         skos:prefLabel "installationOf"@en ;
+                         skos:definition "Relates a specific installation instance to the versioned product it instantiates."@en .
+
+###  https://cyberterrain.org/ns/stonework#hasBomEntry
+stonework:hasBomEntry rdf:type owl:ObjectProperty ;
+                      rdfs:domain stonework:SoftwareBillOfMaterials ;
+                      rdfs:range stonework:VersionedProduct ;
+                      skos:prefLabel "hasBomEntry"@en ;
+                      skos:definition "Relates an SBOM to a component VersionedProduct it inventories."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasWeakness
 stonework:hasWeakness rdf:type owl:AsymmetricProperty , owl:ObjectProperty ;
@@ -925,17 +939,32 @@ stonework:Process rdf:type owl:Class ;
 ###  https://cyberterrain.org/ns/stonework#Product
 stonework:Product rdf:type owl:Class ;
                   rdfs:subClassOf stonework:CyberEntity ;
+                  owl:disjointWith stonework:VersionedProduct ;
                   skos:prefLabel "Product" ;
-                  skos:definition "An abstract grouping of related product versions sharing a common name, vendor, and lineage — independent of any specific release or version."@en ;
-                  skos:scopeNote "Examples: 'Apache Log4j', 'Microsoft Windows', 'OpenSSL'. Vendor is asserted here via stonework:hasVendor; product type via stonework:hasProductType. Specific versioned releases are modeled as stonework:VersionedProduct individuals linked back via stonework:versionOf."@en .
+                  skos:definition "An abstract software, hardware, or firmware product line identified by vendor and product name, independent of any specific version or release. Represents the collection of all versioned releases built under that product identity."@en ;
+                  rdfs:comment "Instances of stonework:Product represent product families or lines (e.g. 'Apache Log4j', 'Windows 10'). Specific releases are modeled as stonework:VersionedProduct individuals related via stonework:versionOf. CPE entries with wildcard version components map to stonework:Product; entries with concrete versions map to stonework:VersionedProduct."@en ;
+                  skos:scopeNote "stonework:Product does not carry version, update, edition, or other release-specific attributes. Those belong on stonework:VersionedProduct. The two classes are disjoint."@en .
 
 ###  https://cyberterrain.org/ns/stonework#VersionedProduct
 stonework:VersionedProduct rdf:type owl:Class ;
-                         rdfs:subClassOf stonework:Product ;
-                         rdfs:comment "Version is represented as a datatype property string. Vendor and family relationships are expressed via stonework:versionOf and stonework:hasVendor on the parent Product rather than on this VersionedProduct class directly."@en ;
-                         skos:prefLabel "Product Version" ;
-                         skos:definition "A specific versioned release of a software, hardware, or firmware artifact. The primary unit for vulnerability applicability and patch tracking."@en ;
-                         skos:scopeNote "May be identified by CPE, PURL, or any other product identification scheme — no single standard is assumed. When a CPE IRI is available, it is typically used as the individual's IRI for deterministic ingest. The abstract grouping concept is modeled as stonework:Product, linked via stonework:versionOf."@en .
+                           skos:prefLabel "VersionedProduct" ;
+                           skos:definition "A specific versioned release or build of a Product, identified by a CPE name or equivalent product identifier. Represents the unit of software actually deployed and potentially affected by vulnerabilities."@en ;
+                           rdfs:comment "Instances of stonework:VersionedProduct may include operating systems, applications, libraries, devices, or embedded components at a specific release. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
+                           skos:scopeNote "Each CPE 2.3 entry with a concrete version component maps to a stonework:VersionedProduct individual. Wildcard-version CPEs map to stonework:Product. Related to its abstract product line via stonework:versionOf."@en .
+
+###  https://cyberterrain.org/ns/stonework#ProductInstallation
+stonework:ProductInstallation rdf:type owl:Class ;
+                              skos:prefLabel "ProductInstallation" ;
+                              skos:definition "A specific installed instance of a VersionedProduct on a particular system or environment, as identified by a SWID tag or equivalent installation record."@en ;
+                              rdfs:comment "Represents the most granular product identity level: not what software exists, but where and how it is installed. Multiple ProductInstallation individuals may reference the same VersionedProduct."@en ;
+                              skos:scopeNote "stonework:ProductInstallation is the intended target for SWID tag data. The installing system, path, licensee, and configuration details belong here rather than on stonework:VersionedProduct."@en .
+
+###  https://cyberterrain.org/ns/stonework#SoftwareBillOfMaterials
+stonework:SoftwareBillOfMaterials rdf:type owl:Class ;
+                                  skos:prefLabel "SoftwareBillOfMaterials" ;
+                                  skos:definition "A formal, machine-readable inventory of VersionedProduct components that constitute a software artifact or system, expressed in a standard format such as CycloneDX or SPDX."@en ;
+                                  rdfs:comment "An SBOM asserts that specific VersionedProduct instances are components of a containing artifact. The containing artifact may itself be a VersionedProduct related to this SBOM via stonework:hasBomEntry."@en ;
+                                  skos:scopeNote "Instances of stonework:SoftwareBillOfMaterials correspond to SBOM documents. Component membership is expressed via stonework:hasBomEntry. Format metadata (CycloneDX, SPDX, etc.) SHOULD be carried as datatype properties."@en .
 
 ###  https://cyberterrain.org/ns/stonework#Provenance
 stonework:Provenance rdf:type owl:Class ;
