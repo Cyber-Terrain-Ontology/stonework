@@ -457,11 +457,12 @@ cve:timestamp
     a owl:FunctionalProperty ;
     rdfs:label "timestamp"@en ;
     rdfs:domain cve:TimelineEntry ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:dateTime .
 
 cve:cveId
     a owl:DatatypeProperty ;
     a owl:FunctionalProperty ;
+    rdfs:subPropertyOf stonework:vulnerabilityId ;
     rdfs:label "cve_id"@en ;
     rdfs:comment "CVE identifier, e.g. 'CVE-2021-44228'"@en ;
     rdfs:domain cve:CveRecord ;
@@ -490,18 +491,20 @@ cve:replacedBy
 cve:datePublic
     a owl:DatatypeProperty ;
     a owl:FunctionalProperty ;
+    owl:equivalentProperty stonework:datePublic ;
     rdfs:label "date_public"@en ;
     rdfs:comment "Date vulnerability was disclosed publicly"@en ;
     rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:dateTime .
 
 cve:dateAssigned
     a owl:DatatypeProperty ;
     a owl:FunctionalProperty ;
+    owl:equivalentProperty stonework:dateAssigned ;
     rdfs:label "date_assigned"@en ;
     rdfs:comment "Date CVE ID was assigned"@en ;
     rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:dateTime .
 
 cve:dateRequested
     a owl:DatatypeProperty ;
@@ -509,15 +512,16 @@ cve:dateRequested
     rdfs:label "date_requested"@en ;
     rdfs:comment "Date CVE was requested — v2 only"@en ;
     rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:dateTime .
 
 cve:dateUpdated
     a owl:DatatypeProperty ;
     a owl:FunctionalProperty ;
+    owl:equivalentProperty stonework:dateUpdated ;
     rdfs:label "date_updated"@en ;
     rdfs:comment "Date record was last updated"@en ;
     rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:dateTime .
 
 cve:assigner
     a owl:DatatypeProperty ;

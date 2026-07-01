@@ -10,8 +10,8 @@
 
 ###  https://cyberterrain.org/ns/stonework#
 <https://cyberterrain.org/ns/stonework#> rdf:type owl:Ontology ;
-                                         owl:versionIRI <https://cyberterrain.org/ns/stonework/0.3.1> ;
-                                         owl:versionInfo "0.3.1" ;
+                                         owl:versionIRI <https://cyberterrain.org/ns/stonework/0.4.0> ;
+                                         owl:versionInfo "0.4.0" ;
                                          rdfs:label "STONEWORK"@en ;
                                          dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
                                          dcterms:description "A semantic threat ontology and research framework that serves as the evolutionary successor to the STONES ontology. It provides a forward-looking, extensible foundation for modeling next-generation cyber threat intelligence concepts, objects, relationships, workflows, and knowledge beyond the scope of STIX 2.1." ;
@@ -163,6 +163,15 @@ stonework:exploits rdf:type owl:ObjectProperty ;
                    skos:prefLabel "exploits" ;
                    skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
 
+###  https://cyberterrain.org/ns/stonework#exploitsWeakness
+stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
+                           rdfs:subPropertyOf stonework:hasWeakness ;
+                           rdfs:domain stonework:Vulnerability ;
+                           rdfs:range stonework:Weakness ;
+                           skos:prefLabel "exploitsWeakness"@en ;
+                           skos:definition "Relates a vulnerability to the weakness class it instantiates or exploits. Subproperty of stonework:hasWeakness, using the directional 'exploits' semantics aligned with CVE and CWE mapping conventions."@en ;
+                           skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. Used by cve:exploitsWeakness (rdfs:subPropertyOf this property) when CVE data is loaded."@en .
+
 ###  https://cyberterrain.org/ns/stonework#fixedInProduct
 stonework:fixedInProduct rdf:type owl:ObjectProperty ;
                          rdfs:domain stonework:Vulnerability ;
@@ -176,6 +185,13 @@ stonework:hasAccount rdf:type owl:ObjectProperty ;
                      rdfs:domain stonework:Agent ;
                      rdfs:range stonework:UserAccount ;
                      skos:prefLabel "hasAccount"@en .
+
+###  https://cyberterrain.org/ns/stonework#hasCvssMetric
+stonework:hasCvssMetric rdf:type owl:ObjectProperty ;
+                        rdfs:domain stonework:Vulnerability ;
+                        skos:prefLabel "hasCvssMetric"@en ;
+                        skos:definition "Relates a vulnerability to a structured CVSS metric record carrying the version, vector string, and base/temporal/environmental scores."@en ;
+                        skos:scopeNote "A single vulnerability may carry metrics for multiple CVSS versions (2.0, 3.1, 4.0). For a single headline score and severity, use stonework:cvssBaseScore and stonework:cvssSeverity directly on the Vulnerability. This property links to the full per-version metric objects populated by CVE ingest."@en .
 
 ###  https://cyberterrain.org/ns/stonework#hasDependency
 stonework:hasDependency rdf:type owl:ObjectProperty ;
@@ -418,6 +434,14 @@ stonework:supersedes rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
                      rdfs:range stonework:VersionedProduct ;
                      skos:prefLabel "supersedes"@en ;
                      skos:definition "Relates a product version to an older version it replaces. Transitive to support full product lifecycle reasoning."@en .
+
+###  https://cyberterrain.org/ns/stonework#supersededBy
+stonework:supersededBy rdf:type owl:ObjectProperty ;
+                       rdfs:domain stonework:Vulnerability ;
+                       rdfs:range stonework:Vulnerability ;
+                       skos:prefLabel "supersededBy"@en ;
+                       skos:definition "Relates a vulnerability to the vulnerability record that supersedes it, e.g. when a CVE is split, merged, or formally replaced by another identifier."@en ;
+                       skos:scopeNote "Corresponds to cve:replacedBy in CVE JSON 5.x, but as an object property linking to a stonework:Vulnerability individual rather than a string. The source-specific string form is preserved on cve:replacedBy."@en .
 
 ###  https://cyberterrain.org/ns/stonework#targets
 stonework:targets rdf:type owl:ObjectProperty ;
@@ -1133,6 +1157,13 @@ stonework:Vulnerability rdf:type owl:Class ;
                         skos:definition "A flaw or weakness in software, hardware, firmware, or system architecture that can be exploited by a threat actor to compromise confidentiality, integrity, or availability."@en ;
                         skos:scopeNote "Represents specific exploitable instances (e.g., CVE-identified vulnerabilities) rather than weakness classes — those are modeled as stonework:Weakness. A Vulnerability is linked to its root Weakness via stonework:hasWeakness, to affected products via stonework:affected, to its fix via stonework:fixedInProduct, and to exploiting malware or actors via stonework:exploits. Aligns with D3FEND Vulnerability and NVD CVE."@en .
 
+###  https://cyberterrain.org/ns/stonework#VulnerabilityAssessment
+stonework:VulnerabilityAssessment rdf:type owl:Class ;
+                                  rdfs:subClassOf stonework:Assessment ;
+                                  skos:prefLabel "Vulnerability Assessment"@en ;
+                                  skos:definition "A structured evaluation of a specific vulnerability's applicability and risk in a particular product or deployment context."@en ;
+                                  skos:scopeNote "Captures VEX-style assessments: whether a product is affected, not affected, fixed, or under investigation, together with the justification and any remediation statement. Distinct from stonework:Vulnerability (which describes the flaw itself) — a VulnerabilityAssessment is an opinion about that flaw in a specific context."@en .
+
 ###  https://cyberterrain.org/ns/stonework#Weakness
 stonework:Weakness rdf:type owl:Class ;
                    rdfs:subClassOf stonework:SecurityCondition ;
@@ -1140,3 +1171,62 @@ stonework:Weakness rdf:type owl:Class ;
                    skos:prefLabel "Weakness" ;
                    skos:definition "A type of flaw, fault, or design condition in software, hardware, or system architecture that can enable vulnerabilities, reduce security assurance, or increase the likelihood of exploitable behavior." ;
                    skos:scopeNote "This class provides a semantic representation of weakness types defined in the Common Weakness Enumeration (CWE). It supports hierarchical relationships, abstraction levels, and mappings to related attack patterns, vulnerabilities, and security controls." .
+
+
+#################################################################
+#    Datatype Properties
+#################################################################
+
+###  https://cyberterrain.org/ns/stonework#vulnerabilityId
+stonework:vulnerabilityId rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+                          rdfs:domain stonework:Vulnerability ;
+                          rdfs:range xsd:string ;
+                          skos:prefLabel "vulnerabilityId"@en ;
+                          skos:definition "The canonical identifier assigned to this vulnerability by its originating numbering authority, e.g. 'CVE-2021-44228', 'GHSA-jfh8-c2jp-hdp9', or 'OSV-2021-1'."@en ;
+                          skos:scopeNote "Source-specific ID properties (e.g. cve:cveId) are declared rdfs:subPropertyOf this property, enabling cross-source queries on a single predicate. Each vulnerability record SHOULD carry exactly one identifier from its primary numbering authority."@en .
+
+###  https://cyberterrain.org/ns/stonework#datePublic
+stonework:datePublic rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+                     rdfs:domain stonework:Vulnerability ;
+                     rdfs:range xsd:dateTime ;
+                     skos:prefLabel "datePublic"@en ;
+                     skos:definition "The date and time at which this vulnerability was publicly disclosed."@en ;
+                     skos:scopeNote "Corresponds to cveMetadata.datePublished in CVE JSON 5.x. cve:datePublic is declared owl:equivalentProperty of this property."@en .
+
+###  https://cyberterrain.org/ns/stonework#dateAssigned
+stonework:dateAssigned rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+                       rdfs:domain stonework:Vulnerability ;
+                       rdfs:range xsd:dateTime ;
+                       skos:prefLabel "dateAssigned"@en ;
+                       skos:definition "The date and time at which a vulnerability identifier was assigned by the relevant numbering authority."@en ;
+                       skos:scopeNote "Corresponds to cveMetadata.dateReserved in CVE JSON 5.x. cve:dateAssigned is declared owl:equivalentProperty of this property."@en .
+
+###  https://cyberterrain.org/ns/stonework#dateUpdated
+stonework:dateUpdated rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+                      rdfs:domain stonework:Vulnerability ;
+                      rdfs:range xsd:dateTime ;
+                      skos:prefLabel "dateUpdated"@en ;
+                      skos:definition "The date and time at which the vulnerability record was last modified in its source database."@en ;
+                      skos:scopeNote "Corresponds to cveMetadata.dateUpdated in CVE JSON 5.x. cve:dateUpdated is declared owl:equivalentProperty of this property."@en .
+
+###  https://cyberterrain.org/ns/stonework#cvssBaseScore
+stonework:cvssBaseScore rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+                        rdfs:domain stonework:Vulnerability ;
+                        rdfs:range xsd:decimal ;
+                        skos:prefLabel "cvssBaseScore"@en ;
+                        skos:definition "The headline CVSS base score for this vulnerability, on a 0.0–10.0 scale."@en ;
+                        skos:scopeNote "When multiple CVSS versions are present, this SHOULD reflect the highest available version (CVSS 4.0 preferred over 3.1, 3.1 over 2.0). For full structured metric data across all CVSS versions use stonework:hasCvssMetric."@en .
+
+###  https://cyberterrain.org/ns/stonework#cvssSeverity
+stonework:cvssSeverity rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+                       rdfs:domain stonework:Vulnerability ;
+                       rdfs:range xsd:string ;
+                       skos:prefLabel "cvssSeverity"@en ;
+                       skos:definition "The qualitative CVSS severity rating corresponding to the headline base score: NONE, LOW, MEDIUM, HIGH, or CRITICAL."@en .
+
+###  https://cyberterrain.org/ns/stonework#cvssVector
+stonework:cvssVector rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+                     rdfs:domain stonework:Vulnerability ;
+                     rdfs:range xsd:string ;
+                     skos:prefLabel "cvssVector"@en ;
+                     skos:definition "The CVSS vector string encoding the metric values used to compute the headline base score, e.g. 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H'."@en .
