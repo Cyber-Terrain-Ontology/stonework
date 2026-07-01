@@ -183,9 +183,9 @@ cve:TimelineEntry
 # CveRecord
 cve:CveRecord
     a owl:Class ;
+    rdfs:subClassOf stonework:Vulnerability ;
     rdfs:label "CVE Record"@en ;
-    rdfs:comment "Unified, source-agnostic CVE record.\n\nAfter ingestion from either v2.x or v5.x JSON, all consumers work\nagainst this single model regardless of origin schema."@en ;
-    rdfs:subClassOf stonework:Vulnerability .
+    rdfs:comment "Unified, source-agnostic CVE record.\n\nAfter ingestion from either v2.x or v5.x JSON, all consumers work\nagainst this single model regardless of origin schema."@en .
 
 # --- Properties ---------------------------------------------------
 
@@ -623,9 +623,7 @@ cve:sourceSchema
     rdfs:domain cve:CveRecord ;
     rdfs:range xsd:string .
 
-# Cross-reference properties (link to stonework: individuals created by CPE/CWE ingest)
-# These are declared here (not in the generator) because they represent ontology
-# alignment mappings — cve.ttl in skotarch is the authoritative source for these.
+# --- Cross-reference properties (serializer → stonework: individuals) ---
 
 cve:affectsProduct
     a owl:ObjectProperty ;
