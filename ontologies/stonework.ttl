@@ -849,12 +849,22 @@ stonework:SecurityCondition
 	skos:scopeNote "Includes Threats, Vulnerabilities, and Weaknesses. Risk, Impact, and Likelihood are assessed/calculated concepts and are modeled under stonework:RiskFactor."@en ;
 	.
 
+stonework:SecurityObservation
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAObservation> ;
+	skos:definition "A time-bounded record produced by a security sensor or automated tool capturing one or more cyber observables witnessed in a monitored environment, together with frequency metadata."@en ;
+	skos:prefLabel "Security Observation"@en ;
+	skos:scopeNote "Machine-produced intelligence: a sensor is not an analyst, but its output feeds the intelligence pipeline in the same way that SIGINT feeds human analysis. Key metadata: the time window the phenomenon was witnessed (first/last observed), how many times it was observed (number_observed), and which cyber observables were captured (hasObservable). Use stonework:madeBySensor to link to the producing stonework:Sensor. Distinct from stonework:Sighting, which records that a known CTI object (indicator, malware, threat actor) was seen; SecurityObservation is the raw sensor-layer record prior to attribution or indicator matching. Corresponds to STIX 2.1 observed-data SDO. Inspired by SOSA sosa:Observation — compatible in concept but does not formally import the SOSA ontology."@en ;
+	.
+
 stonework:Sensor
 	a owl:Class ;
 	rdfs:subClassOf stonework:Infrastructure ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSASensor> ;
 	skos:definition "A deployed system, appliance, agent, or network tap that collects data about digital artifacts, network activity, or adversary behavior for detection and investigation purposes."@en ;
 	skos:prefLabel "Sensor" ;
-	skos:scopeNote "Applies DetectionRules via stonework:usesRule. May be a software agent, physical appliance, virtual instance, or network sensor. Aligns with D3FEND Sensor."@en ;
+	skos:scopeNote "Applies DetectionRules via stonework:usesRule. May be a software agent, physical appliance, virtual instance, or network sensor. Examples: IDS/IPS, SIEM collector, endpoint agent, network tap, honeypot, vulnerability scanner. An AI-driven sensor that crosses into autonomous decision-making may be additionally typed as stonework:AIAgent. Aligns with D3FEND Sensor. Inspired by SOSA sosa:Sensor — compatible in concept but does not formally import the SOSA ontology. Produces stonework:SecurityObservation instances via stonework:madeBySensor."@en ;
 	.
 
 stonework:Sighting
@@ -1472,6 +1482,16 @@ stonework:hasMember
 	skos:prefLabel "hasMember"@en ;
 	.
 
+stonework:hasObservable
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:SecurityObservation ;
+	rdfs:range stonework:CyberEntity ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAhasResult> ;
+	skos:definition "Links a SecurityObservation to the cyber observable objects (SCOs) captured during the observation window."@en ;
+	skos:prefLabel "hasObservable"@en ;
+	skos:scopeNote "The range covers any SCO type: stonework:IPAddress, stonework:Domain, stonework:File, stonework:NetworkTraffic, stonework:RuntimeProcess, stonework:UserAccount, etc. Corresponds to STIX observed-data object_refs. Inspired by SOSA sosa:hasResult."@en ;
+	.
+
 stonework:hasPhoneNumber
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Agent ;
@@ -1573,6 +1593,16 @@ stonework:installationOf
 stonework:linkedTo
 	a owl:ObjectProperty ;
 	skos:prefLabel "linkedTo" ;
+	.
+
+stonework:madeBySensor
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:SecurityObservation ;
+	rdfs:range stonework:Sensor ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAmadeBySensor> ;
+	skos:definition "Links a SecurityObservation to the Sensor that produced it."@en ;
+	skos:prefLabel "madeBySensor"@en ;
+	skos:scopeNote "Inspired by SOSA sosa:madeBySensor. Enables queries such as 'which sensor produced this observation?' and 'what has this IDS sensor observed in the last 24 hours?' The producing sensor may also be the created_by_ref identity in the STIX wire format."@en ;
 	.
 
 stonework:markingRef
