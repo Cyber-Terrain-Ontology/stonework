@@ -451,6 +451,14 @@ stonework:Incident
 	skos:scopeNote "Distinguished from stonework:Event (a raw, unassessed occurrence) by the presence of human or automated triage declaring significance and adversity. An Incident may aggregate multiple Events, involve one or more Campaigns, and trigger Investigation and Playbook execution."@en ;
 	.
 
+stonework:Indicator
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "An intelligence assertion that a pattern — atomic, expression-based, or behavioral — when matched in an observed environment, indicates the presence of threat activity attributable to a specific adversary behavior, malware, or campaign."@en ;
+	skos:prefLabel "Indicator"@en ;
+	skos:scopeNote "The central concept in operational CTI. The term is used by the community in three overlapping senses, all of which stonework:Indicator covers: (1) IOC sense — an atomic observable (IP address, domain, file hash, URL) that has been assessed as malicious or suspicious and tagged for detection; in STONEWORK the underlying observable is the SCO (stonework:IPAddress, stonework:Domain, stonework:Hash), and the Indicator wraps it with the assertion, confidence, and validity window. (2) Pattern sense — a STIX patterning expression over one or more SCOs (e.g., [ipv4-addr:value = ‘198.51.100.0/24’]). (3) Behavioral sense — a multi-step or TTPs-based pattern asserting that an observed sequence of behaviors indicates a technique or campaign. Distinct from stonework:DetectionRule: an Indicator is the intelligence claim (‘look for this’); a DetectionRule is the operational artifact that implements the check (‘here is the Sigma/Snort/YARA rule that looks for it’). Indicators are produced by threat intelligence analysts and consumed by detection pipelines; DetectionRules are deployed in SIEMs, EDRs, and network sensors. Corresponds to STIX 2.1 Indicator SDO. Use stonework:indicates to link an Indicator to the AttackPattern, Malware, Campaign, or ThreatActor it asserts."@en ;
+	.
+
 stonework:Infrastructure
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
@@ -1535,8 +1543,23 @@ stonework:hostedBy
 
 stonework:indicates
 	a owl:ObjectProperty ;
-	skos:definition "Shortcut triple: source Indicator indicates presence of target. Corresponds to STIX relationship_type 'indicates'." ;
-	skos:prefLabel "indicates" ;
+	rdfs:domain stonework:Indicator ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:AttackPattern
+			stonework:AttackTechnique
+			stonework:Campaign
+			stonework:CyberActivityCluster
+			stonework:Infrastructure
+			stonework:Malware
+			stonework:ThreatActor
+			stonework:Tool
+		) ;
+	] ;
+	skos:definition "Asserts that when the source Indicator's pattern is matched, it signals the presence of the target adversary behavior, malware, campaign, or threat actor." ;
+	skos:prefLabel "indicates"@en ;
+	skos:scopeNote "Corresponds to STIX relationship_type 'indicates'. The domain is always stonework:Indicator. The range covers the principal threat intelligence objects an indicator can point to: AttackPattern/AttackTechnique (technique-level indicators), Malware (malware family or sample indicators), Campaign and CyberActivityCluster (campaign-attribution indicators), ThreatActor and its subclasses (actor-attribution indicators), Infrastructure (C2/hosting indicators), and Tool (tool-use indicators). A single Indicator may indicate multiple targets."@en ;
 	.
 
 stonework:installationOf
