@@ -138,7 +138,7 @@ stonework:Bot
 stonework:Campaign
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberActivity ;
-	skos:definition "A grouping of adversary behaviours and resources with a common objective pursued over a period of time. Campaigns may be attributed to intrusion sets or threat actors." ;
+	skos:definition "A grouping of adversary behaviours and resources with a common objective pursued over a period of time. Campaigns may be attributed to ThreatActors and may evolve from a CyberActivityCluster as attribution and objectives become established." ;
 	skos:prefLabel "Campaign"@en ;
 	.
 
@@ -209,6 +209,14 @@ stonework:CyberActivity
 	skos:definition "A specific occurrence or performance of actions by one or more agents over time within a cyber or sociotechnical context."@en ;
 	skos:prefLabel "Cyber Activity" ;
 	skos:scopeNote "One of two root classes in STONEWORK alongside CyberEntity. Superclass for Campaigns, Incidents, Operations, Events, and Processes. Aligns with BFO Occurrent and BFO Process."@en ;
+	.
+
+stonework:CyberActivityCluster
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberActivity ;
+	skos:definition "An analytically-defined grouping of correlated adversarial behaviors, tools, malware, infrastructure, and participants believed to share a common source or campaign thread."@en ;
+	skos:prefLabel "Cyber Activity Cluster"@en ;
+	skos:scopeNote "Represents the intelligence analyst's working construct before enough is known to declare a Campaign: a cluster of correlated observations attributed (loosely or firmly) to a common adversary source. May evolve into a stonework:Campaign when an objective, timeline, and attribution are sufficiently established. Corresponds to the intended meaning of STIX intrusion-set — the correlated set of activity, not the actor responsible for it. Distinct from stonework:ThreatActorGroup, which is the adversary entity; a CyberActivityCluster is the attributed set of activity linked to that entity."@en ;
 	.
 
 stonework:CyberEntity
@@ -872,11 +880,26 @@ stonework:Threat
 stonework:ThreatActor
 	a owl:Class ;
 	rdfs:subClassOf stonework:Agent ;
-	rdfs:comment "Instances of stonework:ThreatActor may represent specific threat actor groups, campaigns, or personas. They may be linked to observed behaviors, techniques, targeting patterns, or strategic objectives. Threat actors are distinct from the threats they pose; they are the entities that carry out actions that realize threats." ;
 	rdfs:seeAlso prov:Agent ;
-	skos:definition "An individual, group, organization, or collective that has the capability and intent to conduct harmful activities within a cyber or sociotechnical context." ;
+	skos:definition "An entity that has the capability and intent to conduct harmful activities within a cyber or sociotechnical context." ;
 	skos:prefLabel "Threat Actor"@en ;
-	skos:scopeNote "This class represents the actors behind cyber threats. It includes both human and non-human entities that can perform actions, have intent, and be attributed responsibility for cyber operations."@en ;
+	skos:scopeNote "Parent class for stonework:ThreatActorIndividual (a single human) and stonework:ThreatActorGroup (a collective or organization). Threat actors are distinct from the threats they pose; they are the entities that carry out actions that realize threats. They may be linked to observed behaviors, techniques, targeting patterns, and strategic objectives."@en ;
+	.
+
+stonework:ThreatActorGroup
+	a owl:Class ;
+	rdfs:subClassOf stonework:ThreatActor ;
+	skos:definition "A collective, organization, or coordinated set of individuals operating with common intent to conduct adversarial cyber activities."@en ;
+	skos:prefLabel "Threat Actor Group"@en ;
+	skos:scopeNote "Covers nation-state units, cybercriminal organizations, hacktivist collectives, and other named adversary groups (e.g., APT29, Lazarus Group). MITRE ATT&CK serializes these as STIX intrusion-set objects; in STONEWORK they are correctly typed as ThreatActorGroup — an adversary entity rather than an activity cluster. Distinguished from stonework:ThreatActorIndividual, which represents a single human actor, and from stonework:CyberActivityCluster, which is the attributed set of activity linked to the group."@en ;
+	.
+
+stonework:ThreatActorIndividual
+	a owl:Class ;
+	rdfs:subClassOf stonework:ThreatActor ;
+	skos:definition "A single, identifiable human actor with the capability and intent to conduct adversarial cyber activities."@en ;
+	skos:prefLabel "Threat Actor Individual"@en ;
+	skos:scopeNote "Covers individual hackers, insiders, contractors, and other identified persons. Relevant for law enforcement and prosecution contexts where attribution to a specific individual — rather than a group — is required. Distinguished from stonework:ThreatActorGroup, which represents a collective or organization."@en ;
 	.
 
 stonework:ThreatScenario
@@ -1061,9 +1084,9 @@ stonework:associatedWith
 
 stonework:attributedTo
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:Campaign ;
+	rdfs:domain stonework:CyberActivity ;
 	rdfs:range stonework:ThreatActor ;
-	skos:definition "Shortcut triple: source Campaign or IntrusionSet is attributed to target ThreatActor or IntrusionSet. Corresponds to STIX relationship_type 'attributed-to'." ;
+	skos:definition "Links a CyberActivity (Campaign, CyberActivityCluster, Incident, etc.) to the ThreatActor (Individual or Group) responsible for it. Corresponds to STIX relationship_type 'attributed-to'." ;
 	skos:prefLabel "attributedTo" ;
 	.
 
