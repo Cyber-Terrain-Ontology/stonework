@@ -59,6 +59,14 @@ stonework:Agent
 	skos:scopeNote "Covers AI, human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
 	.
 
+stonework:Analysis
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "A systematic examination of a cyber entity, artifact, or event that produces structured findings about its nature, behavior, or properties."@en ;
+	skos:prefLabel "Analysis"@en ;
+	skos:scopeNote "Sibling to stonework:Assessment under IntelligenceProduct. Where Assessment answers 'how bad/likely/risky?', Analysis answers 'what is it and what does it do?' Superclass for domain-specific analyses such as MalwareAnalysis. Aligns with STIX MalwareAnalysis SDO at the subclass level."@en ;
+	.
+
 stonework:AnalyticTechnique
 	a owl:Class ;
 	rdfs:subClassOf stonework:Technique ;
@@ -332,6 +340,14 @@ stonework:EmailAddress
 	skos:prefLabel "Email Address"@en ;
 	.
 
+stonework:EmailMessage
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A discrete email communication, including headers, body content, and optional attachments, transmitted over an email protocol."@en ;
+	skos:prefLabel "Email Message"@en ;
+	skos:scopeNote "Distinct from stonework:EmailAddress, which represents the sender/recipient identifier. An EmailMessage is the content artifact itself. Used to represent phishing lures, spear-phishing emails, or other email-borne threat delivery mechanisms. Corresponds to STIX EmailMessage SCO."@en ;
+	.
+
 stonework:Event
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberActivity ;
@@ -500,6 +516,14 @@ stonework:Malware
 	skos:scopeNote "Parent class for stonework:MalwareFamily (STIX is_family=true) and stonework:MalwareSample (STIX is_family=false). Corresponds to the STIX 2.1 malware SDO. Use stonework:categorizedBy to assert behavioral type (e.g., stonework:Ransomware). Use stonework:hasArtifact to link a sample to its captured binary."@en ;
 	.
 
+stonework:MalwareAnalysis
+	a owl:Class ;
+	rdfs:subClassOf stonework:Analysis ;
+	skos:definition "A structured record of findings from static or dynamic analysis performed on a malware specimen or family, including the tool used, analysis configuration, and verdict."@en ;
+	skos:prefLabel "Malware Analysis"@en ;
+	skos:scopeNote "Captures the output of a single analysis run: antivirus scan, sandbox execution, reverse-engineering session, etc. Key properties include the analysis product and version, the result verdict (malicious/suspicious/benign/unknown), and references to SCOs observed during analysis. Corresponds to STIX 2.1 MalwareAnalysis SDO."@en ;
+	.
+
 stonework:MalwareFamily
 	a owl:Class ;
 	rdfs:subClassOf stonework:Malware ;
@@ -596,6 +620,14 @@ stonework:Operation
 	skos:definition "A coordinated set of activities conducted by one or more agents toward a defined objective, typically spanning multiple campaigns, incidents, or phases and characterized by unified command, intent, or resourcing."@en ;
 	skos:prefLabel "Operation" ;
 	skos:scopeNote "Operations are broader in scope than Campaigns — a single Operation may encompass multiple Campaigns executed over an extended period. Applies to both offensive operations (e.g. state-sponsored cyber operations) and defensive operations (e.g. incident response operations, threat hunting operations)."@en ;
+	.
+
+stonework:Opinion
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "An analyst's epistemological stance on the correctness or credibility of information asserted in another intelligence object."@en ;
+	skos:prefLabel "Opinion"@en ;
+	skos:scopeNote "Sibling to stonework:Assessment under IntelligenceProduct. Where Assessment evaluates risk or impact, Opinion evaluates the reliability or accuracy of existing intelligence — e.g., 'I disagree with this threat score' or 'I believe this indicator attribution is incorrect'. Corresponds to STIX 2.1 Opinion SDO. The opinion value (strongly-agree to strongly-disagree) and explanation are captured via stones: properties."@en ;
 	.
 
 stonework:Organization
