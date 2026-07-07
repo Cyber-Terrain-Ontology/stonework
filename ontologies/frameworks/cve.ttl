@@ -1,708 +1,1211 @@
-# ============================================================
-# CVE Unified Ontology
-# Auto-generated from framework_cve.models (Pydantic → OWL)
-# ============================================================
-
-@prefix owl:       <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
-@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix cve: <https://cyberterrain.org/ns/frameworks/cve#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
-@prefix cve:       <https://cyberterrain.org/ns/frameworks/cve#> .
-
-# --- Ontology declaration -------------------------------------------
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://cyberterrain.org/ns/frameworks/cve>
-    a owl:Ontology ;
-    rdfs:label "CVE Unified Ontology"@en ;
-    rdfs:comment "Unified OWL ontology for CVE records. Derived from the framework_cve Pydantic model, supporting both CVE JSON 2.x and CVE JSON 5.x source schemas."@en .
-
-# --- Enumeration classes -------------------------------------------
-
-# CveState
-cve:CveState
-    a owl:Class ;
-    rdfs:label "CVE State"@en ;
-    rdfs:comment "Lifecycle state of a CVE record."@en ;
-    owl:equivalentClass [ a owl:Class ; owl:oneOf ( cve:PUBLISHED cve:REJECTED cve:RESERVED cve:UNKNOWN ) ] .
-
-cve:PUBLISHED
-    a owl:NamedIndividual, cve:CveState ;
-    rdfs:label "PUBLISHED"@en .
-
-cve:REJECTED
-    a owl:NamedIndividual, cve:CveState ;
-    rdfs:label "REJECTED"@en .
-
-cve:RESERVED
-    a owl:NamedIndividual, cve:CveState ;
-    rdfs:label "RESERVED"@en .
-
-cve:UNKNOWN
-    a owl:NamedIndividual, cve:CveState ;
-    rdfs:label "UNKNOWN"@en .
-
-# CvssVersion
-cve:CvssVersion
-    a owl:Class ;
-    rdfs:label "CVSS Version"@en ;
-    rdfs:comment "Supported CVSS scoring version identifiers."@en ;
-    owl:equivalentClass [ a owl:Class ; owl:oneOf ( cve:2_0 cve:3_0 cve:3_1 cve:4_0 ) ] .
+	a owl:Ontology ;
+	rdfs:label "CVE Unified Ontology"@en ;
+	rdfs:comment "Unified OWL ontology for CVE records. Derived from the framework_cve Pydantic model, supporting both CVE JSON 2.x and CVE JSON 5.x source schemas."@en ;
+	.
 
 cve:2_0
-    a owl:NamedIndividual, cve:CvssVersion ;
-    rdfs:label "2.0"@en .
+	a
+		owl:NamedIndividual ,
+		cve:CvssVersion
+		;
+	rdfs:label "2.0"@en ;
+	.
 
 cve:3_0
-    a owl:NamedIndividual, cve:CvssVersion ;
-    rdfs:label "3.0"@en .
+	a
+		owl:NamedIndividual ,
+		cve:CvssVersion
+		;
+	rdfs:label "3.0"@en ;
+	.
 
 cve:3_1
-    a owl:NamedIndividual, cve:CvssVersion ;
-    rdfs:label "3.1"@en .
+	a
+		owl:NamedIndividual ,
+		cve:CvssVersion
+		;
+	rdfs:label "3.1"@en ;
+	.
 
 cve:4_0
-    a owl:NamedIndividual, cve:CvssVersion ;
-    rdfs:label "4.0"@en .
+	a
+		owl:NamedIndividual ,
+		cve:CvssVersion
+		;
+	rdfs:label "4.0"@en ;
+	.
 
-# CreditRole
-cve:CreditRole
-    a owl:Class ;
-    rdfs:label "Credit Role"@en ;
-    rdfs:comment "Role played by a credited party in relation to a CVE."@en ;
-    owl:equivalentClass [ a owl:Class ; owl:oneOf ( cve:finder cve:reporter cve:coordinator cve:remediation cve:tool cve:sponsor cve:other cve:discoverer cve:researcher cve:patcher cve:tester cve:reproducer cve:releaser cve:documentation ) ] .
-
-cve:finder
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "finder"@en .
-
-cve:reporter
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "reporter"@en .
-
-cve:coordinator
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "coordinator"@en .
-
-cve:remediation
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "remediation"@en .
-
-cve:tool
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "tool"@en .
-
-cve:sponsor
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "sponsor"@en .
-
-cve:other
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "other"@en .
-
-cve:discoverer
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "discoverer"@en .
-
-cve:researcher
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "researcher"@en .
-
-cve:patcher
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "patcher"@en .
-
-cve:tester
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "tester"@en .
-
-cve:reproducer
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "reproducer"@en .
-
-cve:releaser
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "releaser"@en .
-
-cve:documentation
-    a owl:NamedIndividual, cve:CreditRole ;
-    rdfs:label "documentation"@en .
-
-# --- Domain classes -----------------------------------------------
-
-# LocalizedText
-cve:LocalizedText
-    a owl:Class ;
-    rdfs:label "Localized Text"@en ;
-    rdfs:comment "A text value paired with a BCP-47 / ISO-639-2 language tag."@en .
-
-# VersionRange
-cve:VersionRange
-    a owl:Class ;
-    rdfs:label "Version Range"@en ;
-    rdfs:comment "A version or version range specifying affected/fixed software.\n\nv2  → DWF.AFFECTS[].AFFECTED / FIXEDIN  (plain version strings with optional\n      leading >, <, >=, <= operators)\nv5  → affected[].versions[]  (structured {version, status, lessThan, …})"@en .
-
-# ProblemType
-cve:ProblemType
-    a owl:Class ;
-    rdfs:label "Problem Type"@en ;
-    rdfs:comment "Weakness classification for the vulnerability.\n\nv2  → DWF.PROBLEM_TYPE  (CWE string, OWASP string, free-text DESCRIPTION)\nv5  → cnaContainer.problemTypes[].descriptions[]"@en .
-
-# AffectedProduct
 cve:AffectedProduct
-    a owl:Class ;
-    rdfs:subClassOf stonework:VersionedProduct ;
-    rdfs:label "Affected Product"@en ;
-    rdfs:comment "A product/component affected by (or fixed for) the vulnerability.\n\nv2  → DWF.AFFECTS[]\nv5  → cnaContainer.affected[]"@en .
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:VersionedProduct ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:collectionUrl ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:cpe ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:defaultStatus ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:packageName ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:product ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:productUrl ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:purl ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:swid ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:vendor ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		]
+		;
+	rdfs:label "Affected Product"@en ;
+	rdfs:comment """A product/component affected by (or fixed for) the vulnerability.
 
-# Reference
-cve:Reference
-    a owl:Class ;
-    rdfs:label "Reference"@en ;
-    rdfs:comment "An external reference for the CVE.\n\nv2  → DWF.REFERENCES[].FILES[].URL  (plus optional NAME, TYPE, DESCRIPTION)\nv5  → cnaContainer.references[]     (url, name, tags)"@en .
+v2  → DWF.AFFECTS[]
+v5  → cnaContainer.affected[]"""@en ;
+	.
 
-# CvssMetric
-cve:CvssMetric
-    a owl:Class ;
-    rdfs:label "CVSS Metric"@en ;
-    rdfs:comment "A CVSS score in any supported version.\n\nv2  → DWF.CVSSv2 / DWF.CVSSv3  (split into BM/TM/EM sub-objects)\nv5  → cnaContainer.metrics[].cvssV2_0 / cvssV3_0 / cvssV3_1 / cvssV4_0"@en .
-
-# Credit
 cve:Credit
-    a owl:Class ;
-    rdfs:label "Credit"@en ;
-    rdfs:comment "A party credited in relation to this CVE.\n\nv2  → DWF.CREDITS[].ID / ROLE\nv5  → cnaContainer.credits[]  (lang, value, type)"@en .
+	a owl:Class ;
+	rdfs:subClassOf
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:identifiers ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:lang ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:name ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		]
+		;
+	rdfs:label "Credit"@en ;
+	rdfs:comment """A party credited in relation to this CVE.
 
-# TimelineEntry
-cve:TimelineEntry
-    a owl:Class ;
-    rdfs:label "Timeline Entry"@en ;
-    rdfs:comment "A single event on the CVE disclosure timeline.\n\nv2  → DWF.TIMELINE[]\nv5  → cnaContainer.timeline[]"@en .
+v2  → DWF.CREDITS[].ID / ROLE
+v5  → cnaContainer.credits[]  (lang, value, type)"""@en ;
+	.
 
-# CveRecord
+cve:CreditRole
+	a owl:Class ;
+	rdfs:label "Credit Role"@en ;
+	rdfs:comment "Role played by a credited party in relation to a CVE."@en ;
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:oneOf (
+			cve:finder
+			cve:reporter
+			cve:coordinator
+			cve:remediation
+			cve:tool
+			cve:sponsor
+			cve:other
+			cve:discoverer
+			cve:researcher
+			cve:patcher
+			cve:tester
+			cve:reproducer
+			cve:releaser
+			cve:documentation
+		) ;
+	] ;
+	.
+
 cve:CveRecord
-    a owl:Class ;
-    rdfs:label "CVE Record"@en ;
-    rdfs:comment "Unified, source-agnostic CVE record.\n\nAfter ingestion from either v2.x or v5.x JSON, all consumers work\nagainst this single model regardless of origin schema."@en ;
-    rdfs:subClassOf stonework:Vulnerability .
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Vulnerability ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:assigner ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:cveId ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:dateAssigned ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:datePublic ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:dateRequested ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:dateUpdated ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:raw ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:requester ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:sourceSchema ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:state ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:title ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		]
+		;
+	rdfs:label "CVE Record"@en ;
+	rdfs:comment """Unified, source-agnostic CVE record.
 
-# --- Properties ---------------------------------------------------
+After ingestion from either v2.x or v5.x JSON, all consumers work
+against this single model regardless of origin schema."""@en ;
+	.
 
-cve:lang
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "lang"@en ;
-    rdfs:comment "ISO-639-2 or BCP-47 language code, e.g. 'en', 'eng'"@en ;
-    rdfs:domain [ owl:unionOf ( cve:LocalizedText cve:Credit cve:TimelineEntry ) ] ;
-    rdfs:range xsd:string .
+cve:CveState
+	a owl:Class ;
+	rdfs:label "CVE State"@en ;
+	rdfs:comment "Lifecycle state of a CVE record."@en ;
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:oneOf (
+			cve:PUBLISHED
+			cve:REJECTED
+			cve:RESERVED
+			cve:UNKNOWN
+		) ;
+	] ;
+	.
 
-cve:value
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "value"@en ;
-    rdfs:comment "The text content in that language"@en ;
-    rdfs:domain [ owl:unionOf ( cve:LocalizedText cve:TimelineEntry ) ] ;
-    rdfs:range xsd:string .
+cve:CvssMetric
+	a owl:Class ;
+	rdfs:subClassOf
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:baseScore ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:baseSeverity ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:environmentalScore ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:raw ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:temporalScore ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:vectorString ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:version ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		]
+		;
+	rdfs:label "CVSS Metric"@en ;
+	rdfs:comment """A CVSS score in any supported version.
 
-cve:version
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "version"@en ;
-    rdfs:comment "Exact version string"@en ;
-    rdfs:domain [ owl:unionOf ( cve:VersionRange cve:CvssMetric ) ] ;
-    rdfs:range xsd:string .
+v2  → DWF.CVSSv2 / DWF.CVSSv3  (split into BM/TM/EM sub-objects)
+v5  → cnaContainer.metrics[].cvssV2_0 / cvssV3_0 / cvssV3_1 / cvssV4_0"""@en ;
+	.
 
-cve:versionType
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "version_type"@en ;
-    rdfs:comment "Versioning scheme, e.g. 'semver', 'git'"@en ;
-    rdfs:domain cve:VersionRange ;
-    rdfs:range xsd:string .
+cve:CvssVersion
+	a owl:Class ;
+	rdfs:label "CVSS Version"@en ;
+	rdfs:comment "Supported CVSS scoring version identifiers."@en ;
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:oneOf (
+			cve:2_0
+			cve:3_0
+			cve:3_1
+			cve:4_0
+		) ;
+	] ;
+	.
 
-cve:lessThan
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "less_than"@en ;
-    rdfs:comment "Exclusive upper bound"@en ;
-    rdfs:domain cve:VersionRange ;
-    rdfs:range xsd:string .
+cve:LocalizedText
+	a owl:Class ;
+	rdfs:subClassOf
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:lang ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:value ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		]
+		;
+	rdfs:label "Localized Text"@en ;
+	rdfs:comment "A text value paired with a BCP-47 / ISO-639-2 language tag."@en ;
+	.
 
-cve:lessEqual
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "less_equal"@en ;
-    rdfs:comment "Inclusive upper bound"@en ;
-    rdfs:domain cve:VersionRange ;
-    rdfs:range xsd:string .
+cve:PUBLISHED
+	a
+		owl:NamedIndividual ,
+		cve:CveState
+		;
+	rdfs:label "PUBLISHED"@en ;
+	.
 
-cve:greaterEqual
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "greater_equal"@en ;
-    rdfs:comment "Inclusive lower bound"@en ;
-    rdfs:domain cve:VersionRange ;
-    rdfs:range xsd:string .
+cve:ProblemType
+	a owl:Class ;
+	rdfs:subClassOf
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:cweId ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:owaspId ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:type ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		]
+		;
+	rdfs:label "Problem Type"@en ;
+	rdfs:comment """Weakness classification for the vulnerability.
 
-cve:greaterThan
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "greater_than"@en ;
-    rdfs:comment "Exclusive lower bound"@en ;
-    rdfs:domain cve:VersionRange ;
-    rdfs:range xsd:string .
+v2  → DWF.PROBLEM_TYPE  (CWE string, OWASP string, free-text DESCRIPTION)
+v5  → cnaContainer.problemTypes[].descriptions[]"""@en ;
+	.
 
-cve:status
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "status"@en ;
-    rdfs:domain cve:VersionRange ;
-    rdfs:range xsd:string .
+cve:REJECTED
+	a
+		owl:NamedIndividual ,
+		cve:CveState
+		;
+	rdfs:label "REJECTED"@en ;
+	.
 
-cve:cweId
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "cwe_id"@en ;
-    rdfs:comment "CWE identifier, e.g. 'CWE-79'"@en ;
-    rdfs:domain cve:ProblemType ;
-    rdfs:range xsd:string .
+cve:RESERVED
+	a
+		owl:NamedIndividual ,
+		cve:CveState
+		;
+	rdfs:label "RESERVED"@en ;
+	.
 
-cve:owaspId
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "owasp_id"@en ;
-    rdfs:comment "OWASP identifier, e.g. 'A3'"@en ;
-    rdfs:domain cve:ProblemType ;
-    rdfs:range xsd:string .
+cve:Reference
+	a owl:Class ;
+	rdfs:subClassOf
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:name ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:refType ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:url ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		]
+		;
+	rdfs:label "Reference"@en ;
+	rdfs:comment """An external reference for the CVE.
 
-cve:description
-    a owl:ObjectProperty ;
-    rdfs:label "description"@en ;
-    rdfs:comment "Free-text description when CWE/OWASP is absent or supplementary"@en ;
-    rdfs:domain [ owl:unionOf ( cve:ProblemType cve:Reference ) ] ;
-    rdfs:range cve:LocalizedText .
+v2  → DWF.REFERENCES[].FILES[].URL  (plus optional NAME, TYPE, DESCRIPTION)
+v5  → cnaContainer.references[]     (url, name, tags)"""@en ;
+	.
 
-cve:type
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "type"@en ;
-    rdfs:comment "v5 'type' field (e.g. 'CWE')"@en ;
-    rdfs:domain cve:ProblemType ;
-    rdfs:range xsd:string .
+cve:TimelineEntry
+	a owl:Class ;
+	rdfs:subClassOf
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:lang ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:timestamp ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:value ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		]
+		;
+	rdfs:label "Timeline Entry"@en ;
+	rdfs:comment """A single event on the CVE disclosure timeline.
 
-cve:vendor
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "vendor"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range xsd:string .
+v2  → DWF.TIMELINE[]
+v5  → cnaContainer.timeline[]"""@en ;
+	.
 
-cve:product
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "product"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range xsd:string .
+cve:UNKNOWN
+	a
+		owl:NamedIndividual ,
+		cve:CveState
+		;
+	rdfs:label "UNKNOWN"@en ;
+	.
 
-cve:collectionUrl
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "collection_url"@en ;
-    rdfs:comment "v5 collectionURL (package repo)"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range xsd:string .
+cve:VersionRange
+	a owl:Class ;
+	rdfs:subClassOf
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:greaterEqual ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:greaterThan ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:lessEqual ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:lessThan ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:status ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:version ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty cve:versionType ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		]
+		;
+	rdfs:label "Version Range"@en ;
+	rdfs:comment """A version or version range specifying affected/fixed software.
 
-cve:packageName
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "package_name"@en ;
-    rdfs:comment "v5 packageName"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range xsd:string .
-
-cve:purl
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "purl"@en ;
-    rdfs:comment "Package URL (purl) — v5 5.2+"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range xsd:string .
-
-cve:cpe
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "cpe"@en ;
-    rdfs:comment "CPE 2.2 or 2.3 string"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range xsd:string .
-
-cve:swid
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "swid"@en ;
-    rdfs:comment "SWID tag — v2 only"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range xsd:string .
-
-cve:productUrl
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "product_url"@en ;
-    rdfs:comment "v2 URL for this product"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range xsd:string .
-
-cve:versions
-    a owl:ObjectProperty ;
-    rdfs:label "versions"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range cve:VersionRange .
-
-cve:defaultStatus
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "default_status"@en ;
-    rdfs:domain cve:AffectedProduct ;
-    rdfs:range xsd:string .
-
-cve:url
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "url"@en ;
-    rdfs:domain cve:Reference ;
-    rdfs:range xsd:string .
-
-cve:name
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "name"@en ;
-    rdfs:domain [ owl:unionOf ( cve:Reference cve:Credit ) ] ;
-    rdfs:range xsd:string .
-
-cve:tags
-    a owl:DatatypeProperty ;
-    rdfs:label "tags"@en ;
-    rdfs:comment "v5 reference tags"@en ;
-    rdfs:domain cve:Reference ;
-    rdfs:range xsd:string .
-
-cve:refType
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "ref_type"@en ;
-    rdfs:comment "v2 TYPE: WWW, FILE, EMAIL"@en ;
-    rdfs:domain cve:Reference ;
-    rdfs:range xsd:string .
-
-cve:vectorString
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "vector_string"@en ;
-    rdfs:comment "Full CVSS vector string"@en ;
-    rdfs:domain cve:CvssMetric ;
-    rdfs:range xsd:string .
-
-cve:baseScore
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "base_score"@en ;
-    rdfs:domain cve:CvssMetric ;
-    rdfs:range xsd:decimal .
-
-cve:baseSeverity
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "base_severity"@en ;
-    rdfs:domain cve:CvssMetric ;
-    rdfs:range xsd:string .
-
-cve:temporalScore
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "temporal_score"@en ;
-    rdfs:domain cve:CvssMetric ;
-    rdfs:range xsd:decimal .
-
-cve:environmentalScore
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "environmental_score"@en ;
-    rdfs:domain cve:CvssMetric ;
-    rdfs:range xsd:decimal .
-
-cve:raw
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "raw"@en ;
-    rdfs:comment "Original metric object"@en ;
-    rdfs:domain [ owl:unionOf ( cve:CvssMetric cve:CveRecord ) ] ;
-    rdfs:range xsd:string .
-
-cve:roles
-    a owl:DatatypeProperty ;
-    rdfs:label "roles"@en ;
-    rdfs:domain cve:Credit ;
-    rdfs:range xsd:string .
-
-cve:identifiers
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "identifiers"@en ;
-    rdfs:domain cve:Credit ;
-    rdfs:range xsd:string .
-
-cve:timestamp
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "timestamp"@en ;
-    rdfs:domain cve:TimelineEntry ;
-    rdfs:range xsd:string .
-
-cve:cveId
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "cve_id"@en ;
-    rdfs:comment "CVE identifier, e.g. 'CVE-2021-44228'"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-cve:state
-    a owl:ObjectProperty, owl:FunctionalProperty ;
-    rdfs:label "state"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:CveState .
-
-cve:title
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "title"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-cve:replacedBy
-    a owl:DatatypeProperty ;
-    rdfs:label "replaced_by"@en ;
-    rdfs:comment "CVE IDs that supersede this one"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-cve:datePublic
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "date_public"@en ;
-    rdfs:comment "Date vulnerability was disclosed publicly"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-cve:dateAssigned
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "date_assigned"@en ;
-    rdfs:comment "Date CVE ID was assigned"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-cve:dateRequested
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "date_requested"@en ;
-    rdfs:comment "Date CVE was requested — v2 only"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-cve:dateUpdated
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "date_updated"@en ;
-    rdfs:comment "Date record was last updated"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-cve:assigner
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "assigner"@en ;
-    rdfs:comment "Org name, UUID, or email of the assigner"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-cve:requester
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "requester"@en ;
-    rdfs:comment "Requestor ID — v2 only"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-cve:descriptions
-    a owl:ObjectProperty ;
-    rdfs:label "descriptions"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:LocalizedText .
-
-cve:problemTypes
-    a owl:ObjectProperty ;
-    rdfs:label "problem_types"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:ProblemType .
+v2  → DWF.AFFECTS[].AFFECTED / FIXEDIN  (plain version strings with optional
+      leading >, <, >=, <= operators)
+v5  → affected[].versions[]  (structured {version, status, lessThan, …})"""@en ;
+	.
 
 cve:affected
-    a owl:ObjectProperty ;
-    rdfs:subPropertyOf stonework:affected ;
-    rdfs:label "affected"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:AffectedProduct .
-
-cve:references
-    a owl:ObjectProperty ;
-    rdfs:label "references"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:Reference .
-
-cve:metrics
-    a owl:ObjectProperty ;
-    rdfs:label "metrics"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:CvssMetric .
-
-cve:credits
-    a owl:ObjectProperty ;
-    rdfs:label "credits"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:Credit .
-
-cve:timeline
-    a owl:ObjectProperty ;
-    rdfs:label "timeline"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:TimelineEntry .
-
-cve:workarounds
-    a owl:ObjectProperty ;
-    rdfs:label "workarounds"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:LocalizedText .
-
-cve:exploits
-    a owl:ObjectProperty ;
-    rdfs:label "exploits"@en ;
-    rdfs:comment "Exploitation information — v2 EXPLOITATION / v5 exploits"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:LocalizedText .
-
-cve:solutions
-    a owl:ObjectProperty ;
-    rdfs:label "solutions"@en ;
-    rdfs:comment "v5 solutions"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:LocalizedText .
-
-cve:impact
-    a owl:ObjectProperty ;
-    rdfs:label "impact"@en ;
-    rdfs:comment "v2 DWF.IMPACT / v5 impacts"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:LocalizedText .
-
-cve:notes
-    a owl:ObjectProperty ;
-    rdfs:label "notes"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range cve:LocalizedText .
-
-cve:sourceSchema
-    a owl:DatatypeProperty ;
-    a owl:FunctionalProperty ;
-    rdfs:label "source_schema"@en ;
-    rdfs:comment "Which schema family the record was ingested from"@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range xsd:string .
-
-# Cross-reference properties (link to stonework: individuals created by CPE/CWE ingest)
-# These are declared here (not in the generator) because they represent ontology
-# alignment mappings — cve.ttl in skotarch is the authoritative source for these.
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:affected ;
+	rdfs:label "affected"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:AffectedProduct ;
+	.
 
 cve:affectsProduct
-    a owl:ObjectProperty ;
-    rdfs:subPropertyOf stonework:affected ;
-    rdfs:label "affects product"@en ;
-    rdfs:comment "Links a CVE record to a stonework:VersionedProduct individual identified by a normalized CPE IRI. The IRI is derived deterministically: colons→underscore, dots→hyphen, asterisks→X. The product version individual is fully populated when CPE data is ingested."@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range stonework:VersionedProduct .
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:affected ;
+	rdfs:label "affects product"@en ;
+	rdfs:comment "Links a CVE record to a stonework:VersionedProduct individual identified by a normalized CPE IRI. The IRI is derived deterministically: colons→underscore, dots→hyphen, asterisks→X. The product version individual is fully populated when CPE data is ingested."@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range stonework:VersionedProduct ;
+	.
+
+cve:assigner
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "assigner"@en ;
+	rdfs:comment "Org name, UUID, or email of the assigner"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:string ;
+	.
+
+cve:baseScore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "base_score"@en ;
+	rdfs:domain cve:CvssMetric ;
+	rdfs:range xsd:decimal ;
+	.
+
+cve:baseSeverity
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "base_severity"@en ;
+	rdfs:domain cve:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
+
+cve:collectionUrl
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "collection_url"@en ;
+	rdfs:comment "v5 collectionURL (package repo)"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range xsd:string ;
+	.
+
+cve:coordinator
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "coordinator"@en ;
+	.
+
+cve:cpe
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "cpe"@en ;
+	rdfs:comment "CPE 2.2 or 2.3 string"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range xsd:string ;
+	.
+
+cve:credits
+	a owl:ObjectProperty ;
+	rdfs:label "credits"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:Credit ;
+	.
+
+cve:cveId
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:vulnerabilityId ;
+	rdfs:label "cve_id"@en ;
+	rdfs:comment "CVE identifier, e.g. 'CVE-2021-44228'"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:string ;
+	.
+
+cve:cweId
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "cwe_id"@en ;
+	rdfs:comment "CWE identifier, e.g. 'CWE-79'"@en ;
+	rdfs:domain cve:ProblemType ;
+	rdfs:range xsd:string ;
+	.
+
+cve:dateAssigned
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "date_assigned"@en ;
+	rdfs:comment "Date CVE ID was assigned"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:dateTime ;
+	owl:equivalentProperty stonework:dateAssigned ;
+	.
+
+cve:datePublic
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "date_public"@en ;
+	rdfs:comment "Date vulnerability was disclosed publicly"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:dateTime ;
+	owl:equivalentProperty stonework:datePublic ;
+	.
+
+cve:dateRequested
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "date_requested"@en ;
+	rdfs:comment "Date CVE was requested — v2 only"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:dateTime ;
+	.
+
+cve:dateUpdated
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "date_updated"@en ;
+	rdfs:comment "Date record was last updated"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:dateTime ;
+	owl:equivalentProperty stonework:dateUpdated ;
+	.
+
+cve:defaultStatus
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "default_status"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range xsd:string ;
+	.
+
+cve:description
+	a owl:ObjectProperty ;
+	rdfs:label "description"@en ;
+	rdfs:comment "Free-text description when CWE/OWASP is absent or supplementary"@en ;
+	rdfs:domain [
+		owl:unionOf (
+			cve:ProblemType
+			cve:Reference
+		) ;
+	] ;
+	rdfs:range cve:LocalizedText ;
+	.
+
+cve:descriptions
+	a owl:ObjectProperty ;
+	rdfs:label "descriptions"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:LocalizedText ;
+	.
+
+cve:discoverer
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "discoverer"@en ;
+	.
+
+cve:documentation
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "documentation"@en ;
+	.
+
+cve:environmentalScore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "environmental_score"@en ;
+	rdfs:domain cve:CvssMetric ;
+	rdfs:range xsd:decimal ;
+	.
+
+cve:exploits
+	a owl:ObjectProperty ;
+	rdfs:label "exploits"@en ;
+	rdfs:comment "Exploitation information — v2 EXPLOITATION / v5 exploits"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:LocalizedText ;
+	.
 
 cve:exploitsWeakness
-    a owl:ObjectProperty ;
-    rdfs:subPropertyOf stonework:exploitsWeakness ;
-    rdfs:label "exploits weakness"@en ;
-    rdfs:comment "Links a CVE record to a stonework:Weakness individual identified by a CWE-ID IRI (e.g. cti-enc:_Weakness_CWE-79). The weakness individual is fully populated when CWE data is ingested."@en ;
-    rdfs:domain cve:CveRecord ;
-    rdfs:range stonework:Weakness .
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:exploitsWeakness ;
+	rdfs:label "exploits weakness"@en ;
+	rdfs:comment "Links a CVE record to a stonework:Weakness individual identified by a CWE-ID IRI (e.g. cti-enc:_Weakness_CWE-79). The weakness individual is fully populated when CWE data is ingested."@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range stonework:Weakness ;
+	.
 
-# --- Cardinality restrictions -------------------------------------
+cve:finder
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "finder"@en ;
+	.
 
-# Restrictions on LocalizedText
-cve:LocalizedText rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:lang ; owl:maxCardinality 1 ] .
-cve:LocalizedText rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:value ; owl:maxCardinality 1 ] .
+cve:greaterEqual
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "greater_equal"@en ;
+	rdfs:comment "Inclusive lower bound"@en ;
+	rdfs:domain cve:VersionRange ;
+	rdfs:range xsd:string ;
+	.
 
-# Restrictions on VersionRange
-cve:VersionRange rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:version ; owl:maxCardinality 1 ] .
-cve:VersionRange rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:versionType ; owl:maxCardinality 1 ] .
-cve:VersionRange rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:lessThan ; owl:maxCardinality 1 ] .
-cve:VersionRange rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:lessEqual ; owl:maxCardinality 1 ] .
-cve:VersionRange rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:greaterEqual ; owl:maxCardinality 1 ] .
-cve:VersionRange rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:greaterThan ; owl:maxCardinality 1 ] .
-cve:VersionRange rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:status ; owl:maxCardinality 1 ] .
+cve:greaterThan
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "greater_than"@en ;
+	rdfs:comment "Exclusive lower bound"@en ;
+	rdfs:domain cve:VersionRange ;
+	rdfs:range xsd:string ;
+	.
 
-# Restrictions on ProblemType
-cve:ProblemType rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:cweId ; owl:maxCardinality 1 ] .
-cve:ProblemType rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:owaspId ; owl:maxCardinality 1 ] .
-cve:ProblemType rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:type ; owl:maxCardinality 1 ] .
+cve:identifiers
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "identifiers"@en ;
+	rdfs:domain cve:Credit ;
+	rdfs:range xsd:string ;
+	.
 
-# Restrictions on AffectedProduct
-cve:AffectedProduct rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:vendor ; owl:maxCardinality 1 ] .
-cve:AffectedProduct rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:product ; owl:maxCardinality 1 ] .
-cve:AffectedProduct rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:collectionUrl ; owl:maxCardinality 1 ] .
-cve:AffectedProduct rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:packageName ; owl:maxCardinality 1 ] .
-cve:AffectedProduct rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:purl ; owl:maxCardinality 1 ] .
-cve:AffectedProduct rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:cpe ; owl:maxCardinality 1 ] .
-cve:AffectedProduct rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:swid ; owl:maxCardinality 1 ] .
-cve:AffectedProduct rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:productUrl ; owl:maxCardinality 1 ] .
-cve:AffectedProduct rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:defaultStatus ; owl:maxCardinality 1 ] .
+cve:impact
+	a owl:ObjectProperty ;
+	rdfs:label "impact"@en ;
+	rdfs:comment "v2 DWF.IMPACT / v5 impacts"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:LocalizedText ;
+	.
 
-# Restrictions on Reference
-cve:Reference rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:url ; owl:maxCardinality 1 ] .
-cve:Reference rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:name ; owl:maxCardinality 1 ] .
-cve:Reference rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:refType ; owl:maxCardinality 1 ] .
+cve:lang
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "lang"@en ;
+	rdfs:comment "ISO-639-2 or BCP-47 language code, e.g. 'en', 'eng'"@en ;
+	rdfs:domain [
+		owl:unionOf (
+			cve:LocalizedText
+			cve:Credit
+			cve:TimelineEntry
+		) ;
+	] ;
+	rdfs:range xsd:string ;
+	.
 
-# Restrictions on CvssMetric
-cve:CvssMetric rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:version ; owl:maxCardinality 1 ] .
-cve:CvssMetric rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:vectorString ; owl:maxCardinality 1 ] .
-cve:CvssMetric rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:baseScore ; owl:maxCardinality 1 ] .
-cve:CvssMetric rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:baseSeverity ; owl:maxCardinality 1 ] .
-cve:CvssMetric rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:temporalScore ; owl:maxCardinality 1 ] .
-cve:CvssMetric rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:environmentalScore ; owl:maxCardinality 1 ] .
-cve:CvssMetric rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:raw ; owl:maxCardinality 1 ] .
+cve:lessEqual
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "less_equal"@en ;
+	rdfs:comment "Inclusive upper bound"@en ;
+	rdfs:domain cve:VersionRange ;
+	rdfs:range xsd:string ;
+	.
 
-# Restrictions on Credit
-cve:Credit rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:name ; owl:maxCardinality 1 ] .
-cve:Credit rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:lang ; owl:maxCardinality 1 ] .
-cve:Credit rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:identifiers ; owl:maxCardinality 1 ] .
+cve:lessThan
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "less_than"@en ;
+	rdfs:comment "Exclusive upper bound"@en ;
+	rdfs:domain cve:VersionRange ;
+	rdfs:range xsd:string ;
+	.
 
-# Restrictions on TimelineEntry
-cve:TimelineEntry rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:timestamp ; owl:maxCardinality 1 ] .
-cve:TimelineEntry rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:lang ; owl:maxCardinality 1 ] .
-cve:TimelineEntry rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:value ; owl:maxCardinality 1 ] .
+cve:metrics
+	a owl:ObjectProperty ;
+	rdfs:label "metrics"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:CvssMetric ;
+	.
 
-# Restrictions on CveRecord
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:cveId ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:state ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:title ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:datePublic ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:dateAssigned ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:dateRequested ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:dateUpdated ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:assigner ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:requester ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:sourceSchema ; owl:maxCardinality 1 ] .
-cve:CveRecord rdfs:subClassOf [ a owl:Restriction ; owl:onProperty cve:raw ; owl:maxCardinality 1 ] .
+cve:name
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "name"@en ;
+	rdfs:domain [
+		owl:unionOf (
+			cve:Reference
+			cve:Credit
+		) ;
+	] ;
+	rdfs:range xsd:string ;
+	.
+
+cve:notes
+	a owl:ObjectProperty ;
+	rdfs:label "notes"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:LocalizedText ;
+	.
+
+cve:other
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "other"@en ;
+	.
+
+cve:owaspId
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "owasp_id"@en ;
+	rdfs:comment "OWASP identifier, e.g. 'A3'"@en ;
+	rdfs:domain cve:ProblemType ;
+	rdfs:range xsd:string ;
+	.
+
+cve:packageName
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "package_name"@en ;
+	rdfs:comment "v5 packageName"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range xsd:string ;
+	.
+
+cve:patcher
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "patcher"@en ;
+	.
+
+cve:problemTypes
+	a owl:ObjectProperty ;
+	rdfs:label "problem_types"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:ProblemType ;
+	.
+
+cve:product
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "product"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range xsd:string ;
+	.
+
+cve:productUrl
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "product_url"@en ;
+	rdfs:comment "v2 URL for this product"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range xsd:string ;
+	.
+
+cve:purl
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "purl"@en ;
+	rdfs:comment "Package URL (purl) — v5 5.2+"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range xsd:string ;
+	.
+
+cve:raw
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "raw"@en ;
+	rdfs:comment "Original metric object"@en ;
+	rdfs:domain [
+		owl:unionOf (
+			cve:CvssMetric
+			cve:CveRecord
+		) ;
+	] ;
+	rdfs:range xsd:string ;
+	.
+
+cve:refType
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "ref_type"@en ;
+	rdfs:comment "v2 TYPE: WWW, FILE, EMAIL"@en ;
+	rdfs:domain cve:Reference ;
+	rdfs:range xsd:string ;
+	.
+
+cve:references
+	a owl:ObjectProperty ;
+	rdfs:label "references"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:Reference ;
+	.
+
+cve:releaser
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "releaser"@en ;
+	.
+
+cve:remediation
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "remediation"@en ;
+	.
+
+cve:replacedBy
+	a owl:DatatypeProperty ;
+	rdfs:label "replaced_by"@en ;
+	rdfs:comment "CVE IDs that supersede this one"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:string ;
+	.
+
+cve:reporter
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "reporter"@en ;
+	.
+
+cve:reproducer
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "reproducer"@en ;
+	.
+
+cve:requester
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "requester"@en ;
+	rdfs:comment "Requestor ID — v2 only"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:string ;
+	.
+
+cve:researcher
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "researcher"@en ;
+	.
+
+cve:roles
+	a owl:DatatypeProperty ;
+	rdfs:label "roles"@en ;
+	rdfs:domain cve:Credit ;
+	rdfs:range xsd:string ;
+	.
+
+cve:solutions
+	a owl:ObjectProperty ;
+	rdfs:label "solutions"@en ;
+	rdfs:comment "v5 solutions"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:LocalizedText ;
+	.
+
+cve:sourceSchema
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "source_schema"@en ;
+	rdfs:comment "Which schema family the record was ingested from"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:string ;
+	.
+
+cve:sponsor
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "sponsor"@en ;
+	.
+
+cve:state
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "state"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:CveState ;
+	.
+
+cve:status
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "status"@en ;
+	rdfs:domain cve:VersionRange ;
+	rdfs:range xsd:string ;
+	.
+
+cve:swid
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "swid"@en ;
+	rdfs:comment "SWID tag — v2 only"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range xsd:string ;
+	.
+
+cve:tags
+	a owl:DatatypeProperty ;
+	rdfs:label "tags"@en ;
+	rdfs:comment "v5 reference tags"@en ;
+	rdfs:domain cve:Reference ;
+	rdfs:range xsd:string ;
+	.
+
+cve:temporalScore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "temporal_score"@en ;
+	rdfs:domain cve:CvssMetric ;
+	rdfs:range xsd:decimal ;
+	.
+
+cve:tester
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "tester"@en ;
+	.
+
+cve:timeline
+	a owl:ObjectProperty ;
+	rdfs:label "timeline"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:TimelineEntry ;
+	.
+
+cve:timestamp
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "timestamp"@en ;
+	rdfs:domain cve:TimelineEntry ;
+	rdfs:range xsd:dateTime ;
+	.
+
+cve:title
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "title"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range xsd:string ;
+	.
+
+cve:tool
+	a
+		owl:NamedIndividual ,
+		cve:CreditRole
+		;
+	rdfs:label "tool"@en ;
+	.
+
+cve:type
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "type"@en ;
+	rdfs:comment "v5 'type' field (e.g. 'CWE')"@en ;
+	rdfs:domain cve:ProblemType ;
+	rdfs:range xsd:string ;
+	.
+
+cve:url
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "url"@en ;
+	rdfs:domain cve:Reference ;
+	rdfs:range xsd:string ;
+	.
+
+cve:value
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "value"@en ;
+	rdfs:comment "The text content in that language"@en ;
+	rdfs:domain [
+		owl:unionOf (
+			cve:LocalizedText
+			cve:TimelineEntry
+		) ;
+	] ;
+	rdfs:range xsd:string ;
+	.
+
+cve:vectorString
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "vector_string"@en ;
+	rdfs:comment "Full CVSS vector string"@en ;
+	rdfs:domain cve:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
+
+cve:vendor
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "vendor"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range xsd:string ;
+	.
+
+cve:version
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "version"@en ;
+	rdfs:comment "Exact version string"@en ;
+	rdfs:domain [
+		owl:unionOf (
+			cve:VersionRange
+			cve:CvssMetric
+		) ;
+	] ;
+	rdfs:range xsd:string ;
+	.
+
+cve:versionType
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "version_type"@en ;
+	rdfs:comment "Versioning scheme, e.g. 'semver', 'git'"@en ;
+	rdfs:domain cve:VersionRange ;
+	rdfs:range xsd:string ;
+	.
+
+cve:versions
+	a owl:ObjectProperty ;
+	rdfs:label "versions"@en ;
+	rdfs:domain cve:AffectedProduct ;
+	rdfs:range cve:VersionRange ;
+	.
+
+cve:workarounds
+	a owl:ObjectProperty ;
+	rdfs:label "workarounds"@en ;
+	rdfs:domain cve:CveRecord ;
+	rdfs:range cve:LocalizedText ;
+	.
+
