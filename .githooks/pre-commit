@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
+# Stonework pre-commit hook.
+# Hooks are tracked in .githooks/ and activated repo-wide via:
+#   git config core.hooksPath .githooks
+#
+# New contributors: run  bash tools/download-rdf-toolkit.sh  once after cloning.
 set -euo pipefail
 
-CATALOG="ontologies/catalog-v001.xml"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
 
-# Remove the Protégé-injected default ":" prefix from any staged .ttl files.
-# Protégé adds: @prefix : <...> .  which duplicates the named stonework: prefix.
+# ── Format staged TTL files ────────────────────────────────────────────────
 staged_ttl=$(git diff --cached --name-only --diff-filter=ACM | grep '\.ttl$' || true)
 if [ -n "$staged_ttl" ]; then
-    while IFS= read -r f; do
-        if grep -qE '^@prefix[[:space:]]+:[[:space:]]+<[^>]+>[[:space:]]*\.$' "$f"; then
-            sed -i '/^@prefix[[:space:]]\+:[[:space:]]\+<[^>]*>[[:space:]]*\.$/d' "$f"
-            git add "$f"
-            echo "pre-commit: removed default ':' prefix from $f"
-        fi
+    abs_files=()
+    while IFS= read -r rel; do
+        abs_files+=("$REPO_ROOT/$rel")
     done <<< "$staged_ttl"
+    bash "$SCRIPT_DIR/format-ttl.sh" "${abs_files[@]}"
 fi
 
-# Keep catalog-v001.xml read-only so Protégé cannot overwrite it on save.
-if [ -f "$CATALOG" ]; then
-    chmod 444 "$CATALOG"
-    echo "pre-commit: set $CATALOG read-only"
-fi
+# ── Protect catalog-v001.xml ───────────────────────────────────────────────
+bash "$SCRIPT_DIR/protect-catalog.sh"
