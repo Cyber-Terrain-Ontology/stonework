@@ -1,353 +1,1960 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
-@base <https://cyberterrain.org/ns/stonework#> .
-
-###  https://cyberterrain.org/ns/stonework#
-<https://cyberterrain.org/ns/stonework#> rdf:type owl:Ontology ;
-                                          owl:versionIRI <https://cyberterrain.org/ns/stonework/0.2.0> ;
-                                          owl:versionInfo "0.2.0" ;
-                                          rdfs:label "STONEWORK"@en ;
-                                          dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-                                          dcterms:creator "Hohimer Intelligence Strategies LLC" ;
-                                          dcterms:license <https://opensource.org/licenses/MIT> ;
-                                          owl:imports stones: ;
-                                          dcterms:description "A semantic threat ontology and research framework that serves as the evolutionary successor to the STONES ontology. It provides a forward-looking, extensible foundation for modeling next-generation cyber threat intelligence concepts, objects, relationships, workflows, and knowledge beyond the scope of STIX 2.1." .
-
-
-#################################################################
-#    Datatype Properties (extending stones: declarations)
-#
-#    stones:relationshipType is declared as owl:DatatypeProperty in the
-#    STONES datatype-properties.ttl but without owl:FunctionalProperty,
-#    domain, range, or annotations. We extend it here.
-#################################################################
-
-###  https://cyberterrain.org/ns/stones#relationshipType
-stones:relationshipType rdf:type owl:DatatypeProperty, owl:FunctionalProperty ;
-                        rdfs:domain stones:Relationship ;
-                        rdfs:range xsd:string ;
-                        skos:prefLabel "relationshipType" ;
-                        skos:definition "The relationship_type string value from the STIX 2.1 SRO (e.g. 'uses', 'mitigates', 'subtechnique-of'). Drawn from the STIX 2.1 open vocabulary; corresponding named individuals are declared as stones:RelationshipTypeVocabulary instances in vocabularies.ttl. A shortcut object property is also asserted: stones:<type_underscored> from source to target." .
-
-
-#################################################################
-#    Object Properties (SRO shortcut predicates)
-#
-#    The STIX 2.1 transform emits a shortcut triple for each SRO:
-#      <source> stones:<relationship_type_underscored> <target>
-#    These predicates are declared here so they are formally typed
-#    as OWL ObjectProperties. Sub-property links to stonework: are
-#    asserted where a STONEWORK semantic equivalent exists.
-#################################################################
-
-###  https://cyberterrain.org/ns/stones#mitigates
-stones:mitigates rdf:type owl:ObjectProperty ;
-                 skos:prefLabel "mitigates" ;
-                 skos:definition "Shortcut triple: source CourseOfAction mitigates target AttackPattern or Vulnerability. Corresponds to STIX relationship_type 'mitigates'." .
-
-###  https://cyberterrain.org/ns/stones#detects
-stones:detects rdf:type owl:ObjectProperty ;
-               skos:prefLabel "detects" ;
-               skos:definition "Shortcut triple: source CourseOfAction or Indicator detects target. Corresponds to STIX relationship_type 'detects'." .
-
-###  https://cyberterrain.org/ns/stones#subtechnique_of
-stones:subtechnique_of rdf:type owl:ObjectProperty ;
-                       skos:prefLabel "subtechnique_of" ;
-                       skos:definition "Shortcut triple: source AttackPattern is a sub-technique of target AttackPattern. Corresponds to STIX relationship_type 'subtechnique-of' (hyphens converted to underscores in the predicate IRI)." .
-
-###  https://cyberterrain.org/ns/stones#revoked_by
-stones:revoked_by rdf:type owl:ObjectProperty ;
-                  skos:prefLabel "revoked_by" ;
-                  skos:definition "Shortcut triple: source STIX object is revoked and superseded by target. Corresponds to STIX relationship_type 'revoked-by'." .
-
-###  https://cyberterrain.org/ns/stones#attributed_to
-stones:attributed_to rdf:type owl:ObjectProperty ;
-                     skos:prefLabel "attributed_to" ;
-                     skos:definition "Shortcut triple: source Campaign or IntrusionSet is attributed to target ThreatActor or IntrusionSet. Corresponds to STIX relationship_type 'attributed-to'." .
-
-###  https://cyberterrain.org/ns/stones#indicates
-stones:indicates rdf:type owl:ObjectProperty ;
-                 skos:prefLabel "indicates" ;
-                 skos:definition "Shortcut triple: source Indicator indicates presence of target. Corresponds to STIX relationship_type 'indicates'." .
-
-###  https://cyberterrain.org/ns/stones#related_to
-stones:related_to rdf:type owl:ObjectProperty ;
-                  skos:prefLabel "related_to" ;
-                  skos:definition "Shortcut triple: generic relationship. Corresponds to STIX relationship_type 'related-to'." .
-
-###  https://cyberterrain.org/ns/stones#targets
-stones:targets rdf:type owl:ObjectProperty ;
-               skos:prefLabel "targets" ;
-               skos:definition "Shortcut triple: source targets the target Identity, Vulnerability, or Location. Corresponds to STIX relationship_type 'targets'." .
-
-###  https://cyberterrain.org/ns/stones#exploits
-stones:exploits rdf:type owl:ObjectProperty ;
-                skos:prefLabel "exploits" ;
-                skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." .
-
-
-#################################################################
-#    Object Properties (STONEWORK semantic layer)
-#################################################################
-
-###  https://cyberterrain.org/ns/stonework#affected
-stonework:affected rdf:type owl:ObjectProperty ;
-                   rdfs:domain stones:Vulnerability ;
-                   rdfs:range stonework:Product ;
-                   skos:prefLabel "affected" ;
-                   skos:definition "Relates a vulnerability to a product known to be affected by it." ;
-                   skos:scopeNote "The range is a stonework:Product individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." .
-
-
-###  https://cyberterrain.org/ns/stonework#exploitsWeakness
-stonework:exploitsWeakness rdf:type owl:ObjectProperty ;
-                           rdfs:domain stones:Vulnerability ;
-                           rdfs:range stonework:Weakness ;
-                           skos:prefLabel "exploitsWeakness" ;
-                           skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates." ;
-                           skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest." .
-
-
-###  https://cyberterrain.org/ns/stonework#hasMembers
-stonework:hasMembers rdf:type owl:ObjectProperty ;
-                     rdfs:domain stonework:Group ;
-                     skos:prefLabel "hasMembers" .
-
-###  https://cyberterrain.org/ns/stonework#hasTechnique
-stonework:hasTechnique rdf:type owl:ObjectProperty ;
-                       rdfs:domain stonework:Tactic ;
-                       rdfs:range stonework:AttackTechnique ;
-                       skos:prefLabel "hasTechnique" ;
-                       skos:definition "Relates a tactic to an offensive technique that serves that tactic's goal." .
-
-
-###  https://cyberterrain.org/ns/stonework#hasWeakness
-stonework:hasWeakness rdf:type owl:AsymmetricProperty , owl:ObjectProperty ;
-                      rdfs:domain stones:Vulnerability ;
-                      rdfs:range stonework:Weakness ;
-                      skos:prefLabel "hasWeakness" ;
-                      skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates."@en ;
-                      skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
-
-###  https://cyberterrain.org/ns/stonework#membersOf
-stonework:membersOf rdf:type owl:ObjectProperty ;
-                    owl:inverseOf stonework:hasMembers ;
-                    rdfs:range stonework:Group ;
-                    skos:prefLabel "membersOf" .
-
-
-###  https://cyberterrain.org/ns/stonework#mitigatesAttackPattern
-stonework:mitigatesAttackPattern rdf:type owl:ObjectProperty ;
-                                 rdfs:domain stonework:Control ;
-                                 rdfs:range stones:AttackPattern ;
-                                 skos:prefLabel "mitigatesAttackPattern" ;
-                                 skos:definition "Relates a security control to an attack pattern or technique it helps mitigate or counter." ;
-                                 skos:scopeNote "Range is stones:AttackPattern, which covers both abstract attack pattern classes (e.g. CAPEC) and operationalized techniques (e.g. ATT&CK), both of which are typed attack-pattern in STIX 2.1." .
-
-
-###  https://cyberterrain.org/ns/stonework#relatedAttackPattern
-stonework:relatedAttackPattern rdf:type owl:ObjectProperty ;
-                               rdfs:domain stones:StixObject ;
-                               rdfs:range stones:AttackPattern ;
-                               skos:prefLabel "relatedAttackPattern" ;
-                               skos:definition "Relates any STIX object to an attack pattern it exploits, instantiates, or operationalizes." ;
-                               skos:scopeNote "Covers two cross-dataset links: (1) CWE weakness → CAPEC attack pattern (exploits/instantiates), and (2) CAPEC attack pattern → ATT&CK technique (operationalizes). Both subjects are stones:StixObject individuals." .
-
-
-###  https://cyberterrain.org/ns/stonework#techniqueOf
-stonework:techniqueOf rdf:type owl:ObjectProperty ;
-                      owl:inverseOf stonework:hasTechnique ;
-                      rdfs:domain stonework:Technique ;
-                      skos:prefLabel "techniqueOf"@en .
-
-###  https://cyberterrain.org/ns/stonework#uses
-stonework:uses rdf:type owl:ObjectProperty ;
-               rdfs:domain stones:IntrusionSet ;
-               rdfs:range stones:AttackPattern ;
-               skos:prefLabel "uses" ;
-               skos:definition "Relates a threat actor group or campaign to an offensive technique they are known to employ." ;
-               skos:scopeNote "Sub-property stones:uses carries the shortcut triples emitted by the STIX 2.1 transform for relationship_type 'uses'." .
-
-###  stones:uses as sub-property of stonework:uses
-stones:uses rdf:type owl:ObjectProperty ;
-            rdfs:subPropertyOf stonework:uses .
-
-
-###  https://cyberterrain.org/ns/stonework#weaknessOf
-stonework:weaknessOf rdf:type owl:ObjectProperty ;
-                     owl:inverseOf stonework:hasWeakness ;
-                     rdfs:domain stonework:Weakness ;
-                     rdfs:range stones:Vulnerability ;
-                     skos:prefLabel "weaknessOf"@en ;
-                     skos:definition "Relates a weakness to the vulnerability that exploits or instantiates it."@en ;
-                     skos:scopeNote "The range is a vulnerability individual. The weakness individual (domain) is a stonework:Weakness whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en .
-
-
-#################################################################
-#    Classes
-#################################################################
-
-###  https://cyberterrain.org/ns/stonework#Agent
-stonework:Agent rdf:type owl:Class ;
-                rdfs:subClassOf stones:StixCoreObject ;
-                skos:prefLabel "Agent" ;
-                skos:definition "Any entity that can act, perform actions, or be attributed responsibility in a cyber or sociotechnical context."@en ;
-                skos:scopeNote "Covers human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
-                rdfs:seeAlso prov:Agent .
-
-
-###  https://cyberterrain.org/ns/stonework#AttackTechnique
-stonework:AttackTechnique rdf:type owl:Class ;
-                          rdfs:subClassOf stonework:CyberTechnique ;
-                          skos:prefLabel "AttackTechnique" ;
-                          skos:definition "A prescribed offensive method used by an adversary to achieve a specific tactical objective within a target environment." ;
-                          skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. Not a subclass of stones:AttackPattern — attack patterns (e.g. CAPEC) are abstract descriptions of attack classes, whereas AttackTechnique is an operationalized plan for execution. Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals." .
-
-
-###  https://cyberterrain.org/ns/stonework#Control
-stonework:Control rdf:type owl:Class ;
-                  rdfs:subClassOf stones:StixDomainObject ;
-                  skos:prefLabel "Control" ;
-                  skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
-                  rdfs:comment "Instances of stonework:Control may represent individual controls, control enhancements, or sub‑controls. Framework‑specific identifiers (e.g., \"AC‑2\", \"CIS 4.1\") SHOULD be modeled using explicit properties rather than encoded in the class IRI. Control text SHOULD be referenced via citations rather than reproduced verbatim." ;
-                  skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." .
-
-
-###  https://cyberterrain.org/ns/stonework#CyberTechnique
-stonework:CyberTechnique rdf:type owl:Class ;
-                         rdfs:subClassOf stonework:Technique ;
-                         skos:prefLabel "CyberTechnique" ;
-                         skos:definition "A technique performed within or against cyberspace, encompassing both offensive and defensive cyber operations." ;
-                         skos:scopeNote "Mirrors D3FEND's CyberTechnique class. Subclassed by stonework:AttackTechnique (offensive) and stonework:DefendTechnique (defensive), enabling a single property chain to span both ATT&CK and D3FEND individuals." .
-
-
-###  https://cyberterrain.org/ns/stonework#DefendTechnique
-stonework:DefendTechnique rdf:type owl:Class ;
-                          rdfs:subClassOf stonework:CyberTechnique ;
-                          skos:prefLabel "DefendTechnique" ;
-                          skos:definition "A prescribed defensive method used to detect, prevent, or respond to adversary behavior within a target environment." ;
-                          skos:scopeNote "Aligns with MITRE D3FEND DefensiveTechnique. Framework-specific subclasses (e.g. d3fend:DefensiveTechnique) extend this class when D3FEND data is loaded." .
-
-
-###  https://cyberterrain.org/ns/stonework#Group
-stonework:Group rdf:type owl:Class ;
-                rdfs:subClassOf stonework:Agent ;
-                skos:prefLabel "Group" ;
-                skos:definition "Any collection of Persons, Organizations, or other Groups that share a common purpose or identity but do not necessarily have formal legal structure."@en ;
-                skos:scopeNote "Used for informal collectives, communities, ad-hoc teams, criminal syndicates, or loose alliances. More general than Organization. Can contain other Groups or Organizations."@en .
-
-
-###  https://cyberterrain.org/ns/stonework#Impact
-stonework:Impact rdf:type owl:Class ;
-                 rdfs:subClassOf stones:StixDomainObject ;
-                 skos:prefLabel "Impact" ;
-                 skos:definition "The magnitude of harm, loss, or adverse effects that would result if a threat were realized and a compromise occurred, expressed in terms of mission, business, operational, or technical consequences." ;
-                 rdfs:comment "Instances of stonework:Impact SHOULD specify the affected asset or mission, the type of consequence, and the severity level. Impact SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
-                 skos:scopeNote "Impact represents the severity of consequences associated with a compromise. It may include effects on confidentiality, integrity, availability, safety, mission success, financial loss, or reputational damage. Impact values may be qualitative or quantitative." .
-
-
-###  https://cyberterrain.org/ns/stonework#Likelihood
-stonework:Likelihood rdf:type owl:Class ;
-                     rdfs:subClassOf stones:StixDomainObject ;
-                     skos:prefLabel "Likelihood" ;
-                     skos:definition "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
-                     rdfs:comment "Instances of stonework:Likelihood may incorporate assumptions, uncertainty, adversary behavior, historical frequency, or environmental conditions. Likelihood SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
-                     skos:scopeNote "Likelihood reflects the chance that a compromise will occur, considering adversary capability, intent, opportunity, preconditions, and environmental factors. Likelihood values may be qualitative, ordinal, or quantitative." .
-
-
-###  https://cyberterrain.org/ns/stonework#Organization
-stonework:Organization rdf:type owl:Class ;
-                       rdfs:subClassOf stonework:Group ;
-                       skos:prefLabel "Organization" ;
-                       skos:definition "A formal or semi-formal structured entity such as a company, government agency, non-profit, military unit, or consortium with defined boundaries and usually legal identity."@en ;
-                       skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
-                       rdfs:seeAlso prov:Organization .
-
-
-###  https://cyberterrain.org/ns/stonework#Person
-stonework:Person rdf:type owl:Class ;
-                 rdfs:subClassOf stonework:Agent ;
-                 skos:prefLabel "Person" ;
-                 skos:definition "A single human individual."@en ;
-                 skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en ;
-                 rdfs:seeAlso prov:Person .
-
-
-###  https://cyberterrain.org/ns/stonework#Procedure
-stonework:Procedure rdf:type owl:Class ;
-                    rdfs:subClassOf stones:StixDomainObject ;
-                    skos:prefLabel "Procedure" ;
-                    skos:definition "A concrete, observable sequence of actions, commands, or behaviors that implements a technique in a specific operational context." ;
-                    rdfs:comment "Procedures are instances or patterns of execution that realize a technique. They may include command lines, API calls, malware behaviors, or operator playbook steps. Procedures are distinct from techniques, which describe generalized methods." ;
-                    skos:scopeNote "Procedures describe the actual steps an adversary takes, such as specific commands, scripts, tools, or configurations. They represent the most granular level of adversary behavior." .
-
-
-###  https://cyberterrain.org/ns/stonework#Product
-stonework:Product rdf:type owl:Class ;
-                  rdfs:subClassOf stones:StixDomainObject ;
-                  rdfs:isDefinedBy "https://cyberterrain.org/ns/stonework#" ;
-                  skos:prefLabel "Product" ;
-                  skos:definition "A software, hardware, or firmware entity identified by its vendor, product name, and version characteristics, used to represent a specific platform or component within vulnerability, configuration, or threat‑intelligence contexts."@en ;
-                  rdfs:comment "Instances of stonework:Product may include operating systems, applications, libraries, devices, or embedded components. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
-                  skos:scopeNote "This class provides a semantic representation of platform entities commonly identified using CPE naming schemes. It does not require the use of CPE, but supports mapping to CPE identifiers when available."@en .
-
-
-###  https://cyberterrain.org/ns/stonework#Risk
-stonework:Risk rdf:type owl:Class ;
-               rdfs:subClassOf stones:StixDomainObject ;
-               skos:prefLabel "Risk" ;
-               skos:definition "A measure of the potential for loss or adverse effects arising from the realization of a threat, expressed as a function of the impact of compromise and the likelihood that the compromise will occur." ;
-               rdfs:comment "Instances of stonework:Risk may reference the threat being considered, the assets affected, the expected impact of compromise, and the likelihood of occurrence. Risk values may be qualitative or quantitative, and SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
-               skos:scopeNote "This class represents the assessed or estimated level of exposure to harm for a specific asset, mission, or organization. Risk is typically derived from the combination of impact and likelihood, and may incorporate assumptions, uncertainty, and contextual factors." .
-
-
-###  https://cyberterrain.org/ns/stonework#Tactic
-stonework:Tactic rdf:type owl:Class ;
-                 rdfs:subClassOf stones:StixDomainObject ;
-                 skos:prefLabel "Tactic" ;
-                 skos:definition "A high‑level adversary objective or strategic goal that groups related techniques by the purpose they serve during an intrusion or operation." ;
-                 rdfs:comment "Instances of stonework:Tactic SHOULD correspond to high‑level adversary goals. Techniques are typically modeled as children or members of a tactic." ;
-                 skos:scopeNote "Tactics represent the strategic intent behind adversary behavior, such as gaining initial access, executing code, or exfiltrating data. They serve as conceptual categories for techniques." .
-
-
-###  https://cyberterrain.org/ns/stonework#Technique
-stonework:Technique rdf:type owl:Class ;
-                    rdfs:subClassOf stones:StixDomainObject ;
-                    skos:prefLabel "Technique" ;
-                    skos:definition "A reusable, prescribed method for achieving an objective, which may be instantiated as a concrete execution by an actor or system." ;
-                    rdfs:comment "Mirrors D3FEND's Technique class and reflects the PROV-O Plan philosophy: a technique is a plan that describes how an action should be carried out, distinct from the activity that executes it. Subclassed by stonework:CyberTechnique for cyber-specific methods." ;
-                    skos:scopeNote "Technique is intentionally not a subclass of stones:AttackPattern. Attack patterns (e.g. CAPEC) are abstract descriptions of attack classes in the STIX sense; techniques are operationalized plans. See stonework:CyberTechnique, stonework:AttackTechnique, stonework:DefendTechnique." .
-
-
-###  https://cyberterrain.org/ns/stonework#Threat
-stonework:Threat rdf:type owl:Class ;
-                 rdfs:subClassOf stones:StixDomainObject ;
-                 skos:prefLabel "Threat" ;
-                 skos:definition "A potential or actual source of harm arising from an adversary's capability, intent, and opportunity to exploit weaknesses or create adverse effects within a system, organization, or mission." ;
-                 rdfs:comment "Instances of stonework:Threat may describe adversary capabilities, strategic objectives, targeting patterns, or environmental conditions that increase the likelihood of harmful action. Threats may be linked to threat actors, campaigns, malware, TTPs, weaknesses, or assets, but are conceptually distinct from the actions or events that realize them." ;
-                 skos:scopeNote "This class represents the abstract notion of a cyber threat, independent of specific threat actors, campaigns, or events. It provides a semantic foundation for modeling adversary capabilities, intentions, targeting, and conditions that give rise to harmful outcomes." .
-
-
-###  https://cyberterrain.org/ns/stonework#ThreatScenario
-stonework:ThreatScenario rdf:type owl:Class ;
-                         rdfs:subClassOf stones:StixDomainObject ;
-                         skos:prefLabel "ThreatScenario" ;
-                         skos:definition "A structured description of how a threat could materialize against specific assets or missions, incorporating adversary intent, capability, opportunity, preconditions, and potential consequences." ;
-                         rdfs:comment "Instances of stonework:ThreatScenario may include assumptions, triggering conditions, targeted assets, adversary profiles, attack paths, and expected impacts. Threat scenarios are distinct from threats, attacks, or incidents; they represent hypothetical or anticipated sequences rather than observed events." ;
-                         skos:scopeNote "Threat scenarios describe plausible or anticipated sequences of adversarial behavior and environmental conditions that could lead to harmful outcomes. They support risk assessment, prioritization, and strategic planning by expressing how threats may be realized in a given organizational context." .
-
-
-###  https://cyberterrain.org/ns/stonework#Weakness
-stonework:Weakness rdf:type owl:Class ;
-                   rdfs:subClassOf stones:StixDomainObject ;
-                   skos:prefLabel "Weakness" ;
-                   skos:definition "A type of flaw, fault, or design condition in software, hardware, or system architecture that can enable vulnerabilities, reduce security assurance, or increase the likelihood of exploitable behavior." ;
-                   rdfs:comment "Instances of stonework:Weakness may represent base weaknesses, variant weaknesses, or compound weaknesses. CWE identifiers (e.g., \"CWE‑79\") SHOULD be modeled using explicit properties rather than encoded in the class IRI. Descriptions and extended details SHOULD be referenced via citations rather than reproduced verbatim." ;
-                   skos:scopeNote "This class provides a semantic representation of weakness types defined in the Common Weakness Enumeration (CWE). It supports hierarchical relationships, abstraction levels, and mappings to related attack patterns, vulnerabilities, and security controls." .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://cyberterrain.org/ns/stonework#>
+	a owl:Ontology ;
+	rdfs:label "STONEWORK"@en ;
+	dcterms:creator "Hohimer Intelligence Strategies LLC" ;
+	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
+	dcterms:license <https://opensource.org/licenses/MIT> ;
+	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.4.0> ;
+	owl:versionInfo "0.4.0" ;
+	.
+
+stonework:AIAgent
+	a owl:Class ;
+	rdfs:subClassOf stonework:Agent ;
+	skos:definition "An autonomous or semi-autonomous system driven by AI/ML that can act, make decisions, or be attributed responsibility in a cyber or sociotechnical context." ;
+	skos:prefLabel "AI Agent" ;
+	skos:scopeNote "Covers both offensive uses (AI-assisted or autonomous threat actors) and defensive uses (AI-driven detection, response, or hunting systems). Distinct from Tool — an AIAgent has a degree of autonomous decision-making rather than being a passively invoked artifact."@en ;
+	.
+
+stonework:AITechnique
+	a owl:Class ;
+	rdfs:subClassOf stonework:Technique ;
+	skos:definition "A specific method by which adversaries attack AI/ML systems (e.g., training data poisoning, adversarial examples, model extraction)."@en ;
+	skos:prefLabel "AI Technique"@en ;
+	.
+
+stonework:AccessControlList
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A structured list of access control entries (ACEs) that governs which principals (users, groups, or system accounts) are permitted or denied specific operations on a resource."@en ;
+	skos:prefLabel "Access Control List"@en ;
+	skos:scopeNote "Applies across filesystems, operating system objects (registry keys, processes), network devices (firewall rules), cloud IAM policies, and APIs. In a CTI context, adversaries frequently modify ACLs to establish persistence, escalate privileges, or deny defenders access to compromised resources. Framework-specific extensions (e.g. Windows DACL/SACL structure) are modeled at the framework layer."@en ;
+	.
+
+stonework:Adware
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Software that automatically displays or downloads advertising material, often without user consent."@en ;
+	skos:notation "adware" ;
+	skos:prefLabel "Adware"@en ;
+	.
+
+stonework:Agent
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "Any entity that can act, perform actions, or be attributed responsibility in a cyber or sociotechnical context."@en ;
+	skos:prefLabel "Agent" ;
+	skos:scopeNote "Covers AI, human individuals, groups, organizations, and other actors (e.g. threat actors, vendors, government bodies). Used as the top-level superclass for identity-related objects in alignment with STIX Identity."@en ;
+	.
+
+stonework:Analysis
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "A systematic examination of a cyber entity, artifact, or event that produces structured findings about its nature, behavior, or properties."@en ;
+	skos:prefLabel "Analysis"@en ;
+	skos:scopeNote "Sibling to stonework:Assessment under IntelligenceProduct. Where Assessment answers 'how bad/likely/risky?', Analysis answers 'what is it and what does it do?' Superclass for domain-specific analyses such as MalwareAnalysis. Aligns with STIX MalwareAnalysis SDO at the subclass level."@en ;
+	.
+
+stonework:AnalyticTechnique
+	a owl:Class ;
+	rdfs:subClassOf stonework:Technique ;
+	skos:definition "A prescribed analytical method used to process, evaluate, or reason over data to produce intelligence, detections, or assessments."@en ;
+	skos:prefLabel "Analytic Technique" ;
+	skos:scopeNote "Covers structured analytic techniques (e.g., analysis of competing hypotheses, kill chain analysis, diamond model analysis) and computational analytic methods (e.g., clustering, anomaly detection). Distinct from DetectionRule — an AnalyticTechnique describes the method; a DetectionRule is a deployable artifact implementing it."@en ;
+	.
+
+stonework:Assessment
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "A structured knowledge artifact capturing the evaluation, analysis, or estimation of risk, likelihood, impact, or other security-relevant attributes."@en ;
+	skos:prefLabel "Assessment" ;
+	skos:scopeNote "Covers risk assessments, vulnerability assessments, and impact analyses. Assessment is an Information artifact — the output of an evaluative process — not the process itself. The process producing an Assessment may be modeled as a stonework:Process or stonework:Investigation."@en ;
+	.
+
+stonework:AttackPattern
+	a owl:Class ;
+	rdfs:subClassOf stonework:Behavior ;
+	skos:definition "A type of Tactics, Techniques, and Procedures (TTP) that describes ways that adversaries attempt to compromise targets. Often maps to MITRE ATT&CK techniques."@en ;
+	skos:prefLabel "Attack Pattern"@en ;
+	.
+
+stonework:AttackTechnique
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberTechnique ;
+	skos:definition "A prescribed offensive method used by an adversary to achieve a specific tactical objective within a target environment."@en ;
+	skos:prefLabel "Attack Technique"@en ;
+	skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. Not a subclass of stones:AttackPattern — attack patterns (e.g. CAPEC) are abstract descriptions of attack classes, whereas AttackTechnique is an operationalized plan for execution. Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals."@en ;
+	.
+
+stonework:AutonomousSystem
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	skos:definition "Represents an Autonomous System (AS), a collection of IP routing prefixes under the control of a single administrative entity, identified by its AS number." ;
+	skos:prefLabel "Autonomous System"@en ;
+	.
+
+stonework:Backdoor
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that provides covert, persistent remote access to a compromised system, bypassing normal authentication."@en ;
+	skos:notation "backdoor" ;
+	skos:prefLabel "Backdoor"@en ;
+	.
+
+stonework:Behavior
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A pattern of actions or methods characteristic of an entity, particularly adversaries."@en ;
+	skos:prefLabel "Behavior" ;
+	skos:scopeNote "Groups TTP-related classes: Tactic, Technique (and subclasses), and Procedure. In BFO terms, Behaviors are GenericallyDependentContinuants — specifications or patterns describing how actions are carried out. The execution of a Technique is a CyberActivity; the Technique itself is a Behavior. Aligns with IAO PlanSpecification."@en ;
+	.
+
+stonework:BomEntry
+	a owl:Class ;
+	rdfs:subClassOf stonework:ComponentContext ;
+	rdfs:comment "BomEntry is the STONEWORK representation of a CycloneDX component element or SPDX package entry. It links a VersionedProduct into the context of a particular SBOM document via stonework:installationOf, and may carry component-specific metadata (PURL, license, hash, component type) that does not belong on the VersionedProduct itself."@en ;
+	skos:definition "A single component entry within a Software Bill of Materials, asserting that a specific VersionedProduct is included in the artifact or system described by the SBOM."@en ;
+	skos:prefLabel "BOM Entry" ;
+	skos:scopeNote "An SBOM import creates one BomEntry per declared component. The BomEntry IRI is scoped to the SBOM (e.g. <sbom-iri/entry/<component-ref>>). Multiple BomEntry instances across different SBOMs may reference the same VersionedProduct via stonework:installationOf."@en ;
+	.
+
+stonework:Bootkit
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that infects the boot sector or master boot record to load before the operating system, enabling deep persistence and defense evasion."@en ;
+	skos:notation "bootkit" ;
+	skos:prefLabel "Bootkit"@en ;
+	.
+
+stonework:Bot
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that connects an infected host to a command-and-control network, enabling remote tasking as part of a botnet."@en ;
+	skos:notation "bot" ;
+	skos:prefLabel "Bot"@en ;
+	.
+
+stonework:Campaign
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberActivity ;
+	skos:definition "A grouping of adversary behaviours and resources with a common objective pursued over a period of time. Campaigns may be attributed to ThreatActors and may evolve from a CyberActivityCluster as attribution and objectives become established." ;
+	skos:prefLabel "Campaign"@en ;
+	.
+
+stonework:Category
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A classification or tagging concept used to group or qualify other individuals in a particular context." ;
+	skos:prefLabel "Category" ;
+	skos:scopeNote "Categories are reified so they can be referenced, versioned, or scoped. They are not rigid types." ;
+	.
+
+stonework:Certificate
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A structured digital document binding a public key to an identity, issued and signed by a certificate authority. Used for authentication, encryption, and trust establishment in networked systems."@en ;
+	skos:prefLabel "Certificate"@en ;
+	skos:scopeNote "Primarily represents X.509 certificates. May be used to cluster infrastructure sharing the same certificate or to link observed TLS/SSL artifacts to their issuing authority. Referenced by stonework:sharesCertificate on Infrastructure."@en ;
+	.
+
+stonework:City
+	a owl:Class ;
+	rdfs:subClassOf stonework:Location ;
+	skos:definition "A significant urban settlement, municipality, or metropolitan area." ;
+	skos:prefLabel "City" ;
+	.
+
+stonework:ComponentContext
+	a owl:Class ;
+	skos:definition "An abstract class representing a context-specific reference to a VersionedProduct: the same product version appears differently depending on whether it is declared in a bill of materials or observed as a running installation on a specific system."@en ;
+	skos:prefLabel "Component Context" ;
+	skos:scopeNote "Subclassed by stonework:BomEntry (declarative — listed in an SBOM document) and stonework:ProductInstallation (observational — verified deployment via SWID tag or scan). Unifies these two evidence bases under a single superclass so that stonework:installationOf can span both without domain restrictions forcing incorrect inferences."@en ;
+	.
+
+stonework:Control
+	a owl:Class ;
+	rdfs:subClassOf stonework:Countermeasure ;
+	rdfs:comment 'Instances of stonework:Control may represent individual controls, control enhancements, or sub‑controls. Framework‑specific identifiers (e.g., "AC‑2", "CIS 4.1") SHOULD be modeled using explicit properties rather than encoded in the class IRI. Control text SHOULD be referenced via citations rather than reproduced verbatim.' ;
+	skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
+	skos:prefLabel "Control" ;
+	skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." ;
+	.
+
+stonework:Countermeasure
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "Any control, mitigation, or safeguard applied to protect against, reduce, or respond to security risks."@en ;
+	skos:prefLabel "Countermeasure" ;
+	skos:scopeNote "Includes Controls, Mitigations, CoursesOfAction, and DetectionRules. The two primary branches are preventive/reactive measures (Mitigation, CourseOfAction, Control) and detection logic (DetectionRule, Signature)."@en ;
+	.
+
+stonework:Country
+	a owl:Class ;
+	rdfs:subClassOf stonework:Location ;
+	skos:definition "A sovereign state or top-level administrative entity recognized internationally." ;
+	skos:prefLabel "Country" ;
+	.
+
+stonework:CourseOfAction
+	a owl:Class ;
+	rdfs:subClassOf stonework:Mitigation ;
+	skos:definition "A specific, contextualized recommended action or set of steps to prevent or respond to a threat, attack, or incident."@en ;
+	skos:prefLabel "Course of Action"@en ;
+	skos:scopeNote "More prescriptive and situational than a general Mitigation — a CourseOfAction packages guidance for a specific threat context. Corresponds to the STIX 2.1 CourseOfAction SDO. General reusable controls (e.g. ATT&CK mitigations) are modeled as Mitigation; specific incident response actions are CourseOfAction."@en ;
+	.
+
+stonework:CryptoAsset
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A digital asset or wallet address used in cryptocurrency transactions, often relevant for tracking ransomware payments or illicit finance."@en ;
+	skos:prefLabel "Crypto Asset"@en ;
+	.
+
+stonework:CyberActivity
+	a owl:Class ;
+	skos:definition "A specific occurrence or performance of actions by one or more agents over time within a cyber or sociotechnical context."@en ;
+	skos:prefLabel "Cyber Activity" ;
+	skos:scopeNote "One of two root classes in STONEWORK alongside CyberEntity. Superclass for Campaigns, Incidents, Operations, Events, and Processes. Aligns with BFO Occurrent and BFO Process."@en ;
+	.
+
+stonework:CyberActivityCluster
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberActivity ;
+	skos:definition "An analytically-defined grouping of correlated adversarial behaviors, tools, malware, infrastructure, and participants believed to share a common source or campaign thread."@en ;
+	skos:prefLabel "Cyber Activity Cluster"@en ;
+	skos:scopeNote "Represents the intelligence analyst's working construct before enough is known to declare a Campaign: a cluster of correlated observations attributed (loosely or firmly) to a common adversary source. May evolve into a stonework:Campaign when an objective, timeline, and attribution are sufficiently established. Corresponds to the intended meaning of STIX intrusion-set — the correlated set of activity, not the actor responsible for it. Distinct from stonework:ThreatActorGroup, which is the adversary entity; a CyberActivityCluster is the attributed set of activity linked to that entity."@en ;
+	.
+
+stonework:CyberEntity
+	a owl:Class ;
+	skos:definition "Any concept, object, or resource that exists or operates within a cyber or sociotechnical domain."@en ;
+	skos:prefLabel "Cyber Entity" ;
+	skos:scopeNote "One of two root classes in STONEWORK. Groups all persistent entities — Agents, Infrastructure, DigitalArtifacts, Behaviors, IntelligenceProducts, SecurityConditions, RiskFactors, Countermeasures, and related classes. Aligns with BFO Continuant. The sibling root class CyberActivity covers happenings (Campaigns, Incidents, Operations, etc.)."@en ;
+	.
+
+stonework:CyberTechnique
+	a owl:Class ;
+	rdfs:subClassOf stonework:Technique ;
+	skos:definition "A technique performed within or against cyberspace, encompassing both offensive and defensive cyber operations." ;
+	skos:prefLabel "Cyber Technique" ;
+	skos:scopeNote "Mirrors D3FEND's CyberTechnique class. Subclassed by stonework:AttackTechnique (offensive) and stonework:DefendTechnique (defensive), enabling a single property chain to span both ATT&CK and D3FEND individuals." ;
+	.
+
+stonework:DDoS
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware designed to conduct or participate in distributed denial-of-service attacks against target systems or networks."@en ;
+	skos:notation "ddos" ;
+	skos:prefLabel "DDoS Malware"@en ;
+	.
+
+stonework:DataAsset
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A defender-owned collection of data or information with organizational value, such as databases, intellectual property, credentials stores, or PII collections."@en ;
+	skos:prefLabel "Data Asset" ;
+	skos:scopeNote "Represents data as a targetable resource distinct from the systems that store or process it. Used to model what adversaries seek to access, exfiltrate, or destroy rather than the infrastructure they exploit to reach it."@en ;
+	.
+
+stonework:DefendTechnique
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberTechnique ;
+	skos:definition "A prescribed defensive method used to detect, prevent, or respond to adversary behavior within a target environment." ;
+	skos:prefLabel "Defend Technique" ;
+	skos:scopeNote "Aligns with MITRE D3FEND DefensiveTechnique. Framework-specific subclasses (e.g. d3fend:DefensiveTechnique) extend this class when D3FEND data is loaded." ;
+	.
+
+stonework:DefensiveTactic
+	a owl:Class ;
+	rdfs:subClassOf stonework:Tactic ;
+	skos:definition "A high-level defensive objective that groups related countermeasure techniques by the protection goal they serve." ;
+	skos:prefLabel "Defensive Tactic" ;
+	skos:scopeNote "Aligns with MITRE D3FEND defensive tactics (e.g. Harden, Detect, Isolate, Evict, Restore). Individuals are typically drawn from D3FEND or similar defensive frameworks via the framework mapping layer."@en ;
+	.
+
+stonework:DetectionRule
+	a owl:Class ;
+	rdfs:subClassOf stonework:Countermeasure ;
+	skos:definition "A structured, machine-readable rule designed to detect malicious or suspicious activity, techniques, or indicators. It may be signature-based, behavioral, correlation-based, or analytic."@en ;
+	skos:prefLabel "Detection Rule" ;
+	skos:scopeNote "Encompasses pattern-matching signatures (YARA, Snort, Suricata), behavioral rules (Sigma), SIEM correlation logic, and analytic detections. Signature is a subclass for content-centric, indicator-matching rules."@en ;
+	.
+
+stonework:DigitalArtifact
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "Any discrete digital object or content entity that can be observed, transmitted, stored, or acted upon in a cyber environment."@en ;
+	skos:prefLabel "Digital Artifact" ;
+	skos:scopeNote "Includes files, hashes, malware samples, network traffic captures, and other content-bearing items. Aligns with D3FEND DigitalArtifact concepts."@en ;
+	.
+
+stonework:DigitalIdentity
+	a owl:Class ;
+	rdfs:subClassOf stonework:Agent ;
+	skos:definition "A digital representation or persona of an Agent, inferred from one or more identifiers (email, phone, account, etc.). It may or may not be attributed to a known real-world Agent." ;
+	skos:prefLabel "Digital Identity" ;
+	skos:scopeNote "Useful when you observe identifiers without confirmed attribution. Can aggregate multiple Identifiers and later be linked to a real-worldAgent."@en ;
+	.
+
+stonework:Directory
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:prefLabel "Directory" ;
+	.
+
+stonework:Domain
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	skos:definition "Represents a network domain name. Can reference the IP addresses it resolves to." ;
+	skos:prefLabel "Domain"@en ;
+	.
+
+stonework:Downloader
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware whose primary function is to download and execute additional malicious payloads from a remote source."@en ;
+	skos:notation "downloader" ;
+	skos:prefLabel "Downloader"@en ;
+	.
+
+stonework:Dropper
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that carries and installs one or more secondary payloads onto a target system, often unpacking them from within itself."@en ;
+	skos:notation "dropper" ;
+	skos:prefLabel "Dropper"@en ;
+	.
+
+stonework:EmailAddress
+	a owl:Class ;
+	rdfs:subClassOf stonework:Identifier ;
+	skos:definition "Represents a single email address, optionally associating it with a display name and a user account." ;
+	skos:prefLabel "Email Address"@en ;
+	.
+
+stonework:EmailMessage
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A discrete email communication, including headers, body content, and optional attachments, transmitted over an email protocol."@en ;
+	skos:prefLabel "Email Message"@en ;
+	skos:scopeNote "Distinct from stonework:EmailAddress, which represents the sender/recipient identifier. An EmailMessage is the content artifact itself. Used to represent phishing lures, spear-phishing emails, or other email-borne threat delivery mechanisms. Corresponds to STIX EmailMessage SCO."@en ;
+	.
+
+stonework:Event
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberActivity ;
+	skos:definition "An atomic, observable occurrence in a system, network, or environment that has potential security relevance but has not yet been assessed or declared as an Incident."@en ;
+	skos:prefLabel "Event"@en ;
+	skos:scopeNote "Represents the pre-triage state — a raw log entry, alert, or sensor observation. Distinguished from Incident by the absence of human or automated assessment declaring it significant and adverse. Useful for SIEM, log-based, and threat hunting use cases."@en ;
+	.
+
+stonework:ExploitKit
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "A toolkit that automates exploitation of client-side vulnerabilities to deliver malware, typically via drive-by download from compromised or malicious web pages."@en ;
+	skos:notation "exploit-kit" ;
+	skos:prefLabel "Exploit Kit"@en ;
+	.
+
+stonework:Feed
+	a owl:Class ;
+	rdfs:subClassOf stonework:Provenance ;
+	skos:definition "A structured data source that provides indicators, intelligence, or enrichment data on a regular or continuous basis." ;
+	skos:prefLabel "Feed" ;
+	skos:scopeNote "Examples: URLHaus, AlienVault OTX, Abuse.ch, commercial threat feeds, etc."@en ;
+	.
+
+stonework:File
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A discrete unit of data stored on a filesystem, identified by name, path, and cryptographic hash. Includes executable binaries, scripts, documents, archives, and other file types relevant to cyber threat analysis."@en ;
+	skos:prefLabel "File"@en ;
+	skos:scopeNote "Linked to hash values via stonework:hasHash. A MalwareSample may be associated with its File representation. Framework-specific extensions (PE headers, NTFS streams, archive contents) are modeled at the framework layer."@en ;
+	.
+
+stonework:Group
+	a owl:Class ;
+	rdfs:subClassOf stonework:Agent ;
+	skos:definition "Any collection of Persons, Organizations, or other Groups that share a common purpose or identity but do not necessarily have formal legal structure."@en ;
+	skos:prefLabel "Group" ;
+	skos:scopeNote "Used for informal collectives, communities, ad-hoc teams, criminal syndicates, or loose alliances. More general than Organization. Can contain other Groups or Organizations."@en ;
+	.
+
+stonework:Hash
+	a owl:Class ;
+	rdfs:subClassOf stonework:Identifier ;
+	skos:definition "A single cryptographic hash entry associating a hashing algorithm with its hex-encoded digest value. Used to represent entries in the STIX hashes dictionary." ;
+	skos:prefLabel "Hash"@en ;
+	.
+
+stonework:Host
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	skos:definition "A computing system, device, or endpoint (physical, virtual, container, or cloud instance) that can run processes, host files, and participate in networks."@en ;
+	skos:prefLabel "Host"@en ;
+	.
+
+stonework:HumanSource
+	a owl:Class ;
+	rdfs:subClassOf stonework:Provenance ;
+	skos:definition "A person who provides information, intelligence, or a report (as opposed to automated feeds or technical artifacts)." ;
+	skos:prefLabel "Human Source" ;
+	skos:scopeNote "Often used in HUMINT or OSINT contexts. Reliability scoring is commonly applied to human sources."@en ;
+	.
+
+stonework:IPAddress
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	skos:definition "Represents a single IP address (IPv4 or IPv6)."@en ;
+	skos:prefLabel "IP Address"@en ;
+	.
+
+stonework:IPBlock
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	skos:definition "A Classless Inter-Domain Routing (CIDR) block used to represent an IP network range."@en ;
+	skos:prefLabel "IP Block"@en ;
+	.
+
+stonework:Identifier
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "An atomic label, string, or token used to uniquely identify, locate, or reference a cyber entity, resource, or principal."@en ;
+	skos:prefLabel "Identifier" ;
+	skos:scopeNote "Includes contact identifiers, network locators, accounts, and similar atomic artifacts."@en ;
+	.
+
+stonework:Impact
+	a owl:Class ;
+	rdfs:subClassOf stonework:RiskFactor ;
+	rdfs:comment "Instances of stonework:Impact SHOULD specify the affected asset or mission, the type of consequence, and the severity level. Impact SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
+	skos:definition "The magnitude of harm, loss, or adverse effects that would result if a threat were realized and a compromise occurred, expressed in terms of mission, business, operational, or technical consequences." ;
+	skos:prefLabel "Impact" ;
+	skos:scopeNote "Impact represents the severity of consequences associated with a compromise. It may include effects on confidentiality, integrity, availability, safety, mission success, financial loss, or reputational damage. Impact values may be qualitative or quantitative." ;
+	.
+
+stonework:Incident
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberActivity ;
+	skos:definition "A significant adverse event or series of related events that has caused, or has the potential to cause, harm to an organization’s operations, assets, or people."@en ;
+	skos:prefLabel "Incident" ;
+	skos:scopeNote "Distinguished from stonework:Event (a raw, unassessed occurrence) by the presence of human or automated triage declaring significance and adversity. An Incident may aggregate multiple Events, involve one or more Campaigns, and trigger Investigation and Playbook execution."@en ;
+	.
+
+stonework:Indicator
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "An intelligence assertion that a pattern — atomic, expression-based, or behavioral — when matched in an observed environment, indicates the presence of threat activity attributable to a specific adversary behavior, malware, or campaign."@en ;
+	skos:prefLabel "Indicator"@en ;
+	skos:scopeNote "The central concept in operational CTI. The term is used by the community in three overlapping senses, all of which stonework:Indicator covers: (1) IOC sense — an atomic observable (IP address, domain, file hash, URL) that has been assessed as malicious or suspicious and tagged for detection; in STONEWORK the underlying observable is the SCO (stonework:IPAddress, stonework:Domain, stonework:Hash), and the Indicator wraps it with the assertion, confidence, and validity window. (2) Pattern sense — a STIX patterning expression over one or more SCOs (e.g., [ipv4-addr:value = ‘198.51.100.0/24’]). (3) Behavioral sense — a multi-step or TTPs-based pattern asserting that an observed sequence of behaviors indicates a technique or campaign. Distinct from stonework:DetectionRule: an Indicator is the intelligence claim (‘look for this’); a DetectionRule is the operational artifact that implements the check (‘here is the Sigma/Snort/YARA rule that looks for it’). Indicators are produced by threat intelligence analysts and consumed by detection pipelines; DetectionRules are deployed in SIEMs, EDRs, and network sensors. Corresponds to STIX 2.1 Indicator SDO. Use stonework:indicates to link an Indicator to the AttackPattern, Malware, Campaign, or ThreatActor it asserts."@en ;
+	.
+
+stonework:Infrastructure
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "Represents systems, software services, or any group of resources used to conduct cyber operations. Infrastructure is used by threat actors and intrusion sets both offensively and defensively." ;
+	skos:prefLabel "Infrastructure"@en ;
+	.
+
+stonework:IntelligenceProduct
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A structured artifact produced by an intelligence or analytical process, intended to convey findings, assessments, observations, or sourcing context to support decision-making."@en ;
+	skos:prefLabel "Intelligence Product"@en ;
+	skos:scopeNote "The intelligence product hierarchy covers the outputs of the intelligence lifecycle: Reports, Assessments, Sightings, Notes, and Provenance records. Distinguished from stonework:DigitalArtifact (raw observable technical data) and stonework:Behavior (plan specifications and TTP patterns). Intelligence products are the result of human or automated analytical work applied to raw data — they carry judgment, context, and traceability that raw artifacts do not."@en ;
+	.
+
+stonework:Investigation
+	a owl:Class ;
+	rdfs:subClassOf stonework:Process ;
+	skos:definition "A systematic Process of inquiry, evidence collection, analysis, hypothesis testing, and conclusion to understand, attribute, or resolve security incidents, threats, anomalies, or other matters of interest." ;
+	skos:prefLabel "Investigation" ;
+	skos:scopeNote "Includes digital forensics, threat hunting, root cause analysis, and incident investigations. Links to Sightings, Evidence (via categorizedBy), Sensors, and produces Findings or updated Assessments."@en ;
+	.
+
+stonework:Keylogger
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that records keystrokes on an infected system to capture credentials, sensitive data, or communications."@en ;
+	skos:notation "keylogger" ;
+	skos:prefLabel "Keylogger"@en ;
+	.
+
+stonework:Likelihood
+	a owl:Class ;
+	rdfs:subClassOf stonework:RiskFactor ;
+	rdfs:comment "Instances of stonework:Likelihood may incorporate assumptions, uncertainty, adversary behavior, historical frequency, or environmental conditions. Likelihood SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
+	skos:definition "The estimated probability, plausibility, or frequency with which a threat could be realized and lead to a compromise under specified conditions." ;
+	skos:prefLabel "Likelihood" ;
+	skos:scopeNote "Likelihood reflects the chance that a compromise will occur, considering adversary capability, intent, opportunity, preconditions, and environmental factors. Likelihood values may be qualitative, ordinal, or quantitative." ;
+	.
+
+stonework:Location
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "Represents a geographic location. May be as specific as a latitude/longitude coordinate or as broad as a continent. At least one of region, country, or latitude/longitude must be provided." ;
+	skos:prefLabel "Location"@en ;
+	.
+
+stonework:Log
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A structured or semi-structured record of events, actions, or state changes generated by a system, application, or network component over time."@en ;
+	skos:prefLabel "Log"@en ;
+	skos:scopeNote "Logs are primary data sources for detection, investigation, and threat hunting. Examples include system event logs, authentication logs, DNS query logs, firewall logs, and application logs. Distinct from NetworkTraffic (which captures raw packet data) and from Event (which represents a parsed, security-relevant occurrence derived from log data)."@en ;
+	.
+
+stonework:Malware
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A software object intended to perform malicious functions within, or on behalf of, a threat actor. Encompasses both abstract family-level concepts and concrete specimen-level artifacts."@en ;
+	skos:prefLabel "Malware"@en ;
+	skos:scopeNote "Parent class for stonework:MalwareFamily (STIX is_family=true) and stonework:MalwareSample (STIX is_family=false). Corresponds to the STIX 2.1 malware SDO. Use stonework:categorizedBy to assert behavioral type (e.g., stonework:Ransomware). Use stonework:hasArtifact to link a sample to its captured binary."@en ;
+	.
+
+stonework:MalwareAnalysis
+	a owl:Class ;
+	rdfs:subClassOf stonework:Analysis ;
+	skos:definition "A structured record of findings from static or dynamic analysis performed on a malware specimen or family, including the tool used, analysis configuration, and verdict."@en ;
+	skos:prefLabel "Malware Analysis"@en ;
+	skos:scopeNote "Captures the output of a single analysis run: antivirus scan, sandbox execution, reverse-engineering session, etc. Key properties include the analysis product and version, the result verdict (malicious/suspicious/benign/unknown), and references to SCOs observed during analysis. Corresponds to STIX 2.1 MalwareAnalysis SDO."@en ;
+	.
+
+stonework:MalwareFamily
+	a owl:Class ;
+	rdfs:subClassOf stonework:Malware ;
+	skos:definition "An abstract malware concept representing a named strain, lineage, or campaign of malicious software sharing common behavioral patterns, code ancestry, or infrastructure. Corresponds to STIX 2.1 malware SDO with is_family=true."@en ;
+	skos:prefLabel "Malware Family"@en ;
+	skos:scopeNote "Examples: Cobalt Strike, Mimikatz, WannaCry, BlackCat. A MalwareFamily does not have a specific hash or binary but may be linked to MalwareSample instances via the inverse of stonework:memberOfFamily. Use stonework:categorizedBy to assert behavioral type (e.g., stonework:Ransomware, stonework:Backdoor)."@en ;
+	.
+
+stonework:MalwareSample
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Malware ,
+		stonework:Product
+		;
+	skos:definition "A discrete, observable instance of malicious code — a specific binary, script, or executable artifact that can be identified by cryptographic hash, file characteristics, or behavioral signature."@en ;
+	skos:prefLabel "Malware Sample"@en ;
+	skos:scopeNote "Represents a concrete sample rather than an abstract family concept. A single MalwareFamily may have thousands of associated samples across versions, packers, and dropper variants. Samples are linked to their family via stonework:memberOfFamily and to their file representation via stonework:hasHash or a direct stonework:File association. Properties such as stonework:drops, stonework:downloads, and stonework:communicatesWith describe the behavior of this specific sample, not the family in general."@en ;
+	.
+
+stonework:MalwareType
+	a owl:Class ;
+	rdfs:subClassOf stonework:Category ;
+	skos:definition "A behavioral or functional classification of malware, describing what the malware does rather than what it is. Corresponds to the STIX 2.1 malware-type open vocabulary."@en ;
+	skos:prefLabel "Malware Type"@en ;
+	skos:scopeNote "Instances (e.g., stonework:Ransomware, stonework:Trojan) are assigned via stonework:categorizedBy. A malware object may carry multiple types. The skos:notation value gives the STIX 2.1 wire-format string for aspirational round-trip export."@en ;
+	.
+
+stonework:Mitigation
+	a owl:Class ;
+	rdfs:subClassOf stonework:Countermeasure ;
+	rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> ;
+	skos:definition "A deliberate action or control intended to reduce the likelihood, impact, or severity of a risk, threat, vulnerability, or adverse event."@en ;
+	skos:prefLabel "Mitigation" ;
+	skos:scopeNote "Mitigations are proactive or reactive measures applied to address weaknesses or threats. Examples include: applying a security patch, enabling MFA, deploying a firewall rule, isolating a compromised host, or training users. A Mitigation may be a reusable control (ATT&CK sense) or a specific situational action. CourseOfAction is a subclass for contextualized, packaged response actions."@en ;
+	.
+
+stonework:MobileDevice
+	a owl:Class ;
+	rdfs:subClassOf stonework:Host ;
+	skos:definition "A portable computing device with wireless connectivity, typically used for communication, data processing, and accessing networks (e.g., smartphones, tablets, or laptops with cellular capability)."@en ;
+	skos:prefLabel "Mobile Device" ;
+	skos:scopeNote "In a cyber threat context, Mobile Devices are often treated as both endpoints (Infrastructure) and vectors for attacks (e.g., mobile malware, phishing, lost/stolen device risks). They may host UserAccounts, run Mobile Applications, and connect via cellular, Wi-Fi, or Bluetooth."@en ;
+	.
+
+stonework:Mutex
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A named mutual exclusion object (mutex or semaphore) used by a process to prevent concurrent access to a shared resource. Commonly used as a malware indicator — malware families often create uniquely named mutexes to avoid re-infecting a host."@en ;
+	skos:prefLabel "Mutex"@en ;
+	skos:scopeNote "Mutex names serve as host-based indicators of compromise. A specific mutex name found on a system can be attributed to a known malware family. Corresponds to the STIX 2.1 Mutex SCO."@en ;
+	.
+
+stonework:NetworkService
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	skos:definition "A network-accessible service or endpoint provided by infrastructure, such as HTTP, DNS, or SSH servers."@en ;
+	skos:prefLabel "Network Service" ;
+	.
+
+stonework:NetworkTraffic
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A captured or observed network traffic flow between source and destination endpoints, including protocol, ports, payload characteristics, and timing."@en ;
+	skos:prefLabel "Network Traffic"@en ;
+	skos:scopeNote "Distinct from stonework:Log (which captures parsed event records) and stonework:Event (a security-relevant occurrence). NetworkTraffic is the raw flow artifact. May carry indicators such as user-agent strings, URI patterns, or certificate fingerprints observable in transit."@en ;
+	.
+
+stonework:Note
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "A free-text annotation attached to one or more individuals to provide additional context, analyst commentary, caveats, or confidence assessments."@en ;
+	skos:prefLabel "Note" ;
+	skos:scopeNote "Notes are analyst-authored rather than machine-generated. They may express uncertainty, sourcing context, or interpretive observations that do not fit structured properties. Corresponds to STIX 2.1 Note SDO."@en ;
+	.
+
+stonework:OffensiveTactic
+	a owl:Class ;
+	rdfs:subClassOf stonework:Tactic ;
+	skos:definition "A high-level adversary objective that groups related attack techniques by the goal they serve during an intrusion or operation." ;
+	skos:prefLabel "Offensive Tactic" ;
+	skos:scopeNote "Aligns with MITRE ATT&CK tactics (e.g. Initial Access, Execution, Lateral Movement) and D3FEND OffensiveTactic. Individuals are typically drawn from ATT&CK or similar offensive frameworks via the STONES or framework mapping layers."@en ;
+	.
+
+stonework:OnlineReference
+	a owl:Class ;
+	rdfs:subClassOf stonework:Provenance ;
+	skos:definition "A reference to an external online resource (URL, article, post, etc.) used for provenance." ;
+	skos:prefLabel "Online Reference" ;
+	.
+
+stonework:Operation
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberActivity ;
+	skos:definition "A coordinated set of activities conducted by one or more agents toward a defined objective, typically spanning multiple campaigns, incidents, or phases and characterized by unified command, intent, or resourcing."@en ;
+	skos:prefLabel "Operation" ;
+	skos:scopeNote "Operations are broader in scope than Campaigns — a single Operation may encompass multiple Campaigns executed over an extended period. Applies to both offensive operations (e.g. state-sponsored cyber operations) and defensive operations (e.g. incident response operations, threat hunting operations)."@en ;
+	.
+
+stonework:Opinion
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "An analyst's epistemological stance on the correctness or credibility of information asserted in another intelligence object."@en ;
+	skos:prefLabel "Opinion"@en ;
+	skos:scopeNote "Sibling to stonework:Assessment under IntelligenceProduct. Where Assessment evaluates risk or impact, Opinion evaluates the reliability or accuracy of existing intelligence — e.g., 'I disagree with this threat score' or 'I believe this indicator attribution is incorrect'. Corresponds to STIX 2.1 Opinion SDO. The opinion value (strongly-agree to strongly-disagree) and explanation are captured via stones: properties."@en ;
+	.
+
+stonework:Organization
+	a owl:Class ;
+	rdfs:subClassOf stonework:Agent ;
+	rdfs:seeAlso prov:Organization ;
+	skos:definition "A formal or semi-formal structured entity such as a company, government agency, non-profit, military unit, or consortium with defined boundaries and usually legal identity."@en ;
+	skos:prefLabel "Organization" ;
+	skos:scopeNote "Corresponds to STIX Identity with identity_class = 'organization'. Includes corporations, government bodies, NGOs, universities, etc. Distinguished from Group by having more persistent structure, roles, and often legal standing."@en ;
+	.
+
+stonework:Person
+	a owl:Class ;
+	rdfs:subClassOf stonework:Agent ;
+	rdfs:seeAlso prov:Person ;
+	skos:definition "A single human individual."@en ;
+	skos:prefLabel "Person" ;
+	skos:scopeNote "Represents real named people (e.g. employees, threat actors, researchers). Does not include legal entities or groups. Corresponds to STIX Identity with identity_class = 'individual'."@en ;
+	.
+
+stonework:PhoneNumber
+	a owl:Class ;
+	rdfs:subClassOf stonework:Identifier ;
+	skos:definition "A telephone number used to contact or identify an Agent. Used for attribution, OSINT pivoting, and identity clustering."@en ;
+	skos:prefLabel "Phone Number"@en ;
+	.
+
+stonework:Playbook
+	a owl:Class ;
+	rdfs:subClassOf stonework:Process ;
+	rdfs:comment "Playbooks are often versioned, tested, and executed as instances of Process."@en ;
+	rdfs:seeAlso prov:Plan ;
+	skos:definition "A documented, structured Process that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
+	skos:prefLabel "Playbook" ;
+	skos:scopeNote "A Playbook provides reusable, often automated or semi-automated guidance for security operations, incident response, threat hunting, recovery, or routine tasks. It typically includes triggers, decision points, assigned roles (Agents), inputs/outputs, and success criteria.  Playbooks bridge planning and execution."@en ;
+	.
+
+stonework:Procedure
+	a owl:Class ;
+	rdfs:subClassOf stonework:Behavior ;
+	rdfs:comment "Procedures are instances or patterns of execution that realize a technique. They may include command lines, API calls, malware behaviors, or operator playbook steps. Procedures are distinct from techniques, which describe generalized methods." ;
+	skos:definition "A concrete, observable sequence of actions, commands, or behaviors that implements a technique in a specific operational context." ;
+	skos:prefLabel "Procedure" ;
+	skos:scopeNote "Procedures describe the actual steps an adversary takes, such as specific commands, scripts, tools, or configurations. They represent the most granular level of adversary behavior." ;
+	.
+
+stonework:Process
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberActivity ;
+	rdfs:seeAlso
+		prov:Activity ,
+		<https://www.opmw.org/model/p-plan/>
+		;
+	skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
+	skos:prefLabel "Process"@en ;
+	skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is intended for modeling Controls, Playbooks, Mitigations, Threat Scenarios, and other repeatable or planned workflows."@en ;
+	.
+
+stonework:Product
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	rdfs:comment "Instances of stonework:Product represent product families or lines (e.g. 'Apache Log4j', 'Windows 10'). Specific releases are modeled as stonework:VersionedProduct individuals related via stonework:versionOf. CPE entries with wildcard version components map to stonework:Product; entries with concrete versions map to stonework:VersionedProduct."@en ;
+	owl:disjointWith stonework:VersionedProduct ;
+	skos:definition "An abstract software, hardware, or firmware product line identified by vendor and product name, independent of any specific version or release. Represents the collection of all versioned releases built under that product identity."@en ;
+	skos:prefLabel "Product" ;
+	skos:scopeNote "stonework:Product does not carry version, update, edition, or other release-specific attributes. Those belong on stonework:VersionedProduct. The two classes are disjoint."@en ;
+	.
+
+stonework:ProductInstallation
+	a owl:Class ;
+	rdfs:subClassOf stonework:ComponentContext ;
+	rdfs:comment "Represents the most granular product identity level: not what software exists, but where and how it is installed. Multiple ProductInstallation individuals may reference the same VersionedProduct."@en ;
+	skos:definition "A specific installed instance of a VersionedProduct on a particular system or environment, as identified by a SWID tag or equivalent installation record."@en ;
+	skos:prefLabel "Product Installation" ;
+	skos:scopeNote "stonework:ProductInstallation is the intended target for SWID tag data. The installing system, path, licensee, and configuration details belong here rather than on stonework:VersionedProduct."@en ;
+	.
+
+stonework:Provenance
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "Structured source references used to record the origin and trustworthiness of data and relationships."@en ;
+	skos:prefLabel "Provenance"@en ;
+	skos:scopeNote "Includes Feeds, Publications, and URL References."@en ;
+	.
+
+stonework:Publication
+	a owl:Class ;
+	rdfs:subClassOf stonework:Provenance ;
+	skos:definition "A structured intelligence artifact such as a blog post, advisory, report, or news article." ;
+	skos:prefLabel "Publication" ;
+	.
+
+stonework:Ransomware
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that encrypts or locks victim data or systems and demands payment for restoration of access."@en ;
+	skos:notation "ransomware" ;
+	skos:prefLabel "Ransomware"@en ;
+	.
+
+stonework:Region
+	a owl:Class ;
+	rdfs:subClassOf stonework:Location ;
+	skos:definition "A sub-national territorial division such as a state, province, region, or governorate." ;
+	skos:prefLabel "Region" ;
+	.
+
+stonework:Registry
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "Describes elements within the Windows configuration Registry system." ;
+	skos:prefLabel "Registry" ;
+	.
+
+stonework:RemoteAccessTrojan
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware providing covert remote control of an infected host, typically including capabilities such as file access, screen capture, keylogging, and command execution."@en ;
+	skos:notation "remote-access-trojan" ;
+	skos:prefLabel "Remote Access Trojan"@en ;
+	.
+
+stonework:Report
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "A collection of threat intelligence focused on one or more topics, such as a description of a threat actor, malware, or attack technique." ;
+	skos:prefLabel "Report" ;
+	.
+
+stonework:ResourceExploitation
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that abuses the computational resources of an infected host, such as for cryptocurrency mining or proxying network traffic."@en ;
+	skos:notation "resource-exploitation" ;
+	skos:prefLabel "Resource Exploitation"@en ;
+	.
+
+stonework:Risk
+	a owl:Class ;
+	rdfs:subClassOf stonework:RiskFactor ;
+	rdfs:comment "Instances of stonework:Risk may reference the threat being considered, the assets affected, the expected impact of compromise, and the likelihood of occurrence. Risk values may be qualitative or quantitative, and SHOULD be represented using explicit properties rather than encoded in class IRIs or labels." ;
+	skos:definition "A measure of the potential for loss or adverse effects arising from the realization of a threat, expressed as a function of the impact of compromise and the likelihood that the compromise will occur." ;
+	skos:prefLabel "Risk" ;
+	skos:scopeNote "This class represents the assessed or estimated level of exposure to harm for a specific asset, mission, or organization. Risk is typically derived from the combination of impact and likelihood, and may incorporate assumptions, uncertainty, and contextual factors." ;
+	.
+
+stonework:RiskFactor
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A calculated or assessed component used to quantify or characterize security risk, including the potential for harm and the probability of its occurrence."@en ;
+	skos:prefLabel "Risk Factor" ;
+	skos:scopeNote "Includes Risk (overall assessed exposure), Impact (magnitude of harm if realized), and Likelihood (probability of occurrence). These are analytical outputs derived from threat and vulnerability data, distinct from the conditions (SecurityCondition) that give rise to them and the countermeasures (Countermeasure) that address them."@en ;
+	.
+
+stonework:RogueSecuritySoftware
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that masquerades as legitimate security software to deceive users into paying for fake threat removal or granting elevated privileges."@en ;
+	skos:notation "rogue-security-software" ;
+	skos:prefLabel "Rogue Security Software"@en ;
+	.
+
+stonework:Role
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A function, capacity, or part played by an entity in a specific context, relationship, or operation." ;
+	skos:prefLabel "Role" ;
+	skos:scopeNote "Roles are typically more stable and relational than Categories. An entity can play multiple Roles. Aligns with patterns in BFO, CCO, and D3FEND (e.g., functional roles of infrastructure or actors)."@en ;
+	.
+
+stonework:Rootkit
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that conceals itself and other malicious software by subverting operating system or hypervisor mechanisms, typically to maintain privileged persistence."@en ;
+	skos:notation "rootkit" ;
+	skos:prefLabel "Rootkit"@en ;
+	.
+
+stonework:RuntimeProcess
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A running or terminated process instance on a host, identified by PID, executable path, command line, parent process, and associated user account."@en ;
+	skos:prefLabel "Runtime Process"@en ;
+	skos:scopeNote "Represents low-level OS process objects observed during execution — distinct from stonework:Process (enterprise-level workflows). Mutex objects created by a process are linked as stonework:Mutex individuals. Corresponds to STIX 2.1 Process SCO."@en ;
+	.
+
+stonework:ScreenCapture
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that periodically or continuously captures screenshots of the victim's display and exfiltrates them to an attacker."@en ;
+	skos:notation "screen-capture" ;
+	skos:prefLabel "Screen Capture"@en ;
+	.
+
+stonework:SecurityCondition
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A state, circumstance, or disposition relevant to the security posture of a system, asset, or mission — existing independently of any measurement or assessment."@en ;
+	skos:prefLabel "Security Condition" ;
+	skos:scopeNote "Includes Threats, Vulnerabilities, and Weaknesses. Risk, Impact, and Likelihood are assessed/calculated concepts and are modeled under stonework:RiskFactor."@en ;
+	.
+
+stonework:SecurityObservation
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAObservation> ;
+	skos:definition "A time-bounded record produced by a security sensor or automated tool capturing one or more cyber observables witnessed in a monitored environment, together with frequency metadata."@en ;
+	skos:prefLabel "Security Observation"@en ;
+	skos:scopeNote "Machine-produced intelligence: a sensor is not an analyst, but its output feeds the intelligence pipeline in the same way that SIGINT feeds human analysis. Key metadata: the time window the phenomenon was witnessed (first/last observed), how many times it was observed (number_observed), and which cyber observables were captured (hasObservable). Use stonework:madeBySensor to link to the producing stonework:Sensor. Distinct from stonework:Sighting, which records that a known CTI object (indicator, malware, threat actor) was seen; SecurityObservation is the raw sensor-layer record prior to attribution or indicator matching. Corresponds to STIX 2.1 observed-data SDO. Inspired by SOSA sosa:Observation — compatible in concept but does not formally import the SOSA ontology."@en ;
+	.
+
+stonework:Sensor
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSASensor> ;
+	skos:definition "A deployed system, appliance, agent, or network tap that collects data about digital artifacts, network activity, or adversary behavior for detection and investigation purposes."@en ;
+	skos:prefLabel "Sensor" ;
+	skos:scopeNote "Applies DetectionRules via stonework:usesRule. May be a software agent, physical appliance, virtual instance, or network sensor. Examples: IDS/IPS, SIEM collector, endpoint agent, network tap, honeypot, vulnerability scanner. An AI-driven sensor that crosses into autonomous decision-making may be additionally typed as stonework:AIAgent. Aligns with D3FEND Sensor. Inspired by SOSA sosa:Sensor — compatible in concept but does not formally import the SOSA ontology. Produces stonework:SecurityObservation instances via stonework:madeBySensor."@en ;
+	.
+
+stonework:Sighting
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "Records that a object such as an indicator, malware, tool, or threat actor was seen. Wraps observation metadata around a reference to the sighted object."@en ;
+	skos:prefLabel "Sighting" ;
+	.
+
+stonework:Signature
+	a owl:Class ;
+	rdfs:subClassOf stonework:DetectionRule ;
+	skos:definition "A content-centric detection rule that matches malicious activity by a specific pattern — a byte sequence, string, hash, regular expression, or network packet structure."@en ;
+	skos:prefLabel "Signature"@en ;
+	skos:scopeNote "Includes YARA rules, Snort/Suricata rules, and AV signatures. Distinguished from broader DetectionRule subclasses (behavioral, correlation, analytic) by its tight binding to a specific known-bad indicator or artifact pattern."@en ;
+	.
+
+stonework:SoftwareBillOfMaterials
+	a owl:Class ;
+	rdfs:comment "An SBOM asserts that specific VersionedProduct instances are components of a containing artifact. Component entries are represented as stonework:BomEntry instances linked via stonework:hasBomEntry."@en ;
+	skos:definition "A formal, machine-readable inventory of VersionedProduct components that constitute a software artifact or system, expressed in a standard format such as CycloneDX or SPDX."@en ;
+	skos:prefLabel "Software Bill of Materials" ;
+	skos:scopeNote "SoftwareBillOfMaterials is a native STONEWORK class — not a subclass of any STIX domain object, as STIX 2.1 has no SBOM concept. Instances correspond to SBOM documents; format provenance (CycloneDX 1.6, SPDX 2.3, etc.) is expressed via stonework:bomFormat."@en ;
+	.
+
+stonework:Spyware
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that covertly monitors user activity, collects personal or sensitive information, and transmits it to a remote party."@en ;
+	skos:notation "spyware" ;
+	skos:prefLabel "Spyware"@en ;
+	.
+
+stonework:Tactic
+	a owl:Class ;
+	rdfs:subClassOf stonework:Behavior ;
+	rdfs:comment "Instances of stonework:Tactic SHOULD correspond to high‑level adversary goals. Techniques are typically modeled as children or members of a tactic." ;
+	skos:definition "A high‑level objective or strategic goal that groups related techniques by the purpose they serve during an operation." ;
+	skos:prefLabel "Tactic" ;
+	skos:scopeNote "Superclass for OffensiveTactic and DefensiveTactic. Tactics represent the strategic intent behind behavior — gaining initial access, exfiltrating data, or hardening a system. They serve as conceptual categories for techniques." ;
+	.
+
+stonework:Technique
+	a owl:Class ;
+	rdfs:subClassOf stonework:Behavior ;
+	rdfs:comment "Mirrors D3FEND's Technique class and reflects the PROV-O Plan philosophy: a technique is a plan that describes how an action should be carried out, distinct from the activity that executes it. Subclassed by stonework:CyberTechnique for cyber-specific methods." ;
+	skos:definition "A reusable, prescribed method for achieving an objective, which may be instantiated as a concrete execution by an actor or system." ;
+	skos:prefLabel "Technique" ;
+	skos:scopeNote "Technique is intentionally not a subclass of stones:AttackPattern. Attack patterns (e.g. CAPEC) are abstract descriptions of attack classes in the STIX sense; techniques are operationalized plans. See stonework:CyberTechnique, stonework:AttackTechnique, stonework:DefendTechnique." ;
+	.
+
+stonework:Threat
+	a owl:Class ;
+	rdfs:subClassOf stonework:SecurityCondition ;
+	rdfs:comment "Instances of stonework:Threat may describe adversary capabilities, strategic objectives, targeting patterns, or environmental conditions that increase the likelihood of harmful action. Threats may be linked to threat actors, campaigns, malware, TTPs, weaknesses, or assets, but are conceptually distinct from the actions or events that realize them." ;
+	skos:definition "A potential or actual source of harm arising from an adversary's capability, intent, and opportunity to exploit weaknesses or create adverse effects within a system, organization, or mission." ;
+	skos:prefLabel "Threat" ;
+	skos:scopeNote "This class represents the abstract notion of a cyber threat, independent of specific threat actors, campaigns, or events. It provides a semantic foundation for modeling adversary capabilities, intentions, targeting, and conditions that give rise to harmful outcomes." ;
+	.
+
+stonework:ThreatActor
+	a owl:Class ;
+	rdfs:subClassOf stonework:Agent ;
+	rdfs:seeAlso prov:Agent ;
+	skos:definition "An entity that has the capability and intent to conduct harmful activities within a cyber or sociotechnical context." ;
+	skos:prefLabel "Threat Actor"@en ;
+	skos:scopeNote "Parent class for stonework:ThreatActorIndividual (a single human) and stonework:ThreatActorGroup (a collective or organization). Threat actors are distinct from the threats they pose; they are the entities that carry out actions that realize threats. They may be linked to observed behaviors, techniques, targeting patterns, and strategic objectives."@en ;
+	.
+
+stonework:ThreatActorGroup
+	a owl:Class ;
+	rdfs:subClassOf stonework:ThreatActor ;
+	skos:definition "A collective, organization, or coordinated set of individuals operating with common intent to conduct adversarial cyber activities."@en ;
+	skos:prefLabel "Threat Actor Group"@en ;
+	skos:scopeNote "Covers nation-state units, cybercriminal organizations, hacktivist collectives, and other named adversary groups (e.g., APT29, Lazarus Group). MITRE ATT&CK serializes these as STIX intrusion-set objects; in STONEWORK they are correctly typed as ThreatActorGroup — an adversary entity rather than an activity cluster. Distinguished from stonework:ThreatActorIndividual, which represents a single human actor, and from stonework:CyberActivityCluster, which is the attributed set of activity linked to the group."@en ;
+	.
+
+stonework:ThreatActorIndividual
+	a owl:Class ;
+	rdfs:subClassOf stonework:ThreatActor ;
+	skos:definition "A single, identifiable human actor with the capability and intent to conduct adversarial cyber activities."@en ;
+	skos:prefLabel "Threat Actor Individual"@en ;
+	skos:scopeNote "Covers individual hackers, insiders, contractors, and other identified persons. Relevant for law enforcement and prosecution contexts where attribution to a specific individual — rather than a group — is required. Distinguished from stonework:ThreatActorGroup, which represents a collective or organization."@en ;
+	.
+
+stonework:ThreatScenario
+	a owl:Class ;
+	rdfs:subClassOf stonework:Behavior ;
+	rdfs:seeAlso prov:Plan ;
+	skos:definition "A plan specification describing how a threat could materialize against specific assets or missions — incorporating adversary intent, capability, opportunity, preconditions, attack path, and expected consequences."@en ;
+	skos:prefLabel "Threat Scenario"@en ;
+	skos:scopeNote "A ThreatScenario is prescriptive and forward-looking: it specifies a potential sequence of adversary behaviors and environmental conditions rather than recording observed events. Used to guide defensive planning, risk assessment, and Playbook development. Distinct from stonework:Incident (an observed occurrence) and stonework:Threat (an abstract source of harm). Aligns with prov:Plan and P-Plan scenario specifications."@en ;
+	.
+
+stonework:Tool
+	a owl:Class ;
+	rdfs:subClassOf stonework:Product ;
+	skos:definition "Legitimate software that can be used offensively by threat actors or defensively by security practitioners. Distinguishable from malware by being designed for benign or dual-use purposes rather than being inherently malicious."@en ;
+	skos:prefLabel "Tool"@en ;
+	skos:scopeNote "Includes commercial penetration testing tools, remote administration utilities, and living-off-the-land binaries (LOLBins) repurposed by adversaries, as well as defender-operated tools such as scanners, EDR agents, and forensic utilities. Corresponds to STIX 2.1 Tool SDO."@en ;
+	.
+
+stonework:Trojan
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware disguised as or bundled with legitimate software to deceive users into executing it, enabling a range of malicious payloads."@en ;
+	skos:notation "trojan" ;
+	skos:prefLabel "Trojan"@en ;
+	.
+
+stonework:URI
+	a owl:Class ;
+	rdfs:subClassOf stonework:Identifier ;
+	skos:definition "Represents a Uniform Resource Identifier conforming to RFC 3986."@en ;
+	skos:prefLabel "URI"@en ;
+	.
+
+stonework:UnknownMalware
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "The malware type has not been determined or cannot be classified into a known category."@en ;
+	skos:notation "unknown" ;
+	skos:prefLabel "Unknown Malware Type"@en ;
+	.
+
+stonework:UserAccount
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalIdentity ;
+	skos:definition "Represents a user account on a system or service, including local OS accounts, cloud accounts, and social media accounts."@en ;
+	skos:prefLabel "User Account"@en ;
+	.
+
+stonework:UserAgent
+	a owl:Class ;
+	rdfs:subClassOf stonework:Identifier ;
+	skos:definition "A string identifier transmitted by a client application in HTTP requests declaring the software, version, and platform making the request. Used for fingerprinting clients, identifying malware C2 beaconing patterns, and clustering infrastructure by shared tooling."@en ;
+	skos:prefLabel "User Agent"@en ;
+	skos:scopeNote "User-agent strings are observable in network traffic, proxy logs, and web server logs. Distinctive or spoofed user-agent values are commonly used as indicators in threat intelligence. Distinct from stonework:UserAccount (an identity credential) — a UserAgent describes software behavior, not a user identity."@en ;
+	.
+
+stonework:UserGroup
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalIdentity ;
+	skos:definition "Represents a user group on a system or service, including local OS groups, cloud groups, and social media groups."@en ;
+	skos:prefLabel "User Group" ;
+	.
+
+stonework:VersionedProduct
+	a owl:Class ;
+	rdfs:comment "Instances of stonework:VersionedProduct may include operating systems, applications, libraries, devices, or embedded components at a specific release. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
+	skos:definition "A specific versioned release or build of a Product, identified by a CPE name or equivalent product identifier. Represents the unit of software actually deployed and potentially affected by vulnerabilities."@en ;
+	skos:prefLabel "VersionedProduct" ;
+	skos:scopeNote "Each CPE 2.3 entry with a concrete version component maps to a stonework:VersionedProduct individual. Wildcard-version CPEs map to stonework:Product. Related to its abstract product line via stonework:versionOf."@en ;
+	.
+
+stonework:Virus
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware that replicates by inserting copies of itself into other executable files or documents, spreading when those files are executed or opened."@en ;
+	skos:notation "virus" ;
+	skos:prefLabel "Virus"@en ;
+	.
+
+stonework:Vulnerability
+	a owl:Class ;
+	rdfs:subClassOf stonework:SecurityCondition ;
+	skos:definition "A flaw or weakness in software, hardware, firmware, or system architecture that can be exploited by a threat actor to compromise confidentiality, integrity, or availability."@en ;
+	skos:prefLabel "Vulnerability" ;
+	skos:scopeNote "Represents specific exploitable instances (e.g., CVE-identified vulnerabilities) rather than weakness classes — those are modeled as stonework:Weakness. A Vulnerability is linked to its root Weakness via stonework:hasWeakness, to affected products via stonework:affected, to its fix via stonework:fixedInProduct, and to exploiting malware or actors via stonework:exploits. Aligns with D3FEND Vulnerability and NVD CVE."@en ;
+	.
+
+stonework:VulnerabilityAssessment
+	a owl:Class ;
+	rdfs:subClassOf stonework:Assessment ;
+	skos:definition "A structured evaluation of a specific vulnerability's applicability and risk in a particular product or deployment context."@en ;
+	skos:prefLabel "Vulnerability Assessment"@en ;
+	skos:scopeNote "Captures VEX-style assessments: whether a product is affected, not affected, fixed, or under investigation, together with the justification and any remediation statement. Distinct from stonework:Vulnerability (which describes the flaw itself) — a VulnerabilityAssessment is an opinion about that flaw in a specific context."@en ;
+	.
+
+stonework:Weakness
+	a owl:Class ;
+	rdfs:subClassOf stonework:SecurityCondition ;
+	rdfs:comment 'Instances of stonework:Weakness may represent base weaknesses, variant weaknesses, or compound weaknesses. CWE identifiers (e.g., "CWE‑79") SHOULD be modeled using explicit properties rather than encoded in the class IRI. Descriptions and extended details SHOULD be referenced via citations rather than reproduced verbatim.' ;
+	skos:definition "A type of flaw, fault, or design condition in software, hardware, or system architecture that can enable vulnerabilities, reduce security assurance, or increase the likelihood of exploitable behavior." ;
+	skos:prefLabel "Weakness" ;
+	skos:scopeNote "This class provides a semantic representation of weakness types defined in the Common Weakness Enumeration (CWE). It supports hierarchical relationships, abstraction levels, and mappings to related attack patterns, vulnerabilities, and security controls." ;
+	.
+
+stonework:Webshell
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware deployed on a web server that provides remote command execution via HTTP requests, enabling persistent access through the web application layer."@en ;
+	skos:notation "webshell" ;
+	skos:prefLabel "Webshell"@en ;
+	.
+
+stonework:Wiper
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Malware designed to irreversibly destroy data or render systems inoperable, typically used for sabotage or to obscure attacker activity."@en ;
+	skos:notation "wiper" ;
+	skos:prefLabel "Wiper"@en ;
+	.
+
+stonework:Worm
+	a
+		owl:NamedIndividual ,
+		stonework:MalwareType
+		;
+	skos:definition "Self-replicating malware that spreads across networks or systems without requiring user interaction or a host file to attach to."@en ;
+	skos:notation "worm" ;
+	skos:prefLabel "Worm"@en ;
+	.
+
+stonework:accountOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:UserAccount ;
+	rdfs:range stonework:Agent ;
+	owl:inverseOf stonework:hasAccount ;
+	skos:prefLabel "accountOf" ;
+	.
+
+stonework:achieves
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:MalwareSample ,
+		stonework:Tool
+		;
+	rdfs:range
+		stonework:AITechnique ,
+		stonework:AttackTechnique
+		;
+	skos:prefLabel "achieves" ;
+	.
+
+stonework:affected
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range stonework:VersionedProduct ;
+	skos:definition "Relates a vulnerability to a product version known to be affected by it." ;
+	skos:prefLabel "affected" ;
+	skos:scopeNote "The range is a stonework:VersionedProduct individual whose IRI is derived deterministically from the CPE identifier. The product individual may be populated by a separate CPE ingest; references from CVE data precede that ingest and are resolved when CPE data is loaded." ;
+	.
+
+stonework:affiliatedWith
+	a owl:ObjectProperty ;
+	rdfs:range stonework:Agent ;
+	skos:prefLabel "affiliatedWith" ;
+	.
+
+stonework:associatedWith
+	a owl:ObjectProperty ;
+	skos:prefLabel "associatedWith" ;
+	.
+
+stonework:attributedTo
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range stonework:ThreatActor ;
+	skos:definition "Links a CyberActivity (Campaign, CyberActivityCluster, Incident, etc.) to the ThreatActor (Individual or Group) responsible for it. Corresponds to STIX relationship_type 'attributed-to'." ;
+	skos:prefLabel "attributedTo" ;
+	.
+
+stonework:attributedToAgent
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:DigitalIdentity ;
+	rdfs:range stonework:Agent ;
+	skos:definition "Links a digital identity to the real-world Agent it is believed to belong to." ;
+	skos:prefLabel "attributedToAgent" ;
+	.
+
+stonework:authoredBy
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Provenance ;
+	rdfs:range stonework:Agent ;
+	skos:prefLabel "authoredBy"@en ;
+	.
+
+stonework:bomFormat
+	a owl:DatatypeProperty ;
+	rdfs:range xsd:string ;
+	skos:definition "The exchange format and version in which a Bill of Materials was originally serialized (e.g. 'CycloneDX 1.6', 'SPDX 2.3')." ;
+	skos:prefLabel "BOM format" ;
+	skos:scopeNote "Domain intentionally left unset. Serves as provenance metadata on stonework:SoftwareBillOfMaterials instances, distinguishing the source format from the STONEWORK representation." ;
+	.
+
+stonework:categorizedBy
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:range stonework:Category ;
+	skos:definition "Links any individual to one or more contextual categories." ;
+	skos:prefLabel "categorizedBy" ;
+	skos:scopeNote "This is the primary mechanism for flexible, context-sensitive classification (e.g., Evidence, HighValue, Suspect, etc.). Multiple categories per individual are allowed."@en ;
+	.
+
+stonework:circumvents
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:AITechnique ,
+		stonework:AttackPattern
+		;
+	rdfs:range
+		stonework:AnalyticTechnique ,
+		stonework:DefendTechnique
+		;
+	skos:prefLabel "circumvents" ;
+	.
+
+stonework:clusteredWith
+	a owl:ObjectProperty ;
+	skos:prefLabel "clusteredWith" ;
+	.
+
+stonework:communicatesWith
+	a
+		owl:ObjectProperty ,
+		owl:SymmetricProperty
+		;
+	rdfs:domain
+		stonework:MalwareSample ,
+		stonework:Tool
+		;
+	rdfs:range
+		stonework:Infrastructure ,
+		stonework:URI
+		;
+	skos:prefLabel "communicatesWith" ;
+	.
+
+stonework:compromisedIn
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Agent ;
+	rdfs:range stonework:Incident ;
+	skos:prefLabel "compromisedIn" ;
+	.
+
+stonework:consistsOf
+	a owl:ObjectProperty ;
+	skos:prefLabel "consistsOf" ;
+	.
+
+stonework:contains
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain
+		stonework:AutonomousSystem ,
+		stonework:IPBlock
+		;
+	rdfs:range
+		stonework:IPAddress ,
+		stonework:IPBlock
+		;
+	skos:prefLabel "contains" ;
+	.
+
+stonework:counters
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:AnalyticTechnique ,
+		stonework:DefendTechnique
+		;
+	rdfs:range
+		stonework:AITechnique ,
+		stonework:AttackTechnique
+		;
+	skos:prefLabel "counters" ;
+	.
+
+stonework:cvssBaseScore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range xsd:decimal ;
+	skos:definition "The headline CVSS base score for this vulnerability, on a 0.0–10.0 scale."@en ;
+	skos:prefLabel "cvssBaseScore"@en ;
+	skos:scopeNote "When multiple CVSS versions are present, this SHOULD reflect the highest available version (CVSS 4.0 preferred over 3.1, 3.1 over 2.0). For full structured metric data across all CVSS versions use stonework:hasCvssMetric."@en ;
+	.
+
+stonework:cvssSeverity
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range xsd:string ;
+	skos:definition "The qualitative CVSS severity rating corresponding to the headline base score: NONE, LOW, MEDIUM, HIGH, or CRITICAL."@en ;
+	skos:prefLabel "cvssSeverity"@en ;
+	.
+
+stonework:cvssVector
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range xsd:string ;
+	skos:definition "The CVSS vector string encoding the metric values used to compute the headline base score, e.g. 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H'."@en ;
+	skos:prefLabel "cvssVector"@en ;
+	.
+
+stonework:dateAssigned
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The date and time at which a vulnerability identifier was assigned by the relevant numbering authority."@en ;
+	skos:prefLabel "dateAssigned"@en ;
+	skos:scopeNote "Corresponds to cveMetadata.dateReserved in CVE JSON 5.x. cve:dateAssigned is declared owl:equivalentProperty of this property."@en ;
+	.
+
+stonework:datePublic
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The date and time at which this vulnerability was publicly disclosed."@en ;
+	skos:prefLabel "datePublic"@en ;
+	skos:scopeNote "Corresponds to cveMetadata.datePublished in CVE JSON 5.x. cve:datePublic is declared owl:equivalentProperty of this property."@en ;
+	.
+
+stonework:dateUpdated
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The date and time at which the vulnerability record was last modified in its source database."@en ;
+	skos:prefLabel "dateUpdated"@en ;
+	skos:scopeNote "Corresponds to cveMetadata.dateUpdated in CVE JSON 5.x. cve:dateUpdated is declared owl:equivalentProperty of this property."@en ;
+	.
+
+stonework:dependencyOf
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain stonework:VersionedProduct ;
+	rdfs:range stonework:VersionedProduct ;
+	skos:definition "Relates a product to another product that depends on it. Transitive to support supply chain reasoning across deep dependency trees."@en ;
+	skos:prefLabel "dependencyOf"@en ;
+	.
+
+stonework:derivedFrom
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:DetectionRule ;
+	rdfs:range
+		stonework:CyberActivity ,
+		stonework:DigitalArtifact ,
+		stonework:Infrastructure
+		;
+	skos:prefLabel "derivedFrom" ;
+	.
+
+stonework:describesInfrastructure
+	a owl:ObjectProperty ;
+	rdfs:range stonework:Infrastructure ;
+	skos:definition "Links a Software Bill of Materials to the enterprise infrastructure, system, or application whose component composition it inventories." ;
+	skos:prefLabel "describes infrastructure" ;
+	skos:scopeNote "Domain intentionally left unset. The primary subject is stonework:SoftwareBillOfMaterials, but other provenance-bearing artifacts may describe infrastructure without being SBOMs. Multiple SBOMs may describe the same Infrastructure over time, enabling historical component inventory."@en ;
+	.
+
+stonework:detects
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:AnalyticTechnique ,
+		stonework:DefendTechnique ,
+		stonework:DetectionRule ,
+		stonework:Sensor
+		;
+	skos:definition "Relates a source DetectionRule, Sensor, Indicator, or defensive technique to the threat, activity, or artifact it is capable of detecting. Corresponds to STIX relationship_type 'detects'."@en ;
+	skos:prefLabel "detects" ;
+	.
+
+stonework:downloads
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:File ,
+		stonework:MalwareSample ,
+		stonework:Tool
+		;
+	rdfs:range
+		stonework:File ,
+		stonework:MalwareSample ,
+		stonework:Tool
+		;
+	skos:prefLabel "downloads" ;
+	.
+
+stonework:drops
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain stonework:MalwareSample ;
+	rdfs:range stonework:DigitalArtifact ;
+	skos:prefLabel "drops" ;
+	.
+
+stonework:emailOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:EmailAddress ;
+	rdfs:range stonework:Agent ;
+	owl:inverseOf stonework:hasEmail ;
+	skos:prefLabel "emailOf" ;
+	.
+
+stonework:exploits
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:Campaign ,
+		stonework:MalwareSample ,
+		stonework:ThreatActor
+		;
+	rdfs:range stonework:Vulnerability ;
+	skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." ;
+	skos:prefLabel "exploits" ;
+	.
+
+stonework:exploitsWeakness
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasWeakness ;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range stonework:Weakness ;
+	skos:definition "Relates a vulnerability to the weakness class it instantiates or exploits. Subproperty of stonework:hasWeakness, using the directional 'exploits' semantics aligned with CVE and CWE mapping conventions."@en ;
+	skos:prefLabel "exploitsWeakness"@en ;
+	skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. Used by cve:exploitsWeakness (rdfs:subPropertyOf this property) when CVE data is loaded."@en ;
+	.
+
+stonework:fixedInProduct
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range stonework:VersionedProduct ;
+	skos:definition "Relates a vulnerability to the product version in which it was addressed."@en ;
+	skos:prefLabel "fixedInProduct"@en ;
+	skos:scopeNote "The range is a stonework:VersionedProduct individual whose IRI is derived deterministically from the CPE identifier. Populated by CVE/patch ingest."@en ;
+	.
+
+stonework:hasAccount
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Agent ;
+	rdfs:range stonework:UserAccount ;
+	skos:prefLabel "hasAccount"@en ;
+	.
+
+stonework:hasArtifact
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:MalwareSample ;
+	rdfs:range stonework:DigitalArtifact ;
+	skos:definition "Links a MalwareSample to a captured binary artifact (file, memory dump, or encoded payload) constituting the physical evidence of the sample."@en ;
+	skos:prefLabel "hasArtifact"@en ;
+	skos:scopeNote "Optional — a MalwareSample may be known via hashes or threat reports without the binary being available. When present, the artifact provides retrievable binary evidence. Corresponds to the STIX 2.1 sample_refs property on the malware SDO."@en ;
+	.
+
+stonework:hasBomEntry
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:SoftwareBillOfMaterials ;
+	rdfs:range stonework:BomEntry ;
+	skos:definition "Relates a Software Bill of Materials to one of its component entries."@en ;
+	skos:prefLabel "has BOM entry" ;
+	skos:scopeNote "Each BomEntry carries the component's VersionedProduct reference (via stonework:installationOf) and any component-specific metadata (PURL, license, hash, component type). Range is BomEntry rather than VersionedProduct directly because the same VersionedProduct may appear in multiple SBOMs with different component-level attributes."@en ;
+	.
+
+stonework:hasCvssMetric
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Vulnerability ;
+	skos:definition "Relates a vulnerability to a structured CVSS metric record carrying the version, vector string, and base/temporal/environmental scores."@en ;
+	skos:prefLabel "hasCvssMetric"@en ;
+	skos:scopeNote "A single vulnerability may carry metrics for multiple CVSS versions (2.0, 3.1, 4.0). For a single headline score and severity, use stonework:cvssBaseScore and stonework:cvssSeverity directly on the Vulnerability. This property links to the full per-version metric objects populated by CVE ingest."@en ;
+	.
+
+stonework:hasDependency
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:VersionedProduct ;
+	rdfs:range stonework:VersionedProduct ;
+	owl:inverseOf stonework:dependencyOf ;
+	skos:definition "Relates a product version to another product version it depends on."@en ;
+	skos:prefLabel "hasDependency"@en ;
+	.
+
+stonework:hasEmail
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Agent ;
+	rdfs:range stonework:EmailAddress ;
+	skos:prefLabel "hasEmail" ;
+	.
+
+stonework:hasHash
+	a owl:ObjectProperty ;
+	rdfs:range stonework:Hash ;
+	skos:definition "Relates an entity to its hash entries. The range is a stonework:Hash individual representing a single hash algorithm and digest value." ;
+	skos:prefLabel "hasHash" ;
+	.
+
+stonework:hasIdentifier
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:DigitalIdentity ;
+	rdfs:range stonework:Identifier ;
+	skos:definition "Links a Digital Identity to one or more atomic Identifiers that belong to it." ;
+	skos:prefLabel "hasIdentifier" ;
+	.
+
+stonework:hasInstalledProduct
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Infrastructure ;
+	rdfs:range stonework:VersionedProduct ;
+	skos:definition "Links an enterprise infrastructure to a versioned product known to be installed in that environment." ;
+	skos:prefLabel "has installed product" ;
+	skos:scopeNote "Used in the user-data graph to assert enterprise inventory directly. Combined with stonework:versionOf and stonework:affected, enables traversal from installed software to applicable CVEs. For SBOM-based ingest with full component provenance, see stonework:SoftwareBillOfMaterials and stonework:hasBomEntry."@en ;
+	.
+
+stonework:hasMember
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:Group ,
+		stonework:Organization ,
+		stonework:ThreatActor
+		;
+	skos:prefLabel "hasMember"@en ;
+	.
+
+stonework:hasObservable
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:SecurityObservation ;
+	rdfs:range stonework:CyberEntity ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAhasResult> ;
+	skos:definition "Links a SecurityObservation to the cyber observable objects (SCOs) captured during the observation window."@en ;
+	skos:prefLabel "hasObservable"@en ;
+	skos:scopeNote "The range covers any SCO type: stonework:IPAddress, stonework:Domain, stonework:File, stonework:NetworkTraffic, stonework:RuntimeProcess, stonework:UserAccount, etc. Corresponds to STIX observed-data object_refs. Inspired by SOSA sosa:hasResult."@en ;
+	.
+
+stonework:hasPhoneNumber
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Agent ;
+	rdfs:range stonework:PhoneNumber ;
+	skos:prefLabel "hasPhoneNumber"@en ;
+	.
+
+stonework:hasTechnique
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain
+		stonework:Tactic ,
+		stonework:Technique
+		;
+	rdfs:range stonework:Technique ;
+	skos:definition "Relates a tactic to an offensive technique that serves that tactic's goal." ;
+	skos:prefLabel "hasTechnique" ;
+	.
+
+stonework:hasVendor
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Product ;
+	rdfs:range stonework:Agent ;
+	owl:inverseOf stonework:vendorOf ;
+	skos:definition "Relates a product family to the Agent (organization or person) that develops or maintains it."@en ;
+	skos:prefLabel "hasVendor"@en ;
+	.
+
+stonework:hasVersion
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Product ;
+	rdfs:range stonework:VersionedProduct ;
+	owl:inverseOf stonework:versionOf ;
+	skos:definition "Relates a product family to a specific versioned product instance."@en ;
+	skos:prefLabel "hasVersion"@en ;
+	.
+
+stonework:hasWeakness
+	a
+		owl:ObjectProperty ,
+		owl:AsymmetricProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range stonework:Weakness ;
+	skos:definition "Relates a vulnerability to the weakness class it exploits or instantiates."@en ;
+	skos:prefLabel "hasWeakness" ;
+	skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en ;
+	.
+
+stonework:hashOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Hash ;
+	owl:inverseOf stonework:hasHash ;
+	skos:definition "Relates a hash entry to the entity it describes. The domain is a stonework:Hash individual representing a single hash algorithm and digest value." ;
+	skos:prefLabel "hashOf" ;
+	.
+
+stonework:hostedBy
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain stonework:Infrastructure ;
+	rdfs:range stonework:Agent ;
+	skos:prefLabel "hostedBy" ;
+	.
+
+stonework:indicates
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Indicator ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:AttackPattern
+			stonework:AttackTechnique
+			stonework:Campaign
+			stonework:CyberActivityCluster
+			stonework:Infrastructure
+			stonework:Malware
+			stonework:ThreatActor
+			stonework:Tool
+		) ;
+	] ;
+	skos:definition "Asserts that when the source Indicator's pattern is matched, it signals the presence of the target adversary behavior, malware, campaign, or threat actor." ;
+	skos:prefLabel "indicates"@en ;
+	skos:scopeNote "Corresponds to STIX relationship_type 'indicates'. The domain is always stonework:Indicator. The range covers the principal threat intelligence objects an indicator can point to: AttackPattern/AttackTechnique (technique-level indicators), Malware (malware family or sample indicators), Campaign and CyberActivityCluster (campaign-attribution indicators), ThreatActor and its subclasses (actor-attribution indicators), Infrastructure (C2/hosting indicators), and Tool (tool-use indicators). A single Indicator may indicate multiple targets."@en ;
+	.
+
+stonework:installationOf
+	a owl:ObjectProperty ;
+	rdfs:range stonework:VersionedProduct ;
+	skos:definition "Relates a component context to the versioned product it references or instantiates."@en ;
+	skos:prefLabel "installation of" ;
+	skos:scopeNote "Used by both stonework:BomEntry (declarative — a component listed in an SBOM) and stonework:ProductInstallation (observational — a verified deployment on a specific system). Domain is intentionally left unset to avoid restricting future component-context subclasses; intended subjects are subclasses of stonework:ComponentContext."@en ;
+	.
+
+stonework:linkedTo
+	a owl:ObjectProperty ;
+	skos:prefLabel "linkedTo" ;
+	.
+
+stonework:madeBySensor
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:SecurityObservation ;
+	rdfs:range stonework:Sensor ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAmadeBySensor> ;
+	skos:definition "Links a SecurityObservation to the Sensor that produced it."@en ;
+	skos:prefLabel "madeBySensor"@en ;
+	skos:scopeNote "Inspired by SOSA sosa:madeBySensor. Enables queries such as 'which sensor produced this observation?' and 'what has this IDS sensor observed in the last 24 hours?' The producing sensor may also be the created_by_ref identity in the STIX wire format."@en ;
+	.
+
+stonework:markingRef
+	a owl:ObjectProperty ;
+	rdfs:range stonework:Markings ;
+	skos:definition "Reference to the Markings applied by this marking entry." ;
+	skos:prefLabel "markingRef" ;
+	.
+
+stonework:memberOf
+	a owl:ObjectProperty ;
+	rdfs:range
+		stonework:Group ,
+		stonework:Organization ,
+		stonework:ThreatActor
+		;
+	owl:inverseOf stonework:hasMember ;
+	skos:prefLabel "memberOf"@en ;
+	.
+
+stonework:memberOfFamily
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:MalwareSample ;
+	rdfs:range stonework:MalwareFamily ;
+	skos:definition "Relates a specific malware sample to the malware family it has been classified as belonging to, based on shared behavioral patterns, code similarity, infrastructure overlap, or analyst attribution." ;
+	skos:prefLabel "memberOfFamily" ;
+	.
+
+stonework:mentions
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Provenance ;
+	skos:prefLabel "mentions" ;
+	.
+
+stonework:mitigates
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Countermeasure ;
+	rdfs:range
+		stonework:AttackPattern ,
+		stonework:Vulnerability
+		;
+	skos:definition "Relates a Mitigation, CourseOfAction, or Control to the AttackPattern or Vulnerability it addresses. Corresponds to STIX relationship_type 'mitigates'."@en ;
+	skos:prefLabel "mitigates" ;
+	.
+
+stonework:observedIn
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:DigitalArtifact ,
+		stonework:Infrastructure
+		;
+	rdfs:range stonework:Campaign ;
+	skos:prefLabel "observedIn" ;
+	.
+
+stonework:originatesFrom
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Agent ;
+	rdfs:range stonework:Location ;
+	skos:prefLabel "originatesFrom" ;
+	.
+
+stonework:overlapsWith
+	a owl:ObjectProperty ;
+	skos:prefLabel "overlapsWith" ;
+	.
+
+stonework:phoneNumberOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:PhoneNumber ;
+	rdfs:range stonework:Agent ;
+	owl:inverseOf stonework:hasPhoneNumber ;
+	skos:prefLabel "phoneNumberOf" ;
+	.
+
+stonework:playsRole
+	a owl:ObjectProperty ;
+	rdfs:range stonework:Role ;
+	skos:prefLabel "playsRole" ;
+	.
+
+stonework:precedes
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:IntelligenceProduct ;
+	rdfs:range stonework:IntelligenceProduct ;
+	skos:definition "Temporal succession of Information (v1 precedes v2 of a report)"@en ;
+	skos:prefLabel "precedes" ;
+	.
+
+stonework:references
+	a owl:ObjectProperty ;
+	skos:prefLabel "references" ;
+	.
+
+stonework:registeredTo
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Infrastructure ;
+	rdfs:range stonework:Agent ;
+	skos:definition "Relates infrastructure to the Agent recorded as its owner or registrant of record — the entity in whose name the resource is officially registered."@en ;
+	skos:prefLabel "registeredTo" ;
+	.
+
+stonework:registeredWith
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Infrastructure ;
+	rdfs:range stonework:Agent ;
+	skos:definition "Relates infrastructure to the registrar, registry, or administrative authority through which the registration was processed or is maintained."@en ;
+	skos:prefLabel "registeredWith" ;
+	.
+
+stonework:relatedTechnique
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberTechnique ;
+	rdfs:range stonework:CyberTechnique ;
+	skos:definition "Relates a CyberTechnique to another related CyberTechnique via a cross-framework or cross-abstraction-level association."@en ;
+	skos:prefLabel "relatedTechnique" ;
+	skos:scopeNote "Used for links such as CWE weakness → CAPEC technique (exploits/instantiates) and CAPEC technique → ATT&CK technique (operationalizes). Domain is CyberTechnique; framework-specific individuals populate the relationships at the framework mapping layer."@en ;
+	.
+
+stonework:relatedTo
+	a owl:ObjectProperty ;
+	skos:definition "Shortcut triple: generic relationship. Corresponds to STIX relationship_type 'related-to'." ;
+	skos:prefLabel "relatedTo" ;
+	.
+
+stonework:remediates
+	a owl:ObjectProperty ;
+	rdfs:range
+		stonework:Vulnerability ,
+		stonework:Weakness
+		;
+	skos:prefLabel "remediates" ;
+	.
+
+stonework:resolvesTo
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Infrastructure ;
+	rdfs:range stonework:Infrastructure ;
+	skos:prefLabel "resolvesTo"@en ;
+	.
+
+stonework:revokedBy
+	a owl:ObjectProperty ;
+	skos:definition "Shortcut triple: source STIX object is revoked and superseded by target. Corresponds to STIX relationship_type 'revoked-by'." ;
+	skos:prefLabel "revokedBy" ;
+	.
+
+stonework:serialNumber
+	a owl:DatatypeProperty ;
+	rdfs:range xsd:string ;
+	skos:definition "A globally unique identifier for a BOM document, typically expressed as a URN UUID (e.g. urn:uuid:...) per the CycloneDX specification or as a document namespace per SPDX." ;
+	skos:prefLabel "serial number" ;
+	skos:scopeNote "Domain intentionally left unset. Primary subject is stonework:SoftwareBillOfMaterials. Use dcterms:created for the BOM timestamp."@en ;
+	.
+
+stonework:sharesCertificate
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Infrastructure ;
+	rdfs:range stonework:Certificate ;
+	skos:prefLabel "sharesCertificate" ;
+	.
+
+stonework:sharesRegistrant
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Infrastructure ;
+	skos:prefLabel "sharesRegistrant" ;
+	.
+
+stonework:subdomainOf
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain stonework:Domain ;
+	rdfs:range stonework:Domain ;
+	skos:prefLabel "subdomainOf" ;
+	.
+
+stonework:supersededBy
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range stonework:Vulnerability ;
+	skos:definition "Relates a vulnerability to the vulnerability record that supersedes it, e.g. when a CVE is split, merged, or formally replaced by another identifier."@en ;
+	skos:prefLabel "supersededBy"@en ;
+	skos:scopeNote "Corresponds to cve:replacedBy in CVE JSON 5.x, but as an object property linking to a stonework:Vulnerability individual rather than a string. The source-specific string form is preserved on cve:replacedBy."@en ;
+	.
+
+stonework:supersedes
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain stonework:VersionedProduct ;
+	rdfs:range stonework:VersionedProduct ;
+	skos:definition "Relates a product version to an older version it replaces. Transitive to support full product lifecycle reasoning."@en ;
+	skos:prefLabel "supersedes"@en ;
+	.
+
+stonework:targets
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:Campaign ,
+		stonework:MalwareSample ,
+		stonework:ThreatActor
+		;
+	rdfs:range
+		stonework:Agent ,
+		stonework:Location ,
+		stonework:Sector ,
+		stonework:Vulnerability
+		;
+	skos:definition "Shortcut triple: source targets the target Identity, Vulnerability, or Location. Corresponds to STIX relationship_type 'targets'." ;
+	skos:prefLabel "targets" ;
+	.
+
+stonework:techniqueOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Technique ;
+	rdfs:isDefinedBy <https://cyberterrain.org/ns/stonework#> ;
+	rdfs:range
+		stonework:Tactic ,
+		stonework:Technique
+		;
+	owl:inverseOf stonework:hasTechnique ;
+	skos:definition "Links a Technique to the Tactic(s) it achieves or supports."@en ;
+	skos:prefLabel "techniqueOf"@en ;
+	skos:scopeNote "This is the inverse of hasTechnique. A single Technique may support multiple Tactics (e.g. 'Phishing' supports both Initial Access and Credential Access)."@en ;
+	.
+
+stonework:urlOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:URI ;
+	skos:prefLabel "urlOf" ;
+	.
+
+stonework:uses
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:Campaign ,
+		stonework:MalwareSample ,
+		stonework:ThreatActor
+		;
+	rdfs:range stonework:AttackTechnique ;
+	skos:definition "Relates a threat actor group or campaign to an offensive technique they are known to employ." ;
+	skos:prefLabel "uses" ;
+	skos:scopeNote "Sub-property stones:uses carries the shortcut triples emitted by the STIX 2.1 transform for relationship_type 'uses'." ;
+	.
+
+stonework:usesRule
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Sensor ;
+	rdfs:range stonework:DetectionRule ;
+	skos:definition "Relates a Sensor to the Detection Rules it applies." ;
+	skos:prefLabel "usesRule" ;
+	.
+
+stonework:variantOf
+	a owl:ObjectProperty ;
+	rdfs:domain
+		stonework:MalwareFamily ,
+		stonework:MalwareSample
+		;
+	rdfs:range
+		stonework:File ,
+		stonework:Hash ,
+		stonework:MalwareFamily ,
+		stonework:MalwareSample
+		;
+	skos:definition "Relates a malware sample or family to another sample or family from which it is derived, modified, or evolved — indicating shared code lineage, forked development, or deliberate repackaging."@en ;
+	skos:prefLabel "variantOf" ;
+	.
+
+stonework:vendorOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Agent ;
+	rdfs:range stonework:Product ;
+	owl:inverseOf stonework:hasVendor ;
+	skos:definition "Relates an Agent to a product family it develops or maintains."@en ;
+	skos:prefLabel "vendorOf"@en ;
+	.
+
+stonework:versionOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:VersionedProduct ;
+	rdfs:range stonework:Product ;
+	owl:inverseOf stonework:hasVersion ;
+	skos:definition "Links a specific versioned product instance back to its abstract product family."@en ;
+	skos:prefLabel "versionOf"@en ;
+	.
+
+stonework:vulnerabilityId
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range xsd:string ;
+	skos:definition "The canonical identifier assigned to this vulnerability by its originating numbering authority, e.g. 'CVE-2021-44228', 'GHSA-jfh8-c2jp-hdp9', or 'OSV-2021-1'."@en ;
+	skos:prefLabel "vulnerabilityId"@en ;
+	skos:scopeNote "Source-specific ID properties (e.g. cve:cveId) are declared rdfs:subPropertyOf this property, enabling cross-source queries on a single predicate. Each vulnerability record SHOULD carry exactly one identifier from its primary numbering authority."@en ;
+	.
+
+stonework:weaknessOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Weakness ;
+	rdfs:range stonework:Vulnerability ;
+	owl:inverseOf stonework:hasWeakness ;
+	skos:definition "Relates a weakness to the vulnerability that exploits or instantiates it."@en ;
+	skos:prefLabel "weaknessOf"@en ;
+	skos:scopeNote "The range is a vulnerability individual. The weakness individual (domain) is a stonework:Weakness whose IRI is derived from the CWE identifier. The weakness individual may be populated by a separate CWE ingest."@en ;
+	.
+

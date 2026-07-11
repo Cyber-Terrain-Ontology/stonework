@@ -1,0 +1,166 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix frameworks: <https://cyberterrain.org/ns/frameworks/> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix d3f: <http://d3fend.mitre.org/ontologies/d3fend.owl#> .
+@base <https://cyberterrain.org/ns/frameworks/d3fend> .
+
+###  https://cyberterrain.org/ns/frameworks/d3fend
+frameworks:d3fend rdf:type owl:Ontology ;
+                  owl:versionIRI <https://cyberterrain.org/ns/frameworks/d3fend/0.1.0> ;
+                  owl:versionInfo "0.1.0" ;
+                  owl:imports <https://cyberterrain.org/ns/stonework#> ;
+                  rdfs:label "STONEWORK: D3FEND Mapping"@en ;
+                  dcterms:description "Declares subclass mappings from D3FEND classes into STONEWORK. D3FEND classes are mapped as subclasses of their STONEWORK counterparts, consistent with STONEWORK's role as the middle-tier ontology. Load alongside D3FEND when countermeasure knowledge graph reasoning is required."@en ;
+                  rdfs:seeAlso <http://d3fend.mitre.org/ontologies/d3fend.owl> .
+
+
+#################################################################
+#    Agent Mappings
+#################################################################
+
+###  d3f:Agent → stonework:Agent
+d3f:Agent rdfs:subClassOf stonework:Agent .
+
+###  d3f:Person → stonework:Person
+d3f:Person rdfs:subClassOf stonework:Person .
+
+###  d3f:Organization → stonework:Organization
+d3f:Organization rdfs:subClassOf stonework:Organization .
+
+###  d3f:Group → stonework:Group
+d3f:Group rdfs:subClassOf stonework:Group .
+
+
+#################################################################
+#    Artifact Mappings
+#################################################################
+
+###  d3f:Certificate → stonework:Certificate
+d3f:Certificate rdfs:subClassOf stonework:Certificate .
+
+###  d3f:DigitalArtifact → stonework:DigitalArtifact
+d3f:DigitalArtifact rdfs:subClassOf stonework:DigitalArtifact .
+
+###  d3f:File → stonework:File
+d3f:File rdfs:subClassOf stonework:File .
+
+###  d3f:Log → stonework:Log
+d3f:Log rdfs:subClassOf stonework:Log .
+
+###  d3f:NetworkTraffic → stonework:NetworkTraffic
+d3f:NetworkTraffic rdfs:subClassOf stonework:NetworkTraffic .
+
+###  d3f:UserAccount → stonework:UserAccount
+d3f:UserAccount rdfs:subClassOf stonework:UserAccount .
+
+
+#################################################################
+#    Infrastructure Mappings
+#################################################################
+
+###  d3f:PhysicalArtifact → stonework:Infrastructure
+###  D3FEND PhysicalArtifact covers physical and virtual systems — maps to Infrastructure
+###  d3f:Artifact is too broad (also parents DigitalArtifact and System) to map here
+d3f:PhysicalArtifact rdfs:subClassOf stonework:Infrastructure .
+
+###  d3f:System → stonework:Infrastructure
+###  D3FEND System (interrelated artifacts working as a coherent entity) aligns with Infrastructure
+d3f:System rdfs:subClassOf stonework:Infrastructure .
+
+###  d3f:Host → stonework:Host
+d3f:Host rdfs:subClassOf stonework:Host .
+
+###  d3f:NetworkService → stonework:NetworkService
+d3f:NetworkService rdfs:subClassOf stonework:NetworkService .
+
+###  d3f:IPAddress → stonework:IPAddress
+d3f:IPAddress rdfs:subClassOf stonework:IPAddress .
+
+###  d3f:Sensor → stonework:Sensor
+d3f:Sensor rdfs:subClassOf stonework:Sensor .
+
+
+#################################################################
+#    Technique Mappings
+#################################################################
+
+###  d3f:Technique → stonework:Technique
+d3f:Technique rdfs:subClassOf stonework:Technique .
+
+###  d3f:CyberTechnique → stonework:CyberTechnique
+d3f:CyberTechnique rdfs:subClassOf stonework:CyberTechnique .
+
+###  d3f:OffensiveTechnique → stonework:AttackTechnique
+d3f:OffensiveTechnique rdfs:subClassOf stonework:AttackTechnique .
+
+###  d3f:DefensiveTechnique → stonework:DefendTechnique
+d3f:DefensiveTechnique rdfs:subClassOf stonework:DefendTechnique .
+
+###  d3f:AnalyticTechnique → stonework:AnalyticTechnique
+d3f:AnalyticTechnique rdfs:subClassOf stonework:AnalyticTechnique .
+
+
+#################################################################
+#    Tactic Mappings
+#################################################################
+
+###  d3f:Goal → stonework:Tactic
+###  D3FEND Goal is the shared superclass of OffensiveTactic and DefensiveTactic
+d3f:Goal rdfs:subClassOf stonework:Tactic .
+
+###  d3f:OffensiveTactic → stonework:OffensiveTactic
+d3f:OffensiveTactic rdfs:subClassOf stonework:OffensiveTactic .
+
+###  d3f:DefensiveTactic → stonework:DefensiveTactic
+d3f:DefensiveTactic rdfs:subClassOf stonework:DefensiveTactic .
+
+
+#################################################################
+#    Security Condition Mappings
+#################################################################
+
+###  d3f:Vulnerability → stonework:Vulnerability
+d3f:Vulnerability rdfs:subClassOf stonework:Vulnerability .
+
+###  d3f:Weakness → stonework:Weakness
+d3f:Weakness rdfs:subClassOf stonework:Weakness .
+
+
+#################################################################
+#    Behavior / Process Mappings
+#################################################################
+
+###  d3f:Procedure → stonework:Procedure
+###  D3FEND Procedure (implements a Technique via Steps) maps directly to stonework:Procedure
+d3f:Procedure rdfs:subClassOf stonework:Procedure .
+
+###  d3f:OperationalActivityPlan → stonework:Process
+###  D3FEND OperationalActivityPlan (business process / activity plan) maps to stonework:Process
+d3f:OperationalActivityPlan rdfs:subClassOf stonework:Process .
+
+
+#################################################################
+#    Countermeasure Mappings
+#################################################################
+
+###  d3f:DefensiveArtifact → stonework:Countermeasure
+###  D3FEND DefensiveArtifact covers artifacts deployed as part of a defensive measure
+###  (e.g. firewall rules, detection signatures, access control configurations)
+d3f:DefensiveArtifact rdfs:subClassOf stonework:Countermeasure .
+
+
+#################################################################
+#    Event / Activity Mappings
+#################################################################
+
+###  d3f:Event → stonework:Event
+d3f:Event rdfs:subClassOf stonework:Event .
+
+###  d3f:DigitalEvent → stonework:CyberActivity
+###  D3FEND DigitalEvent covers happenings in cyberspace, aligning with CyberActivity
+d3f:DigitalEvent rdfs:subClassOf stonework:CyberActivity .

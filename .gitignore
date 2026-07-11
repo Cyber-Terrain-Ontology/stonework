@@ -1,5 +1,10 @@
+# Build tools (download with: bash tools/download-rdf-toolkit.sh)
+tools/rdf-toolkit.jar
+
 # Protégé artifacts
 ontologies/catalog-backup-*.xml
+# catalog-v*.xml
+
 
 # IDE
 .idea/
@@ -8,3 +13,5 @@ ontologies/catalog-backup-*.xml
 # OS
 Thumbs.db
 .DS_Store
+
+
