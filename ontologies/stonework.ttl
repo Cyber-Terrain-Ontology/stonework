@@ -123,6 +123,15 @@ stonework:Behavior
 	skos:scopeNote "Groups TTP-related classes: Tactic, Technique (and subclasses), and Procedure. In BFO terms, Behaviors are GenericallyDependentContinuants — specifications or patterns describing how actions are carried out. The execution of a Technique is a CyberActivity; the Technique itself is a Behavior. Aligns with IAO PlanSpecification."@en ;
 	.
 
+stonework:BomEntry
+	a owl:Class ;
+	rdfs:subClassOf stonework:ComponentContext ;
+	rdfs:comment "BomEntry is the STONEWORK representation of a CycloneDX component element or SPDX package entry. It links a VersionedProduct into the context of a particular SBOM document via stonework:installationOf, and may carry component-specific metadata (PURL, license, hash, component type) that does not belong on the VersionedProduct itself."@en ;
+	skos:definition "A single component entry within a Software Bill of Materials, asserting that a specific VersionedProduct is included in the artifact or system described by the SBOM."@en ;
+	skos:prefLabel "BOM Entry" ;
+	skos:scopeNote "An SBOM import creates one BomEntry per declared component. The BomEntry IRI is scoped to the SBOM (e.g. <sbom-iri/entry/<component-ref>>). Multiple BomEntry instances across different SBOMs may reference the same VersionedProduct via stonework:installationOf."@en ;
+	.
+
 stonework:Bootkit
 	a
 		owl:NamedIndividual ,
@@ -171,6 +180,13 @@ stonework:City
 	rdfs:subClassOf stonework:Location ;
 	skos:definition "A significant urban settlement, municipality, or metropolitan area." ;
 	skos:prefLabel "City" ;
+	.
+
+stonework:ComponentContext
+	a owl:Class ;
+	skos:definition "An abstract class representing a context-specific reference to a VersionedProduct: the same product version appears differently depending on whether it is declared in a bill of materials or observed as a running installation on a specific system."@en ;
+	skos:prefLabel "Component Context" ;
+	skos:scopeNote "Subclassed by stonework:BomEntry (declarative — listed in an SBOM document) and stonework:ProductInstallation (observational — verified deployment via SWID tag or scan). Unifies these two evidence bases under a single superclass so that stonework:installationOf can span both without domain restrictions forcing incorrect inferences."@en ;
 	.
 
 stonework:Control
@@ -706,9 +722,10 @@ stonework:Product
 
 stonework:ProductInstallation
 	a owl:Class ;
+	rdfs:subClassOf stonework:ComponentContext ;
 	rdfs:comment "Represents the most granular product identity level: not what software exists, but where and how it is installed. Multiple ProductInstallation individuals may reference the same VersionedProduct."@en ;
 	skos:definition "A specific installed instance of a VersionedProduct on a particular system or environment, as identified by a SWID tag or equivalent installation record."@en ;
-	skos:prefLabel "ProductInstallation" ;
+	skos:prefLabel "Product Installation" ;
 	skos:scopeNote "stonework:ProductInstallation is the intended target for SWID tag data. The installing system, path, licensee, and configuration details belong here rather than on stonework:VersionedProduct."@en ;
 	.
 
@@ -884,10 +901,10 @@ stonework:Signature
 
 stonework:SoftwareBillOfMaterials
 	a owl:Class ;
-	rdfs:comment "An SBOM asserts that specific VersionedProduct instances are components of a containing artifact. The containing artifact may itself be a VersionedProduct related to this SBOM via stonework:hasBomEntry."@en ;
+	rdfs:comment "An SBOM asserts that specific VersionedProduct instances are components of a containing artifact. Component entries are represented as stonework:BomEntry instances linked via stonework:hasBomEntry."@en ;
 	skos:definition "A formal, machine-readable inventory of VersionedProduct components that constitute a software artifact or system, expressed in a standard format such as CycloneDX or SPDX."@en ;
-	skos:prefLabel "SoftwareBillOfMaterials" ;
-	skos:scopeNote "Instances of stonework:SoftwareBillOfMaterials correspond to SBOM documents. Component membership is expressed via stonework:hasBomEntry. Format metadata (CycloneDX, SPDX, etc.) SHOULD be carried as datatype properties."@en ;
+	skos:prefLabel "Software Bill of Materials" ;
+	skos:scopeNote "SoftwareBillOfMaterials is a native STONEWORK class — not a subclass of any STIX domain object, as STIX 2.1 has no SBOM concept. Instances correspond to SBOM documents; format provenance (CycloneDX 1.6, SPDX 2.3, etc.) is expressed via stonework:bomFormat."@en ;
 	.
 
 stonework:Spyware
@@ -1155,6 +1172,14 @@ stonework:authoredBy
 	skos:prefLabel "authoredBy"@en ;
 	.
 
+stonework:bomFormat
+	a owl:DatatypeProperty ;
+	rdfs:range xsd:string ;
+	skos:definition "The exchange format and version in which a Bill of Materials was originally serialized (e.g. 'CycloneDX 1.6', 'SPDX 2.3')." ;
+	skos:prefLabel "BOM format" ;
+	skos:scopeNote "Domain intentionally left unset. Serves as provenance metadata on stonework:SoftwareBillOfMaterials instances, distinguishing the source format from the STONEWORK representation." ;
+	.
+
 stonework:categorizedBy
 	a
 		owl:ObjectProperty ,
@@ -1333,6 +1358,14 @@ stonework:derivedFrom
 	skos:prefLabel "derivedFrom" ;
 	.
 
+stonework:describesInfrastructure
+	a owl:ObjectProperty ;
+	rdfs:range stonework:Infrastructure ;
+	skos:definition "Links a Software Bill of Materials to the enterprise infrastructure, system, or application whose component composition it inventories." ;
+	skos:prefLabel "describes infrastructure" ;
+	skos:scopeNote "Domain intentionally left unset. The primary subject is stonework:SoftwareBillOfMaterials, but other provenance-bearing artifacts may describe infrastructure without being SBOMs. Multiple SBOMs may describe the same Infrastructure over time, enabling historical component inventory."@en ;
+	.
+
 stonework:detects
 	a owl:ObjectProperty ;
 	rdfs:domain
@@ -1428,9 +1461,10 @@ stonework:hasArtifact
 stonework:hasBomEntry
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:SoftwareBillOfMaterials ;
-	rdfs:range stonework:VersionedProduct ;
-	skos:definition "Relates an SBOM to a component VersionedProduct it inventories."@en ;
-	skos:prefLabel "hasBomEntry"@en ;
+	rdfs:range stonework:BomEntry ;
+	skos:definition "Relates a Software Bill of Materials to one of its component entries."@en ;
+	skos:prefLabel "has BOM entry" ;
+	skos:scopeNote "Each BomEntry carries the component's VersionedProduct reference (via stonework:installationOf) and any component-specific metadata (PURL, license, hash, component type). Range is BomEntry rather than VersionedProduct directly because the same VersionedProduct may appear in multiple SBOMs with different component-level attributes."@en ;
 	.
 
 stonework:hasCvssMetric
@@ -1470,6 +1504,15 @@ stonework:hasIdentifier
 	rdfs:range stonework:Identifier ;
 	skos:definition "Links a Digital Identity to one or more atomic Identifiers that belong to it." ;
 	skos:prefLabel "hasIdentifier" ;
+	.
+
+stonework:hasInstalledProduct
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Infrastructure ;
+	rdfs:range stonework:VersionedProduct ;
+	skos:definition "Links an enterprise infrastructure to a versioned product known to be installed in that environment." ;
+	skos:prefLabel "has installed product" ;
+	skos:scopeNote "Used in the user-data graph to assert enterprise inventory directly. Combined with stonework:versionOf and stonework:affected, enables traversal from installed software to applicable CVEs. For SBOM-based ingest with full component provenance, see stonework:SoftwareBillOfMaterials and stonework:hasBomEntry."@en ;
 	.
 
 stonework:hasMember
@@ -1584,10 +1627,10 @@ stonework:indicates
 
 stonework:installationOf
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:ProductInstallation ;
 	rdfs:range stonework:VersionedProduct ;
-	skos:definition "Relates a specific installation instance to the versioned product it instantiates."@en ;
-	skos:prefLabel "installationOf"@en ;
+	skos:definition "Relates a component context to the versioned product it references or instantiates."@en ;
+	skos:prefLabel "installation of" ;
+	skos:scopeNote "Used by both stonework:BomEntry (declarative — a component listed in an SBOM) and stonework:ProductInstallation (observational — a verified deployment on a specific system). Domain is intentionally left unset to avoid restricting future component-context subclasses; intended subjects are subclasses of stonework:ComponentContext."@en ;
 	.
 
 stonework:linkedTo
@@ -1748,6 +1791,14 @@ stonework:revokedBy
 	a owl:ObjectProperty ;
 	skos:definition "Shortcut triple: source STIX object is revoked and superseded by target. Corresponds to STIX relationship_type 'revoked-by'." ;
 	skos:prefLabel "revokedBy" ;
+	.
+
+stonework:serialNumber
+	a owl:DatatypeProperty ;
+	rdfs:range xsd:string ;
+	skos:definition "A globally unique identifier for a BOM document, typically expressed as a URN UUID (e.g. urn:uuid:...) per the CycloneDX specification or as a document namespace per SPDX." ;
+	skos:prefLabel "serial number" ;
+	skos:scopeNote "Domain intentionally left unset. Primary subject is stonework:SoftwareBillOfMaterials. Use dcterms:created for the BOM timestamp."@en ;
 	.
 
 stonework:sharesCertificate
