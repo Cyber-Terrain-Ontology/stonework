@@ -45,7 +45,7 @@ Download the STONEWORK ontology file:
 ontologies/stonework.ttl
 ```
 
-STONEWORK imports STONES. Load both into your triplestore, or clone with submodules (see Developer Setup) to get everything together.
+STONEWORK treats STONES and the other CTI framework ontologies (ATT&CK, CAPEC, CWE, CVE, CPE, ...) as peer reference vocabularies rather than ontologies it imports — load whichever ones you need alongside it.
 
 ### 2. Load into a triplestore
 
@@ -74,19 +74,11 @@ Load the CTI reference datasets (ATT&CK, CAPEC, CVE, CWE, NIST SP 800-53, CIS) a
 
 ## Developer Setup
 
-### Clone with submodules
-
-STONEWORK includes STONES as a submodule.
+### Clone the repo
 
 ```bash
-git clone --recurse-submodules https://github.com/Cyber-Terrain-Ontology/stonework.git
+git clone https://github.com/Cyber-Terrain-Ontology/stonework.git
 cd stonework
-```
-
-If you already cloned without `--recurse-submodules`:
-
-```bash
-git submodule update --init --recursive
 ```
 
 ### Activate the pre-commit hook
