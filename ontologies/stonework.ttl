@@ -95,7 +95,7 @@ stonework:AttackTechnique
 	rdfs:subClassOf stonework:CyberTechnique ;
 	skos:definition "A prescribed offensive method used by an adversary to achieve a specific tactical objective within a target environment."@en ;
 	skos:prefLabel "Attack Technique"@en ;
-	skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. Not a subclass of stones:AttackPattern — attack patterns (e.g. CAPEC) are abstract descriptions of attack classes, whereas AttackTechnique is an operationalized plan for execution. Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals."@en ;
+	skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. Not a subclass of stones:AttackPattern — attack patterns (e.g. CAPEC) are abstract descriptions of attack classes, whereas AttackTechnique is an operationalized plan for execution. Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals. A specific, concrete realization of this technique is modeled as a stonework:Procedure, linked back via stonework:implementedBy."@en ;
 	.
 
 stonework:AutonomousSystem
@@ -205,6 +205,14 @@ stonework:Control
 	skos:scopeNote "This class provides a semantic representation of security and privacy controls from frameworks such as NIST SP 800‑53 and the CIS Controls. It supports mapping to external control identifiers and families without embedding copyrighted control text." ;
 	.
 
+stonework:ControlPlan
+	a owl:Class ;
+	rdfs:subClassOf stonework:Behavior ;
+	skos:definition "A concrete, Step-decomposed sequence of actions that implements a Control in a specific operational context."@en ;
+	skos:prefLabel "Control Plan" ;
+	skos:scopeNote "Mirrors the Technique/Procedure split on the defensive side: stonework:Control is the abstract prescribed safeguard (a catalog entry, e.g. NIST AC-2 or a CIS control); ControlPlan is its concrete implementation as a Step sequence, linked back via stonework:implements. A ControlPlan is typically invoked from within a Playbook or DetectionPlan by a Step that stonework:implements it."@en ;
+	.
+
 stonework:Countermeasure
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
@@ -297,6 +305,14 @@ stonework:DefensiveTactic
 	skos:definition "A high-level defensive objective that groups related countermeasure techniques by the protection goal they serve." ;
 	skos:prefLabel "Defensive Tactic" ;
 	skos:scopeNote "Aligns with MITRE D3FEND defensive tactics (e.g. Harden, Detect, Isolate, Evict, Restore). Individuals are typically drawn from D3FEND or similar defensive frameworks via the framework mapping layer."@en ;
+	.
+
+stonework:DetectionPlan
+	a owl:Class ;
+	rdfs:subClassOf stonework:Behavior ;
+	skos:definition "A Step-decomposed sequence of actions for determining whether observed activity constitutes a security-relevant violation, as distinct from the offensive or defensive action plans that respond to one."@en ;
+	skos:prefLabel "Detection Plan" ;
+	skos:scopeNote "Where a Playbook is an action plan carried out by an interested party — offensive (an adversary's operational playbook) or defensive (an incident responder's playbook) — a DetectionPlan plays a neutral, evaluative role: orchestrating DetectionRule/Signature evaluation and analytic logic to identify whether a violation occurred, typically triggering a defensive Playbook or ControlPlan via a guarded Transition once one is confirmed."@en ;
 	.
 
 stonework:DetectionRule
@@ -713,6 +729,14 @@ stonework:Operation
 	skos:scopeNote "Operations are broader in scope than Campaigns — a single Operation may encompass multiple Campaigns executed over an extended period. Applies to both offensive operations (e.g. state-sponsored cyber operations) and defensive operations (e.g. incident response operations, threat hunting operations)."@en ;
 	.
 
+stonework:OperationPlan
+	a owl:Class ;
+	rdfs:subClassOf stonework:Playbook ;
+	skos:definition "A Playbook specifically representing an adversary's operational plan — the offensive counterpart within the Playbook hierarchy."@en ;
+	skos:prefLabel "Operation Plan" ;
+	skos:scopeNote "Named to avoid colliding with the already-established stonework:AttackPattern and stonework:AttackTechnique, and to align with stonework:Operation, whose definition ('a coordinated set of activities... unified command, intent, or resourcing') describes the executed counterpart of an OperationPlan. Generic stonework:Playbook remains available for the undifferentiated or defensive case."@en ;
+	.
+
 stonework:Opinion
 	a owl:Class ;
 	rdfs:subClassOf stonework:IntelligenceProduct ;
@@ -748,12 +772,12 @@ stonework:PhoneNumber
 
 stonework:Playbook
 	a owl:Class ;
-	rdfs:subClassOf stonework:Process ;
-	rdfs:comment "Playbooks are often versioned, tested, and executed as instances of Process."@en ;
+	rdfs:subClassOf stonework:Behavior ;
+	rdfs:comment "A Playbook is a plan specification; executing one produces instances of stonework:Process. Playbooks are often versioned and tested before use."@en ;
 	rdfs:seeAlso prov:Plan ;
-	skos:definition "A documented, structured Process that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
+	skos:definition "A documented, structured Behavior that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
 	skos:prefLabel "Playbook" ;
-	skos:scopeNote "A Playbook provides reusable, often automated or semi-automated guidance for security operations, incident response, threat hunting, recovery, or routine tasks. It typically includes triggers, decision points, assigned roles (Agents), inputs/outputs, and success criteria.  Playbooks bridge planning and execution."@en ;
+	skos:scopeNote "A Playbook may be offensive (an adversary's operational playbook — see stonework:OperationPlan) or defensive (an incident response, threat hunting, or recovery playbook) — both are action plans carried out by an interested party, as distinct from stonework:DetectionPlan, which plays a neutral, evaluative role. A Playbook decomposes into Steps via stonework:hasStep; its actual execution is recorded as a stonework:Process."@en ;
 	.
 
 stonework:Procedure
@@ -762,7 +786,7 @@ stonework:Procedure
 	rdfs:comment "Procedures are instances or patterns of execution that realize a technique. They may include command lines, API calls, malware behaviors, or operator playbook steps. Procedures are distinct from techniques, which describe generalized methods." ;
 	skos:definition "A concrete, observable sequence of actions, commands, or behaviors that implements a technique in a specific operational context." ;
 	skos:prefLabel "Procedure" ;
-	skos:scopeNote "Procedures describe the actual steps an adversary takes, such as specific commands, scripts, tools, or configurations. They represent the most granular level of adversary behavior." ;
+	skos:scopeNote "Procedures describe the actual steps an adversary takes, such as specific commands, scripts, tools, or configurations. They represent the most granular level of adversary behavior. Links back to the AttackTechnique it operationalizes via stonework:implements (Procedure implements AttackTechnique); may itself decompose into stonework:Step individuals via stonework:hasStep." ;
 	.
 
 stonework:Process
@@ -774,7 +798,7 @@ stonework:Process
 		;
 	skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
 	skos:prefLabel "Process"@en ;
-	skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is intended for modeling Controls, Playbooks, Mitigations, Threat Scenarios, and other repeatable or planned workflows."@en ;
+	skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is the execution-side counterpart to Behavior-side plan specifications such as Playbook, ControlPlan, and ThreatScenario — e.g. executing a Playbook produces a Process instance."@en ;
 	.
 
 stonework:Product
@@ -1780,6 +1804,24 @@ stonework:hostedBy
 	rdfs:domain stonework:Infrastructure ;
 	rdfs:range stonework:Agent ;
 	skos:prefLabel "hostedBy" ;
+	.
+
+stonework:implementedBy
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Behavior ;
+	rdfs:range stonework:Behavior ;
+	owl:inverseOf stonework:implements ;
+	skos:definition "Relates an abstract Behavior to a concrete, Step-decomposed Behavior that realizes it."@en ;
+	skos:prefLabel "implementedBy" ;
+	.
+
+stonework:implements
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Behavior ;
+	rdfs:range stonework:Behavior ;
+	skos:definition "Relates a concrete, Step-decomposed Behavior to the more abstract Behavior it is a specific realization of."@en ;
+	skos:prefLabel "implements" ;
+	skos:scopeNote "General-purpose relationship covering both offense (a Procedure implements a Technique) and defense (a ControlPlan implements a Control) with one property rather than a bespoke one per pairing."@en ;
 	.
 
 stonework:indicates
