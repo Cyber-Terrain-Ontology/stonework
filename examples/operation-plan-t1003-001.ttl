@@ -1,0 +1,178 @@
+@prefix cti-enc: <https://cyberterrain.org/cti-encyclopedia/resource/> .
+@prefix ex: <https://cyberterrain.org/ns/stonework/examples/t1003-001#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:opplan-t1003-001
+	a stonework:OperationPlan ;
+	skos:definition "Attempts to obtain credential material from LSASS process memory, trying alternative tool choices in order until one succeeds."@en ;
+	skos:prefLabel "Credential Access via LSASS Memory — Operation Plan"@en ;
+	stonework:hasOutputVariable ex:var-credential-outcome ;
+	stonework:hasStep
+		ex:step-attempt-comsvcs ,
+		ex:step-attempt-mimikatz ,
+		ex:step-attempt-procdump ,
+		ex:step-credential-access-achieved
+		;
+	.
+
+ex:proc-comsvcs
+	a stonework:Procedure ;
+	skos:prefLabel "LSASS dump via comsvcs.dll MiniDump (rundll32)"@en ;
+	stonework:hasStep
+		ex:step-comsvcs-invoke-minidump ,
+		ex:step-comsvcs-locate-lsass ,
+		ex:step-comsvcs-stage-exfil
+		;
+	stonework:implements cti-enc:attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90 ;
+	.
+
+ex:proc-mimikatz
+	a stonework:Procedure ;
+	skos:prefLabel "LSASS dump via Mimikatz sekurlsa::logonpasswords"@en ;
+	stonework:hasStep
+		ex:step-mimikatz-dump ,
+		ex:step-mimikatz-load
+		;
+	stonework:implements cti-enc:attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90 ;
+	.
+
+ex:proc-procdump
+	a stonework:Procedure ;
+	skos:prefLabel "LSASS dump via procdump.exe"@en ;
+	stonework:hasStep
+		ex:step-procdump-locate-lsass ,
+		ex:step-procdump-run
+		;
+	stonework:implements cti-enc:attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90 ;
+	.
+
+ex:step-attempt-comsvcs
+	a stonework:Step ;
+	skos:prefLabel "Attempt: comsvcs.dll MiniDump"@en ;
+	stonework:implements ex:proc-comsvcs ;
+	stonework:isStepOf ex:opplan-t1003-001 ;
+	stonework:stepOrder "1"^^xsd:integer ;
+	.
+
+ex:step-attempt-mimikatz
+	a stonework:Step ;
+	skos:prefLabel "Attempt: Mimikatz"@en ;
+	stonework:implements ex:proc-mimikatz ;
+	stonework:isStepOf ex:opplan-t1003-001 ;
+	stonework:stepOrder "3"^^xsd:integer ;
+	.
+
+ex:step-attempt-procdump
+	a stonework:Step ;
+	skos:prefLabel "Attempt: procdump.exe"@en ;
+	stonework:implements ex:proc-procdump ;
+	stonework:isStepOf ex:opplan-t1003-001 ;
+	stonework:stepOrder "2"^^xsd:integer ;
+	.
+
+ex:step-comsvcs-invoke-minidump
+	a stonework:Step ;
+	skos:prefLabel "Invoke comsvcs.dll MiniDump export via rundll32"@en ;
+	stonework:isStepOf ex:proc-comsvcs ;
+	stonework:stepOrder "2"^^xsd:integer ;
+	.
+
+ex:step-comsvcs-locate-lsass
+	a stonework:Step ;
+	skos:prefLabel "Locate lsass.exe PID"@en ;
+	stonework:isStepOf ex:proc-comsvcs ;
+	stonework:stepOrder "1"^^xsd:integer ;
+	.
+
+ex:step-comsvcs-stage-exfil
+	a stonework:Step ;
+	skos:prefLabel "Stage and exfiltrate dump file"@en ;
+	stonework:isStepOf ex:proc-comsvcs ;
+	stonework:stepOrder "3"^^xsd:integer ;
+	.
+
+ex:step-credential-access-achieved
+	a stonework:Step ;
+	skos:prefLabel "Credential access achieved — proceed to next phase"@en ;
+	stonework:isStepOf ex:opplan-t1003-001 ;
+	.
+
+ex:step-mimikatz-dump
+	a stonework:Step ;
+	skos:prefLabel "Run sekurlsa::logonpasswords"@en ;
+	stonework:isStepOf ex:proc-mimikatz ;
+	stonework:stepOrder "2"^^xsd:integer ;
+	.
+
+ex:step-mimikatz-load
+	a stonework:Step ;
+	skos:prefLabel "Load Mimikatz into the target process"@en ;
+	stonework:isStepOf ex:proc-mimikatz ;
+	stonework:stepOrder "1"^^xsd:integer ;
+	.
+
+ex:step-procdump-locate-lsass
+	a stonework:Step ;
+	skos:prefLabel "Locate lsass.exe PID"@en ;
+	stonework:isStepOf ex:proc-procdump ;
+	stonework:stepOrder "1"^^xsd:integer ;
+	.
+
+ex:step-procdump-run
+	a stonework:Step ;
+	skos:prefLabel "Run procdump.exe -ma against lsass.exe"@en ;
+	stonework:isStepOf ex:proc-procdump ;
+	stonework:stepOrder "2"^^xsd:integer ;
+	.
+
+ex:t-comsvcs-success
+	a stonework:Transition ;
+	stonework:fromStep ex:step-attempt-comsvcs ;
+	stonework:guardType stonework:SecurityCondition ;
+	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:toStep ex:step-credential-access-achieved ;
+	.
+
+ex:t-comsvcs-to-procdump
+	a stonework:Transition ;
+	stonework:fromStep ex:step-attempt-comsvcs ;
+	stonework:guardLiteralValue "false"^^xsd:boolean ;
+	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:toStep ex:step-attempt-procdump ;
+	.
+
+ex:t-mimikatz-success
+	a stonework:Transition ;
+	stonework:fromStep ex:step-attempt-mimikatz ;
+	stonework:guardType stonework:SecurityCondition ;
+	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:toStep ex:step-credential-access-achieved ;
+	.
+
+ex:t-procdump-success
+	a stonework:Transition ;
+	stonework:fromStep ex:step-attempt-procdump ;
+	stonework:guardType stonework:SecurityCondition ;
+	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:toStep ex:step-credential-access-achieved ;
+	.
+
+ex:t-procdump-to-mimikatz
+	a stonework:Transition ;
+	stonework:fromStep ex:step-attempt-procdump ;
+	stonework:guardLiteralValue "false"^^xsd:boolean ;
+	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:toStep ex:step-attempt-mimikatz ;
+	.
+
+ex:var-credential-outcome
+	a stonework:Variable ;
+	skos:definition "Bound to a SecurityCondition instance if an attempt yields usable credential material; bound to literal false if the attempt is blocked or fails."@en ;
+	stonework:variableName "credentialAccessOutcome" ;
+	.
+
