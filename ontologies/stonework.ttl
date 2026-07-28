@@ -182,6 +182,13 @@ stonework:City
 	skos:prefLabel "City" ;
 	.
 
+stonework:ComparisonOperator
+	a owl:Class ;
+	skos:definition "A controlled vocabulary of operators used to compare a Variable's bound value against a threshold in a Transition guard."@en ;
+	skos:prefLabel "Comparison Operator" ;
+	skos:scopeNote "Individuals are stonework:Equals, stonework:NotEquals, stonework:LessThan, stonework:LessThanOrEqual, stonework:GreaterThan, and stonework:GreaterThanOrEqual. Referenced by stonework:guardOperator; omitting an operator on a guard defaults to Equals semantics."@en ;
+	.
+
 stonework:ComponentContext
 	a owl:Class ;
 	skos:definition "An abstract class representing a context-specific reference to a VersionedProduct: the same product version appears differently depending on whether it is declared in a bill of materials or observed as a running installation on a specific system."@en ;
@@ -364,6 +371,16 @@ stonework:EmailMessage
 	skos:scopeNote "Distinct from stonework:EmailAddress, which represents the sender/recipient identifier. An EmailMessage is the content artifact itself. Used to represent phishing lures, spear-phishing emails, or other email-borne threat delivery mechanisms. Corresponds to STIX EmailMessage SCO."@en ;
 	.
 
+stonework:Equals
+	a
+		owl:NamedIndividual ,
+		stonework:ComparisonOperator
+		;
+	skos:definition "The guardVariable's bound value equals guardLiteralValue."@en ;
+	skos:notation "eq" ;
+	skos:prefLabel "Equals"@en ;
+	.
+
 stonework:Event
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberActivity ;
@@ -396,6 +413,26 @@ stonework:File
 	skos:definition "A discrete unit of data stored on a filesystem, identified by name, path, and cryptographic hash. Includes executable binaries, scripts, documents, archives, and other file types relevant to cyber threat analysis."@en ;
 	skos:prefLabel "File"@en ;
 	skos:scopeNote "Linked to hash values via stonework:hasHash. A MalwareSample may be associated with its File representation. Framework-specific extensions (PE headers, NTFS streams, archive contents) are modeled at the framework layer."@en ;
+	.
+
+stonework:GreaterThan
+	a
+		owl:NamedIndividual ,
+		stonework:ComparisonOperator
+		;
+	skos:definition "The guardVariable's bound value is greater than guardLiteralValue."@en ;
+	skos:notation "gt" ;
+	skos:prefLabel "Greater Than"@en ;
+	.
+
+stonework:GreaterThanOrEqual
+	a
+		owl:NamedIndividual ,
+		stonework:ComparisonOperator
+		;
+	skos:definition "The guardVariable's bound value is greater than or equal to guardLiteralValue."@en ;
+	skos:notation "ge" ;
+	skos:prefLabel "Greater Than Or Equal"@en ;
 	.
 
 stonework:Group
@@ -508,6 +545,26 @@ stonework:Keylogger
 	skos:prefLabel "Keylogger"@en ;
 	.
 
+stonework:LessThan
+	a
+		owl:NamedIndividual ,
+		stonework:ComparisonOperator
+		;
+	skos:definition "The guardVariable's bound value is less than guardLiteralValue."@en ;
+	skos:notation "lt" ;
+	skos:prefLabel "Less Than"@en ;
+	.
+
+stonework:LessThanOrEqual
+	a
+		owl:NamedIndividual ,
+		stonework:ComparisonOperator
+		;
+	skos:definition "The guardVariable's bound value is less than or equal to guardLiteralValue."@en ;
+	skos:notation "le" ;
+	skos:prefLabel "Less Than Or Equal"@en ;
+	.
+
 stonework:Likelihood
 	a owl:Class ;
 	rdfs:subClassOf stonework:RiskFactor ;
@@ -613,6 +670,16 @@ stonework:NetworkTraffic
 	skos:definition "A captured or observed network traffic flow between source and destination endpoints, including protocol, ports, payload characteristics, and timing."@en ;
 	skos:prefLabel "Network Traffic"@en ;
 	skos:scopeNote "Distinct from stonework:Log (which captures parsed event records) and stonework:Event (a security-relevant occurrence). NetworkTraffic is the raw flow artifact. May carry indicators such as user-agent strings, URI patterns, or certificate fingerprints observable in transit."@en ;
+	.
+
+stonework:NotEquals
+	a
+		owl:NamedIndividual ,
+		stonework:ComparisonOperator
+		;
+	skos:definition "The guardVariable's bound value does not equal guardLiteralValue."@en ;
+	skos:notation "ne" ;
+	skos:prefLabel "Not Equals"@en ;
 	.
 
 stonework:Note
@@ -917,6 +984,15 @@ stonework:Spyware
 	skos:prefLabel "Spyware"@en ;
 	.
 
+stonework:Step
+	a owl:Class ;
+	rdfs:subClassOf stonework:Behavior ;
+	rdfs:seeAlso <http://purl.org/net/p-plan#Step> ;
+	skos:definition "A single, individually addressable unit of action within a Behavior that models a multi-step process, such as a Procedure, Playbook, ThreatScenario, or Control."@en ;
+	skos:prefLabel "Step" ;
+	skos:scopeNote "A Step is itself a Behavior — a plan specification for a sub-action, not its execution — consistent with p-plan:Step subclassing prov:Plan rather than prov:Activity. Because Step is a Behavior, a Step MAY itself decompose into further Steps via stonework:hasStep, supporting nested sub-procedures (e.g. a Kill Chain phase decomposing into candidate technique attempts) without a separate composite class. The activity that executes a Step is a stonework:CyberActivity; the property linking an executing Activity back to the Step/Plan it realizes is not yet defined."@en ;
+	.
+
 stonework:Tactic
 	a owl:Class ;
 	rdfs:subClassOf stonework:Behavior ;
@@ -986,6 +1062,13 @@ stonework:Tool
 	skos:scopeNote "Includes commercial penetration testing tools, remote administration utilities, and living-off-the-land binaries (LOLBins) repurposed by adversaries, as well as defender-operated tools such as scanners, EDR agents, and forensic utilities. Corresponds to STIX 2.1 Tool SDO."@en ;
 	.
 
+stonework:Transition
+	a owl:Class ;
+	skos:definition "A directed edge between two Steps within the same parent Behavior's Step graph, representing progression from one Step to the next."@en ;
+	skos:prefLabel "Transition" ;
+	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Guard/condition properties for conditional branching (testing a bound Variable's value) are not yet defined — this class currently captures only the structural edge via stonework:fromStep and stonework:toStep."@en ;
+	.
+
 stonework:Trojan
 	a
 		owl:NamedIndividual ,
@@ -1033,6 +1116,15 @@ stonework:UserGroup
 	rdfs:subClassOf stonework:DigitalIdentity ;
 	skos:definition "Represents a user group on a system or service, including local OS groups, cloud groups, and social media groups."@en ;
 	skos:prefLabel "User Group" ;
+	.
+
+stonework:Variable
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	rdfs:seeAlso <http://purl.org/net/p-plan#Variable> ;
+	skos:definition "A named placeholder for a value declared by a Behavior or Step, bound to an actual value only once the corresponding execution occurs."@en ;
+	skos:prefLabel "Variable" ;
+	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. An input Variable is typically bound before its Step executes, from an already-known fact (e.g. a Vulnerability's CVSS score); an output Variable is bound only after its Step executes, from a result the execution produced (e.g. a Technique attempt's outcome). Bound via stonework:boundTo (an individual) or stonework:boundToLiteral (a scalar). The bound value is what stonework:Transition guard properties test, and — in a future deviation-detection layer — what an actual result is compared against what the Step declared as expected."@en ;
 	.
 
 stonework:VersionedProduct
@@ -1178,6 +1270,24 @@ stonework:bomFormat
 	skos:definition "The exchange format and version in which a Bill of Materials was originally serialized (e.g. 'CycloneDX 1.6', 'SPDX 2.3')." ;
 	skos:prefLabel "BOM format" ;
 	skos:scopeNote "Domain intentionally left unset. Serves as provenance metadata on stonework:SoftwareBillOfMaterials instances, distinguishing the source format from the STONEWORK representation." ;
+	.
+
+stonework:boundTo
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Variable ;
+	rdfs:range owl:Thing ;
+	skos:definition "Binds a Variable, at execution time, to the individual it actually resolved to — e.g. the specific SecurityCondition instance a successful attempt produced."@en ;
+	skos:prefLabel "boundTo" ;
+	skos:scopeNote "Used when the bound value is an instance of a class rather than a scalar; see stonework:boundToLiteral for scalar bindings. Tested by stonework:guardType on a Transition."@en ;
+	.
+
+stonework:boundToLiteral
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Variable ;
+	rdfs:range rdfs:Literal ;
+	skos:definition "Binds a Variable, at execution time or at plan instantiation, to a scalar result value such as a boolean, count, or numeric score."@en ;
+	skos:prefLabel "boundToLiteral" ;
+	skos:scopeNote "Tested by stonework:guardLiteralValue and stonework:guardOperator on a Transition. When the guard uses an ordering operator (LessThan, GreaterThanOrEqual, etc.), this value MUST carry a numeric datatype (xsd:decimal, xsd:double, or xsd:integer) — untyped or string literals do not compare numerically under SPARQL."@en ;
 	.
 
 stonework:categorizedBy
@@ -1442,6 +1552,49 @@ stonework:fixedInProduct
 	skos:scopeNote "The range is a stonework:VersionedProduct individual whose IRI is derived deterministically from the CPE identifier. Populated by CVE/patch ingest."@en ;
 	.
 
+stonework:fromStep
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Transition ;
+	rdfs:range stonework:Step ;
+	skos:definition "The Step a Transition leaves."@en ;
+	skos:prefLabel "fromStep" ;
+	.
+
+stonework:guardLiteralValue
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Transition ;
+	rdfs:range rdfs:Literal ;
+	skos:definition "The literal value that guardVariable's bound value is compared against."@en ;
+	skos:prefLabel "guardLiteralValue" ;
+	skos:scopeNote "Compared using the operator given by stonework:guardOperator; if guardOperator is omitted, comparison defaults to Equals. Must share a compatible, numerically-typed datatype with the guardVariable's stonework:boundToLiteral value when an ordering operator is used."@en ;
+	.
+
+stonework:guardOperator
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Transition ;
+	rdfs:range stonework:ComparisonOperator ;
+	skos:definition "The comparison operator applied between guardVariable's bound literal value and guardLiteralValue."@en ;
+	skos:prefLabel "guardOperator" ;
+	skos:scopeNote "Omitted = Equals, preserving equality-only guard semantics without requiring this property on every Transition."@en ;
+	.
+
+stonework:guardType
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Transition ;
+	rdfs:range rdfs:Class ;
+	skos:definition "A Transition fires only if guardVariable's stonework:boundTo value is an instance of this class."@en ;
+	skos:prefLabel "guardType" ;
+	skos:scopeNote "Used for guards that test whether a Variable was bound to an instance of a particular class (e.g. testing that an attempt's outcome Variable was bound to a stonework:SecurityCondition instance) rather than testing equality against a scalar."@en ;
+	.
+
+stonework:guardVariable
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Transition ;
+	rdfs:range stonework:Variable ;
+	skos:definition "The Variable whose bound value is tested to decide whether a Transition is taken."@en ;
+	skos:prefLabel "guardVariable" ;
+	.
+
 stonework:hasAccount
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Agent ;
@@ -1506,6 +1659,14 @@ stonework:hasIdentifier
 	skos:prefLabel "hasIdentifier" ;
 	.
 
+stonework:hasInputVariable
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Behavior ;
+	rdfs:range stonework:Variable ;
+	skos:definition "Declares a Variable whose value must be bound before the Behavior or Step executes."@en ;
+	skos:prefLabel "hasInputVariable" ;
+	.
+
 stonework:hasInstalledProduct
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Infrastructure ;
@@ -1535,11 +1696,28 @@ stonework:hasObservable
 	skos:scopeNote "The range covers any SCO type: stonework:IPAddress, stonework:Domain, stonework:File, stonework:NetworkTraffic, stonework:RuntimeProcess, stonework:UserAccount, etc. Corresponds to STIX observed-data object_refs. Inspired by SOSA sosa:hasResult."@en ;
 	.
 
+stonework:hasOutputVariable
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Behavior ;
+	rdfs:range stonework:Variable ;
+	skos:definition "Declares a Variable whose value is bound only once the Behavior or Step has executed."@en ;
+	skos:prefLabel "hasOutputVariable" ;
+	.
+
 stonework:hasPhoneNumber
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Agent ;
 	rdfs:range stonework:PhoneNumber ;
 	skos:prefLabel "hasPhoneNumber"@en ;
+	.
+
+stonework:hasStep
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Behavior ;
+	rdfs:range stonework:Step ;
+	skos:definition "Relates a Behavior (Procedure, Playbook, ThreatScenario, Control, or another Step) to a Step that decomposes it."@en ;
+	skos:prefLabel "hasStep" ;
+	skos:scopeNote "Domain is the general Behavior root rather than a specific subclass, so decomposition applies uniformly across Procedure, Playbook, ThreatScenario, and — recursively, since Step is itself a Behavior — Step."@en ;
 	.
 
 stonework:hasTechnique
@@ -1631,6 +1809,15 @@ stonework:installationOf
 	skos:definition "Relates a component context to the versioned product it references or instantiates."@en ;
 	skos:prefLabel "installation of" ;
 	skos:scopeNote "Used by both stonework:BomEntry (declarative — a component listed in an SBOM) and stonework:ProductInstallation (observational — a verified deployment on a specific system). Domain is intentionally left unset to avoid restricting future component-context subclasses; intended subjects are subclasses of stonework:ComponentContext."@en ;
+	.
+
+stonework:isStepOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:Behavior ;
+	owl:inverseOf stonework:hasStep ;
+	skos:definition "Relates a Step to the Behavior it decomposes."@en ;
+	skos:prefLabel "isStepOf" ;
 	.
 
 stonework:linkedTo
@@ -1727,6 +1914,15 @@ stonework:playsRole
 	skos:prefLabel "playsRole" ;
 	.
 
+stonework:precededByStep
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:Step ;
+	skos:definition "Relates a Step to another Step that must occur before it within the same parent Behavior."@en ;
+	skos:prefLabel "precededByStep" ;
+	skos:scopeNote "Deliberately distinct from stonework:precedes, whose domain and range are IntelligenceProduct (report-version succession) — an unrelated relationship. precededByStep expresses a graph that may contain cycles: an edge targeting an already-reached Step is a loop, not an error. Use stonework:Transition instead when the edge itself needs a guard condition or other structure attached."@en ;
+	.
+
 stonework:precedes
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:IntelligenceProduct ;
@@ -1814,6 +2010,15 @@ stonework:sharesRegistrant
 	skos:prefLabel "sharesRegistrant" ;
 	.
 
+stonework:stepOrder
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Step ;
+	rdfs:range xsd:integer ;
+	skos:definition "An optional ordinal position for a Step within a strictly linear Behavior, where the full precededByStep graph is unnecessary."@en ;
+	skos:prefLabel "stepOrder" ;
+	skos:scopeNote "Most CTI procedure write-ups (a numbered list of adversary actions) are linear. stepOrder is a low-overhead alternative to precededByStep for that common case; the two are not mutually exclusive."@en ;
+	.
+
 stonework:subdomainOf
 	a
 		owl:ObjectProperty ,
@@ -1875,6 +2080,15 @@ stonework:techniqueOf
 	skos:scopeNote "This is the inverse of hasTechnique. A single Technique may support multiple Tactics (e.g. 'Phishing' supports both Initial Access and Credential Access)."@en ;
 	.
 
+stonework:toStep
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Transition ;
+	rdfs:range stonework:Step ;
+	skos:definition "The Step a Transition enters."@en ;
+	skos:prefLabel "toStep" ;
+	skos:scopeNote "A Transition whose toStep was already reached earlier in the same Behavior's Step graph expresses a loop back-edge; a self-loop (toStep equal to fromStep) is the degenerate case."@en ;
+	.
+
 stonework:urlOf
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:URI ;
@@ -1900,6 +2114,14 @@ stonework:usesRule
 	rdfs:range stonework:DetectionRule ;
 	skos:definition "Relates a Sensor to the Detection Rules it applies." ;
 	skos:prefLabel "usesRule" ;
+	.
+
+stonework:variableName
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Variable ;
+	rdfs:range xsd:string ;
+	skos:definition "A short name identifying a Variable within the scope of its declaring Behavior, allowing it to be referenced consistently across Steps and Transitions."@en ;
+	skos:prefLabel "variableName" ;
 	.
 
 stonework:variantOf
