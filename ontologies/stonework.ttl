@@ -88,14 +88,18 @@ stonework:AttackPattern
 	rdfs:subClassOf stonework:Behavior ;
 	skos:definition "A type of Tactics, Techniques, and Procedures (TTP) that describes ways that adversaries attempt to compromise targets. Often maps to MITRE ATT&CK techniques."@en ;
 	skos:prefLabel "Attack Pattern"@en ;
+	skos:scopeNote "The abstract concept spanning framework-specific shapes that are not structurally identical: CAPEC's shape (capec:AttackPattern) is a taxonomy entry with severity/likelihood/prerequisite fields; MITRE ATT&CK's shape (stonework:AttackTechnique) is an operationalized technique with sub-techniques, procedures, mitigations, and detections. Both are AttackPatterns; stonework:relatedAttackPattern links instances across shapes that describe the same underlying technique."@en ;
 	.
 
 stonework:AttackTechnique
 	a owl:Class ;
-	rdfs:subClassOf stonework:CyberTechnique ;
+	rdfs:subClassOf
+		stonework:AttackPattern ,
+		stonework:CyberTechnique
+		;
 	skos:definition "A prescribed offensive method used by an adversary to achieve a specific tactical objective within a target environment."@en ;
 	skos:prefLabel "Attack Technique"@en ;
-	skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. Not a subclass of stones:AttackPattern — attack patterns (e.g. CAPEC) are abstract descriptions of attack classes, whereas AttackTechnique is an operationalized plan for execution. Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals. A specific, concrete realization of this technique is modeled as a stonework:Procedure, linked back via stonework:implementedBy."@en ;
+	skos:scopeNote "Aligns with MITRE ATT&CK techniques and D3FEND OffensiveTechnique. The MITRE ATT&CK-shaped realization of stonework:AttackPattern — operationalized for execution, as distinct from CAPEC's more abstract taxonomy-entry shape (capec:AttackPattern, also a stonework:AttackPattern). Framework-specific subclasses (e.g. attack:Technique) provide the concrete individuals. A specific, concrete realization of this technique is modeled as a stonework:Procedure, linked back via stonework:implementedBy."@en ;
 	.
 
 stonework:AutonomousSystem
@@ -1920,6 +1924,16 @@ stonework:mitigates
 	skos:prefLabel "mitigates" ;
 	.
 
+stonework:mitigatesAttackPattern
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:mitigates ;
+	rdfs:domain stonework:Countermeasure ;
+	rdfs:range stonework:AttackPattern ;
+	skos:definition "Relates a Countermeasure (e.g. a CIS Control safeguard) to the AttackPattern it mitigates, resolved from a shared technique identifier."@en ;
+	skos:prefLabel "mitigatesAttackPattern" ;
+	skos:scopeNote "Materialized by joining a framework's technique-identifier literal (see stonework:relatedTechniqueIdentifier, e.g. cis:mitigatesTechniqueId) against the ATT&CK technique's external reference. Framework ontologies declare their concrete property (e.g. cis:mitigatesTechnique) as rdfs:subPropertyOf this."@en ;
+	.
+
 stonework:observedIn
 	a owl:ObjectProperty ;
 	rdfs:domain
@@ -1994,13 +2008,29 @@ stonework:registeredWith
 	skos:prefLabel "registeredWith" ;
 	.
 
+stonework:relatedAttackPattern
+	a owl:ObjectProperty ;
+	rdfs:range stonework:AttackPattern ;
+	skos:definition "Relates an entity to an AttackPattern representing the same underlying technique in a different framework shape, resolved from a shared technique identifier (e.g. a CAPEC entry and the MITRE ATT&CK technique it maps to, or a CWE weakness and the CAPEC pattern that exploits it)."@en ;
+	skos:prefLabel "relatedAttackPattern" ;
+	skos:scopeNote "Domain intentionally left unset: subjects include stonework:Weakness (CWE → CAPEC) and stonework:AttackPattern itself (CAPEC → ATT&CK). Materialized by joining a framework's technique-identifier literal (see stonework:relatedTechniqueIdentifier) against the ATT&CK technique's external reference. Framework ontologies declare their concrete property (e.g. capec:relatedAttackTechnique, cwe:relatedAttackPattern) as rdfs:subPropertyOf this."@en ;
+	.
+
 stonework:relatedTechnique
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:CyberTechnique ;
 	rdfs:range stonework:CyberTechnique ;
 	skos:definition "Relates a CyberTechnique to another related CyberTechnique via a cross-framework or cross-abstraction-level association."@en ;
 	skos:prefLabel "relatedTechnique" ;
-	skos:scopeNote "Used for links such as CWE weakness → CAPEC technique (exploits/instantiates) and CAPEC technique → ATT&CK technique (operationalizes). Domain is CyberTechnique; framework-specific individuals populate the relationships at the framework mapping layer."@en ;
+	skos:scopeNote "For technique-to-technique associations where both ends are already stonework:CyberTechnique individuals. Where the association instead crosses AttackPattern shapes (e.g. CWE weakness → CAPEC pattern, CAPEC pattern → ATT&CK technique), use stonework:relatedAttackPattern, whose domain is not restricted to CyberTechnique."@en ;
+	.
+
+stonework:relatedTechniqueIdentifier
+	a owl:DatatypeProperty ;
+	rdfs:range xsd:string ;
+	skos:definition "A framework-native technique identifier string (e.g. a MITRE ATT&CK technique ID such as 'T1003.001') carried on an entity from another framework, both for provenance and as the join key used to materialize the corresponding stonework:relatedAttackPattern or stonework:mitigatesAttackPattern edge."@en ;
+	skos:prefLabel "relatedTechniqueIdentifier" ;
+	skos:scopeNote "Domain intentionally left unset: populated on entities as different as capec:AttackPattern and cis:Control. Framework-specific subproperties (e.g. capec:attackTechniqueId, cis:mitigatesTechniqueId) carry the concrete literal. Retained after materialization — it records the source string as ingested, distinct from the resolved object-property edge."@en ;
 	.
 
 stonework:relatedTo
