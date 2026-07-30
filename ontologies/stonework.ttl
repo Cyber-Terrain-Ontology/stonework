@@ -1271,10 +1271,9 @@ stonework:associatedWith
 
 stonework:attributedTo
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:CyberActivity ;
-	rdfs:range stonework:ThreatActor ;
 	skos:definition "Links a CyberActivity (Campaign, CyberActivityCluster, Incident, etc.) to the ThreatActor (Individual or Group) responsible for it. Corresponds to STIX relationship_type 'attributed-to'." ;
 	skos:prefLabel "attributedTo" ;
+	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'attributed-to' shortcut. STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure, and a closed domain/range here would misrepresent real STIX 2.1 data and mislead reasoner-based consumers."@en ;
 	.
 
 stonework:attributedToAgent
@@ -1506,14 +1505,9 @@ stonework:describesInfrastructure
 
 stonework:detects
 	a owl:ObjectProperty ;
-	rdfs:domain
-		stonework:AnalyticTechnique ,
-		stonework:DefendTechnique ,
-		stonework:DetectionRule ,
-		stonework:Sensor
-		;
 	skos:definition "Relates a source DetectionRule, Sensor, Indicator, or defensive technique to the threat, activity, or artifact it is capable of detecting. Corresponds to STIX relationship_type 'detects'."@en ;
 	skos:prefLabel "detects" ;
+	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'detects' shortcut. STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure, and a closed domain/range here would misrepresent real STIX 2.1 data and mislead reasoner-based consumers."@en ;
 	.
 
 stonework:downloads
@@ -1551,14 +1545,9 @@ stonework:emailOf
 
 stonework:exploits
 	a owl:ObjectProperty ;
-	rdfs:domain
-		stonework:Campaign ,
-		stonework:MalwareSample ,
-		stonework:ThreatActor
-		;
-	rdfs:range stonework:Vulnerability ;
 	skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." ;
 	skos:prefLabel "exploits" ;
+	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'exploits' shortcut. STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure, and a closed domain/range here would misrepresent real STIX 2.1 data and mislead reasoner-based consumers."@en ;
 	.
 
 stonework:exploitsWeakness
@@ -1831,22 +1820,9 @@ stonework:implements
 stonework:indicates
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Indicator ;
-	rdfs:range [
-		a owl:Class ;
-		owl:unionOf (
-			stonework:AttackPattern
-			stonework:AttackTechnique
-			stonework:Campaign
-			stonework:CyberActivityCluster
-			stonework:Infrastructure
-			stonework:Malware
-			stonework:ThreatActor
-			stonework:Tool
-		) ;
-	] ;
 	skos:definition "Asserts that when the source Indicator's pattern is matched, it signals the presence of the target adversary behavior, malware, campaign, or threat actor." ;
 	skos:prefLabel "indicates"@en ;
-	skos:scopeNote "Corresponds to STIX relationship_type 'indicates'. The domain is always stonework:Indicator. The range covers the principal threat intelligence objects an indicator can point to: AttackPattern/AttackTechnique (technique-level indicators), Malware (malware family or sample indicators), Campaign and CyberActivityCluster (campaign-attribution indicators), ThreatActor and its subclasses (actor-attribution indicators), Infrastructure (C2/hosting indicators), and Tool (tool-use indicators). A single Indicator may indicate multiple targets."@en ;
+	skos:scopeNote "Corresponds to STIX relationship_type 'indicates'. Domain is stonework:Indicator — unlike the source side of other STIX relationship shortcuts, this is definitional rather than open-world convention: an object is only ever an Indicator because it indicates something, per STIX's own spec role for that object type. Range is intentionally left unset: an Indicator may indicate all sorts of things (AttackPattern/AttackTechnique, Malware, Campaign, CyberActivityCluster, ThreatActor, Infrastructure, Tool, and whatever else a producer's pattern targets), and STIX does not schema-constrain the target_ref type for a given relationship_type. A single Indicator may indicate multiple targets."@en ;
 	.
 
 stonework:installationOf
@@ -1915,13 +1891,9 @@ stonework:mentions
 
 stonework:mitigates
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:Countermeasure ;
-	rdfs:range
-		stonework:AttackPattern ,
-		stonework:Vulnerability
-		;
 	skos:definition "Relates a Mitigation, CourseOfAction, or Control to the AttackPattern or Vulnerability it addresses. Corresponds to STIX relationship_type 'mitigates'."@en ;
 	skos:prefLabel "mitigates" ;
+	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'mitigates' shortcut. STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure, and a closed domain/range here would misrepresent real STIX 2.1 data and mislead reasoner-based consumers. Contrast with stonework:mitigatesAttackPattern, a purpose-built subproperty with a controlled domain/range, populated by materialize-technique-links.sparql rather than lifted directly from STIX."@en ;
 	.
 
 stonework:mitigatesAttackPattern
@@ -2123,19 +2095,9 @@ stonework:supersedes
 
 stonework:targets
 	a owl:ObjectProperty ;
-	rdfs:domain
-		stonework:Campaign ,
-		stonework:MalwareSample ,
-		stonework:ThreatActor
-		;
-	rdfs:range
-		stonework:Agent ,
-		stonework:Location ,
-		stonework:Sector ,
-		stonework:Vulnerability
-		;
 	skos:definition "Shortcut triple: source targets the target Identity, Vulnerability, or Location. Corresponds to STIX relationship_type 'targets'." ;
 	skos:prefLabel "targets" ;
+	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'targets' shortcut. STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure, and a closed domain/range here would misrepresent real STIX 2.1 data and mislead reasoner-based consumers."@en ;
 	.
 
 stonework:techniqueOf
@@ -2169,15 +2131,9 @@ stonework:urlOf
 
 stonework:uses
 	a owl:ObjectProperty ;
-	rdfs:domain
-		stonework:Campaign ,
-		stonework:MalwareSample ,
-		stonework:ThreatActor
-		;
-	rdfs:range stonework:AttackTechnique ;
-	skos:definition "Relates a threat actor group or campaign to an offensive technique they are known to employ." ;
+	skos:definition "Relates a threat actor group, campaign, malware, or tool to an offensive technique, malware, or tool it is known to employ." ;
 	skos:prefLabel "uses" ;
-	skos:scopeNote "Sub-property stones:uses carries the shortcut triples emitted by the STIX 2.1 transform for relationship_type 'uses'." ;
+	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'uses' shortcut (sub-property stones:uses carries the shortcut triples emitted by the STIX 2.1 transform). STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure. In the MITRE ATT&CK bundle alone, observed 'uses' sources include Campaign, IntrusionSet, Malware, and Tool, and observed targets include AttackTechnique, Malware, and Tool — a closed domain/range would misrepresent this real data and mislead reasoner-based consumers. Query-time discrimination (e.g. selecting only IntrusionSet users of a technique) should filter on the asserted stones:stixType literal or a specific rdf:type, not assume it from this property alone."@en ;
 	.
 
 stonework:usesRule
