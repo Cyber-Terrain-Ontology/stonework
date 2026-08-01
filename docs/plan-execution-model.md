@@ -124,7 +124,51 @@ in `boundToLiteral false` instead of `boundTo` a `SecurityCondition`, and
 
 ---
 
-## 4. What was added to STONEWORK to support this
+## 4. Provenance: technique attribution vs. forensic attribution
+
+Two different questions, both now answerable from the graph:
+
+**"Which technique was this?"** — a real but *indirect* chain, mediated
+through the Step/Procedure structure rather than a direct edge on the
+Activity:
+
+```
+ex:act-attempt-procdump ─correspondsToStep─▶ ex:step-attempt-procdump ─implements─▶ ex:proc-procdump ─implements─▶ cti-enc:attack-pattern--65f2d882-...
+```
+
+`stonework:implements` (domain/range `Behavior`→`Behavior`) is deliberately
+reused at both the Step→Procedure and Procedure→Technique levels, so this
+chain falls out of the Plan structure for free — no Activity needs its own
+edge to the technique.
+
+**"Who did it, when, and against what?"** — this was previously missing, and
+is now on every executed `Process` individual in the example:
+
+```
+ex:act-procdump-run
+  stonework:attributedTo   ex:threat-actor        # who
+  stonework:startedAtTime  "2026-08-01T14:00:17Z"  # when it began
+  stonework:endedAtTime    "2026-08-01T14:00:45Z"  # when it ended
+  stonework:actsOn         ex:rtproc-lsass         # what it acted on
+  stonework:produces       ex:cond-procdump-credential-material
+```
+
+`stonework:attributedTo`'s range is `stonework:Agent`, not `ThreatActor` —
+`CyberActivity` is a general occurrence class covering offensive, defensive,
+and neutral activities alike, so its performer need not be adversarial (a
+defender running a `ControlPlan`, or an analyst running an
+`InvestigationPlan`, is equally in scope). `stonework:actsOn` (mirrors
+`prov:used`) points at the concrete technical asset an activity operated
+against — `ex:host-target` (a `Host`) for the enumeration steps, `ex:rtproc-lsass`
+(a `RuntimeProcess`) for the steps that acted directly on lsass.exe — and is
+deliberately distinct from `stonework:targets`, whose domain
+(`Campaign`/`MalwareSample`/`ThreatActor`) is strategic-level targeting
+(a Sector, a Location), not a specific technical asset one execution step
+touched.
+
+---
+
+## 5. What was added to STONEWORK to support this
 
 ### New classes
 
@@ -151,6 +195,14 @@ vulnerability assessment, ...).
 | `stonework:confidence` | `Hypothesis` → `xsd:integer` | 0–100, matching STIX's confidence scale. |
 | `stonework:hasHypothesisStatus` | `Hypothesis` → `HypothesisStatus` (in `categories.ttl`) | Explicit `Pending`/`Confirmed`/`Refuted` status — not inferred from which Transition fired. |
 | `stonework:produces` | `CyberActivity` → `CyberEntity` | General "this activity constructed this thing" link. |
+| `stonework:actsOn` | `CyberActivity` → `CyberEntity` | The asset/artifact an activity operated against. Mirrors `prov:used`. |
+| `stonework:startedAtTime` / `stonework:endedAtTime` | `CyberActivity` → `xsd:dateTime` (functional) | When an activity began/ended. Mirror `prov:startedAtTime`/`prov:endedAtTime`. |
+
+### Widened properties
+
+| Property | Was | Now | Why |
+|---|---|---|---|
+| `stonework:attributedTo` | `CyberActivity` → `ThreatActor` | `CyberActivity` → `Agent` | `CyberActivity` covers defensive and neutral activities too, not just adversarial ones — the performer shouldn't be typed as adversarial by default. |
 
 ### Pre-existing machinery this pattern relies on
 
@@ -168,7 +220,7 @@ a home for complex output artifacts (plots, time series) — neither
 
 ---
 
-## 5. Recipe — encoding another T-code
+## 6. Recipe — encoding another T-code
 
 1. **Model the Plan.** Create a `stonework:OperationPlan` with `hasStep`
    pointing at one Step per candidate procedure attempt, plus a terminal
@@ -193,7 +245,9 @@ a home for complex output artifacts (plots, time series) — neither
    via `correspondsToStep`. Bind each attempted Step's Variable to its real
    result via `boundTo`/`boundToLiteral`. Set each tested Hypothesis's
    `hasHypothesisStatus` to `Confirmed`/`Refuted`. Link the Activity that
-   built a result to it via `produces`.
+   built a result to it via `produces`. For forensic completeness, also set
+   `attributedTo` (who), `startedAtTime`/`endedAtTime` (when), and `actsOn`
+   (the concrete asset acted upon) on each executed Activity.
 7. **Leave untaken branches alone.** A Step that was never attempted keeps
    an unbound Variable and a `Pending` (or absent) Hypothesis status — that
    absence is itself part of the forensic record.

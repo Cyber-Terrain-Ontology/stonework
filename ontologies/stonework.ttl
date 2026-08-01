@@ -1266,6 +1266,16 @@ stonework:achieves
 	skos:prefLabel "achieves" ;
 	.
 
+stonework:actsOn
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range stonework:CyberEntity ;
+	rdfs:seeAlso prov:used ;
+	skos:definition "Links a CyberActivity to the CyberEntity it acted upon — the asset, artifact, or resource the activity operated against."@en ;
+	skos:prefLabel "actsOn" ;
+	skos:scopeNote "Mirrors prov:used (an Activity used an Entity). Typical range instances are stonework:Host, stonework:RuntimeProcess, or other stonework:DigitalArtifact/stonework:Infrastructure individuals — e.g. the specific lsass.exe stonework:RuntimeProcess a credential-dumping attempt acted on. Distinct from stonework:targets, whose domain is Campaign/MalwareSample/ThreatActor and which describes a higher-level strategic target (a Sector, a Location, an Agent) rather than the concrete technical asset one execution step acted upon."@en ;
+	.
+
 stonework:affected
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Vulnerability ;
@@ -1289,9 +1299,10 @@ stonework:associatedWith
 stonework:attributedTo
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:CyberActivity ;
-	rdfs:range stonework:ThreatActor ;
-	skos:definition "Links a CyberActivity (Campaign, CyberActivityCluster, Incident, etc.) to the ThreatActor (Individual or Group) responsible for it. Corresponds to STIX relationship_type 'attributed-to'." ;
+	rdfs:range stonework:Agent ;
+	skos:definition "Links a CyberActivity to the Agent responsible for, or associated with, performing it." ;
 	skos:prefLabel "attributedTo" ;
+	skos:scopeNote "Range is stonework:Agent, not stonework:ThreatActor: stonework:CyberActivity is a general occurrence class covering offensive, defensive, and neutral activities alike (Campaigns, Incidents, Operations, Processes, Investigations), so its performer need not be adversarial. In the adversarial case the Agent will typically be a ThreatActor — a subclass of Agent — corresponding to STIX relationship_type 'attributed-to'; a defender, analyst, or automated system carrying out a CyberActivity (e.g. an Investigation, a ControlPlan's Process) is equally in scope."@en ;
 	.
 
 stonework:attributedToAgent
@@ -1586,6 +1597,18 @@ stonework:emailOf
 	rdfs:range stonework:Agent ;
 	owl:inverseOf stonework:hasEmail ;
 	skos:prefLabel "emailOf" ;
+	.
+
+stonework:endedAtTime
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range xsd:dateTime ;
+	rdfs:seeAlso prov:endedAtTime ;
+	skos:definition "The date and time at which a CyberActivity ended."@en ;
+	skos:prefLabel "endedAtTime" ;
 	.
 
 stonework:exploits
@@ -2164,6 +2187,18 @@ stonework:sharesRegistrant
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Infrastructure ;
 	skos:prefLabel "sharesRegistrant" ;
+	.
+
+stonework:startedAtTime
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range xsd:dateTime ;
+	rdfs:seeAlso prov:startedAtTime ;
+	skos:definition "The date and time at which a CyberActivity began."@en ;
+	skos:prefLabel "startedAtTime" ;
 	.
 
 stonework:stepOrder

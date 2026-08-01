@@ -11,56 +11,87 @@ ex:act-attempt-comsvcs
 	a stonework:Process ;
 	skos:definition "The adversary's first credential-access attempt for this operation, applying the comsvcs.dll MiniDump procedure against lsass.exe."@en ;
 	skos:prefLabel "Execution: Attempt comsvcs.dll MiniDump"@en ;
+	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-attempt-comsvcs ;
+	stonework:endedAtTime "2026-08-01T14:00:12Z"^^xsd:dateTime ;
+	stonework:startedAtTime "2026-08-01T14:00:00Z"^^xsd:dateTime ;
 	.
 
 ex:act-attempt-procdump
 	a stonework:Process ;
 	skos:definition "The adversary's second credential-access attempt for this operation, applying the procdump.exe procedure against lsass.exe after the comsvcs.dll attempt was blocked."@en ;
 	skos:prefLabel "Execution: Attempt procdump.exe"@en ;
+	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-attempt-procdump ;
+	stonework:endedAtTime "2026-08-01T14:00:45Z"^^xsd:dateTime ;
+	stonework:startedAtTime "2026-08-01T14:00:15Z"^^xsd:dateTime ;
 	.
 
 ex:act-comsvcs-invoke-minidump
 	a stonework:Process ;
 	skos:definition "rundll32.exe was invoked to call the comsvcs.dll MiniDump export against the located lsass.exe PID; the endpoint's EDR agent terminated the process before a dump file could be written, and no credential material was obtained."@en ;
 	skos:prefLabel "Execution: Invoke comsvcs.dll MiniDump export (blocked by EDR)"@en ;
+	stonework:actsOn ex:rtproc-lsass ;
+	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-comsvcs-invoke-minidump ;
+	stonework:endedAtTime "2026-08-01T14:00:12Z"^^xsd:dateTime ;
+	stonework:startedAtTime "2026-08-01T14:00:03Z"^^xsd:dateTime ;
 	.
 
 ex:act-comsvcs-locate-lsass
 	a stonework:Process ;
 	skos:definition "The lsass.exe PID was successfully enumerated on the target host."@en ;
 	skos:prefLabel "Execution: Locate lsass.exe PID (comsvcs attempt)"@en ;
+	stonework:actsOn ex:host-target ;
+	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-comsvcs-locate-lsass ;
+	stonework:endedAtTime "2026-08-01T14:00:02Z"^^xsd:dateTime ;
+	stonework:startedAtTime "2026-08-01T14:00:00Z"^^xsd:dateTime ;
 	.
 
 ex:act-credential-access-achieved
 	a stonework:Process ;
 	skos:definition "Marks the point in execution at which usable credential material had been obtained and the operation proceeded to its next phase."@en ;
 	skos:prefLabel "Execution: Credential access achieved"@en ;
+	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-credential-access-achieved ;
+	stonework:endedAtTime "2026-08-01T14:00:46Z"^^xsd:dateTime ;
+	stonework:startedAtTime "2026-08-01T14:00:46Z"^^xsd:dateTime ;
 	.
 
 ex:act-procdump-locate-lsass
 	a stonework:Process ;
 	skos:definition "The lsass.exe PID was successfully enumerated on the target host."@en ;
 	skos:prefLabel "Execution: Locate lsass.exe PID (procdump attempt)"@en ;
+	stonework:actsOn ex:host-target ;
+	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-procdump-locate-lsass ;
+	stonework:endedAtTime "2026-08-01T14:00:16Z"^^xsd:dateTime ;
+	stonework:startedAtTime "2026-08-01T14:00:15Z"^^xsd:dateTime ;
 	.
 
 ex:act-procdump-run
 	a stonework:Process ;
 	skos:definition "procdump.exe -ma was executed against the located lsass.exe PID and completed successfully, writing a full memory dump later confirmed to contain extractable credential material."@en ;
 	skos:prefLabel "Execution: Run procdump.exe -ma against lsass.exe"@en ;
+	stonework:actsOn ex:rtproc-lsass ;
+	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-procdump-run ;
+	stonework:endedAtTime "2026-08-01T14:00:45Z"^^xsd:dateTime ;
 	stonework:produces ex:cond-procdump-credential-material ;
+	stonework:startedAtTime "2026-08-01T14:00:17Z"^^xsd:dateTime ;
 	.
 
 ex:cond-procdump-credential-material
 	a stonework:SecurityCondition ;
 	skos:definition "Usable credential material extracted from the lsass.exe memory dump produced by the successful procdump.exe attempt."@en ;
 	skos:prefLabel "Credential material obtained (procdump)"@en ;
+	.
+
+ex:host-target
+	a stonework:Host ;
+	skos:definition "The Windows endpoint targeted by this operation, on which lsass.exe was running."@en ;
+	skos:prefLabel "Target Endpoint"@en ;
 	.
 
 ex:hyp-comsvcs-outcome
@@ -125,6 +156,12 @@ ex:proc-procdump
 		ex:step-procdump-run
 		;
 	stonework:implements cti-enc:attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90 ;
+	.
+
+ex:rtproc-lsass
+	a stonework:RuntimeProcess ;
+	skos:definition "The lsass.exe process running on the target endpoint, whose memory was the object of this operation's credential-dumping attempts."@en ;
+	skos:prefLabel "lsass.exe (target endpoint)"@en ;
 	.
 
 ex:step-attempt-comsvcs
@@ -247,6 +284,12 @@ ex:t-procdump-to-mimikatz
 	stonework:guardLiteralValue "false"^^xsd:boolean ;
 	stonework:guardVariable ex:var-procdump-outcome ;
 	stonework:toStep ex:step-attempt-mimikatz ;
+	.
+
+ex:threat-actor
+	a stonework:ThreatActorGroup ;
+	skos:definition "The adversary group responsible for this operation, for illustrative purposes in this worked example."@en ;
+	skos:prefLabel "Example Threat Actor Group"@en ;
 	.
 
 ex:var-comsvcs-outcome
