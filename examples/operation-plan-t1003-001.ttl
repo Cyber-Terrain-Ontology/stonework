@@ -7,6 +7,82 @@
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+ex:act-attempt-comsvcs
+	a stonework:Process ;
+	skos:definition "The adversary's first credential-access attempt for this operation, applying the comsvcs.dll MiniDump procedure against lsass.exe."@en ;
+	skos:prefLabel "Execution: Attempt comsvcs.dll MiniDump"@en ;
+	stonework:correspondsToStep ex:step-attempt-comsvcs ;
+	.
+
+ex:act-attempt-procdump
+	a stonework:Process ;
+	skos:definition "The adversary's second credential-access attempt for this operation, applying the procdump.exe procedure against lsass.exe after the comsvcs.dll attempt was blocked."@en ;
+	skos:prefLabel "Execution: Attempt procdump.exe"@en ;
+	stonework:correspondsToStep ex:step-attempt-procdump ;
+	.
+
+ex:act-comsvcs-invoke-minidump
+	a stonework:Process ;
+	skos:definition "rundll32.exe was invoked to call the comsvcs.dll MiniDump export against the located lsass.exe PID; the endpoint's EDR agent terminated the process before a dump file could be written, and no credential material was obtained."@en ;
+	skos:prefLabel "Execution: Invoke comsvcs.dll MiniDump export (blocked by EDR)"@en ;
+	stonework:correspondsToStep ex:step-comsvcs-invoke-minidump ;
+	.
+
+ex:act-comsvcs-locate-lsass
+	a stonework:Process ;
+	skos:definition "The lsass.exe PID was successfully enumerated on the target host."@en ;
+	skos:prefLabel "Execution: Locate lsass.exe PID (comsvcs attempt)"@en ;
+	stonework:correspondsToStep ex:step-comsvcs-locate-lsass ;
+	.
+
+ex:act-credential-access-achieved
+	a stonework:Process ;
+	skos:definition "Marks the point in execution at which usable credential material had been obtained and the operation proceeded to its next phase."@en ;
+	skos:prefLabel "Execution: Credential access achieved"@en ;
+	stonework:correspondsToStep ex:step-credential-access-achieved ;
+	.
+
+ex:act-procdump-locate-lsass
+	a stonework:Process ;
+	skos:definition "The lsass.exe PID was successfully enumerated on the target host."@en ;
+	skos:prefLabel "Execution: Locate lsass.exe PID (procdump attempt)"@en ;
+	stonework:correspondsToStep ex:step-procdump-locate-lsass ;
+	.
+
+ex:act-procdump-run
+	a stonework:Process ;
+	skos:definition "procdump.exe -ma was executed against the located lsass.exe PID and completed successfully, writing a full memory dump later confirmed to contain extractable credential material."@en ;
+	skos:prefLabel "Execution: Run procdump.exe -ma against lsass.exe"@en ;
+	stonework:correspondsToStep ex:step-procdump-run ;
+	stonework:produces ex:cond-procdump-credential-material ;
+	.
+
+ex:cond-procdump-credential-material
+	a stonework:SecurityCondition ;
+	skos:definition "Usable credential material extracted from the lsass.exe memory dump produced by the successful procdump.exe attempt."@en ;
+	skos:prefLabel "Credential material obtained (procdump)"@en ;
+	.
+
+ex:hyp-comsvcs-outcome
+	a stonework:Hypothesis ;
+	skos:definition "Predicted that the comsvcs.dll MiniDump procedure would obtain usable credential material from lsass.exe."@en ;
+	skos:prefLabel "Hypothesis: comsvcs.dll MiniDump succeeds"@en ;
+	stonework:confidence "60"^^xsd:integer ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusRefuted ;
+	stonework:predictedType stonework:SecurityCondition ;
+	stonework:predictsVariable ex:var-comsvcs-outcome ;
+	.
+
+ex:hyp-procdump-outcome
+	a stonework:Hypothesis ;
+	skos:definition "Predicted that procdump.exe -ma would obtain usable credential material from lsass.exe, as a fallback after the comsvcs.dll attempt was blocked."@en ;
+	skos:prefLabel "Hypothesis: procdump.exe succeeds"@en ;
+	stonework:confidence "75"^^xsd:integer ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusConfirmed ;
+	stonework:predictedType stonework:SecurityCondition ;
+	stonework:predictsVariable ex:var-procdump-outcome ;
+	.
+
 ex:opplan-t1003-001
 	a stonework:OperationPlan ;
 	skos:definition "Attempts to obtain credential material from LSASS process memory, trying alternative tool choices in order until one succeeds."@en ;
@@ -54,6 +130,7 @@ ex:proc-procdump
 ex:step-attempt-comsvcs
 	a stonework:Step ;
 	skos:prefLabel "Attempt: comsvcs.dll MiniDump"@en ;
+	stonework:hasOutputVariable ex:var-comsvcs-outcome ;
 	stonework:implements ex:proc-comsvcs ;
 	stonework:isStepOf ex:opplan-t1003-001 ;
 	stonework:stepOrder "1"^^xsd:integer ;
@@ -62,6 +139,7 @@ ex:step-attempt-comsvcs
 ex:step-attempt-mimikatz
 	a stonework:Step ;
 	skos:prefLabel "Attempt: Mimikatz"@en ;
+	stonework:hasOutputVariable ex:var-mimikatz-outcome ;
 	stonework:implements ex:proc-mimikatz ;
 	stonework:isStepOf ex:opplan-t1003-001 ;
 	stonework:stepOrder "3"^^xsd:integer ;
@@ -70,6 +148,7 @@ ex:step-attempt-mimikatz
 ex:step-attempt-procdump
 	a stonework:Step ;
 	skos:prefLabel "Attempt: procdump.exe"@en ;
+	stonework:hasOutputVariable ex:var-procdump-outcome ;
 	stonework:implements ex:proc-procdump ;
 	stonework:isStepOf ex:opplan-t1003-001 ;
 	stonework:stepOrder "2"^^xsd:integer ;
@@ -134,7 +213,7 @@ ex:t-comsvcs-success
 	a stonework:Transition ;
 	stonework:fromStep ex:step-attempt-comsvcs ;
 	stonework:guardType stonework:SecurityCondition ;
-	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:guardVariable ex:var-comsvcs-outcome ;
 	stonework:toStep ex:step-credential-access-achieved ;
 	.
 
@@ -142,7 +221,7 @@ ex:t-comsvcs-to-procdump
 	a stonework:Transition ;
 	stonework:fromStep ex:step-attempt-comsvcs ;
 	stonework:guardLiteralValue "false"^^xsd:boolean ;
-	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:guardVariable ex:var-comsvcs-outcome ;
 	stonework:toStep ex:step-attempt-procdump ;
 	.
 
@@ -150,7 +229,7 @@ ex:t-mimikatz-success
 	a stonework:Transition ;
 	stonework:fromStep ex:step-attempt-mimikatz ;
 	stonework:guardType stonework:SecurityCondition ;
-	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:guardVariable ex:var-mimikatz-outcome ;
 	stonework:toStep ex:step-credential-access-achieved ;
 	.
 
@@ -158,7 +237,7 @@ ex:t-procdump-success
 	a stonework:Transition ;
 	stonework:fromStep ex:step-attempt-procdump ;
 	stonework:guardType stonework:SecurityCondition ;
-	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:guardVariable ex:var-procdump-outcome ;
 	stonework:toStep ex:step-credential-access-achieved ;
 	.
 
@@ -166,13 +245,34 @@ ex:t-procdump-to-mimikatz
 	a stonework:Transition ;
 	stonework:fromStep ex:step-attempt-procdump ;
 	stonework:guardLiteralValue "false"^^xsd:boolean ;
-	stonework:guardVariable ex:var-credential-outcome ;
+	stonework:guardVariable ex:var-procdump-outcome ;
 	stonework:toStep ex:step-attempt-mimikatz ;
+	.
+
+ex:var-comsvcs-outcome
+	a stonework:Variable ;
+	skos:definition "The comsvcs.dll MiniDump attempt's own outcome: bound to a SecurityCondition instance if that attempt yields usable credential material, or to literal false if it is blocked or fails."@en ;
+	stonework:boundToLiteral "false"^^xsd:boolean ;
+	stonework:variableName "comsvcsOutcome" ;
 	.
 
 ex:var-credential-outcome
 	a stonework:Variable ;
-	skos:definition "Bound to a SecurityCondition instance if an attempt yields usable credential material; bound to literal false if the attempt is blocked or fails."@en ;
+	skos:definition "The OperationPlan's overall output: bound to the SecurityCondition instance that ultimately satisfied credential access, once any attempt succeeds."@en ;
+	stonework:boundTo ex:cond-procdump-credential-material ;
 	stonework:variableName "credentialAccessOutcome" ;
+	.
+
+ex:var-mimikatz-outcome
+	a stonework:Variable ;
+	skos:definition "The Mimikatz attempt's own outcome: bound to a SecurityCondition instance if that attempt yields usable credential material, or to literal false if it is blocked or fails."@en ;
+	stonework:variableName "mimikatzOutcome" ;
+	.
+
+ex:var-procdump-outcome
+	a stonework:Variable ;
+	skos:definition "The procdump.exe attempt's own outcome: bound to a SecurityCondition instance if that attempt yields usable credential material, or to literal false if it is blocked or fails."@en ;
+	stonework:boundTo ex:cond-procdump-credential-material ;
+	stonework:variableName "procdumpOutcome" ;
 	.
 

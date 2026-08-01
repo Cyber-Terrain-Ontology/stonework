@@ -313,10 +313,10 @@ stonework:DefensiveTactic
 
 stonework:DetectionPlan
 	a owl:Class ;
-	rdfs:subClassOf stonework:Behavior ;
+	rdfs:subClassOf stonework:InvestigationPlan ;
 	skos:definition "A Step-decomposed sequence of actions for determining whether observed activity constitutes a security-relevant violation, as distinct from the offensive or defensive action plans that respond to one."@en ;
 	skos:prefLabel "Detection Plan" ;
-	skos:scopeNote "Where a Playbook is an action plan carried out by an interested party — offensive (an adversary's operational playbook) or defensive (an incident responder's playbook) — a DetectionPlan plays a neutral, evaluative role: orchestrating DetectionRule/Signature evaluation and analytic logic to identify whether a violation occurred, typically triggering a defensive Playbook or ControlPlan via a guarded Transition once one is confirmed."@en ;
+	skos:scopeNote "A specialization of stonework:InvestigationPlan narrowly scoped to violation triage: orchestrating DetectionRule/Signature evaluation and analytic logic to identify whether a violation occurred, typically triggering a defensive Playbook or ControlPlan via a guarded Transition once one is confirmed. Where a Playbook is an action plan carried out by an interested party — offensive (an adversary's operational playbook) or defensive (an incident responder's playbook) — a DetectionPlan plays a neutral, evaluative role, watching for the kind of changes an InvestigationPlan more broadly investigates."@en ;
 	.
 
 stonework:DetectionRule
@@ -485,6 +485,14 @@ stonework:HumanSource
 	skos:scopeNote "Often used in HUMINT or OSINT contexts. Reliability scoring is commonly applied to human sources."@en ;
 	.
 
+stonework:Hypothesis
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	skos:definition "A structured, falsifiable prediction about the value a Variable will resolve to once the Behavior or Step declaring that Variable executes."@en ;
+	skos:prefLabel "Hypothesis" ;
+	skos:scopeNote "Formalizes the anticipated side of the Variable lifecycle described in stonework:Variable's scopeNote: a Hypothesis names, in advance, the value an output Variable is predicted to be bound to. Linked to the Variable it predicts via stonework:predictsVariable, and to the prediction itself via stonework:predictedType (a class, the common case — mirrors stonework:guardType), stonework:predictedValue (a specific individual), or stonework:predictedLiteral (a scalar) — mirroring stonework:boundTo/stonework:boundToLiteral on the actual-result side. A Transition's guard properties, which test a Variable's actual bound value, implicitly test agreement with whichever Hypothesis predicted that Variable — confirming it if they match, refuting it otherwise. May attach at any level of a Step/Plan decomposition, since stonework:Step is itself a stonework:Behavior."@en ;
+	.
+
 stonework:IPAddress
 	a owl:Class ;
 	rdfs:subClassOf stonework:Infrastructure ;
@@ -553,6 +561,15 @@ stonework:Investigation
 	skos:definition "A systematic Process of inquiry, evidence collection, analysis, hypothesis testing, and conclusion to understand, attribute, or resolve security incidents, threats, anomalies, or other matters of interest." ;
 	skos:prefLabel "Investigation" ;
 	skos:scopeNote "Includes digital forensics, threat hunting, root cause analysis, and incident investigations. Links to Sightings, Evidence (via categorizedBy), Sensors, and produces Findings or updated Assessments."@en ;
+	.
+
+stonework:InvestigationPlan
+	a owl:Class ;
+	rdfs:subClassOf stonework:Behavior ;
+	rdfs:comment "An InvestigationPlan is a plan specification; executing one produces an instance of stonework:Investigation."@en ;
+	skos:definition "A Step-decomposed sequence of actions for systematically examining a cyber entity, artifact, or event to determine its nature, extent, or significance."@en ;
+	skos:prefLabel "Investigation Plan" ;
+	skos:scopeNote "The general assessment-plan counterpart to stonework:Playbook on the production side: where a Playbook's execution changes state in the world, an InvestigationPlan's execution (a stonework:Investigation) produces judgment about something that already exists or happened — typically a stonework:Analysis or stonework:Assessment. stonework:DetectionPlan is a specialized subclass, narrowly scoped to determining whether observed activity constitutes a security-relevant violation; broader analytical work (forensic analysis, malware analysis, vulnerability assessment) is modeled directly as InvestigationPlan."@en ;
 	.
 
 stonework:Keylogger
@@ -1018,7 +1035,7 @@ stonework:Step
 	rdfs:seeAlso <http://purl.org/net/p-plan#Step> ;
 	skos:definition "A single, individually addressable unit of action within a Behavior that models a multi-step process, such as a Procedure, Playbook, ThreatScenario, or Control."@en ;
 	skos:prefLabel "Step" ;
-	skos:scopeNote "A Step is itself a Behavior — a plan specification for a sub-action, not its execution — consistent with p-plan:Step subclassing prov:Plan rather than prov:Activity. Because Step is a Behavior, a Step MAY itself decompose into further Steps via stonework:hasStep, supporting nested sub-procedures (e.g. a Kill Chain phase decomposing into candidate technique attempts) without a separate composite class. The activity that executes a Step is a stonework:CyberActivity; the property linking an executing Activity back to the Step/Plan it realizes is not yet defined."@en ;
+	skos:scopeNote "A Step is itself a Behavior — a plan specification for a sub-action, not its execution — consistent with p-plan:Step subclassing prov:Plan rather than prov:Activity. Because Step is a Behavior, a Step MAY itself decompose into further Steps via stonework:hasStep, supporting nested sub-procedures (e.g. a Kill Chain phase decomposing into candidate technique attempts) without a separate composite class. The activity that executes a Step is a stonework:CyberActivity; it links back to the Step it realizes via stonework:correspondsToStep."@en ;
 	.
 
 stonework:Tactic
@@ -1370,6 +1387,15 @@ stonework:compromisedIn
 	skos:prefLabel "compromisedIn" ;
 	.
 
+stonework:confidence
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range xsd:integer ;
+	skos:definition "A numeric estimate, from 0 to 100, of the degree of belief that a Hypothesis's prediction will be borne out."@en ;
+	skos:prefLabel "confidence" ;
+	skos:scopeNote "Matches the 0-100 scale of the STIX 2.1 confidence property, for consistency with STIX round-tripping."@en ;
+	.
+
 stonework:consistsOf
 	a owl:ObjectProperty ;
 	skos:prefLabel "consistsOf" ;
@@ -1389,6 +1415,19 @@ stonework:contains
 		stonework:IPBlock
 		;
 	skos:prefLabel "contains" ;
+	.
+
+stonework:correspondsToStep
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range stonework:Step ;
+	rdfs:seeAlso <http://purl.org/net/p-plan#correspondsToStep> ;
+	skos:definition "Links an executing CyberActivity to the Step it is the concrete performance of."@en ;
+	skos:prefLabel "correspondsToStep" ;
+	skos:scopeNote "Directly mirrors p-plan:correspondsToStep (domain prov:Activity, range p-plan:Step), narrowed to stonework:CyberActivity/stonework:Step. Declared functional, matching p-plan: a single CyberActivity corresponds to at most one Step, but a Step may still be the target of many CyberActivity instances across retries or repeated executions. Fills the gap noted on stonework:Step: the property linking an executing Activity back to the Step it realizes."@en ;
 	.
 
 stonework:counters
@@ -1985,6 +2024,51 @@ stonework:precedes
 	rdfs:range stonework:IntelligenceProduct ;
 	skos:definition "Temporal succession of Information (v1 precedes v2 of a report)"@en ;
 	skos:prefLabel "precedes" ;
+	.
+
+stonework:predictedLiteral
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range rdfs:Literal ;
+	skos:definition "The scalar value a Hypothesis predicts its stonework:predictsVariable will be bound to, once executed."@en ;
+	skos:prefLabel "predictedLiteral" ;
+	skos:scopeNote "Mirrors stonework:boundToLiteral on the actual-result side; see stonework:predictedValue for predictions of an individual rather than a scalar."@en ;
+	.
+
+stonework:predictedType
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range rdfs:Class ;
+	skos:definition "The class a Hypothesis predicts its stonework:predictsVariable will be bound to an instance of, once executed."@en ;
+	skos:prefLabel "predictedType" ;
+	skos:scopeNote "Mirrors stonework:guardType on Transition. Exists because a Hypothesis is typically formed before the Variable's eventual value has been constructed — at prediction time there is usually no individual yet to name via stonework:predictedValue, only an expected class of outcome (e.g. 'this attempt will produce some stonework:SecurityCondition')."@en ;
+	.
+
+stonework:predictedValue
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range owl:Thing ;
+	skos:definition "The individual a Hypothesis predicts its stonework:predictsVariable will be bound to, once executed."@en ;
+	skos:prefLabel "predictedValue" ;
+	skos:scopeNote "Mirrors stonework:boundTo on the actual-result side; usable only when a specific pre-existing individual is predicted. See stonework:predictedType for the more common case of predicting a class of outcome rather than a specific not-yet-constructed individual, and stonework:predictedLiteral for predictions of a scalar."@en ;
+	.
+
+stonework:predictsVariable
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range stonework:Variable ;
+	skos:definition "The Variable whose eventual binding a Hypothesis is a prediction about."@en ;
+	skos:prefLabel "predictsVariable" ;
+	skos:scopeNote "Because stonework:hasInputVariable/stonework:hasOutputVariable are declared on stonework:Behavior, and stonework:Step is itself a Behavior, a Hypothesis may predict a Variable declared at any level of a Step/Plan decomposition — a top-level Plan's overall outcome or a single Step's individual result — without a separate property per level."@en ;
+	.
+
+stonework:produces
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range stonework:CyberEntity ;
+	skos:definition "Links an executing CyberActivity to a CyberEntity it constructed or generated in the course of executing."@en ;
+	skos:prefLabel "produces" ;
+	skos:scopeNote "General-purpose construction/generation link — e.g. the CyberActivity realizing a Step is what actually constructs the value a Variable ends up stonework:boundTo, or a complex output artifact (a dataset, a report) that value refers to."@en ;
 	.
 
 stonework:references
