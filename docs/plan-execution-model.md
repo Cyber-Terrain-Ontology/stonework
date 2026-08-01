@@ -251,3 +251,68 @@ a home for complex output artifacts (plots, time series) — neither
 7. **Leave untaken branches alone.** A Step that was never attempted keeps
    an unbound Variable and a `Pending` (or absent) Hypothesis status — that
    absence is itself part of the forensic record.
+
+---
+
+## 7. Relationship to OASIS CACAO
+
+[CACAO](https://docs.oasis-open.org/cacao/security-playbooks/v2.0/security-playbooks-v2.0.html)
+(Collaborative Automated Course of Action Operations) is OASIS's standard for
+machine-readable security playbooks — JSON documents handed to a SOAR
+orchestration engine for direct execution. Surface-level, it looks like it
+covers the same ground as this pattern. It doesn't, and the differences are
+informative.
+
+**Where they converge — structural parallels arrived at independently:**
+
+| CACAO concept | STONEWORK equivalent |
+|---|---|
+| `workflow` step, `on_success`/`on_failure`/`on_true`/`on_false` | `Step` + `Transition` (`fromStep`/`toStep`/`guardType`/`guardLiteralValue`) |
+| `variables` (playbook- or step-scoped, typed) | `Variable` (`hasInputVariable`/`hasOutputVariable`, `boundTo`/`boundToLiteral`) |
+| `agent` on a `command` (what executes it) | `stonework:attributedTo` |
+| `target` on a `command` (what it acts against) | `stonework:actsOn` |
+| `playbook_types` open vocabulary (`attack`, `investigation`, `detection`, `mitigation`, `prevention`, ...) | The production/assessment split — `OperationPlan` ≈ `attack`; `InvestigationPlan`/`DetectionPlan` ≈ `investigation`/`detection`; `ControlPlan` ≈ `mitigation`/`prevention` |
+
+CACAO's own vocabulary independently landing on an offense/investigation/defense
+split is external validation that this distinction isn't idiosyncratic to
+STONEWORK — it's one the field converges on from multiple directions.
+
+**Where they diverge:**
+
+1. **Format and purpose.** CACAO is JSON, designed for a SOAR engine to
+   execute directly — its center of gravity is *vendor interop for
+   automation*. This pattern is native RDF/OWL, living inside the same graph
+   as the CTI Encyclopedia — its center of gravity is *knowledge
+   representation and reasoning*. A CACAO playbook is a document sent
+   somewhere to be run; a STONEWORK `OperationPlan` is a graph node that can
+   be SPARQL-queried, reasoned over, and semantically joined to CVE/CWE/
+   ATT&CK data natively.
+2. **Control flow is embedded, not addressable.** CACAO's `on_success`/
+   `on_failure` are step-ID string references embedded inside the step
+   object itself. `Transition` is a first-class RDF resource with its own
+   URI — annotatable and independently referenceable. A `Hypothesis` can't
+   attach to a CACAO branch; it can attach to `ex:t-comsvcs-to-procdump`.
+3. **No epistemic layer.** CACAO has no concept of a predicted outcome
+   distinct from an actual one, no confidence scoring, no confirm/refute
+   status — it's a "do this, then do that" execution graph. `Hypothesis` /
+   `predictsVariable` / `confidence` / `hasHypothesisStatus` have no CACAO
+   counterpart.
+4. **Technique attribution is a loose pointer, not a graph traversal.**
+   CACAO references ATT&CK techniques via `external_references` — an ID
+   sitting in a metadata field, not something traversable. The `implements`
+   chain (§4) is a real property path a SPARQL query walks, landing on an
+   actual `cti-enc:` individual embedded in the encyclopedia graph.
+5. **Variables are key-values, not addressable resources.** A CACAO variable
+   is `{name, type, value}` sitting inside a step, with no identity outside
+   its containing document. A STONEWORK `Variable` is its own URI-bearing
+   individual — which is exactly what makes `predictsVariable` possible at
+   all.
+
+**Positioning:** the same relationship this project already has with STIX
+2.1 applies here — "supported import/export format, not the ceiling." A
+CACAO playbook's `workflow` maps reasonably cleanly onto `Step`/`Transition`/
+`Variable`, making CACAO a plausible *ingest* format. What it structurally
+cannot provide is the execution-trace layer described in this document: what
+a SOAR engine *actually did* when it ran that playbook — attributed,
+timestamped, confirmed-or-refuted against what was expected, and joined
+natively to the rest of the threat-intel graph.
