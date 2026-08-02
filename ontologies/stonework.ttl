@@ -1273,7 +1273,7 @@ stonework:actsOn
 	rdfs:seeAlso prov:used ;
 	skos:definition "Links a CyberActivity to the CyberEntity it acted upon — the asset, artifact, or resource the activity operated against."@en ;
 	skos:prefLabel "actsOn" ;
-	skos:scopeNote "Mirrors prov:used (an Activity used an Entity). Typical range instances are stonework:Host, stonework:RuntimeProcess, or other stonework:DigitalArtifact/stonework:Infrastructure individuals — e.g. the specific lsass.exe stonework:RuntimeProcess a credential-dumping attempt acted on. Distinct from stonework:targets, whose domain is Campaign/MalwareSample/ThreatActor and which describes a higher-level strategic target (a Sector, a Location, an Agent) rather than the concrete technical asset one execution step acted upon."@en ;
+	skos:scopeNote "Mirrors prov:used (an Activity used an Entity). Typical range instances are stonework:Host, stonework:RuntimeProcess, or other stonework:DigitalArtifact/stonework:Infrastructure individuals — e.g. the specific lsass.exe stonework:RuntimeProcess a credential-dumping attempt acted on. Distinct from stonework:targets: targets is a direct, open-domain/range lift of the STIX 2.1 relationship_type 'targets' shortcut, describing higher-level strategic targeting (a Sector, a Location, an Agent) by a Campaign/MalwareSample/ThreatActor. actsOn is purpose-built for the concrete technical asset one execution-trace Activity acted upon — the same distinction develop draws between stonework:mitigates (open, STIX-lifted) and stonework:mitigatesAttackPattern (purpose-built, controlled domain/range)."@en ;
 	.
 
 stonework:affected

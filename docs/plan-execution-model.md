@@ -153,18 +153,27 @@ ex:act-procdump-run
   stonework:produces       ex:cond-procdump-credential-material
 ```
 
-`stonework:attributedTo`'s range is `stonework:Agent`, not `ThreatActor` —
-`CyberActivity` is a general occurrence class covering offensive, defensive,
-and neutral activities alike, so its performer need not be adversarial (a
-defender running a `ControlPlan`, or an analyst running an
-`InvestigationPlan`, is equally in scope). `stonework:actsOn` (mirrors
-`prov:used`) points at the concrete technical asset an activity operated
-against — `ex:host-target` (a `Host`) for the enumeration steps, `ex:rtproc-lsass`
-(a `RuntimeProcess`) for the steps that acted directly on lsass.exe — and is
-deliberately distinct from `stonework:targets`, whose domain
-(`Campaign`/`MalwareSample`/`ThreatActor`) is strategic-level targeting
-(a Sector, a Location), not a specific technical asset one execution step
-touched.
+`stonework:attributedTo` has no closed `rdfs:domain`/`rdfs:range` — it's a
+direct lift of the STIX 2.1 `attributed-to` relationship-type shortcut, and
+`develop` established (commit `510915c`) that these shortcuts can't carry an
+enforceable domain/range: STIX itself doesn't schema-constrain which
+SDO/SCO types appear on them, and closed domain/range on properties like
+this previously caused confirmed RDFS++ entailment corruption in
+AllegroGraph. In practice the object is typically a `stonework:Agent`, most
+often a `ThreatActor` in the adversarial case — but `CyberActivity` is a
+general occurrence class covering offensive, defensive, and neutral
+activities alike, so the performer need not be adversarial (a defender
+running a `ControlPlan`, or an analyst running an `InvestigationPlan`, is
+equally in scope). `stonework:actsOn` (mirrors `prov:used`) points at the
+concrete technical asset an activity operated against — `ex:host-target`
+(a `Host`) for the enumeration steps, `ex:rtproc-lsass` (a `RuntimeProcess`)
+for the steps that acted directly on lsass.exe — and is deliberately
+distinct from `stonework:targets`, which (also per `510915c`) is likewise an
+open, STIX-lifted shortcut for higher-level strategic targeting (a Sector,
+a Location) by a Campaign/ThreatActor, not a specific technical asset one
+execution step touched. `actsOn` is purpose-built with a controlled
+domain/range instead, the same way `mitigatesAttackPattern` is purpose-built
+against the open `mitigates`.
 
 ---
 
@@ -198,11 +207,11 @@ vulnerability assessment, ...).
 | `stonework:actsOn` | `CyberActivity` → `CyberEntity` | The asset/artifact an activity operated against. Mirrors `prov:used`. |
 | `stonework:startedAtTime` / `stonework:endedAtTime` | `CyberActivity` → `xsd:dateTime` (functional) | When an activity began/ended. Mirror `prov:startedAtTime`/`prov:endedAtTime`. |
 
-### Widened properties
+### Modified properties
 
 | Property | Was | Now | Why |
 |---|---|---|---|
-| `stonework:attributedTo` | `CyberActivity` → `ThreatActor` | `CyberActivity` → `Agent` | `CyberActivity` covers defensive and neutral activities too, not just adversarial ones — the performer shouldn't be typed as adversarial by default. |
+| `stonework:attributedTo` | `CyberActivity` → `ThreatActor` | domain/range unset; `Agent` documented in scopeNote as the typical (not enforced) object type | Initially widened to `Agent` on this branch, since `CyberActivity` covers defensive/neutral activities too, not just adversarial ones. Reconciled against `develop` (merge commit `8a2be47`, pulling in `510915c`), which had independently removed domain/range from `attributedTo` and five other STIX relationship-type shortcut properties entirely — closed domain/range on a direct STIX lift caused confirmed RDFS++ entailment corruption in AllegroGraph and can't be accurate for arbitrary STIX 2.1 input regardless. The Agent-not-ThreatActor guidance survives as scopeNote prose instead of an enforced range. |
 
 ### Pre-existing machinery this pattern relies on
 
