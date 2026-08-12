@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri name="https://cyberterrain.org/ns/stonework#" uri="stonework.ttl"/>
+        <uri name="https://cyberterrain.org/ns/stonework/categories#" uri="categories.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/bfo" uri="frameworks/bfo.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/capec" uri="frameworks/capec.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/cis" uri="frameworks/cis.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/cpe" uri="frameworks/cpe.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/cve" uri="frameworks/cve.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/cwe" uri="frameworks/cwe.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/d3fend" uri="frameworks/d3fend.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/dhcp" uri="frameworks/dhcp.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/dns" uri="frameworks/dns.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/email" uri="frameworks/email.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/killchain" uri="frameworks/killchain.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/nist" uri="frameworks/nist.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/registry" uri="frameworks/registry.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/stix" uri="frameworks/stix.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/uri" uri="frameworks/uri.ttl"/>
+        <!-- stix.ttl is STONEWORK's local crosswalk of the STONES/STIX 2.1 vocabulary; it imports its own stones# namespace, so resolve that import back to itself rather than fetching over the network -->
+        <uri name="https://cyberterrain.org/ns/stones#" uri="frameworks/stix.ttl"/>
+    </group>
+</catalog>

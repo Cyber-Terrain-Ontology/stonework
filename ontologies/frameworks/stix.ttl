@@ -1,302 +1,572 @@
+@prefix frameworks: <https://cyberterrain.org/ns/frameworks/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix frameworks: <https://cyberterrain.org/ns/frameworks/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix stonex: <https://cyberterrain.org/ns/stonex#> .
-@base <https://cyberterrain.org/ns/frameworks/stix> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+frameworks:stix
+	a owl:Ontology ;
+	rdfs:label "STONES: STIX Framework Ontology"@en ;
+	rdfs:comment "A mapping of the STONES Ontology to STONEWORK. Provides a class hierarchy for all STONES Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STONES properties."@en ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/stix/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
+	.
+
+stones:ArtifactObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	.
+
+stones:AttackMotivationVocabulary
+	a owl:Class ;
+	rdfs:subClassOf stonework:Motivation ;
+	.
+
+stones:AttackPattern
+	a owl:Class ;
+	rdfs:subClassOf stonework:AttackPattern ;
+	.
+
+stones:AutonomousSystemObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:AutonomousSystem ;
+	.
+
+stones:Campaign
+	a owl:Class ;
+	rdfs:subClassOf stonework:Campaign ;
+	.
+
+stones:CourseOfAction
+	a owl:Class ;
+	rdfs:subClassOf stonework:CourseOfAction ;
+	.
+
+stones:DomainNameObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:Domain ;
+	.
+
+stones:EmailAddressObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:EmailAddress ;
+	.
+
+stones:ExternalReference
+	a owl:Class ;
+	rdfs:subClassOf stonework:OnlineReference ;
+	.
+
+stones:FileObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:File ;
+	.
+
+stones:GranularMarking
+	a owl:Class ;
+	rdfs:subClassOf stonework:Markings ;
+	.
+
+stones:Grouping
+	a owl:Class ;
+	rdfs:subClassOf stonework:Category ;
+	.
+
+stones:HashEntry
+	a owl:Class ;
+	rdfs:subClassOf stonework:Hash ;
+	.
+
+stones:IPv4AddressObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:IPAddress ;
+	.
+
+stones:IPv6AddressObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:IPAddress ;
+	.
+
+stones:Identity
+	a owl:Class ;
+	rdfs:subClassOf stonework:Agent ;
+	.
+
+stones:Indicator
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	.
+
+stones:Infrastructure
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	.
+
+stones:InfrastuctureTypeVocabulary
+	a owl:Class ;
+	rdfs:subClassOf stonework:InfrastructureType ;
+	.
+
+stones:IntrusionSet
+	a owl:Class ;
+	rdfs:subClassOf stonework:ThreatActor ;
+	.
+
+stones:KillChainPhase
+	a owl:Class ;
+	rdfs:subClassOf stonework:KillChainPhase ;
+	.
+
+stones:Location
+	a owl:Class ;
+	rdfs:subClassOf stonework:Location ;
+	.
+
+stones:MACAddressObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	.
+
+stones:Malware
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:MalwareFamily ,
+		stonework:MalwareSample
+		;
+	.
+
+stones:MalwareAnalysis
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	.
+
+stones:MalwareTypeVocabulary
+	a owl:Class ;
+	rdfs:subClassOf stonework:MalwareType ;
+	.
+
+stones:MarkingDefinitionObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:Markings ;
+	.
+
+stones:MutexObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:Mutex ;
+	.
+
+stones:NetworkTrafficObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:NetworkTraffic ;
+	.
+
+stones:Note
+	a owl:Class ;
+	rdfs:subClassOf stonework:Note ;
+	.
+
+stones:ObservedData
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	.
+
+stones:Opinion
+	a owl:Class ;
+	rdfs:subClassOf stonework:IntelligenceProduct ;
+	.
+
+stones:ProcessObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:RuntimeProcess ;
+	.
+
+stones:Report
+	a owl:Class ;
+	rdfs:subClassOf stonework:Report ;
+	.
+
+stones:Sighting
+	a owl:Class ;
+	rdfs:subClassOf stonework:Sighting ;
+	.
+
+stones:SoftwareObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:Product ;
+	.
+
+stones:StixSubType
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	.
+
+stones:ThreatActor
+	a owl:Class ;
+	rdfs:subClassOf stonework:ThreatActor ;
+	.
+
+stones:ThreatActorRoleVocabulary
+	a owl:Class ;
+	rdfs:subClassOf stonework:ThreatActorRole ;
+	.
+
+stones:ThreatActorTypeVocabulary
+	a owl:Class ;
+	rdfs:subClassOf stonework:ThreatActorType ;
+	.
+
+stones:Tool
+	a owl:Class ;
+	rdfs:subClassOf stonework:Tool ;
+	.
+
+stones:URLObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:URI ;
+	.
+
+stones:UserAccountObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:UserAccount ;
+	.
+
+stones:Vulnerability
+	a owl:Class ;
+	rdfs:subClassOf stonework:Vulnerability ;
+	.
+
+stones:WindowsRegistryKeyObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:Registry ;
+	.
+
+stones:WindowsRegistryValue
+	a owl:Class ;
+	rdfs:subClassOf stonework:Registry ;
+	.
+
+stones:X509CertificateObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:Certificate ;
+	.
+
+stones:attributed_to
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:attributedTo ;
+	.
+
+stones:detects
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:detects ;
+	.
+
+stones:exploits
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:exploits ;
+	.
+
+stones:granularMarkings
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:markingRef ;
+	.
+
+stones:indicates
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:indicates ;
+	.
+
+stones:markingRef
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:markingRef ;
+	.
+
+stones:mitigates
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:mitigates ;
+	.
+
+stones:objectMarkingRefs
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:markingRef ;
+	.
+
+stones:related_to
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:relatedTo ;
+	.
+
+stones:relationshipType
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stones:Relationship ;
+	rdfs:range xsd:string ;
+	skos:definition "The relationship_type string value from the STIX 2.1 SRO (e.g. 'uses', 'mitigates', 'subtechnique-of'). Drawn from the STIX 2.1 open vocabulary; corresponding named individuals are declared as stones:RelationshipTypeVocabulary instances in vocabularies.ttl. A shortcut object property is also asserted: stones:<type_underscored> from source to target." ;
+	skos:prefLabel "relationshipType" ;
+	.
+
+stones:revoked_by
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:revokedBy ;
+	.
+
+stones:subtechnique_of
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:techniqueOf ;
+	.
+
+stones:targets
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:targets ;
+	.
+
+stones:uses
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:uses ;
+	.
+
+stonex:_accidental
+	owl:sameAs stonework:motivationAccidental ;
+	.
+
+stonex:_activist
+	owl:sameAs stonework:threatActorTypeActivist ;
+	.
+
+stonex:_adware
+	owl:sameAs stonework:malwareTypeAdware ;
+	.
+
+stonex:_agent
+	owl:sameAs stonework:threatActorRoleAgent ;
+	.
+
+stonex:_amplification
+	owl:sameAs stonework:infraTypeAmplification ;
+	.
+
+stonex:_anonymization
+	owl:sameAs stonework:infraTypeAnonymization ;
+	.
+
+stonex:_backdoor
+	owl:sameAs stonework:malwareTypeBackdoor ;
+	.
+
+stonex:_bootkit
+	owl:sameAs stonework:malwareTypeBootkit ;
+	.
+
+stonex:_bot
+	owl:sameAs stonework:malwareTypeBot ;
+	.
+
+stonex:_botnet
+	owl:sameAs stonework:infraTypeBotnet ;
+	.
+
+stonex:_coercion
+	owl:sameAs stonework:motivationCoercion ;
+	.
+
+stonex:_command-and-control
+	owl:sameAs stonework:infraTypeC2 ;
+	.
+
+stonex:_competitor
+	owl:sameAs stonework:threatActorTypeCompetitor ;
+	.
+
+stonex:_crime-syndicate
+	owl:sameAs stonework:threatActorTypeCrimeSyndicate ;
+	.
+
+stonex:_criminal
+	owl:sameAs stonework:threatActorTypeCriminal ;
+	.
+
+stonex:_ddos
+	owl:sameAs stonework:malwareTypeDDoS ;
+	.
+
+stonex:_director
+	owl:sameAs stonework:threatActorRoleDirector ;
+	.
+
+stonex:_dominance
+	owl:sameAs stonework:motivationDominance ;
+	.
+
+stonex:_downloader
+	owl:sameAs stonework:malwareTypeDownloader ;
+	.
+
+stonex:_dropper
+	owl:sameAs stonework:malwareTypeDropper ;
+	.
+
+stonex:_exfiltration
+	owl:sameAs stonework:infraTypeExfiltration ;
+	.
+
+stonex:_exploit-kit
+	owl:sameAs stonework:malwareTypeExploitKit ;
+	.
+
+stonex:_firewall
+	owl:sameAs stonework:infraTypeFirewall ;
+	.
+
+stonex:_hacker
+	owl:sameAs stonework:threatActorTypeHacker ;
+	.
+
+stonex:_hosting-malware
+	owl:sameAs stonework:infraTypeHostingMalware ;
+	.
+
+stonex:_hosting-target-lists
+	owl:sameAs stonework:infraTypeHostingTargetLists ;
+	.
+
+stonex:_ideology
+	owl:sameAs stonework:motivationIdeology ;
+	.
+
+stonex:_infrastructure-architect
+	owl:sameAs stonework:threatActorRoleInfrastructureArchitect ;
+	.
+
+stonex:_infrastructure-operator
+	owl:sameAs stonework:threatActorRoleInfrastructureOperator ;
+	.
+
+stonex:_insider-accidental
+	owl:sameAs stonework:threatActorTypeInsiderAccidental ;
+	.
+
+stonex:_insider-disgruntled
+	owl:sameAs stonework:threatActorTypeInsiderDisgruntled ;
+	.
+
+stonex:_keylogger
+	owl:sameAs stonework:malwareTypeKeylogger ;
+	.
+
+stonex:_malware-author
+	owl:sameAs stonework:threatActorRoleMalwareAuthor ;
+	.
+
+stonex:_nation-state
+	owl:sameAs stonework:threatActorTypeNationState ;
+	.
+
+stonex:_notoriety
+	owl:sameAs stonework:motivationNotoriety ;
+	.
+
+stonex:_organizational-gain
+	owl:sameAs stonework:motivationOrganizationalGain ;
+	.
+
+stonex:_personal-gain
+	owl:sameAs stonework:motivationPersonalGain ;
+	.
+
+stonex:_personal-satisfaction
+	owl:sameAs stonework:motivationPersonalSatisfaction ;
+	.
+
+stonex:_phishing
+	owl:sameAs stonework:infraTypePhishing ;
+	.
+
+stonex:_ransomware
+	owl:sameAs stonework:malwareTypeRansomware ;
+	.
+
+stonex:_reconnaissance
+	owl:sameAs stonework:infraTypeReconnaissance ;
+	.
+
+stonex:_remote-access-trojan
+	owl:sameAs stonework:malwareTypeRAT ;
+	.
+
+stonex:_resource-exploitation
+	owl:sameAs stonework:malwareTypeResourceExploitation ;
+	.
+
+stonex:_revenge
+	owl:sameAs stonework:motivationRevenge ;
+	.
+
+stonex:_rootkit
+	owl:sameAs stonework:malwareTypeRootkit ;
+	.
+
+stonex:_routers-switches
+	owl:sameAs stonework:infraTypeRoutersSwitches ;
+	.
+
+stonex:_screen-capture
+	owl:sameAs stonework:malwareTypeScreenCapture ;
+	.
+
+stonex:_sensationalist
+	owl:sameAs stonework:threatActorTypeSensationalist ;
+	.
+
+stonex:_sponsor
+	owl:sameAs stonework:threatActorRoleSponsor ;
+	.
+
+stonex:_spy
+	owl:sameAs stonework:threatActorTypeSpy ;
+	.
+
+stonex:_spyware
+	owl:sameAs stonework:malwareTypeSpyware ;
+	.
+
+stonex:_staging
+	owl:sameAs stonework:infraTypeStaging ;
+	.
+
+stonex:_terrorist
+	owl:sameAs stonework:threatActorTypeTerrorist ;
+	.
+
+stonex:_trojan
+	owl:sameAs stonework:malwareTypeTrojan ;
+	.
+
+stonex:_unpredictable
+	owl:sameAs stonework:motivationUnpredictable ;
+	.
+
+stonex:_virus
+	owl:sameAs stonework:malwareTypeVirus ;
+	.
+
+stonex:_webshell
+	owl:sameAs stonework:malwareTypeWebshell ;
+	.
+
+stonex:_wiper
+	owl:sameAs stonework:malwareTypeWiper ;
+	.
+
+stonex:_workstation
+	owl:sameAs stonework:infraTypeWorkstation ;
+	.
+
+stonex:_worm
+	owl:sameAs stonework:malwareTypeWorm ;
+	.
 
-###  https://cyberterrain.org/ns/frameworks/stix
-frameworks:stix rdf:type owl:Ontology ;
-                owl:versionIRI <https://cyberterrain.org/ns/frameworks/stix/0.1.0> ;
-                owl:versionInfo "0.1.0" ;
-                owl:imports <https://cyberterrain.org/ns/stones#> ;
-                rdfs:label "STONES: STIX Framework Ontology"@en ;
-                rdfs:comment "A mapping of the STONES Ontology to STONEWORK. Provides a class hierarchy for all STONES Domain Objects (SDOs), Cyber Observable Objects (SCOs), Relationship Objects (SROs), Meta Objects, and structured sub-types, together with datatype and object properties covering all standard STONES properties."@en .
-
-
-#################################################################
-#    Data Properties
-#################################################################
-
-###  https://cyberterrain.org/ns/stones#relationshipType
-stones:relationshipType rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
-                        rdfs:domain stones:Relationship ;
-                        rdfs:range xsd:string ;
-                        skos:prefLabel "relationshipType" ;
-                        skos:definition "The relationship_type string value from the STIX 2.1 SRO (e.g. 'uses', 'mitigates', 'subtechnique-of'). Drawn from the STIX 2.1 open vocabulary; corresponding named individuals are declared as stones:RelationshipTypeVocabulary instances in vocabularies.ttl. A shortcut object property is also asserted: stones:<type_underscored> from source to target." .
-
-
-#################################################################
-#    General Axioms
-#################################################################
-
-###  https://cyberterrain.org/ns/stones#ArtifactObject
-stones:ArtifactObject rdfs:subClassOf stonework:DigitalArtifact .
-
-###  https://cyberterrain.org/ns/stones#AttackPattern
-stones:AttackPattern rdfs:subClassOf stonework:AttackPattern .
-
-###  https://cyberterrain.org/ns/stones#attributed_to
-stones:attributed_to rdfs:subPropertyOf stonework:attributedTo .
-
-###  https://cyberterrain.org/ns/stones#AutonomousSystemObject
-stones:AutonomousSystemObject rdfs:subClassOf stonework:AutonomousSystem .
-
-###  https://cyberterrain.org/ns/stones#Campaign
-stones:Campaign rdfs:subClassOf stonework:Campaign .
-
-###  https://cyberterrain.org/ns/stones#CourseOfAction
-stones:CourseOfAction rdfs:subClassOf stonework:CourseOfAction .
-
-###  https://cyberterrain.org/ns/stones#detects
-stones:detects rdfs:subPropertyOf stonework:detects .
-
-###  https://cyberterrain.org/ns/stones#DomainNameObject
-stones:DomainNameObject rdfs:subClassOf stonework:Domain .
-
-###  https://cyberterrain.org/ns/stones#EmailAddressObject
-stones:EmailAddressObject rdfs:subClassOf stonework:EmailAddress .
-
-###  https://cyberterrain.org/ns/stones#exploits
-stones:exploits rdfs:subPropertyOf stonework:exploits .
-
-###  https://cyberterrain.org/ns/stones#ExternalReference
-stones:ExternalReference rdfs:subClassOf stonework:OnlineReference .
-
-###  https://cyberterrain.org/ns/stones#FileObject
-stones:FileObject rdfs:subClassOf stonework:File .
-
-###  https://cyberterrain.org/ns/stones#GranularMarking
-stones:GranularMarking rdfs:subClassOf stonework:Markings .
-
-###  https://cyberterrain.org/ns/stones#granularMarkings
-stones:granularMarkings rdfs:subPropertyOf stonework:markingRef .
-
-###  https://cyberterrain.org/ns/stones#Grouping
-stones:Grouping rdfs:subClassOf stonework:Category .
-
-###  https://cyberterrain.org/ns/stones#HashEntry
-stones:HashEntry rdfs:subClassOf stonework:Hash .
-
-###  https://cyberterrain.org/ns/stones#Identity
-stones:Identity rdfs:subClassOf stonework:Agent .
-
-###  https://cyberterrain.org/ns/stones#indicates
-stones:indicates rdfs:subPropertyOf stonework:indicates .
-
-###  https://cyberterrain.org/ns/stones#Indicator
-stones:Indicator rdfs:subClassOf stonework:DigitalArtifact .
-
-###  https://cyberterrain.org/ns/stones#Infrastructure
-stones:Infrastructure rdfs:subClassOf stonework:Infrastructure .
-
-###  https://cyberterrain.org/ns/stones#IntrusionSet
-stones:IntrusionSet rdfs:subClassOf stonework:ThreatActor .
-
-###  https://cyberterrain.org/ns/stones#IPv4AddressObject
-stones:IPv4AddressObject rdfs:subClassOf stonework:IPAddress .
-
-###  https://cyberterrain.org/ns/stones#IPv6AddressObject
-stones:IPv6AddressObject rdfs:subClassOf stonework:IPAddress .
-
-###  https://cyberterrain.org/ns/stones#KillChainPhase
-stones:KillChainPhase rdfs:subClassOf stonework:KillChainPhase .
-
-###  https://cyberterrain.org/ns/stones#Location
-stones:Location rdfs:subClassOf stonework:Location .
-
-###  https://cyberterrain.org/ns/stones#MACAddressObject
-stones:MACAddressObject rdfs:subClassOf stonework:Infrastructure .
-
-###  https://cyberterrain.org/ns/stones#Malware
-stones:Malware rdfs:subClassOf stonework:MalwareFamily , stonework:MalwareSample .
-
-###  https://cyberterrain.org/ns/stones#MalwareAnalysis
-stones:MalwareAnalysis rdfs:subClassOf stonework:IntelligenceProduct .
-
-###  https://cyberterrain.org/ns/stones#MarkingDefinitionObject
-stones:MarkingDefinitionObject rdfs:subClassOf stonework:Markings .
-
-###  https://cyberterrain.org/ns/stones#markingRef
-stones:markingRef rdfs:subPropertyOf stonework:markingRef .
-
-###  https://cyberterrain.org/ns/stones#mitigates
-stones:mitigates rdfs:subPropertyOf stonework:mitigates .
-
-###  https://cyberterrain.org/ns/stones#MutexObject
-stones:MutexObject rdfs:subClassOf stonework:Mutex .
-
-###  https://cyberterrain.org/ns/stones#NetworkTrafficObject
-stones:NetworkTrafficObject rdfs:subClassOf stonework:NetworkTraffic .
-
-###  https://cyberterrain.org/ns/stones#Note
-stones:Note rdfs:subClassOf stonework:Note .
-
-###  https://cyberterrain.org/ns/stones#objectMarkingRefs
-stones:objectMarkingRefs rdfs:subPropertyOf stonework:markingRef .
-
-###  https://cyberterrain.org/ns/stones#ObservedData
-stones:ObservedData rdfs:subClassOf stonework:DigitalArtifact .
-
-###  https://cyberterrain.org/ns/stones#Opinion
-stones:Opinion rdfs:subClassOf stonework:IntelligenceProduct .
-
-###  https://cyberterrain.org/ns/stones#ProcessObject
-stones:ProcessObject rdfs:subClassOf stonework:RuntimeProcess .
-
-###  https://cyberterrain.org/ns/stones#related_to
-stones:related_to rdfs:subPropertyOf stonework:relatedTo .
-
-###  https://cyberterrain.org/ns/stones#Report
-stones:Report rdfs:subClassOf stonework:Report .
-
-###  https://cyberterrain.org/ns/stones#revoked_by
-stones:revoked_by rdfs:subPropertyOf stonework:revokedBy .
-
-###  https://cyberterrain.org/ns/stones#Sighting
-stones:Sighting rdfs:subClassOf stonework:Sighting .
-
-###  https://cyberterrain.org/ns/stones#SoftwareObject
-stones:SoftwareObject rdfs:subClassOf stonework:Product .
-
-###  https://cyberterrain.org/ns/stones#StixSubType
-stones:StixSubType rdfs:subClassOf stonework:DigitalArtifact .
-
-###  https://cyberterrain.org/ns/stones#X509CertificateObject
-stones:X509CertificateObject rdfs:subClassOf stonework:Certificate .
-
-###  https://cyberterrain.org/ns/stones#subtechnique_of
-stones:subtechnique_of rdfs:subPropertyOf stonework:techniqueOf .
-
-###  https://cyberterrain.org/ns/stones#targets
-stones:targets rdfs:subPropertyOf stonework:targets .
-
-###  https://cyberterrain.org/ns/stones#ThreatActor
-stones:ThreatActor rdfs:subClassOf stonework:ThreatActor .
-
-###  https://cyberterrain.org/ns/stones#Tool
-stones:Tool rdfs:subClassOf stonework:Tool .
-
-###  https://cyberterrain.org/ns/stones#URLObject
-stones:URLObject rdfs:subClassOf stonework:URI .
-
-###  https://cyberterrain.org/ns/stones#UserAccountObject
-stones:UserAccountObject rdfs:subClassOf stonework:UserAccount .
-
-###  https://cyberterrain.org/ns/stones#uses
-stones:uses rdfs:subPropertyOf stonework:uses .
-
-###  https://cyberterrain.org/ns/stones#Vulnerability
-stones:Vulnerability rdfs:subClassOf stonework:Vulnerability .
-
-###  https://cyberterrain.org/ns/stones#WindowsRegistryKeyObject
-stones:WindowsRegistryKeyObject rdfs:subClassOf stonework:Registry .
-
-###  https://cyberterrain.org/ns/stones#WindowsRegistryValue
-stones:WindowsRegistryValue rdfs:subClassOf stonework:Registry .
-
-
-#################################################################
-#    Attack Motivation Vocabulary Mappings
-#################################################################
-
-###  Map stones:AttackMotivationVocabulary to stonework:Motivation
-stones:AttackMotivationVocabulary rdfs:subClassOf stonework:Motivation .
-
-###  Map stonex vocabulary individuals to stonework Motivation named individuals
-stonex:_accidental owl:sameAs stonework:motivationAccidental .
-stonex:_coercion owl:sameAs stonework:motivationCoercion .
-stonex:_dominance owl:sameAs stonework:motivationDominance .
-stonex:_ideology owl:sameAs stonework:motivationIdeology .
-stonex:_notoriety owl:sameAs stonework:motivationNotoriety .
-stonex:_organizational-gain owl:sameAs stonework:motivationOrganizationalGain .
-stonex:_personal-gain owl:sameAs stonework:motivationPersonalGain .
-stonex:_personal-satisfaction owl:sameAs stonework:motivationPersonalSatisfaction .
-stonex:_revenge owl:sameAs stonework:motivationRevenge .
-stonex:_unpredictable owl:sameAs stonework:motivationUnpredictable .
-
-
-#################################################################
-#    Infrastructure Type Vocabulary Mappings
-#################################################################
-
-stones:InfrastuctureTypeVocabulary rdfs:subClassOf stonework:InfrastructureType .
-
-stonex:_amplification owl:sameAs stonework:infraTypeAmplification .
-stonex:_anonymization owl:sameAs stonework:infraTypeAnonymization .
-stonex:_botnet owl:sameAs stonework:infraTypeBotnet .
-stonex:_command-and-control owl:sameAs stonework:infraTypeC2 .
-stonex:_exfiltration owl:sameAs stonework:infraTypeExfiltration .
-stonex:_firewall owl:sameAs stonework:infraTypeFirewall .
-stonex:_hosting-malware owl:sameAs stonework:infraTypeHostingMalware .
-stonex:_hosting-target-lists owl:sameAs stonework:infraTypeHostingTargetLists .
-stonex:_phishing owl:sameAs stonework:infraTypePhishing .
-stonex:_reconnaissance owl:sameAs stonework:infraTypeReconnaissance .
-stonex:_routers-switches owl:sameAs stonework:infraTypeRoutersSwitches .
-stonex:_staging owl:sameAs stonework:infraTypeStaging .
-stonex:_workstation owl:sameAs stonework:infraTypeWorkstation .
-
-
-#################################################################
-#    Malware Type Vocabulary Mappings
-#################################################################
-
-stones:MalwareTypeVocabulary rdfs:subClassOf stonework:MalwareType .
-
-stonex:_adware owl:sameAs stonework:malwareTypeAdware .
-stonex:_backdoor owl:sameAs stonework:malwareTypeBackdoor .
-stonex:_bot owl:sameAs stonework:malwareTypeBot .
-stonex:_bootkit owl:sameAs stonework:malwareTypeBootkit .
-stonex:_ddos owl:sameAs stonework:malwareTypeDDoS .
-stonex:_downloader owl:sameAs stonework:malwareTypeDownloader .
-stonex:_dropper owl:sameAs stonework:malwareTypeDropper .
-stonex:_exploit-kit owl:sameAs stonework:malwareTypeExploitKit .
-stonex:_keylogger owl:sameAs stonework:malwareTypeKeylogger .
-stonex:_ransomware owl:sameAs stonework:malwareTypeRansomware .
-stonex:_remote-access-trojan owl:sameAs stonework:malwareTypeRAT .
-stonex:_resource-exploitation owl:sameAs stonework:malwareTypeResourceExploitation .
-stonex:_rootkit owl:sameAs stonework:malwareTypeRootkit .
-stonex:_screen-capture owl:sameAs stonework:malwareTypeScreenCapture .
-stonex:_spyware owl:sameAs stonework:malwareTypeSpyware .
-stonex:_trojan owl:sameAs stonework:malwareTypeTrojan .
-stonex:_virus owl:sameAs stonework:malwareTypeVirus .
-stonex:_webshell owl:sameAs stonework:malwareTypeWebshell .
-stonex:_wiper owl:sameAs stonework:malwareTypeWiper .
-stonex:_worm owl:sameAs stonework:malwareTypeWorm .
-
-
-#################################################################
-#    Threat Actor Type Vocabulary Mappings
-#################################################################
-
-stones:ThreatActorTypeVocabulary rdfs:subClassOf stonework:ThreatActorType .
-
-stonex:_activist owl:sameAs stonework:threatActorTypeActivist .
-stonex:_competitor owl:sameAs stonework:threatActorTypeCompetitor .
-stonex:_crime-syndicate owl:sameAs stonework:threatActorTypeCrimeSyndicate .
-stonex:_criminal owl:sameAs stonework:threatActorTypeCriminal .
-stonex:_hacker owl:sameAs stonework:threatActorTypeHacker .
-stonex:_insider-accidental owl:sameAs stonework:threatActorTypeInsiderAccidental .
-stonex:_insider-disgruntled owl:sameAs stonework:threatActorTypeInsiderDisgruntled .
-stonex:_nation-state owl:sameAs stonework:threatActorTypeNationState .
-stonex:_sensationalist owl:sameAs stonework:threatActorTypeSensationalist .
-stonex:_spy owl:sameAs stonework:threatActorTypeSpy .
-stonex:_terrorist owl:sameAs stonework:threatActorTypeTerrorist .
-
-
-#################################################################
-#    Threat Actor Role Vocabulary Mappings
-#################################################################
-
-stones:ThreatActorRoleVocabulary rdfs:subClassOf stonework:ThreatActorRole .
-
-stonex:_agent owl:sameAs stonework:threatActorRoleAgent .
-stonex:_director owl:sameAs stonework:threatActorRoleDirector .
-stonex:_infrastructure-architect owl:sameAs stonework:threatActorRoleInfrastructureArchitect .
-stonex:_infrastructure-operator owl:sameAs stonework:threatActorRoleInfrastructureOperator .
-stonex:_malware-author owl:sameAs stonework:threatActorRoleMalwareAuthor .
-stonex:_sponsor owl:sameAs stonework:threatActorRoleSponsor .

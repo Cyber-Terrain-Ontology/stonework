@@ -14,7 +14,7 @@ STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or 
 
 ## Status
 
-**v0.2.0 — Active Development**
+**v0.6.1 — Active Development**
 
 The namespace (`https://cyberterrain.org/ns/stonework#`) is stable and will not change. Core extension vocabulary is in place. Framework coverage (ATT&CK, D3FEND, CWE, NIST SP 800-53, CIS) is expanding. The scope of coverage will grow as the ontology matures. Feedback, issues, and contributions are welcome.
 
@@ -33,6 +33,8 @@ STONEWORK extends STONES across four concrete domains:
 
 This coverage enables queries that no single standard can answer on its own. A SPARQL query can trace a CVE to the weakness it exploits, to the attack patterns that leverage that weakness, to the APT groups known to use them, and to the controls that mitigate the risk — in a single federated query.
 
+Both NIST SP 800-53 and CIS Controls now carry real, materialized `stonework:mitigatesAttackPattern` links to ATT&CK — not just conceptual coverage. NIST's crosswalk is sourced from the Center for Threat-Informed Defense's mapping, since NIST's own catalog defines no ATT&CK relationship on its own.
+
 ---
 
 ## Quick Start — Using the Ontology
@@ -45,7 +47,7 @@ Download the STONEWORK ontology file:
 ontologies/stonework.ttl
 ```
 
-STONEWORK imports STONES. Load both into your triplestore, or clone with submodules (see Developer Setup) to get everything together.
+STONEWORK treats STONES and the other CTI framework ontologies (ATT&CK, CAPEC, CWE, CVE, CPE, ...) as peer reference vocabularies rather than ontologies it imports — load whichever ones you need alongside it.
 
 ### 2. Load into a triplestore
 
@@ -74,19 +76,11 @@ Load the CTI reference datasets (ATT&CK, CAPEC, CVE, CWE, NIST SP 800-53, CIS) a
 
 ## Developer Setup
 
-### Clone with submodules
-
-STONEWORK includes STONES as a submodule.
+### Clone the repo
 
 ```bash
-git clone --recurse-submodules https://github.com/Cyber-Terrain-Ontology/stonework.git
+git clone https://github.com/Cyber-Terrain-Ontology/stonework.git
 cd stonework
-```
-
-If you already cloned without `--recurse-submodules`:
-
-```bash
-git submodule update --init --recursive
 ```
 
 ### Activate the pre-commit hook
