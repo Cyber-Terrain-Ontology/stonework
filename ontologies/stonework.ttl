@@ -202,7 +202,10 @@ stonework:ComponentContext
 
 stonework:Control
 	a owl:Class ;
-	rdfs:subClassOf stonework:Countermeasure ;
+	rdfs:subClassOf
+		stonework:Behavior ,
+		stonework:Countermeasure
+		;
 	rdfs:comment 'Instances of stonework:Control may represent individual controls, control enhancements, or sub‑controls. Framework‑specific identifiers (e.g., "AC‑2", "CIS 4.1") SHOULD be modeled using explicit properties rather than encoded in the class IRI. Control text SHOULD be referenced via citations rather than reproduced verbatim.' ;
 	skos:definition "A prescribed security or privacy safeguard that specifies an action, capability, or condition intended to reduce risk, enforce policy, or achieve a defined protection objective within an information system or organization." ;
 	skos:prefLabel "Control" ;
@@ -1903,6 +1906,16 @@ stonework:executedOn
 	skos:prefLabel "executedOn"@en ;
 	.
 
+stonework:executionOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range stonework:Behavior ;
+	owl:inverseOf stonework:hasExecution ;
+	skos:definition "Relates a CyberActivity to the Behavior plan whose execution it represents."@en ;
+	skos:prefLabel "executionOf"@en ;
+	skos:scopeNote "Links an overall execution to its plan, such as an Investigation to an InvestigationPlan, an Operation to an OperationPlan, or a Process to a Playbook or ControlPlan. Use stonework:correspondsToStep for the finer-grained link between an executing CyberActivity and an individual Step."@en ;
+	.
+
 stonework:exploits
 	a owl:ObjectProperty ;
 	skos:definition "Shortcut triple: source Malware or ThreatActor exploits target Vulnerability. Corresponds to STIX relationship_type 'exploits'." ;
@@ -2105,6 +2118,14 @@ stonework:hasEvent
 	skos:prefLabel "hasEvent"@en ;
 	.
 
+stonework:hasExecution
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Behavior ;
+	rdfs:range stonework:CyberActivity ;
+	skos:definition "Relates a Behavior plan to a CyberActivity that executes it."@en ;
+	skos:prefLabel "hasExecution"@en ;
+	.
+
 stonework:hasHash
 	a owl:ObjectProperty ;
 	rdfs:range stonework:Hash ;
@@ -2230,6 +2251,15 @@ stonework:hasPhoneNumber
 	owl:inverseOf stonework:phoneNumberOf ;
 	skos:definition "A PhoneNumber associated with this Agent."@en ;
 	skos:prefLabel "hasPhoneNumber"@en ;
+	.
+
+stonework:hasProductInstallation
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Infrastructure ;
+	rdfs:range stonework:ProductInstallation ;
+	skos:definition "Relates an Infrastructure entity to a contextual record of a product installed on it."@en ;
+	skos:prefLabel "hasProductInstallation"@en ;
+	skos:scopeNote "Use stonework:hasInstalledProduct for a direct Infrastructure-to-VersionedProduct inventory assertion. Use this property with stonework:installationOf when installation-specific identity, path, licensee, or configuration details must be preserved."@en ;
 	.
 
 stonework:hasRisk
@@ -2410,6 +2440,15 @@ stonework:installationOf
 	skos:definition "Relates a component context to the versioned product it references or instantiates."@en ;
 	skos:prefLabel "installation of" ;
 	skos:scopeNote "Used by both stonework:BomEntry (declarative — a component listed in an SBOM) and stonework:ProductInstallation (observational — a verified deployment on a specific system). Domain is intentionally left unset to avoid restricting future component-context subclasses; intended subjects are subclasses of stonework:ComponentContext."@en ;
+	.
+
+stonework:installedOn
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:ProductInstallation ;
+	rdfs:range stonework:Infrastructure ;
+	owl:inverseOf stonework:hasProductInstallation ;
+	skos:definition "Relates a ProductInstallation to the Infrastructure entity on which that product instance is installed."@en ;
+	skos:prefLabel "installedOn"@en ;
 	.
 
 stonework:investigatedBy
@@ -2989,6 +3028,14 @@ stonework:revokedBy
 	a owl:ObjectProperty ;
 	skos:definition "Shortcut triple: source STIX object is revoked and superseded by target. Corresponds to STIX relationship_type 'revoked-by'." ;
 	skos:prefLabel "revokedBy" ;
+	.
+
+stonework:riskOfScenario
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Risk ;
+	rdfs:range stonework:ThreatScenario ;
+	skos:definition "Relates an assessed Risk to the ThreatScenario whose realization gives rise to that risk."@en ;
+	skos:prefLabel "riskOfScenario"@en ;
 	.
 
 stonework:runs
