@@ -1,97 +1,121 @@
-@prefix owl:       <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:       <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:      <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:       <http://www.w3.org/2001/XMLSchema#> .
-@prefix skos:      <http://www.w3.org/2004/02/skos/core#> .
+@prefix attack: <https://cyberterrain.org/ns/frameworks/attack#> .
+@prefix capec: <https://cyberterrain.org/ns/frameworks/capec#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
-@prefix attack:    <https://cyberterrain.org/ns/frameworks/attack#> .
-@prefix capec:     <https://cyberterrain.org/ns/frameworks/capec#> .
-
-# --- Ontology declaration -------------------------------------------
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://cyberterrain.org/ns/frameworks/capec>
-    a owl:Ontology ;
-    rdfs:label "CAPEC Framework Ontology"@en ;
-    rdfs:comment "OWL vocabulary for MITRE Common Attack Pattern Enumeration and Classification (CAPEC) data as represented in the CTI Encyclopedia."@en .
-
-# --- Classes --------------------------------------------------------
+	a owl:Ontology ;
+	rdfs:label "CAPEC Framework Ontology"@en ;
+	rdfs:comment "OWL vocabulary for MITRE Common Attack Pattern Enumeration and Classification (CAPEC) data as represented in the CTI Encyclopedia."@en ;
+	.
 
 capec:AttackPattern
-    a owl:Class ;
-    rdfs:subClassOf stonework:AttackPattern ;
-    rdfs:label "CAPEC Attack Pattern"@en ;
-    rdfs:comment "A CAPEC attack pattern. Instances are identified by ctienc:_AttackPattern_CAPEC-{ID} IRIs."@en .
-
-# --- Datatype Properties --------------------------------------------
-
-capec:capecId
-    a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "CAPEC ID"@en ;
-    rdfs:comment "CAPEC identifier string, e.g. '1'."@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range xsd:string .
+	a owl:Class ;
+	rdfs:subClassOf stonework:AttackPattern ;
+	rdfs:label "CAPEC Attack Pattern"@en ;
+	rdfs:comment "A CAPEC attack pattern. Instances are identified by ctienc:_AttackPattern_CAPEC-{ID} IRIs."@en ;
+	.
 
 capec:abstraction
-    a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "abstraction"@en ;
-    rdfs:comment "CAPEC abstraction level: Meta, Standard, or Detailed."@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range xsd:string .
-
-capec:status
-    a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "status"@en ;
-    rdfs:comment "CAPEC entry status, e.g. Draft, Stable, Deprecated."@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range xsd:string .
-
-capec:description
-    a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "description"@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range xsd:string .
-
-capec:likelihoodOfAttack
-    a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "likelihood of attack"@en ;
-    rdfs:comment "Estimated likelihood that this pattern will be used: Low, Medium, or High."@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range xsd:string .
-
-capec:typicalSeverity
-    a owl:DatatypeProperty, owl:FunctionalProperty ;
-    rdfs:label "typical severity"@en ;
-    rdfs:comment "Typical impact severity if this attack pattern succeeds: Low, Medium, High, or Very High."@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range xsd:string .
-
-# --- Object Properties ----------------------------------------------
-
-capec:childOf
-    a owl:ObjectProperty ;
-    rdfs:label "child of"@en ;
-    rdfs:comment "Hierarchical parent attack pattern in the CAPEC tree."@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range capec:AttackPattern .
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "abstraction"@en ;
+	rdfs:comment "CAPEC abstraction level: Meta, Standard, or Detailed."@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range xsd:string ;
+	.
 
 capec:attackTechniqueId
-    a owl:DatatypeProperty ;
-    rdfs:label "ATT&CK technique ID"@en ;
-    rdfs:comment "ATT&CK technique external ID (e.g. 'T1059.001') mapped from CAPEC taxonomy. Source string retained for provenance; use stonework:relatedAttackPattern for the resolved IRI link."@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range xsd:string .
+	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf stonework:relatedTechniqueIdentifier ;
+	rdfs:label "ATT&CK technique ID"@en ;
+	rdfs:comment "ATT&CK technique external ID (e.g. 'T1059.001') mapped from CAPEC taxonomy. Source string retained for provenance; use stonework:relatedAttackPattern for the resolved IRI link."@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range xsd:string ;
+	.
 
-capec:relatedAttackTechnique
-    a owl:ObjectProperty ;
-    rdfs:subPropertyOf stonework:relatedAttackPattern ;
-    rdfs:label "related attack technique"@en ;
-    rdfs:comment "ATT&CK technique that this abstract attack pattern maps to or operationalizes. Materialized by a post-load SPARQL UPDATE joining capec:attackTechniqueId against stones:externalReferences/stones:externalId."@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range stonework:AttackPattern .
+capec:capecId
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "CAPEC ID"@en ;
+	rdfs:comment "CAPEC identifier string, e.g. '1'."@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range xsd:string ;
+	.
+
+capec:childOf
+	a owl:ObjectProperty ;
+	rdfs:label "child of"@en ;
+	rdfs:comment "Hierarchical parent attack pattern in the CAPEC tree."@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range capec:AttackPattern ;
+	.
+
+capec:description
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "description"@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range xsd:string ;
+	.
 
 capec:exploitsWeakness
-    a owl:ObjectProperty ;
-    rdfs:label "exploits weakness"@en ;
-    rdfs:comment "CWE weakness that this attack pattern exploits."@en ;
-    rdfs:domain capec:AttackPattern ;
-    rdfs:range stonework:Weakness .
+	a owl:ObjectProperty ;
+	rdfs:label "exploits weakness"@en ;
+	rdfs:comment "CWE weakness that this attack pattern exploits."@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range stonework:Weakness ;
+	.
+
+capec:likelihoodOfAttack
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "likelihood of attack"@en ;
+	rdfs:comment "Estimated likelihood that this pattern will be used: Low, Medium, or High."@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range xsd:string ;
+	.
+
+capec:relatedAttackTechnique
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:relatedAttackPattern ;
+	rdfs:label "related attack technique"@en ;
+	rdfs:comment "ATT&CK technique that this abstract attack pattern maps to or operationalizes. Materialized by a post-load SPARQL UPDATE joining capec:attackTechniqueId against stones:externalReferences/stones:externalId."@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range stonework:AttackPattern ;
+	.
+
+capec:status
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "status"@en ;
+	rdfs:comment "CAPEC entry status, e.g. Draft, Stable, Deprecated."@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range xsd:string ;
+	.
+
+capec:typicalSeverity
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "typical severity"@en ;
+	rdfs:comment "Typical impact severity if this attack pattern succeeds: Low, Medium, High, or Very High."@en ;
+	rdfs:domain capec:AttackPattern ;
+	rdfs:range xsd:string ;
+	.
+
