@@ -49,22 +49,6 @@ stonework:KillChainPhase
 	skos:scopeNote "Applies to both offensive frameworks (Lockheed Martin Cyber Kill Chain, MITRE ATT&CK) and defensive lifecycle models. Used to tag AttackTechniques, Procedures, or Events with their operational phase."@en ;
 	.
 
-stonework:MalwareFamily
-	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
-	skos:definition "A named classification of malware sharing common code lineage, capabilities, behavioral patterns, or authorship. Represents the abstract family concept rather than any specific sample or binary." ;
-	skos:prefLabel "Malware Family" ;
-	skos:scopeNote "Samples are modeled as stonework:MalwareSample individuals linked to their family via stonework:memberOfFamily. A family may have associated TTPs, infrastructure, and threat actor attribution independent of any specific sample."@en ;
-	.
-
-stonework:MalwareType
-	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
-	skos:definition "A classification of malware by its primary functional category or behavioral characteristic." ;
-	skos:prefLabel "Malware Type" ;
-	skos:scopeNote "Applied via stonework:categorizedBy to MalwareSample or MalwareFamily individuals. A sample may have multiple types (e.g. a trojan that also acts as a downloader). Aligns with the STIX 2.1 malware-type open vocabulary."@en ;
-	.
-
 stonework:Markings
 	a owl:Class ;
 	rdfs:subClassOf stonework:Category ;
@@ -145,10 +129,13 @@ stonework:hasInfrastructureType
 stonework:hasMalwareType
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:categorizedBy ;
-	rdfs:domain
-		stonework:MalwareFamily ,
-		stonework:MalwareSample
-		;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:MalwareFamily
+			stonework:MalwareSample
+		) ;
+	] ;
 	rdfs:range stonework:MalwareType ;
 	skos:definition "Relates a malware sample or family to one or more functional type classifications."@en ;
 	skos:prefLabel "hasMalwareType"@en ;
@@ -340,183 +327,123 @@ stonework:infraTypeWorkstation
 	.
 
 stonework:malwareTypeAdware
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Software that automatically displays or downloads advertising material, often without user consent."@en ;
-	skos:prefLabel "Adware"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Adware ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeBackdoor
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that provides covert, persistent remote access to a compromised system."@en ;
-	skos:prefLabel "Backdoor"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Backdoor ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeBootkit
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that infects the boot sector or bootloader, enabling persistence before the OS loads."@en ;
-	skos:prefLabel "Bootkit"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Bootkit ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeBot
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that turns the infected system into a node in an adversary-controlled botnet."@en ;
-	skos:prefLabel "Bot"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Bot ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeDDoS
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware designed to participate in or conduct distributed denial-of-service attacks."@en ;
-	skos:prefLabel "DDoS"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:DDoS ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeDownloader
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware whose primary function is to retrieve and execute additional malicious payloads."@en ;
-	skos:prefLabel "Downloader"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Downloader ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeDropper
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that installs or deploys other malicious components on a compromised system."@en ;
-	skos:prefLabel "Dropper"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Dropper ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeExploitKit
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "A toolkit that automates exploitation of vulnerabilities in web browsers and plugins."@en ;
-	skos:prefLabel "Exploit Kit"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:ExploitKit ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeKeylogger
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that records keystrokes to capture credentials or sensitive information."@en ;
-	skos:prefLabel "Keylogger"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Keylogger ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeRAT
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware providing remote control capabilities over a compromised system, typically with stealth features."@en ;
-	skos:prefLabel "Remote Access Trojan"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:RemoteAccessTrojan ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeRansomware
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that encrypts or denies access to victim data and demands payment for restoration."@en ;
-	skos:prefLabel "Ransomware"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Ransomware ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeResourceExploitation
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that uses victim system resources for adversary purposes, such as cryptomining."@en ;
-	skos:prefLabel "Resource Exploitation"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:ResourceExploitation ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeRootkit
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware designed to hide its presence and other malicious activity by subverting OS or firmware mechanisms."@en ;
-	skos:prefLabel "Rootkit"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Rootkit ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeScreenCapture
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that captures screenshots or video of the victim's display for exfiltration."@en ;
-	skos:prefLabel "Screen Capture"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:ScreenCapture ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeSpyware
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that covertly monitors and exfiltrates user activity, credentials, or personal data."@en ;
-	skos:prefLabel "Spyware"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Spyware ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeTrojan
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware disguised as or bundled with legitimate software to deceive users into executing it."@en ;
-	skos:prefLabel "Trojan"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Trojan ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeVirus
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that replicates by inserting copies of itself into other programs or files."@en ;
-	skos:prefLabel "Virus"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Virus ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeWebshell
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "A script placed on a web server to provide persistent remote access and command execution."@en ;
-	skos:prefLabel "Webshell"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Webshell ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeWiper
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware designed to irreversibly destroy data or render systems inoperable."@en ;
-	skos:prefLabel "Wiper"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Wiper ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:malwareTypeWorm
-	a
-		owl:NamedIndividual ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that self-propagates across systems or networks without requiring user interaction."@en ;
-	skos:prefLabel "Worm"@en ;
+	a owl:NamedIndividual ;
+	dcterms:isReplacedBy stonework:Worm ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 stonework:motivationAccidental

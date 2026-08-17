@@ -14,3 +14,10 @@ repos:
         entry: .githooks/protect-catalog.sh
         pass_filenames: false
         always_run: true
+
+      - id: ontology-integrity
+        name: Validate Turtle and OWL integrity
+        language: system
+        entry: python3 tools/check-ontology.py
+        pass_filenames: false
+        always_run: true

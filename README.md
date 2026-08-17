@@ -94,12 +94,19 @@ bash tools/download-rdf-toolkit.sh
 
 The first command activates the hooks tracked in `.githooks/`. The second downloads the [edmcouncil rdf-toolkit](https://github.com/edmcouncil/rdf-toolkit) jar (~33 MB, gitignored) used to canonicalize Turtle files on every commit.
 
+Run the ontology checks directly at any time with:
+
+```bash
+python3 tools/check-ontology.py
+```
+
 **What the hook does on each commit:**
 - Canonicalizes all staged `.ttl` files via rdf-toolkit (alphabetical prefixes, tab indentation, consistent triple ordering) so diffs reflect content changes, not style noise
 - Strips Protégé's injected default `:` prefix when present
+- Parses every Turtle file and rejects common OWL integrity errors, including accidental domain/range intersections, incompatible inverse-property endpoints, property-kind collisions, class/individual punning, conflicting definitions, and duplicate controlled-vocabulary labels
 - Sets `ontologies/catalog-v001.xml` read-only so Protégé cannot overwrite it
 
-**Requirements:** Java 11+ on `PATH` (for rdf-toolkit).
+**Requirements:** Java 11+ and Python 3 on `PATH`.
 
 ---
 

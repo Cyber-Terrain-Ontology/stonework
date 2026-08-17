@@ -68,12 +68,12 @@ stones:FileObject
 
 stones:GranularMarking
 	a owl:Class ;
-	rdfs:subClassOf stonework:Markings ;
+	rdfs:subClassOf stonework:GranularMarking ;
 	.
 
 stones:Grouping
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf stonework:Grouping ;
 	.
 
 stones:HashEntry
@@ -98,7 +98,7 @@ stones:Identity
 
 stones:Indicator
 	a owl:Class ;
-	rdfs:subClassOf stonework:DigitalArtifact ;
+	rdfs:subClassOf stonework:Indicator ;
 	.
 
 stones:Infrastructure
@@ -128,20 +128,17 @@ stones:Location
 
 stones:MACAddressObject
 	a owl:Class ;
-	rdfs:subClassOf stonework:Infrastructure ;
+	rdfs:subClassOf stonework:MACAddress ;
 	.
 
 stones:Malware
 	a owl:Class ;
-	rdfs:subClassOf
-		stonework:MalwareFamily ,
-		stonework:MalwareSample
-		;
+	rdfs:subClassOf stonework:Malware ;
 	.
 
 stones:MalwareAnalysis
 	a owl:Class ;
-	rdfs:subClassOf stonework:IntelligenceProduct ;
+	rdfs:subClassOf stonework:MalwareAnalysis ;
 	.
 
 stones:MalwareTypeVocabulary
@@ -171,12 +168,12 @@ stones:Note
 
 stones:ObservedData
 	a owl:Class ;
-	rdfs:subClassOf stonework:DigitalArtifact ;
+	rdfs:subClassOf stonework:SecurityObservation ;
 	.
 
 stones:Opinion
 	a owl:Class ;
-	rdfs:subClassOf stonework:IntelligenceProduct ;
+	rdfs:subClassOf stonework:Opinion ;
 	.
 
 stones:ProcessObject
@@ -196,7 +193,13 @@ stones:Sighting
 
 stones:SoftwareObject
 	a owl:Class ;
-	rdfs:subClassOf stonework:Product ;
+	rdfs:subClassOf [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:Product
+			stonework:VersionedProduct
+		) ;
+	] ;
 	.
 
 stones:StixSubType
@@ -339,7 +342,7 @@ stonex:_activist
 	.
 
 stonex:_adware
-	owl:sameAs stonework:malwareTypeAdware ;
+	owl:sameAs stonework:Adware ;
 	.
 
 stonex:_agent
@@ -355,15 +358,15 @@ stonex:_anonymization
 	.
 
 stonex:_backdoor
-	owl:sameAs stonework:malwareTypeBackdoor ;
+	owl:sameAs stonework:Backdoor ;
 	.
 
 stonex:_bootkit
-	owl:sameAs stonework:malwareTypeBootkit ;
+	owl:sameAs stonework:Bootkit ;
 	.
 
 stonex:_bot
-	owl:sameAs stonework:malwareTypeBot ;
+	owl:sameAs stonework:Bot ;
 	.
 
 stonex:_botnet
@@ -391,7 +394,7 @@ stonex:_criminal
 	.
 
 stonex:_ddos
-	owl:sameAs stonework:malwareTypeDDoS ;
+	owl:sameAs stonework:DDoS ;
 	.
 
 stonex:_director
@@ -403,11 +406,11 @@ stonex:_dominance
 	.
 
 stonex:_downloader
-	owl:sameAs stonework:malwareTypeDownloader ;
+	owl:sameAs stonework:Downloader ;
 	.
 
 stonex:_dropper
-	owl:sameAs stonework:malwareTypeDropper ;
+	owl:sameAs stonework:Dropper ;
 	.
 
 stonex:_exfiltration
@@ -415,7 +418,7 @@ stonex:_exfiltration
 	.
 
 stonex:_exploit-kit
-	owl:sameAs stonework:malwareTypeExploitKit ;
+	owl:sameAs stonework:ExploitKit ;
 	.
 
 stonex:_firewall
@@ -455,7 +458,7 @@ stonex:_insider-disgruntled
 	.
 
 stonex:_keylogger
-	owl:sameAs stonework:malwareTypeKeylogger ;
+	owl:sameAs stonework:Keylogger ;
 	.
 
 stonex:_malware-author
@@ -487,7 +490,7 @@ stonex:_phishing
 	.
 
 stonex:_ransomware
-	owl:sameAs stonework:malwareTypeRansomware ;
+	owl:sameAs stonework:Ransomware ;
 	.
 
 stonex:_reconnaissance
@@ -495,19 +498,23 @@ stonex:_reconnaissance
 	.
 
 stonex:_remote-access-trojan
-	owl:sameAs stonework:malwareTypeRAT ;
+	owl:sameAs stonework:RemoteAccessTrojan ;
 	.
 
 stonex:_resource-exploitation
-	owl:sameAs stonework:malwareTypeResourceExploitation ;
+	owl:sameAs stonework:ResourceExploitation ;
 	.
 
 stonex:_revenge
 	owl:sameAs stonework:motivationRevenge ;
 	.
 
+stonex:_rogue-security-software
+	owl:sameAs stonework:RogueSecuritySoftware ;
+	.
+
 stonex:_rootkit
-	owl:sameAs stonework:malwareTypeRootkit ;
+	owl:sameAs stonework:Rootkit ;
 	.
 
 stonex:_routers-switches
@@ -515,7 +522,7 @@ stonex:_routers-switches
 	.
 
 stonex:_screen-capture
-	owl:sameAs stonework:malwareTypeScreenCapture ;
+	owl:sameAs stonework:ScreenCapture ;
 	.
 
 stonex:_sensationalist
@@ -531,7 +538,7 @@ stonex:_spy
 	.
 
 stonex:_spyware
-	owl:sameAs stonework:malwareTypeSpyware ;
+	owl:sameAs stonework:Spyware ;
 	.
 
 stonex:_staging
@@ -543,7 +550,11 @@ stonex:_terrorist
 	.
 
 stonex:_trojan
-	owl:sameAs stonework:malwareTypeTrojan ;
+	owl:sameAs stonework:Trojan ;
+	.
+
+stonex:_unknown
+	owl:sameAs stonework:UnknownMalware ;
 	.
 
 stonex:_unpredictable
@@ -551,15 +562,15 @@ stonex:_unpredictable
 	.
 
 stonex:_virus
-	owl:sameAs stonework:malwareTypeVirus ;
+	owl:sameAs stonework:Virus ;
 	.
 
 stonex:_webshell
-	owl:sameAs stonework:malwareTypeWebshell ;
+	owl:sameAs stonework:Webshell ;
 	.
 
 stonex:_wiper
-	owl:sameAs stonework:malwareTypeWiper ;
+	owl:sameAs stonework:Wiper ;
 	.
 
 stonex:_workstation
@@ -567,6 +578,6 @@ stonex:_workstation
 	.
 
 stonex:_worm
-	owl:sameAs stonework:malwareTypeWorm ;
+	owl:sameAs stonework:Worm ;
 	.
 
