@@ -2724,6 +2724,8 @@ stonework:observedIn
 		owl:unionOf (
 			stonework:DigitalArtifact
 			stonework:Infrastructure
+			stonework:Malware
+			stonework:Product
 		) ;
 	] ;
 	rdfs:range stonework:Campaign ;
