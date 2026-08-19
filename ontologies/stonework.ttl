@@ -1893,10 +1893,20 @@ stonework:emailOf
 
 stonework:employs
 	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:uses ;
 	rdfs:domain stonework:ThreatActor ;
-	rdfs:range stonework:AttackPattern ;
-	skos:definition "A ThreatActor directly employs an AttackPattern. Enables actor-level technique profiling independent of any specific Campaign."@en ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:AttackPattern
+			stonework:Malware
+			stonework:Technique
+			stonework:Tool
+		) ;
+	] ;
+	skos:definition "Relates a ThreatActor to an AttackPattern, Malware, Technique, or Tool it deliberately puts into operational use."@en ;
 	skos:prefLabel "employs"@en ;
+	skos:scopeNote "Use for curated ThreatActor relationships where deliberate operational use is intended. As a subproperty of the open STIX-compatible stonework:uses relationship, employs assertions remain available to queries over the broader interoperability predicate."@en ;
 	.
 
 stonework:endedAtTime
@@ -3381,15 +3391,6 @@ stonework:usesRule
 	rdfs:range stonework:DetectionRule ;
 	skos:definition "Relates a Sensor to the Detection Rules it applies." ;
 	skos:prefLabel "usesRule" ;
-	.
-
-stonework:usesTool
-	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:uses ;
-	rdfs:range stonework:Tool ;
-	skos:definition "Associates a ThreatActor, Campaign, or Operation with a Tool it uses. Distinct from stonework:uses (Campaign → AttackTechnique)."@en ;
-	skos:prefLabel "usesTool"@en ;
-	skos:scopeNote "⚑ Category: tool *type* classification (loader, RAT, stealer, C2 framework) belongs as stonework:categorizedBy → Category named individual." ;
 	.
 
 stonework:variableName
