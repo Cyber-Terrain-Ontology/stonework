@@ -2726,6 +2726,9 @@ stonework:observedIn
 			stonework:Infrastructure
 			stonework:Malware
 			stonework:Product
+			stonework:Behavior
+			stonework:Identifier
+			stonework:SecurityCondition
 		) ;
 	] ;
 	rdfs:range stonework:Campaign ;
