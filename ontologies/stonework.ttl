@@ -3376,6 +3376,7 @@ stonework:uses
 
 stonework:usesRule
 	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:uses ;
 	rdfs:domain stonework:Sensor ;
 	rdfs:range stonework:DetectionRule ;
 	skos:definition "Relates a Sensor to the Detection Rules it applies." ;
@@ -3384,6 +3385,7 @@ stonework:usesRule
 
 stonework:usesTool
 	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:uses ;
 	rdfs:range stonework:Tool ;
 	skos:definition "Associates a ThreatActor, Campaign, or Operation with a Tool it uses. Distinct from stonework:uses (Campaign → AttackTechnique)."@en ;
 	skos:prefLabel "usesTool"@en ;
