@@ -679,7 +679,10 @@ stonework:MalwareAnalysis
 
 stonework:MalwareFamily
 	a owl:Class ;
-	rdfs:subClassOf stonework:Malware ;
+	rdfs:subClassOf
+		stonework:Malware ,
+		stonework:Product
+		;
 	skos:definition "An abstract malware concept representing a named strain, lineage, or campaign of malicious software sharing common behavioral patterns, code ancestry, or infrastructure. Corresponds to STIX 2.1 malware SDO with is_family=true."@en ;
 	skos:prefLabel "Malware Family"@en ;
 	skos:scopeNote "Examples: Cobalt Strike, Mimikatz, WannaCry, BlackCat. A MalwareFamily does not have a specific hash or binary but may be linked to MalwareSample instances via the inverse of stonework:memberOfFamily. Use stonework:categorizedBy to assert behavioral type (e.g., stonework:Ransomware, stonework:Backdoor)."@en ;
@@ -689,7 +692,7 @@ stonework:MalwareSample
 	a owl:Class ;
 	rdfs:subClassOf
 		stonework:Malware ,
-		stonework:Product
+		stonework:VersionedProduct
 		;
 	skos:definition "A discrete, observable instance of malicious code — a specific binary, script, or executable artifact that can be identified by cryptographic hash, file characteristics, or behavioral signature."@en ;
 	skos:prefLabel "Malware Sample"@en ;
@@ -1309,26 +1312,6 @@ stonework:accountOf
 	owl:inverseOf stonework:hasAccount ;
 	skos:definition "A UserAccount belonging to this Agent. Inverse of stonework:hasAccount."@en ;
 	skos:prefLabel "accountOf" ;
-	.
-
-stonework:achieves
-	a owl:ObjectProperty ;
-	rdfs:domain [
-		a owl:Class ;
-		owl:unionOf (
-			stonework:MalwareSample
-			stonework:Tool
-		) ;
-	] ;
-	rdfs:range [
-		a owl:Class ;
-		owl:unionOf (
-			stonework:AITechnique
-			stonework:AttackTechnique
-		) ;
-	] ;
-	skos:definition "Relates a MalwareSample or Tool to an AITechnique or AttackTechnique it accomplishes during execution."@en ;
-	skos:prefLabel "achieves" ;
 	.
 
 stonework:actsOn
@@ -2449,6 +2432,23 @@ stonework:implements
 	skos:scopeNote "General-purpose relationship covering both offense (a Procedure implements a Technique) and defense (a ControlPlan implements a Control) with one property rather than a bespoke one per pairing."@en ;
 	.
 
+stonework:implementsTechnique
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:uses ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:Malware
+			stonework:Product
+			stonework:VersionedProduct
+		) ;
+	] ;
+	rdfs:range stonework:Technique ;
+	skos:definition "Relates malware or a product to a Technique embodied by its behavior or capabilities."@en ;
+	skos:prefLabel "implementsTechnique" ;
+	skos:scopeNote "Specializes the open STIX-compatible stonework:uses relationship for malware- or product-to-technique assertions. Product covers abstract product families, including Tool; VersionedProduct covers specific releases or builds. stonework:implements remains the distinct Behavior-to-Behavior realization relationship."@en ;
+	.
+
 stonework:inBlock
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:IPAddress ;
@@ -3467,4 +3467,3 @@ stonework:worksFor
 	skos:definition "Relates a Person to the Organization they work for."@en ;
 	skos:prefLabel "worksFor"@en ;
 	.
-
