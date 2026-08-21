@@ -369,7 +369,7 @@ stonework:evidence
 		;
 	skos:definition "Material or information offered to support or refute a claim, typically within an investigation or legal context."@en ;
 	skos:inScheme stonework:categoryScheme ;
-	skos:prefLabel "Evidence" ;
+	skos:prefLabel "Evidence"@en ;
 	skos:scopeNote "This is a reusable category instance. It is *not* a class. Use stonework:categorizedBy to assert that something is evidence in a given context."@en ;
 	.
 
@@ -868,7 +868,7 @@ stonework:indicator
 		;
 	skos:definition "An assertion that a specific pattern or set of Digital Artifacts is associated with malicious behavior, enabling detection, correlation, and response."@en ;
 	skos:inScheme stonework:categoryScheme ;
-	skos:prefLabel "Indicator" ;
+	skos:prefLabel "Indicator"@en ;
 	skos:scopeNote "In STONEWORK, Indicators can be simple (single IOC like a hash or IP) or complex (full STIX patterns combining multiple artifacts and conditions)."@en ;
 	.
 
@@ -2173,7 +2173,7 @@ stonework:tlpAmberStrict
 		stonework:markingScheme
 		;
 	skos:notation "TLP:AMBER+STRICT" ;
-	skos:prefLabel "TLP:AMBER+STRICT" ;
+	skos:prefLabel "TLP:AMBER+STRICT"@en ;
 	.
 
 stonework:tlpClear

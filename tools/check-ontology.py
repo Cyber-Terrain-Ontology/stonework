@@ -363,6 +363,24 @@ def main() -> int:
             for ancestor in ancestors(subject_type):
                 required_schemes.update(class_schemes(ancestor))
 
+        if required_schemes:
+            location = ", ".join(sorted(sources.get(subject, ())))
+            for predicate, field_name in (
+                (SKOS + "prefLabel", "skos:prefLabel"),
+                (SKOS + "definition", "skos:definition"),
+            ):
+                english_values = [
+                    obj
+                    for obj in values[(subject, predicate)]
+                    if obj[0] == "literal"
+                    and (obj[2] or "").casefold() == "en"
+                ]
+                if len(english_values) != 1:
+                    errors.append(
+                        f"{describe(subject)} ({location}) must declare exactly one English "
+                        f"{field_name}"
+                    )
+
         materialized_schemes = {
             obj[1] for obj in values[(subject, SKOS + "inScheme")] if obj[0] == "iri"
         }
