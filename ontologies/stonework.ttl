@@ -1324,6 +1324,20 @@ stonework:actsOn
 	skos:scopeNote "Mirrors prov:used (an Activity used an Entity). Typical range instances are stonework:Host, stonework:RuntimeProcess, or other stonework:DigitalArtifact/stonework:Infrastructure individuals — e.g. the specific lsass.exe stonework:RuntimeProcess a credential-dumping attempt acted on. Distinct from stonework:targets: targets is a direct, open-domain/range lift of the STIX 2.1 relationship_type 'targets' shortcut, describing higher-level strategic targeting (a Sector, a Location, an Agent) by a Campaign/MalwareSample/ThreatActor. actsOn is purpose-built for the concrete technical asset one execution-trace Activity acted upon — the same distinction develop draws between stonework:mitigates (open, STIX-lifted) and stonework:mitigatesAttackPattern (purpose-built, controlled domain/range)."@en ;
 	.
 
+stonework:addressOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:IPAddress ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:Host
+			stonework:NetworkService
+		) ;
+	] ;
+	skos:definition "Relates an IPAddress to the Host or NetworkService for which it serves as a network address."@en ;
+	skos:prefLabel "addressOf"@en ;
+	.
+
 stonework:addresses
 	a owl:ObjectProperty ;
 	rdfs:domain [
@@ -1389,6 +1403,20 @@ stonework:affiliatedWith
 	rdfs:range stonework:Agent ;
 	skos:definition "Associates an entity with a related Agent through organizational membership, alliance, sponsorship, or informal association."@en ;
 	skos:prefLabel "affiliatedWith" ;
+	.
+
+stonework:analysisOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Analysis ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:CyberActivity
+			stonework:CyberEntity
+		) ;
+	] ;
+	skos:definition "Relates an Analysis to the CyberEntity or CyberActivity that it examines."@en ;
+	skos:prefLabel "analysisOf"@en ;
 	.
 
 stonework:appliesControl
@@ -2236,6 +2264,21 @@ stonework:hasMember
 	skos:prefLabel "hasMember"@en ;
 	.
 
+stonework:hasNetworkAddress
+	a owl:ObjectProperty ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:Host
+			stonework:NetworkService
+		) ;
+	] ;
+	rdfs:range stonework:IPAddress ;
+	owl:inverseOf stonework:addressOf ;
+	skos:definition "Relates a Host or NetworkService to an IPAddress assigned to or used by it."@en ;
+	skos:prefLabel "hasNetworkAddress"@en ;
+	.
+
 stonework:hasObservable
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:SecurityObservation ;
@@ -2292,6 +2335,15 @@ stonework:hasProductInstallation
 	skos:definition "Relates an Infrastructure entity to a contextual record of a product installed on it."@en ;
 	skos:prefLabel "hasProductInstallation"@en ;
 	skos:scopeNote "Use stonework:hasInstalledProduct for a direct Infrastructure-to-VersionedProduct inventory assertion. Use this property with stonework:installationOf when installation-specific identity, path, licensee, or configuration details must be preserved."@en ;
+	.
+
+stonework:hasProvenance
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:IntelligenceProduct ;
+	rdfs:range stonework:Provenance ;
+	owl:inverseOf stonework:provenanceOf ;
+	skos:definition "Relates an IntelligenceProduct to a Provenance record documenting its origin or evidentiary basis."@en ;
+	skos:prefLabel "hasProvenance"@en ;
 	.
 
 stonework:hasRisk
@@ -2774,6 +2826,14 @@ stonework:operatesIn
 	skos:prefLabel "operatesIn"@en ;
 	.
 
+stonework:opinionOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Opinion ;
+	rdfs:range stonework:IntelligenceProduct ;
+	skos:definition "Relates an Opinion to the IntelligenceProduct whose correctness or credibility it evaluates."@en ;
+	skos:prefLabel "opinionOf"@en ;
+	.
+
 stonework:originatesFrom
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Agent ;
@@ -2963,6 +3023,14 @@ stonework:protects
 	] ;
 	skos:definition "Relates a Countermeasure or ACL to the resource it protects."@en ;
 	skos:prefLabel "protects"@en ;
+	.
+
+stonework:provenanceOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Provenance ;
+	rdfs:range stonework:IntelligenceProduct ;
+	skos:definition "Relates a Provenance record to the IntelligenceProduct whose origin or evidentiary basis it documents."@en ;
+	skos:prefLabel "provenanceOf"@en ;
 	.
 
 stonework:references
@@ -3382,6 +3450,21 @@ stonework:uses
 	skos:definition "Relates a threat actor group, campaign, malware, or tool to an offensive technique, malware, or tool it is known to employ." ;
 	skos:prefLabel "uses" ;
 	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'uses' shortcut (sub-property stones:uses carries the shortcut triples emitted by the STIX 2.1 transform). STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure. In the MITRE ATT&CK bundle alone, observed 'uses' sources include Campaign, IntrusionSet, Malware, and Tool, and observed targets include AttackTechnique, Malware, and Tool — a closed domain/range would misrepresent this real data and mislead reasoner-based consumers. Query-time discrimination (e.g. selecting only IntrusionSet users of a technique) should filter on the asserted stones:stixType literal or a specific rdf:type, not assume it from this property alone."@en ;
+	.
+
+stonework:usesDetectionRule
+	a owl:ObjectProperty ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:DetectionPlan
+			stonework:Step
+		) ;
+	] ;
+	rdfs:range stonework:DetectionRule ;
+	skos:definition "Relates a DetectionPlan or Step to a DetectionRule that it evaluates or invokes."@en ;
+	skos:prefLabel "usesDetectionRule"@en ;
+	skos:scopeNote "Use stonework:usesRule for the deployment-side relationship between a Sensor and a DetectionRule."@en ;
 	.
 
 stonework:usesRule
