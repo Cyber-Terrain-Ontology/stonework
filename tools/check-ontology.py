@@ -346,6 +346,8 @@ def main() -> int:
                     "but that resource is not a skos:ConceptScheme"
                 )
 
+    scheme_notation_owners = defaultdict(set)
+
     for subject, subject_types in sorted(types.items()):
         if named_individual not in subject_types:
             continue
@@ -370,6 +372,25 @@ def main() -> int:
                 f"{describe(subject)} ({location}) must explicitly materialize rdf:type "
                 "skos:Concept"
             )
+        specific_schemes = required_schemes - {category_scheme}
+        notation_values = values[(subject, SKOS + "notation")]
+        notations = [obj for obj in notation_values if obj[0] == "literal"]
+        if specific_schemes and (len(notation_values) != 1 or len(notations) != 1):
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) must declare exactly one literal "
+                "skos:notation"
+            )
+        elif specific_schemes:
+            notation = notations[0]
+            if notation[2] is not None:
+                location = ", ".join(sorted(sources.get(subject, ())))
+                errors.append(
+                    f"{describe(subject)} ({location}) has a language-tagged skos:notation; "
+                    "notations must be language-neutral"
+                )
+            for scheme in specific_schemes:
+                scheme_notation_owners[(scheme, notation[1].casefold())].add(subject)
         missing_schemes = required_schemes - materialized_schemes
         if missing_schemes:
             rendered = ", ".join(describe(scheme) for scheme in sorted(missing_schemes))
@@ -378,6 +399,14 @@ def main() -> int:
                 f"{describe(subject)} ({location}) must explicitly materialize skos:inScheme "
                 f"for {rendered}"
             )
+
+    for (scheme, notation), owners in sorted(scheme_notation_owners.items()):
+        if len(owners) < 2:
+            continue
+        rendered = ", ".join(describe(owner) for owner in sorted(owners))
+        errors.append(
+            f"duplicate skos:notation {notation!r} in {describe(scheme)}: {rendered}"
+        )
 
     for subject in sorted(sources):
         definitions = values[(subject, SKOS + "definition")]

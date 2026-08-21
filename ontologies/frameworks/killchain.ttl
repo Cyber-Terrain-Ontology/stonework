@@ -36,6 +36,7 @@ killchain:ActionsOnObjectives
 		stonework:categoryScheme ,
 		stonework:killChainPhaseScheme
 		;
+	skos:notation "actions-on-objectives" ;
 	skos:prefLabel "Actions on Objectives"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "actions-on-objectives" ;
@@ -53,6 +54,7 @@ killchain:CommandAndControl
 		stonework:categoryScheme ,
 		stonework:killChainPhaseScheme
 		;
+	skos:notation "command-and-control" ;
 	skos:prefLabel "Command and Control"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "command-and-control" ;
@@ -70,6 +72,7 @@ killchain:Delivery
 		stonework:categoryScheme ,
 		stonework:killChainPhaseScheme
 		;
+	skos:notation "delivery" ;
 	skos:prefLabel "Delivery"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "delivery" ;
@@ -87,6 +90,7 @@ killchain:Exploitation
 		stonework:categoryScheme ,
 		stonework:killChainPhaseScheme
 		;
+	skos:notation "exploitation" ;
 	skos:prefLabel "Exploitation"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "exploitation" ;
@@ -104,6 +108,7 @@ killchain:Installation
 		stonework:categoryScheme ,
 		stonework:killChainPhaseScheme
 		;
+	skos:notation "installation" ;
 	skos:prefLabel "Installation"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "installation" ;
@@ -121,6 +126,7 @@ killchain:Reconnaissance
 		stonework:categoryScheme ,
 		stonework:killChainPhaseScheme
 		;
+	skos:notation "reconnaissance" ;
 	skos:prefLabel "Reconnaissance"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "reconnaissance" ;
@@ -138,6 +144,7 @@ killchain:Weaponization
 		stonework:categoryScheme ,
 		stonework:killChainPhaseScheme
 		;
+	skos:notation "weaponization" ;
 	skos:prefLabel "Weaponization"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "weaponization" ;

@@ -584,6 +584,7 @@ stonework:hypothesisStatusConfirmed
 		stonework:categoryScheme ,
 		stonework:hypothesisStatusScheme
 		;
+	skos:notation "confirmed" ;
 	skos:prefLabel "Confirmed"@en ;
 	.
 
@@ -598,6 +599,7 @@ stonework:hypothesisStatusPending
 		stonework:categoryScheme ,
 		stonework:hypothesisStatusScheme
 		;
+	skos:notation "pending" ;
 	skos:prefLabel "Pending"@en ;
 	.
 
@@ -612,6 +614,7 @@ stonework:hypothesisStatusRefuted
 		stonework:categoryScheme ,
 		stonework:hypothesisStatusScheme
 		;
+	skos:notation "refuted" ;
 	skos:prefLabel "Refuted"@en ;
 	.
 
@@ -888,6 +891,7 @@ stonework:infraTypeAmplification
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "amplification" ;
 	skos:prefLabel "Amplification"@en ;
 	.
 
@@ -902,6 +906,7 @@ stonework:infraTypeAnonymization
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "anonymization" ;
 	skos:prefLabel "Anonymization"@en ;
 	.
 
@@ -916,6 +921,7 @@ stonework:infraTypeBotnet
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "botnet" ;
 	skos:prefLabel "Botnet"@en ;
 	.
 
@@ -930,6 +936,7 @@ stonework:infraTypeC2
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "command-and-control" ;
 	skos:prefLabel "Command and Control"@en ;
 	.
 
@@ -944,6 +951,7 @@ stonework:infraTypeExfiltration
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "exfiltration" ;
 	skos:prefLabel "Exfiltration"@en ;
 	.
 
@@ -958,6 +966,7 @@ stonework:infraTypeFirewall
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "firewall" ;
 	skos:prefLabel "Firewall"@en ;
 	.
 
@@ -972,6 +981,7 @@ stonework:infraTypeHostingMalware
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "hosting-malware" ;
 	skos:prefLabel "Hosting Malware"@en ;
 	.
 
@@ -986,6 +996,7 @@ stonework:infraTypeHostingTargetLists
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "hosting-target-lists" ;
 	skos:prefLabel "Hosting Target Lists"@en ;
 	.
 
@@ -1000,6 +1011,7 @@ stonework:infraTypePhishing
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "phishing" ;
 	skos:prefLabel "Phishing"@en ;
 	.
 
@@ -1014,6 +1026,7 @@ stonework:infraTypeReconnaissance
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "reconnaissance" ;
 	skos:prefLabel "Reconnaissance"@en ;
 	.
 
@@ -1028,6 +1041,7 @@ stonework:infraTypeRoutersSwitches
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "routers-switches" ;
 	skos:prefLabel "Routers and Switches"@en ;
 	.
 
@@ -1042,6 +1056,7 @@ stonework:infraTypeStaging
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "staging" ;
 	skos:prefLabel "Staging"@en ;
 	.
 
@@ -1056,6 +1071,7 @@ stonework:infraTypeWorkstation
 		stonework:categoryScheme ,
 		stonework:infrastructureTypeScheme
 		;
+	skos:notation "workstation" ;
 	skos:prefLabel "Workstation"@en ;
 	.
 
@@ -1267,6 +1283,7 @@ stonework:motivationAccidental
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "accidental" ;
 	skos:prefLabel "Accidental"@en ;
 	.
 
@@ -1281,6 +1298,7 @@ stonework:motivationCoercion
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "coercion" ;
 	skos:prefLabel "Coercion"@en ;
 	.
 
@@ -1295,6 +1313,7 @@ stonework:motivationDominance
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "dominance" ;
 	skos:prefLabel "Dominance"@en ;
 	.
 
@@ -1309,6 +1328,7 @@ stonework:motivationIdeology
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "ideology" ;
 	skos:prefLabel "Ideology"@en ;
 	.
 
@@ -1323,6 +1343,7 @@ stonework:motivationNotoriety
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "notoriety" ;
 	skos:prefLabel "Notoriety"@en ;
 	.
 
@@ -1337,6 +1358,7 @@ stonework:motivationOrganizationalGain
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "organizational-gain" ;
 	skos:prefLabel "Organizational Gain"@en ;
 	.
 
@@ -1351,6 +1373,7 @@ stonework:motivationPersonalGain
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "personal-gain" ;
 	skos:prefLabel "Personal Gain"@en ;
 	.
 
@@ -1365,6 +1388,7 @@ stonework:motivationPersonalSatisfaction
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "personal-satisfaction" ;
 	skos:prefLabel "Personal Satisfaction"@en ;
 	.
 
@@ -1379,6 +1403,7 @@ stonework:motivationRevenge
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "revenge" ;
 	skos:prefLabel "Revenge"@en ;
 	.
 
@@ -1401,6 +1426,7 @@ stonework:motivationUnpredictable
 		stonework:categoryScheme ,
 		stonework:motivationScheme
 		;
+	skos:notation "unpredictable" ;
 	skos:prefLabel "Unpredictable"@en ;
 	.
 
@@ -1415,6 +1441,7 @@ stonework:productTypeAIModel
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "ai-model" ;
 	skos:prefLabel "AI Model"@en ;
 	.
 
@@ -1429,6 +1456,7 @@ stonework:productTypeApplication
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "application" ;
 	skos:prefLabel "Application"@en ;
 	.
 
@@ -1443,6 +1471,7 @@ stonework:productTypeContainerImage
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "container-image" ;
 	skos:prefLabel "Container Image"@en ;
 	.
 
@@ -1457,6 +1486,7 @@ stonework:productTypeFirmware
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "firmware" ;
 	skos:prefLabel "Firmware"@en ;
 	.
 
@@ -1471,6 +1501,7 @@ stonework:productTypeHardware
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "hardware" ;
 	skos:prefLabel "Hardware"@en ;
 	.
 
@@ -1485,6 +1516,7 @@ stonework:productTypeLibrary
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "library" ;
 	skos:prefLabel "Library"@en ;
 	.
 
@@ -1499,6 +1531,7 @@ stonework:productTypeOperatingSystem
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "operating-system" ;
 	skos:prefLabel "Operating System"@en ;
 	.
 
@@ -1513,6 +1546,7 @@ stonework:productTypePackage
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "package" ;
 	skos:prefLabel "Package"@en ;
 	.
 
@@ -1527,6 +1561,7 @@ stonework:productTypeSDK
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "sdk" ;
 	skos:prefLabel "SDK"@en ;
 	.
 
@@ -1549,6 +1584,7 @@ stonework:productTypeService
 		stonework:categoryScheme ,
 		stonework:productTypeScheme
 		;
+	skos:notation "service" ;
 	skos:prefLabel "Service"@en ;
 	.
 
@@ -1948,6 +1984,7 @@ stonework:threatActorTypeActivist
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "activist" ;
 	skos:prefLabel "Activist"@en ;
 	.
 
@@ -1962,6 +1999,7 @@ stonework:threatActorTypeCompetitor
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "competitor" ;
 	skos:prefLabel "Competitor"@en ;
 	.
 
@@ -1976,6 +2014,7 @@ stonework:threatActorTypeCrimeSyndicate
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "crime-syndicate" ;
 	skos:prefLabel "Crime Syndicate"@en ;
 	.
 
@@ -1990,6 +2029,7 @@ stonework:threatActorTypeCriminal
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "criminal" ;
 	skos:prefLabel "Criminal"@en ;
 	.
 
@@ -2004,6 +2044,7 @@ stonework:threatActorTypeHacker
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "hacker" ;
 	skos:prefLabel "Hacker"@en ;
 	.
 
@@ -2018,6 +2059,7 @@ stonework:threatActorTypeInsiderAccidental
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "insider-accidental" ;
 	skos:prefLabel "Insider Accidental"@en ;
 	.
 
@@ -2032,6 +2074,7 @@ stonework:threatActorTypeInsiderDisgruntled
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "insider-disgruntled" ;
 	skos:prefLabel "Insider Disgruntled"@en ;
 	.
 
@@ -2046,6 +2089,7 @@ stonework:threatActorTypeNationState
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "nation-state" ;
 	skos:prefLabel "Nation State"@en ;
 	.
 
@@ -2068,6 +2112,7 @@ stonework:threatActorTypeSensationalist
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "sensationalist" ;
 	skos:prefLabel "Sensationalist"@en ;
 	.
 
@@ -2082,6 +2127,7 @@ stonework:threatActorTypeSpy
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "spy" ;
 	skos:prefLabel "Spy"@en ;
 	.
 
@@ -2096,6 +2142,7 @@ stonework:threatActorTypeTerrorist
 		stonework:categoryScheme ,
 		stonework:threatActorTypeScheme
 		;
+	skos:notation "terrorist" ;
 	skos:prefLabel "Terrorist"@en ;
 	.
 
@@ -2110,6 +2157,7 @@ stonework:tlpAmber
 		stonework:categoryScheme ,
 		stonework:markingScheme
 		;
+	skos:notation "TLP:AMBER" ;
 	skos:prefLabel "TLP:AMBER"@en ;
 	.
 
@@ -2124,6 +2172,7 @@ stonework:tlpAmberStrict
 		stonework:categoryScheme ,
 		stonework:markingScheme
 		;
+	skos:notation "TLP:AMBER+STRICT" ;
 	skos:prefLabel "TLP:AMBER+STRICT" ;
 	.
 
@@ -2138,6 +2187,7 @@ stonework:tlpClear
 		stonework:categoryScheme ,
 		stonework:markingScheme
 		;
+	skos:notation "TLP:CLEAR" ;
 	skos:prefLabel "TLP:CLEAR"@en ;
 	.
 
@@ -2152,6 +2202,7 @@ stonework:tlpGreen
 		stonework:categoryScheme ,
 		stonework:markingScheme
 		;
+	skos:notation "TLP:GREEN" ;
 	skos:prefLabel "TLP:GREEN"@en ;
 	.
 
@@ -2166,5 +2217,6 @@ stonework:tlpRed
 		stonework:categoryScheme ,
 		stonework:markingScheme
 		;
+	skos:notation "TLP:RED" ;
 	skos:prefLabel "TLP:RED"@en ;
 	.
