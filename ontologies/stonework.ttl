@@ -44,6 +44,7 @@ stonework:AccessControlList
 stonework:Adware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Software that automatically displays or downloads advertising material, often without user consent."@en ;
@@ -116,6 +117,7 @@ stonework:AutonomousSystem
 stonework:Backdoor
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that provides covert, persistent remote access to a compromised system, bypassing normal authentication."@en ;
@@ -147,6 +149,7 @@ stonework:BomEntry
 stonework:Bootkit
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that infects the boot sector or master boot record to load before the operating system, enabling deep persistence and defense evasion."@en ;
@@ -161,6 +164,7 @@ stonework:Bootkit
 stonework:Bot
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that connects an infected host to a command-and-control network, enabling remote tasking as part of a botnet."@en ;
@@ -307,6 +311,7 @@ stonework:CyberTechnique
 stonework:DDoS
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware designed to conduct or participate in distributed denial-of-service attacks against target systems or networks."@en ;
@@ -390,6 +395,7 @@ stonework:Domain
 stonework:Downloader
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware whose primary function is to download and execute additional malicious payloads from a remote source."@en ;
@@ -404,6 +410,7 @@ stonework:Downloader
 stonework:Dropper
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that carries and installs one or more secondary payloads onto a target system, often unpacking them from within itself."@en ;
@@ -451,6 +458,7 @@ stonework:Event
 stonework:ExploitKit
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "A toolkit that automates exploitation of client-side vulnerabilities to deliver malware, typically via drive-by download from compromised or malicious web pages."@en ;
@@ -634,6 +642,7 @@ stonework:InvestigationPlan
 stonework:Keylogger
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that records keystrokes on an infected system to capture credentials, sensitive data, or communications."@en ;
@@ -970,6 +979,7 @@ stonework:QualifiedAssertion
 stonework:Ransomware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that encrypts or locks victim data or systems and demands payment for restoration of access."@en ;
@@ -1012,6 +1022,7 @@ stonework:RegistryValue
 stonework:RemoteAccessTrojan
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware providing covert remote control of an infected host, typically including capabilities such as file access, screen capture, keylogging, and command execution."@en ;
@@ -1033,6 +1044,7 @@ stonework:Report
 stonework:ResourceExploitation
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that abuses the computational resources of an infected host, such as for cryptocurrency mining or proxying network traffic."@en ;
@@ -1064,6 +1076,7 @@ stonework:RiskFactor
 stonework:RogueSecuritySoftware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that masquerades as legitimate security software to deceive users into paying for fake threat removal or granting elevated privileges."@en ;
@@ -1094,6 +1107,7 @@ stonework:RoleAssignment
 stonework:Rootkit
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that conceals itself and other malicious software by subverting operating system or hypervisor mechanisms, typically to maintain privileged persistence."@en ;
@@ -1116,6 +1130,7 @@ stonework:RuntimeProcess
 stonework:ScreenCapture
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that periodically or continuously captures screenshots of the victim's display and exfiltrates them to an attacker."@en ;
@@ -1179,6 +1194,7 @@ stonework:SoftwareBillOfMaterials
 stonework:Spyware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that covertly monitors user activity, collects personal or sensitive information, and transmits it to a remote party."@en ;
@@ -1278,6 +1294,7 @@ stonework:Transition
 stonework:Trojan
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware disguised as or bundled with legitimate software to deceive users into executing it, enabling a range of malicious payloads."@en ;
@@ -1299,6 +1316,7 @@ stonework:URI
 stonework:UnknownMalware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "The malware type has not been determined or cannot be classified into a known category."@en ;
@@ -1352,6 +1370,7 @@ stonework:VersionedProduct
 stonework:Virus
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that replicates by inserting copies of itself into other executable files or documents, spreading when those files are executed or opened."@en ;
@@ -1391,6 +1410,7 @@ stonework:Weakness
 stonework:Webshell
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware deployed on a web server that provides remote command execution via HTTP requests, enabling persistent access through the web application layer."@en ;
@@ -1405,6 +1425,7 @@ stonework:Webshell
 stonework:Wiper
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware designed to irreversibly destroy data or render systems inoperable, typically used for sabotage or to obscure attacker activity."@en ;
@@ -1419,6 +1440,7 @@ stonework:Wiper
 stonework:Worm
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Self-replicating malware that spreads across networks or systems without requiring user interaction or a host file to attach to."@en ;

@@ -27,6 +27,7 @@
 killchain:ActionsOnObjectives
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stones:KillChainPhase ,
 		stonework:KillChainPhase
 		;
@@ -43,6 +44,7 @@ killchain:ActionsOnObjectives
 killchain:CommandAndControl
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stones:KillChainPhase ,
 		stonework:KillChainPhase
 		;
@@ -59,6 +61,7 @@ killchain:CommandAndControl
 killchain:Delivery
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stones:KillChainPhase ,
 		stonework:KillChainPhase
 		;
@@ -75,6 +78,7 @@ killchain:Delivery
 killchain:Exploitation
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stones:KillChainPhase ,
 		stonework:KillChainPhase
 		;
@@ -91,6 +95,7 @@ killchain:Exploitation
 killchain:Installation
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stones:KillChainPhase ,
 		stonework:KillChainPhase
 		;
@@ -107,6 +112,7 @@ killchain:Installation
 killchain:Reconnaissance
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stones:KillChainPhase ,
 		stonework:KillChainPhase
 		;
@@ -123,6 +129,7 @@ killchain:Reconnaissance
 killchain:Weaponization
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stones:KillChainPhase ,
 		stonework:KillChainPhase
 		;

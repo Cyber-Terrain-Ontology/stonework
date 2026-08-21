@@ -364,6 +364,12 @@ def main() -> int:
         materialized_schemes = {
             obj[1] for obj in values[(subject, SKOS + "inScheme")] if obj[0] == "iri"
         }
+        if required_schemes and SKOS + "Concept" not in subject_types:
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) must explicitly materialize rdf:type "
+                "skos:Concept"
+            )
         missing_schemes = required_schemes - materialized_schemes
         if missing_schemes:
             rendered = ", ".join(describe(scheme) for scheme in sorted(missing_schemes))
@@ -428,7 +434,7 @@ def main() -> int:
     for subject, subject_types in types.items():
         if named_individual not in subject_types:
             continue
-        domain_types = subject_types - {named_individual}
+        domain_types = subject_types - {named_individual, SKOS + "Concept"}
         for label in values[(subject, SKOS + "prefLabel")]:
             if label[0] != "literal":
                 continue
