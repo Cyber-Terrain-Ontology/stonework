@@ -94,6 +94,7 @@ nist:title
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:title ;
 	rdfs:label "title"@en ;
 	rdfs:comment "Human-readable control title as supplied in the OSCAL catalog, e.g. 'Access Control Policy and Procedures'."@en ;
 	rdfs:domain nist:Control ;

@@ -18,7 +18,7 @@
         <uri name="https://cyberterrain.org/ns/frameworks/registry" uri="frameworks/registry.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/stix" uri="frameworks/stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uri" uri="frameworks/uri.ttl"/>
-        <!-- stix.ttl is STONEWORK's local crosswalk of the STONES/STIX 2.1 vocabulary; it imports its own stones# namespace, so resolve that import back to itself rather than fetching over the network -->
+        <!-- stix.ttl is STONEWORK's self-contained local crosswalk for the STONES/STIX 2.1 vocabulary; resolve stones# to that mapping rather than fetching it over the network -->
         <uri name="https://cyberterrain.org/ns/stones#" uri="frameworks/stix.ttl"/>
     </group>
 </catalog>

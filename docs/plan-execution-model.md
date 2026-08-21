@@ -197,6 +197,7 @@ vulnerability assessment, ...).
 | Property | Domain → Range | Purpose |
 |---|---|---|
 | `stonework:correspondsToStep` | `CyberActivity` → `Step` (functional) | Links an executing Activity to the Step it's the concrete performance of. Mirrors `p-plan:correspondsToStep`. |
+| `stonework:executionOf` / `stonework:hasExecution` | `CyberActivity` ↔ `Behavior` | Links an overall execution to its plan; complements the finer-grained Step link rather than replacing it. |
 | `stonework:predictsVariable` | `Hypothesis` → `Variable` | Which Variable's eventual binding this Hypothesis predicts. |
 | `stonework:predictedType` | `Hypothesis` → `rdfs:Class` | Predicted *class* of outcome (mirrors `guardType`) — the common case, since a Hypothesis formed before execution usually can't name a specific not-yet-constructed individual. |
 | `stonework:predictedValue` | `Hypothesis` → `owl:Thing` | Predicted specific individual (mirrors `boundTo`) — rare case. |

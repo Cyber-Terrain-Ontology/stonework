@@ -86,6 +86,7 @@ cis:title
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:title ;
 	rdfs:label "title"@en ;
 	rdfs:comment "Human-readable control or safeguard title as supplied in the OSCAL catalog."@en ;
 	rdfs:domain cis:Control ;

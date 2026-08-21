@@ -19,5 +19,8 @@ if [ -n "$staged_ttl" ]; then
     bash "$SCRIPT_DIR/format-ttl.sh" "${abs_files[@]}"
 fi
 
+# ── Validate Turtle and high-value OWL invariants ──────────────────────────
+python3 "$REPO_ROOT/tools/check-ontology.py"
+
 # ── Protect catalog-v001.xml ───────────────────────────────────────────────
 bash "$SCRIPT_DIR/protect-catalog.sh"
