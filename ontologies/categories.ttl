@@ -55,8 +55,8 @@ stonework:HypothesisStatus
 			owl:hasValue stonework:hypothesisStatusScheme ;
 		]
 		;
-	skos:definition "A classification of a Hypothesis's position in the confirm/refute lifecycle." ;
-	skos:prefLabel "Hypothesis Status" ;
+	skos:definition "A classification of a Hypothesis's position in the confirm/refute lifecycle."@en ;
+	skos:prefLabel "Hypothesis Status"@en ;
 	skos:scopeNote "Applied via stonework:hasHypothesisStatus to Hypothesis individuals. Named individuals: pending (not yet tested), confirmed (actual result matched the prediction), refuted (actual result did not match the prediction)."@en ;
 	.
 
@@ -113,7 +113,7 @@ stonework:Industry
 		]
 		;
 	skos:definition "A specific branch of economic activity or commercial sector (typically modeled using NAICS or similar codes)."@en ;
-	skos:prefLabel "Industry" ;
+	skos:prefLabel "Industry"@en ;
 	skos:scopeNote "Examples: Financial Services, Manufacturing, Retail, Pharmaceuticals."@en ;
 	.
 
@@ -127,8 +127,8 @@ stonework:InfrastructureType
 			owl:hasValue stonework:infrastructureTypeScheme ;
 		]
 		;
-	skos:definition "A classification of infrastructure by its operational role or purpose within a cyber operation." ;
-	skos:prefLabel "Infrastructure Type" ;
+	skos:definition "A classification of infrastructure by its operational role or purpose within a cyber operation."@en ;
+	skos:prefLabel "Infrastructure Type"@en ;
 	skos:scopeNote "Applied via stonework:categorizedBy to Infrastructure individuals. Covers both adversary-controlled infrastructure (C2, staging, phishing) and defender infrastructure (firewall, workstation). Aligns with the STIX 2.1 infrastructure-type open vocabulary."@en ;
 	.
 
@@ -143,7 +143,7 @@ stonework:KillChainPhase
 		]
 		;
 	skos:definition "A named phase within a kill chain or attack lifecycle framework used to categorize the stage of an offensive or defensive operation."@en ;
-	skos:prefLabel "Kill Chain Phase" ;
+	skos:prefLabel "Kill Chain Phase"@en ;
 	skos:scopeNote "Applies to both offensive frameworks (Lockheed Martin Cyber Kill Chain, MITRE ATT&CK) and defensive lifecycle models. Used to tag AttackTechniques, Procedures, or Events with their operational phase."@en ;
 	.
 
@@ -185,8 +185,8 @@ stonework:Motivation
 			owl:hasValue stonework:motivationScheme ;
 		]
 		;
-	skos:definition "The reason or driving force behind an adversary's decision to conduct an attack or operation." ;
-	skos:prefLabel "Motivation" ;
+	skos:definition "The reason or driving force behind an adversary's decision to conduct an attack or operation."@en ;
+	skos:prefLabel "Motivation"@en ;
 	skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor, Campaign, or Operation individuals. Named individuals cover the STIX 2.1 attack-motivation open vocabulary. Custom motivations may be added as additional individuals."@en ;
 	.
 
@@ -200,8 +200,8 @@ stonework:ProductType
 			owl:hasValue stonework:productTypeScheme ;
 		]
 		;
-	skos:definition "A classification of a product by its primary functional category within a system or architecture." ;
-	skos:prefLabel "Product Type" ;
+	skos:definition "A classification of a product by its primary functional category within a system or architecture."@en ;
+	skos:prefLabel "Product Type"@en ;
 	skos:scopeNote "Applied via stonework:hasProductType to Product individuals. Aligns with CPE component type designations. A product may have more than one type (e.g. an embedded OS is both firmware and operating-system)."@en ;
 	.
 
@@ -273,8 +273,8 @@ stonework:ThreatActorRole
 			owl:hasValue stonework:threatActorRoleScheme ;
 		]
 		;
-	skos:definition "A controlled role type describing the function played by a threat actor within a specific operation, campaign, or criminal organization." ;
-	skos:prefLabel "Threat Actor Role" ;
+	skos:definition "A controlled role type describing the function played by a threat actor within a specific operation, campaign, or criminal organization."@en ;
+	skos:prefLabel "Threat Actor Role"@en ;
 	skos:scopeNote "A threat actor may play different roles across operations — a nation-state actor may be a sponsor in one campaign and a director in another. Use stonework:RoleAssignment for contextual modeling; stonework:playsRole is the context-free STIX-compatible projection."@en ;
 	.
 
@@ -288,8 +288,8 @@ stonework:ThreatActorType
 			owl:hasValue stonework:threatActorTypeScheme ;
 		]
 		;
-	skos:definition "A classification of a threat actor by their organizational form, affiliation, or primary mode of operation." ;
-	skos:prefLabel "Threat Actor Type" ;
+	skos:definition "A classification of a threat actor by their organizational form, affiliation, or primary mode of operation."@en ;
+	skos:prefLabel "Threat Actor Type"@en ;
 	skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor individuals. A threat actor may have multiple types. Aligns with the STIX 2.1 threat-actor-type open vocabulary."@en ;
 	.
 

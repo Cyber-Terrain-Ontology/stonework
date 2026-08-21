@@ -298,6 +298,23 @@ def main() -> int:
     category = STONEWORK + "Category"
     category_scheme = STONEWORK + "categoryScheme"
 
+    def require_english_vocabulary_annotations(subject):
+        location = ", ".join(sorted(sources.get(subject, ())))
+        for predicate, field_name in (
+            (SKOS + "prefLabel", "skos:prefLabel"),
+            (SKOS + "definition", "skos:definition"),
+        ):
+            english_values = [
+                obj
+                for obj in values[(subject, predicate)]
+                if obj[0] == "literal" and (obj[2] or "").casefold() == "en"
+            ]
+            if len(english_values) != 1:
+                errors.append(
+                    f"{describe(subject)} ({location}) must declare exactly one English "
+                    f"{field_name}"
+                )
+
     def class_schemes(subject):
         schemes = set()
         for superclass in values[(subject, RDFS + "subClassOf")]:
@@ -316,6 +333,7 @@ def main() -> int:
     for subject, subject_types in sorted(types.items()):
         if concept_scheme not in subject_types or not subject.startswith(STONEWORK):
             continue
+        require_english_vocabulary_annotations(subject)
         if subject == category_scheme:
             continue
         if ("iri", category_scheme) not in values[(subject, DCTERMS + "isPartOf")]:
@@ -328,6 +346,8 @@ def main() -> int:
             continue
         if subject == category or category not in ancestors(subject):
             continue
+
+        require_english_vocabulary_annotations(subject)
 
         schemes = class_schemes(subject) - {category_scheme}
 
@@ -364,22 +384,7 @@ def main() -> int:
                 required_schemes.update(class_schemes(ancestor))
 
         if required_schemes:
-            location = ", ".join(sorted(sources.get(subject, ())))
-            for predicate, field_name in (
-                (SKOS + "prefLabel", "skos:prefLabel"),
-                (SKOS + "definition", "skos:definition"),
-            ):
-                english_values = [
-                    obj
-                    for obj in values[(subject, predicate)]
-                    if obj[0] == "literal"
-                    and (obj[2] or "").casefold() == "en"
-                ]
-                if len(english_values) != 1:
-                    errors.append(
-                        f"{describe(subject)} ({location}) must declare exactly one English "
-                        f"{field_name}"
-                    )
+            require_english_vocabulary_annotations(subject)
 
         materialized_schemes = {
             obj[1] for obj in values[(subject, SKOS + "inScheme")] if obj[0] == "iri"
