@@ -297,6 +297,20 @@ def main() -> int:
 
     category = STONEWORK + "Category"
     category_scheme = STONEWORK + "categoryScheme"
+    stix_specification = "https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html"
+    expected_scheme_sources = {
+        STONEWORK + "infrastructureTypeScheme": {stix_specification},
+        STONEWORK + "killChainPhaseScheme": {
+            "https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html"
+        },
+        STONEWORK + "malwareTypeScheme": {stix_specification},
+        STONEWORK + "markingScheme": {"https://www.first.org/tlp/"},
+        STONEWORK + "motivationScheme": {stix_specification},
+        STONEWORK + "resourceLevelScheme": {stix_specification},
+        STONEWORK + "sophisticationLevelScheme": {stix_specification},
+        STONEWORK + "threatActorRoleScheme": {stix_specification},
+        STONEWORK + "threatActorTypeScheme": {stix_specification},
+    }
 
     def require_english_vocabulary_annotations(subject):
         location = ", ".join(sorted(sources.get(subject, ())))
@@ -334,6 +348,18 @@ def main() -> int:
         if concept_scheme not in subject_types or not subject.startswith(STONEWORK):
             continue
         require_english_vocabulary_annotations(subject)
+
+        declared_source_values = values[(subject, DCTERMS + "source")]
+        declared_sources = {obj[1] for obj in declared_source_values if obj[0] == "iri"}
+        if len(declared_sources) != len(declared_source_values):
+            errors.append(f"{describe(subject)} must use IRI-valued dcterms:source links")
+        missing_sources = expected_scheme_sources.get(subject, set()) - declared_sources
+        if missing_sources:
+            rendered = ", ".join(sorted(missing_sources))
+            errors.append(
+                f"{describe(subject)} is missing its authoritative dcterms:source: {rendered}"
+            )
+
         if subject == category_scheme:
             continue
         if ("iri", category_scheme) not in values[(subject, DCTERMS + "isPartOf")]:
