@@ -47,6 +47,7 @@ uri:location
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:uriValue ;
 	rdfs:label "URI Location"@en ;
 	rdfs:comment "The complete absolute location for this URI"@en ;
 	rdfs:domain stonework:URI ;
@@ -66,4 +67,3 @@ uri:servedFrom
 		) ;
 	] ;
 	.
-

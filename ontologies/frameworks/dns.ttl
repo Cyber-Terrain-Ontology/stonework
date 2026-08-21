@@ -319,6 +319,7 @@ dns:registeredOn
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:registrationDate ;
 	rdfs:label "dns:registeredOn"@en ;
 	rdfs:comment "the date the domain was registered on"@en ;
 	rdfs:domain stonework:Domain ;
@@ -361,4 +362,3 @@ dns:usingMX
 	] ;
 	rdfs:range dns:MX ;
 	.
-

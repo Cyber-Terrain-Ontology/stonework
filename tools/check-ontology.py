@@ -13,6 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 JAR = ROOT / "tools" / "rdf-toolkit.jar"
+CATALOG = ROOT / "ontologies" / "catalog-v001.xml"
 
 RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 RDFS = "http://www.w3.org/2000/01/rdf-schema#"
@@ -124,6 +125,29 @@ def main() -> int:
         values[(subject, predicate)].add(obj)
         if predicate == RDF_TYPE and obj[0] == "iri":
             types[subject].add(obj[1])
+
+    try:
+        catalog_root = ET.parse(CATALOG).getroot()
+        catalog_names = {
+            element.get("name")
+            for element in catalog_root.iter()
+            if expanded_name(element.tag) == "urn:oasis:names:tc:entity:xmlns:xml:cataloguri"
+            and element.get("name")
+        }
+    except ET.ParseError as exc:
+        catalog_names = set()
+        errors.append(f"{CATALOG.relative_to(ROOT)}: parse failure: {exc}")
+
+    for subject, predicate, obj in triples:
+        if predicate != OWL + "imports" or obj[0] != "iri":
+            continue
+        imported_iri = obj[1]
+        if imported_iri.startswith("https://cyberterrain.org/ns/") and imported_iri not in catalog_names:
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) imports {imported_iri}, which is not resolved "
+                "by ontologies/catalog-v001.xml"
+            )
 
     def list_members(head):
         members = set()

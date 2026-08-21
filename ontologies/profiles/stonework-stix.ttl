@@ -1,0 +1,16 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://cyberterrain.org/ns/stonework/profiles/stix>
+	a owl:Ontology ;
+	owl:imports
+		<https://cyberterrain.org/ns/frameworks/stix> ,
+		<https://cyberterrain.org/ns/stonework#> ,
+		<https://cyberterrain.org/ns/stonework/categories#>
+		;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/profiles/stix/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
+	dcterms:description "Import-only profile providing the complete local STIX/STONES-to-STONEWORK mapping closure: core vocabulary, controlled vocabularies, and the STIX framework mapping."@en ;
+	rdfs:label "STONEWORK STIX Profile"@en ;
+	.

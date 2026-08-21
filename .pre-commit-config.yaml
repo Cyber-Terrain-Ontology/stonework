@@ -21,3 +21,10 @@ repos:
         entry: python3 tools/check-ontology.py
         pass_filenames: false
         always_run: true
+
+      - id: shacl-validation
+        name: Validate STONEWORK instance constraints
+        language: system
+        entry: python3 tools/check-shacl.py
+        pass_filenames: false
+        always_run: true

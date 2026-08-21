@@ -145,10 +145,13 @@ stonework:SophisticationLevel
 
 stonework:ThreatActorRole
 	a owl:Class ;
-	rdfs:subClassOf stonework:Role ;
-	skos:definition "The function or part played by a threat actor within a specific operation, campaign, or criminal organization." ;
+	rdfs:subClassOf
+		stonework:Category ,
+		stonework:Role
+		;
+	skos:definition "A controlled role type describing the function played by a threat actor within a specific operation, campaign, or criminal organization." ;
 	skos:prefLabel "Threat Actor Role" ;
-	skos:scopeNote "A threat actor may play different roles across operations — a nation-state actor may be a sponsor in one campaign and a director in another. Applied via stonework:playsRole. Aligns with the STIX 2.1 threat-actor-role open vocabulary."@en ;
+	skos:scopeNote "A threat actor may play different roles across operations — a nation-state actor may be a sponsor in one campaign and a director in another. Use stonework:RoleAssignment for contextual modeling; stonework:playsRole is the context-free STIX-compatible projection."@en ;
 	.
 
 stonework:ThreatActorType
@@ -730,6 +733,66 @@ stonework:likelihoodLevelUnlikely
 	skos:prefLabel "Unlikely"@en ;
 	.
 
+stonework:metricConfidence
+	a
+		owl:NamedIndividual ,
+		stonework:MetricType
+		;
+	skos:definition "A 0–100 score expressing confidence in an assertion or expected outcome."@en ;
+	skos:notation "confidence" ;
+	skos:prefLabel "Confidence"@en ;
+	.
+
+stonework:metricCvssBaseScore
+	a
+		owl:NamedIndividual ,
+		stonework:MetricType
+		;
+	skos:definition "A CVSS base score on the 0.0–10.0 scale."@en ;
+	skos:notation "cvss-base-score" ;
+	skos:prefLabel "CVSS Base Score"@en ;
+	.
+
+stonework:metricEpssScore
+	a
+		owl:NamedIndividual ,
+		stonework:MetricType
+		;
+	skos:definition "An EPSS probability score on the 0.0–1.0 scale."@en ;
+	skos:notation "epss-score" ;
+	skos:prefLabel "EPSS Score"@en ;
+	.
+
+stonework:metricKevMembership
+	a
+		owl:NamedIndividual ,
+		stonework:MetricType
+		;
+	skos:definition "A dated boolean observation of whether a vulnerability appears in the CISA Known Exploited Vulnerabilities catalog."@en ;
+	skos:notation "kev-membership" ;
+	skos:prefLabel "KEV Membership"@en ;
+	.
+
+stonework:metricLikelihoodScore
+	a
+		owl:NamedIndividual ,
+		stonework:MetricType
+		;
+	skos:definition "A likelihood or probability score on the 0.0–1.0 scale."@en ;
+	skos:notation "likelihood-score" ;
+	skos:prefLabel "Likelihood Score"@en ;
+	.
+
+stonework:metricRiskScore
+	a
+		owl:NamedIndividual ,
+		stonework:MetricType
+		;
+	skos:definition "A numeric risk score calculated using a stated methodology or assessment model."@en ;
+	skos:notation "risk-score" ;
+	skos:prefLabel "Risk Score"@en ;
+	.
+
 stonework:motivationAccidental
 	a
 		owl:NamedIndividual ,
@@ -1086,6 +1149,7 @@ stonework:threatActorRoleAgent
 		stonework:ThreatActorRole
 		;
 	skos:definition "A threat actor who executes operations on behalf of a directing or sponsoring entity."@en ;
+	skos:notation "agent" ;
 	skos:prefLabel "Agent"@en ;
 	.
 
@@ -1095,6 +1159,7 @@ stonework:threatActorRoleDirector
 		stonework:ThreatActorRole
 		;
 	skos:definition "A threat actor who plans and directs operations without necessarily executing them."@en ;
+	skos:notation "director" ;
 	skos:prefLabel "Director"@en ;
 	.
 
@@ -1104,6 +1169,7 @@ stonework:threatActorRoleInfrastructureArchitect
 		stonework:ThreatActorRole
 		;
 	skos:definition "A threat actor responsible for designing and building the technical infrastructure supporting operations."@en ;
+	skos:notation "infrastructure-architect" ;
 	skos:prefLabel "Infrastructure Architect"@en ;
 	.
 
@@ -1113,6 +1179,7 @@ stonework:threatActorRoleInfrastructureOperator
 		stonework:ThreatActorRole
 		;
 	skos:definition "A threat actor who maintains and operates technical infrastructure during an operation."@en ;
+	skos:notation "infrastructure-operator" ;
 	skos:prefLabel "Infrastructure Operator"@en ;
 	.
 
@@ -1122,6 +1189,7 @@ stonework:threatActorRoleMalwareAuthor
 		stonework:ThreatActorRole
 		;
 	skos:definition "A threat actor who develops malicious code used in operations."@en ;
+	skos:notation "malware-author" ;
 	skos:prefLabel "Malware Author"@en ;
 	.
 
@@ -1131,6 +1199,7 @@ stonework:threatActorRoleSponsor
 		stonework:ThreatActorRole
 		;
 	skos:definition "A threat actor who funds or otherwise enables operations without direct participation."@en ;
+	skos:notation "sponsor" ;
 	skos:prefLabel "Sponsor"@en ;
 	.
 

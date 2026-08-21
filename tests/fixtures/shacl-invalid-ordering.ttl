@@ -1,0 +1,9 @@
+@prefix example: <https://example.org/> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:observation
+	a stonework:SecurityObservation ;
+	stonework:firstSeen "2026-08-20T12:00:00Z"^^xsd:dateTime ;
+	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
+	.

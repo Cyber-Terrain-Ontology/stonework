@@ -26,7 +26,7 @@ registry:Key
 	a owl:Class ;
 	rdfs:subClassOf
 		stones:WindowsRegistryKeyObject ,
-		stonework:Registry
+		stonework:RegistryKey
 		;
 	rdfs:label "Registry Key"@en ;
 	rdfs:comment "a Registry key within a Registry Hive"@en ;
@@ -36,7 +36,7 @@ registry:Value
 	a owl:Class ;
 	rdfs:subClassOf
 		stones:WindowsRegistryValue ,
-		stonework:Registry
+		stonework:RegistryValue
 		;
 	rdfs:label "Registry Value"@en ;
 	rdfs:comment "a value within a Registry Key"@en ;
@@ -87,6 +87,7 @@ registry:hasContent
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:registryValueData ;
 	rdfs:label "registry:hasContent"@en ;
 	rdfs:comment "the contents of a value within a registry key"@en ;
 	rdfs:domain registry:Value ;
@@ -162,6 +163,7 @@ registry:hasValueName
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:registryValueName ;
 	rdfs:label "registry:hasValueName"@en ;
 	rdfs:domain registry:Value ;
 	rdfs:range xsd:normalizedString ;
@@ -262,4 +264,3 @@ registry:stringValue
 	rdfs:label "registry:stringValue"@en ;
 	rdfs:comment "a String Registry Key value"@en ;
 	.
-

@@ -17,6 +17,7 @@ cpe:cpeName
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:cpeUri ;
 	rdfs:label "CPE name"@en ;
 	rdfs:comment "Full CPE 2.3 URI string, e.g. 'cpe:2.3:a:autodesk:autocad:2025:*:*:*:*:*:*:*'."@en ;
 	rdfs:domain stonework:VersionedProduct ;
@@ -84,4 +85,3 @@ cpe:title
 	rdfs:domain stonework:VersionedProduct ;
 	rdfs:range rdf:langString ;
 	.
-

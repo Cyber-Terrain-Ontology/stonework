@@ -4,7 +4,7 @@
 
 **STONEWORK is an OWL 2 extension of STONES that adds what STIX 2.1 does not define.**
 
-[STONES](https://github.com/Cyber-Terrain-Ontology/stones) provides a faithful ontological binding of STIX 2.1. STONEWORK imports STONES and extends the cyber terrain to cover adversary techniques, software weaknesses, and defensive controls — drawing from MITRE ATT&CK, MITRE D3FEND, CWE, NIST SP 800-53, and CIS Critical Controls. Together, STONES and STONEWORK form a composable semantic stack for AI-driven cyber threat intelligence analysis.
+[STONES](https://github.com/Cyber-Terrain-Ontology/stones) provides a faithful ontological binding of STIX 2.1. STONEWORK extends that cyber terrain to cover adversary techniques, software weaknesses, and defensive controls — drawing from MITRE ATT&CK, MITRE D3FEND, CWE, NIST SP 800-53, and CIS Critical Controls. The core remains lightweight; import-only profiles compose it with the controlled vocabularies and framework mappings needed for a particular use case. Together, STONES and STONEWORK form a composable semantic stack for AI-driven cyber threat intelligence analysis.
 
 STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or CIS.
 
@@ -41,17 +41,19 @@ Both NIST SP 800-53 and CIS Controls now carry real, materialized `stonework:mit
 
 ### 1. Download
 
-Download the STONEWORK ontology file:
+Choose the smallest ontology entry point that fits the use case:
 
 ```
-ontologies/stonework.ttl
+ontologies/stonework.ttl                         # core vocabulary only
+ontologies/profiles/stonework-stix.ttl           # core + categories + STIX mapping
+ontologies/profiles/stonework-full.ttl           # all bundled mappings
 ```
 
-STONEWORK treats STONES and the other CTI framework ontologies (ATT&CK, CAPEC, CWE, CVE, CPE, ...) as peer reference vocabularies rather than ontologies it imports — load whichever ones you need alongside it.
+STONEWORK treats STONES and the other CTI framework ontologies (ATT&CK, CAPEC, CWE, CVE, CPE, ...) as peer reference vocabularies. The profile ontologies declare a dependable import closure without adding vocabulary of their own. External framework datasets remain separately loadable peer graphs.
 
 ### 2. Load into a triplestore
 
-Load both `stones-merged.ttl` (from the STONES repo) and `stonework.ttl` into any OWL-compatible triplestore:
+Load the selected entry point and any external source datasets, such as `stones-merged.ttl` from the STONES repo, into an OWL-compatible triplestore:
 [AllegroGraph](https://allegrograph.com) · [Stardog](https://stardog.com) · [GraphDB](https://graphdb.ontotext.com) · [Apache Jena / Fuseki](https://jena.apache.org)
 
 ### 3. Verify with SPARQL
@@ -98,7 +100,10 @@ Run the ontology checks directly at any time with:
 
 ```bash
 python3 tools/check-ontology.py
+python3 tools/check-shacl.py
 ```
+
+The first command parses every Turtle file and checks high-value OWL integrity rules. The second executes the SHACL profile in `ontologies/shapes/stonework-shapes.ttl` with the repository's bundled RDF4J runtime, accepting a conforming fixture and proving that a non-conforming fixture is rejected.
 
 **What the hook does on each commit:**
 - Canonicalizes all staged `.ttl` files via rdf-toolkit (alphabetical prefixes, tab indentation, consistent triple ordering) so diffs reflect content changes, not style noise

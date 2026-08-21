@@ -1,0 +1,29 @@
+name: Ontology validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Check Turtle and OWL integrity
+        run: python3 tools/check-ontology.py
+
+      - name: Check SHACL constraints
+        run: python3 tools/check-shacl.py

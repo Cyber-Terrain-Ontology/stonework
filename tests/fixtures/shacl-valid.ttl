@@ -1,0 +1,102 @@
+@prefix example: <https://example.org/> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:indicator
+	a stonework:Indicator ;
+	stonework:confidence 85 ;
+	.
+
+example:vulnerability
+	a stonework:Vulnerability ;
+	stonework:cvssBaseScore 9.8 ;
+	stonework:epssScore 0.42 ;
+	stonework:isKnownExploited true ;
+	.
+
+example:epssObservation
+	a stonework:MetricObservation ;
+	stonework:hasProvenance example:epssFeed ;
+	stonework:metricFor example:vulnerability ;
+	stonework:metricType stonework:metricEpssScore ;
+	stonework:metricValue 0.42 ;
+	stonework:modelVersion "2026.1" ;
+	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
+	.
+
+example:epssFeed
+	a stonework:Feed ;
+	.
+
+example:likelihood
+	a stonework:Likelihood ;
+	stonework:likelihoodScore 0.6 ;
+	.
+
+example:location
+	a stonework:Location ;
+	stonework:latitude 40.7128 ;
+	stonework:longitude -74.0060 ;
+	.
+
+example:observation
+	a stonework:SecurityObservation ;
+	stonework:firstSeen "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
+	.
+
+example:certificate
+	a stonework:Certificate ;
+	stonework:certValidNotBefore "2026-01-01T00:00:00Z"^^xsd:dateTime ;
+	stonework:certValidNotAfter "2027-01-01T00:00:00Z"^^xsd:dateTime ;
+	.
+
+example:activity
+	a stonework:CyberActivity ;
+	stonework:startedAtTime "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+	stonework:endedAtTime "2026-08-20T10:05:00Z"^^xsd:dateTime ;
+	.
+
+example:service
+	a stonework:NetworkService ;
+	stonework:port "443"^^xsd:unsignedShort ;
+	.
+
+example:address
+	a stonework:IPAddress ;
+	stonework:ipVersion 4 ;
+	.
+
+example:hash
+	a stonework:Hash ;
+	stonework:hashAlgorithm "SHA-256" ;
+	stonework:hashValue "dffd6021bb2bd33e0f47df5fcfe00d61010a3f9a8a70d1fc8ad2e72f15f5f65f" ;
+	.
+
+example:domain
+	a stonework:Domain ;
+	stonework:registrationDate "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+	.
+
+example:actor
+	a stonework:ThreatActor ;
+	stonework:hasRoleAssignment example:sponsorAssignment ;
+	.
+
+example:campaign
+	a stonework:Campaign ;
+	.
+
+example:roleSource
+	a stonework:Publication ;
+	.
+
+example:sponsorAssignment
+	a stonework:RoleAssignment ;
+	stonework:assignedRole stonework:threatActorRoleSponsor ;
+	stonework:hasProvenance example:roleSource ;
+	stonework:roleContext example:campaign ;
+	stonework:rolePlayer example:actor ;
+	stonework:validFrom "2026-01-01T00:00:00Z"^^xsd:dateTime ;
+	stonework:validUntil "2026-12-31T23:59:59Z"^^xsd:dateTime ;
+	.

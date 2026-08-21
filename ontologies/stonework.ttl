@@ -707,6 +707,21 @@ stonework:MalwareType
 	skos:scopeNote "Instances (e.g., stonework:Ransomware, stonework:Trojan) are assigned via stonework:categorizedBy. A malware object may carry multiple types. The skos:notation value gives the STIX 2.1 wire-format string for aspirational round-trip export."@en ;
 	.
 
+stonework:MetricObservation
+	a owl:Class ;
+	rdfs:subClassOf stonework:QualifiedAssertion ;
+	skos:definition "A qualified, time-stamped metric value about a cyber entity, carrying its metric type, source provenance, and optional calculation-model version."@en ;
+	skos:prefLabel "Metric Observation"@en ;
+	skos:scopeNote "Use for values that change over time or differ by source, including EPSS probability, KEV membership, confidence, likelihood, and risk scores. Direct datatype properties remain convenience projections for consumers that need a single current value."@en ;
+	.
+
+stonework:MetricType
+	a owl:Class ;
+	rdfs:subClassOf stonework:Category ;
+	skos:definition "A controlled classification identifying the meaning and scale of a qualified metric observation."@en ;
+	skos:prefLabel "Metric Type"@en ;
+	.
+
 stonework:Mitigation
 	a owl:Class ;
 	rdfs:subClassOf stonework:Countermeasure ;
@@ -894,6 +909,14 @@ stonework:Publication
 	skos:prefLabel "Publication" ;
 	.
 
+stonework:QualifiedAssertion
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A record that qualifies an assertion or relationship with provenance, time, and other context that cannot be represented by an unqualified binary property or scalar value."@en ;
+	skos:prefLabel "Qualified Assertion"@en ;
+	skos:scopeNote "Subclasses provide the assertion-specific structure. Use direct properties as query-friendly projections when their loss of source, time, or relationship context is acceptable."@en ;
+	.
+
 stonework:Ransomware
 	a
 		owl:NamedIndividual ,
@@ -916,6 +939,20 @@ stonework:Registry
 	rdfs:subClassOf stonework:DigitalArtifact ;
 	skos:definition "Describes elements within the Windows configuration Registry system." ;
 	skos:prefLabel "Registry" ;
+	.
+
+stonework:RegistryKey
+	a owl:Class ;
+	rdfs:subClassOf stonework:Registry ;
+	skos:definition "A named key in a Windows Registry hierarchy that may contain subordinate keys and registry values."@en ;
+	skos:prefLabel "Registry Key"@en ;
+	.
+
+stonework:RegistryValue
+	a owl:Class ;
+	rdfs:subClassOf stonework:Registry ;
+	skos:definition "A named or default value stored beneath a Windows Registry key, including its value type and literal data."@en ;
+	skos:prefLabel "Registry Value"@en ;
 	.
 
 stonework:RemoteAccessTrojan
@@ -978,6 +1015,14 @@ stonework:Role
 	skos:definition "A function, capacity, or part played by an entity in a specific context, relationship, or operation." ;
 	skos:prefLabel "Role" ;
 	skos:scopeNote "Roles are typically more stable and relational than Categories. An entity can play multiple Roles. Aligns with patterns in BFO, CCO, and D3FEND (e.g., functional roles of infrastructure or actors)."@en ;
+	.
+
+stonework:RoleAssignment
+	a owl:Class ;
+	rdfs:subClassOf stonework:QualifiedAssertion ;
+	skos:definition "A qualified record assigning a Role to an entity within a particular campaign, operation, organization, or other context."@en ;
+	skos:prefLabel "Role Assignment"@en ;
+	skos:scopeNote "Create separate assignments when the same entity plays different roles in different contexts or time intervals. The assignment can infer the context-free stonework:playsRole projection through the declared property chain."@en ;
 	.
 
 stonework:Rootkit
@@ -1473,6 +1518,17 @@ stonework:asNumber
 	skos:prefLabel "asNumber"@en ;
 	.
 
+stonework:assignedRole
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:RoleAssignment ;
+	rdfs:range stonework:Role ;
+	skos:definition "The Role assigned by a qualified RoleAssignment."@en ;
+	skos:prefLabel "assignedRole"@en ;
+	.
+
 stonework:assessmentOf
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Assessment ;
@@ -1714,7 +1770,7 @@ stonework:confidence
 	rdfs:range xsd:integer ;
 	skos:definition "An integer score from 0 to 100 representing confidence in the accuracy of an assertion or the expected outcome of a Hypothesis."@en ;
 	skos:prefLabel "confidence" ;
-	skos:scopeNote "Domain is intentionally unset because the property is shared by Hypotheses and STIX-derived intelligence objects. Matches the STIX 2.1 confidence scale for round-tripping."@en ;
+	skos:scopeNote "Domain is intentionally unset because the property is shared by Hypotheses and STIX-derived intelligence objects. Matches the STIX 2.1 confidence scale for round-tripping. For source- and time-qualified confidence history, use stonework:MetricObservation with stonework:metricConfidence."@en ;
 	.
 
 stonework:consistsOf
@@ -2191,6 +2247,7 @@ stonework:epssScore
 	rdfs:range xsd:decimal ;
 	skos:definition "The EPSS (Exploit Prediction Scoring System) score (0.0–1.0), estimating the probability of exploitation in the wild within 30 days."@en ;
 	skos:prefLabel "epssScore"@en ;
+	skos:scopeNote "Convenience projection for a current score. Preserve dated values, source, and EPSS model version with stonework:MetricObservation and stonework:metricEpssScore."@en ;
 	.
 
 stonework:evidencedBy
@@ -2589,6 +2646,15 @@ stonework:hasMember
 	skos:prefLabel "hasMember"@en ;
 	.
 
+stonework:hasMetricObservation
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberEntity ;
+	rdfs:range stonework:MetricObservation ;
+	owl:inverseOf stonework:metricFor ;
+	skos:definition "Relates an entity to a source- and time-qualified metric observation about it."@en ;
+	skos:prefLabel "hasMetricObservation"@en ;
+	.
+
 stonework:hasNetworkAddress
 	a owl:ObjectProperty ;
 	rdfs:domain [
@@ -2664,10 +2730,16 @@ stonework:hasProductInstallation
 
 stonework:hasProvenance
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:IntelligenceProduct ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:IntelligenceProduct
+			stonework:QualifiedAssertion
+		) ;
+	] ;
 	rdfs:range stonework:Provenance ;
 	owl:inverseOf stonework:provenanceOf ;
-	skos:definition "Relates an IntelligenceProduct to a Provenance record documenting its origin or evidentiary basis."@en ;
+	skos:definition "Relates an IntelligenceProduct or QualifiedAssertion to a Provenance record documenting its origin or evidentiary basis."@en ;
 	skos:prefLabel "hasProvenance"@en ;
 	.
 
@@ -2684,6 +2756,15 @@ stonework:hasRisk
 	rdfs:range stonework:Risk ;
 	skos:definition "Relates an asset or organization to an assessed Risk."@en ;
 	skos:prefLabel "hasRisk"@en ;
+	.
+
+stonework:hasRoleAssignment
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberEntity ;
+	rdfs:range stonework:RoleAssignment ;
+	owl:inverseOf stonework:rolePlayer ;
+	skos:definition "Relates an entity to a qualified assignment of a Role in a specific context."@en ;
+	skos:prefLabel "hasRoleAssignment"@en ;
 	.
 
 stonework:hasSignature
@@ -2977,6 +3058,7 @@ stonework:isKnownExploited
 	rdfs:range xsd:boolean ;
 	skos:definition "Indicates whether this vulnerability appears in CISA's Known Exploited Vulnerabilities (KEV) catalog."@en ;
 	skos:prefLabel "isKnownExploited"@en ;
+	skos:scopeNote "Convenience projection for a current catalog snapshot. A false value is only meaningful as of a specific time; preserve dated membership evidence with stonework:MetricObservation and stonework:metricKevMembership."@en ;
 	.
 
 stonework:isPacked
@@ -3080,6 +3162,7 @@ stonework:likelihoodScore
 	rdfs:range xsd:decimal ;
 	skos:definition "A numeric score (0.0–1.0) representing the estimated probability of occurrence."@en ;
 	skos:prefLabel "likelihoodScore"@en ;
+	skos:scopeNote "Convenience projection for a current value. Use stonework:MetricObservation with stonework:metricLikelihoodScore when source, assessment time, or model version must be preserved."@en ;
 	.
 
 stonework:linkedTo
@@ -3188,6 +3271,40 @@ stonework:mentions
 	skos:prefLabel "mentions" ;
 	.
 
+stonework:metricFor
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range stonework:CyberEntity ;
+	owl:inverseOf stonework:hasMetricObservation ;
+	skos:definition "The entity whose value is recorded by a MetricObservation."@en ;
+	skos:prefLabel "metricFor"@en ;
+	.
+
+stonework:metricType
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range stonework:MetricType ;
+	skos:definition "Identifies the meaning and scale of the recorded metric value."@en ;
+	skos:prefLabel "metricType"@en ;
+	.
+
+stonework:metricValue
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range rdfs:Literal ;
+	skos:definition "The typed literal value recorded by a MetricObservation."@en ;
+	skos:prefLabel "metricValue"@en ;
+	.
+
 stonework:mimeType
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:File ;
@@ -3219,6 +3336,17 @@ stonework:mitigatesVulnerability
 	rdfs:range stonework:Vulnerability ;
 	skos:definition "A CourseOfAction (patch, workaround, compensating control) addresses this Vulnerability. Distinct from stonework:mitigates (Countermeasure → AttackPattern)."@en ;
 	skos:prefLabel "mitigatesVulnerability"@en ;
+	.
+
+stonework:modelVersion
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range xsd:string ;
+	skos:definition "The version identifier of the scoring, prediction, or assessment model that produced a metric observation."@en ;
+	skos:prefLabel "modelVersion"@en ;
 	.
 
 stonework:modified
@@ -3266,6 +3394,17 @@ stonework:objective
 	rdfs:range xsd:string ;
 	skos:definition "A description of the strategic goal or objective being pursued."@en ;
 	skos:prefLabel "objective"@en ;
+	.
+
+stonework:observedAt
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The date and time at which a metric observation was made or calculated."@en ;
+	skos:prefLabel "observedAt"@en ;
 	.
 
 stonework:observedIn
@@ -3457,8 +3596,13 @@ stonework:playbookVersion
 stonework:playsRole
 	a owl:ObjectProperty ;
 	rdfs:range stonework:Role ;
-	skos:definition "The Role this entity plays in a given context or operation."@en ;
+	owl:propertyChainAxiom (
+		stonework:hasRoleAssignment
+		stonework:assignedRole
+	) ;
+	skos:definition "A context-free projection of a Role played by an entity."@en ;
 	skos:prefLabel "playsRole" ;
+	skos:scopeNote "Use stonework:RoleAssignment with stonework:roleContext when the campaign, operation, organization, provenance, or time interval matters. The qualified pattern infers this direct projection through a property chain."@en ;
 	.
 
 stonework:port
@@ -3613,8 +3757,14 @@ stonework:protects
 stonework:provenanceOf
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Provenance ;
-	rdfs:range stonework:IntelligenceProduct ;
-	skos:definition "Relates a Provenance record to the IntelligenceProduct whose origin or evidentiary basis it documents."@en ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:IntelligenceProduct
+			stonework:QualifiedAssertion
+		) ;
+	] ;
+	skos:definition "Relates a Provenance record to the IntelligenceProduct or QualifiedAssertion whose origin or evidentiary basis it documents."@en ;
 	skos:prefLabel "provenanceOf"@en ;
 	.
 
@@ -3684,14 +3834,15 @@ stonework:registeredWith
 stonework:registrationDate
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Domain ;
-	rdfs:range xsd:date ;
-	skos:definition "The date the domain was first registered."@en ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The date and time when the domain was first registered."@en ;
 	skos:prefLabel "registrationDate"@en ;
+	skos:scopeNote "Uses xsd:dateTime so source-native registration timestamps, including dns:registeredOn, can map without losing precision."@en ;
 	.
 
 stonework:registryKeyPath
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:Registry ;
+	rdfs:domain stonework:RegistryKey ;
 	rdfs:range xsd:string ;
 	skos:definition "The full registry key path (e.g. HKEY_LOCAL_MACHINE\\SOFTWARE\\...)."@en ;
 	skos:prefLabel "registryKeyPath"@en ;
@@ -3699,15 +3850,16 @@ stonework:registryKeyPath
 
 stonework:registryValueData
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:Registry ;
-	rdfs:range xsd:string ;
-	skos:definition "The data stored in the registry value."@en ;
+	rdfs:domain stonework:RegistryValue ;
+	rdfs:range rdfs:Literal ;
+	skos:definition "The typed literal data stored in the registry value."@en ;
 	skos:prefLabel "registryValueData"@en ;
+	skos:scopeNote "The broad literal range preserves string, numeric, multi-string, and binary-valued source representations. Use stonework:registryValueType to record the Windows registry type explicitly."@en ;
 	.
 
 stonework:registryValueName
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:Registry ;
+	rdfs:domain stonework:RegistryValue ;
 	rdfs:range xsd:string ;
 	skos:definition "The name of the registry value."@en ;
 	skos:prefLabel "registryValueName"@en ;
@@ -3715,7 +3867,7 @@ stonework:registryValueName
 
 stonework:registryValueType
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:Registry ;
+	rdfs:domain stonework:RegistryValue ;
 	rdfs:range xsd:string ;
 	skos:definition "The type of the registry value (e.g. REG_SZ, REG_DWORD, REG_BINARY)."@en ;
 	skos:prefLabel "registryValueType"@en ;
@@ -3838,6 +3990,36 @@ stonework:riskScore
 	rdfs:range xsd:decimal ;
 	skos:definition "A numeric risk score expressing combined impact and likelihood."@en ;
 	skos:prefLabel "riskScore"@en ;
+	skos:scopeNote "Convenience projection for a current score. Use stonework:MetricObservation with stonework:metricRiskScore when methodology, source, model version, or assessment time must be preserved."@en ;
+	.
+
+stonework:roleContext
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:RoleAssignment ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:CyberActivity
+			stonework:CyberEntity
+		) ;
+	] ;
+	skos:definition "The campaign, operation, organization, or other context in which a RoleAssignment applies."@en ;
+	skos:prefLabel "roleContext"@en ;
+	.
+
+stonework:rolePlayer
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:RoleAssignment ;
+	rdfs:range stonework:CyberEntity ;
+	owl:inverseOf stonework:hasRoleAssignment ;
+	skos:definition "The entity that bears the Role in a qualified RoleAssignment."@en ;
+	skos:prefLabel "rolePlayer"@en ;
 	.
 
 stonework:ruleContent
@@ -4341,6 +4523,28 @@ stonework:variantOf
 	] ;
 	skos:definition "Relates a MalwareFamily or MalwareSample to another family or sample from which it is derived, modified, or evolved, indicating shared code lineage, forked development, or deliberate repackaging."@en ;
 	skos:prefLabel "variantOf" ;
+	.
+
+stonework:validFrom
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:QualifiedAssertion ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The start of the interval during which a qualified assertion is considered applicable."@en ;
+	skos:prefLabel "validFrom"@en ;
+	.
+
+stonework:validUntil
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:QualifiedAssertion ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The end of the interval during which a qualified assertion is considered applicable."@en ;
+	skos:prefLabel "validUntil"@en ;
 	.
 
 stonework:vendorOf
