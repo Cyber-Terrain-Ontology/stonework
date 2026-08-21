@@ -31,6 +31,10 @@ killchain:ActionsOnObjectives
 		stonework:KillChainPhase
 		;
 	skos:definition "The adversary achieves their intended goals (data exfiltration, data destruction, encryption for ransom, etc.)."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:killChainPhaseScheme
+		;
 	skos:prefLabel "Actions on Objectives"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "actions-on-objectives" ;
@@ -43,6 +47,10 @@ killchain:CommandAndControl
 		stonework:KillChainPhase
 		;
 	skos:definition "The adversary establishes a command channel to remotely control the compromised system."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:killChainPhaseScheme
+		;
 	skos:prefLabel "Command and Control"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "command-and-control" ;
@@ -55,6 +63,10 @@ killchain:Delivery
 		stonework:KillChainPhase
 		;
 	skos:definition "The adversary transmits the weaponized payload to the target (e.g., spear-phishing email, USB drop, drive-by download)."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:killChainPhaseScheme
+		;
 	skos:prefLabel "Delivery"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "delivery" ;
@@ -67,6 +79,10 @@ killchain:Exploitation
 		stonework:KillChainPhase
 		;
 	skos:definition "The adversary triggers a vulnerability or exploit on the target system to execute code."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:killChainPhaseScheme
+		;
 	skos:prefLabel "Exploitation"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "exploitation" ;
@@ -79,6 +95,10 @@ killchain:Installation
 		stonework:KillChainPhase
 		;
 	skos:definition "The adversary installs malware on the target system to establish persistence."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:killChainPhaseScheme
+		;
 	skos:prefLabel "Installation"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "installation" ;
@@ -91,6 +111,10 @@ killchain:Reconnaissance
 		stonework:KillChainPhase
 		;
 	skos:definition "The adversary gathers information to identify and select targets (e.g., public source reconnaissance, phishing email harvesting)."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:killChainPhaseScheme
+		;
 	skos:prefLabel "Reconnaissance"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "reconnaissance" ;
@@ -103,6 +127,10 @@ killchain:Weaponization
 		stonework:KillChainPhase
 		;
 	skos:definition "The adversary couples a remote access trojan with an exploit into a deliverable payload (e.g., creating a malicious PDF or Word document)."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:killChainPhaseScheme
+		;
 	skos:prefLabel "Weaponization"@en ;
 	stones:killChainName "lockheed-martin-cyber-kill-chain" ;
 	stones:phaseName "weaponization" ;

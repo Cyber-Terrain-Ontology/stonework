@@ -298,6 +298,21 @@ def main() -> int:
     category = STONEWORK + "Category"
     category_scheme = STONEWORK + "categoryScheme"
 
+    def class_schemes(subject):
+        schemes = set()
+        for superclass in values[(subject, RDFS + "subClassOf")]:
+            if superclass[0] != "bnode":
+                continue
+            restriction = superclass[1]
+            if ("iri", SKOS + "inScheme") not in values[(restriction, OWL + "onProperty")]:
+                continue
+            schemes.update(
+                obj[1]
+                for obj in values[(restriction, OWL + "hasValue")]
+                if obj[0] == "iri"
+            )
+        return schemes
+
     for subject, subject_types in sorted(types.items()):
         if concept_scheme not in subject_types or not subject.startswith(STONEWORK):
             continue
@@ -314,18 +329,7 @@ def main() -> int:
         if subject == category or category not in ancestors(subject):
             continue
 
-        schemes = set()
-        for superclass in values[(subject, RDFS + "subClassOf")]:
-            if superclass[0] != "bnode":
-                continue
-            restriction = superclass[1]
-            if ("iri", SKOS + "inScheme") not in values[(restriction, OWL + "onProperty")]:
-                continue
-            schemes.update(
-                obj[1]
-                for obj in values[(restriction, OWL + "hasValue")]
-                if obj[0] == "iri" and obj[1] != category_scheme
-            )
+        schemes = class_schemes(subject) - {category_scheme}
 
         if not schemes:
             location = ", ".join(sorted(sources.get(subject, ())))
@@ -341,6 +345,33 @@ def main() -> int:
                     f"{describe(subject)} references {describe(scheme)} as its concept scheme, "
                     "but that resource is not a skos:ConceptScheme"
                 )
+
+    for subject, subject_types in sorted(types.items()):
+        if named_individual not in subject_types:
+            continue
+        # Compatibility aliases point at the canonical vocabulary individual;
+        # require materialized membership on the canonical resource instead.
+        if values[(subject, OWL + "sameAs")]:
+            continue
+
+        required_schemes = set()
+        for subject_type in subject_types - {named_individual}:
+            if category not in ancestors(subject_type):
+                continue
+            for ancestor in ancestors(subject_type):
+                required_schemes.update(class_schemes(ancestor))
+
+        materialized_schemes = {
+            obj[1] for obj in values[(subject, SKOS + "inScheme")] if obj[0] == "iri"
+        }
+        missing_schemes = required_schemes - materialized_schemes
+        if missing_schemes:
+            rendered = ", ".join(describe(scheme) for scheme in sorted(missing_schemes))
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) must explicitly materialize skos:inScheme "
+                f"for {rendered}"
+            )
 
     for subject in sorted(sources):
         definitions = values[(subject, SKOS + "definition")]

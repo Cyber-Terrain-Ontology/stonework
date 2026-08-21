@@ -47,6 +47,10 @@ stonework:Adware
 		stonework:MalwareType
 		;
 	skos:definition "Software that automatically displays or downloads advertising material, often without user consent."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "adware" ;
 	skos:prefLabel "Adware"@en ;
 	.
@@ -115,6 +119,10 @@ stonework:Backdoor
 		stonework:MalwareType
 		;
 	skos:definition "Malware that provides covert, persistent remote access to a compromised system, bypassing normal authentication."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "backdoor" ;
 	skos:prefLabel "Backdoor"@en ;
 	.
@@ -142,6 +150,10 @@ stonework:Bootkit
 		stonework:MalwareType
 		;
 	skos:definition "Malware that infects the boot sector or master boot record to load before the operating system, enabling deep persistence and defense evasion."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "bootkit" ;
 	skos:prefLabel "Bootkit"@en ;
 	.
@@ -152,6 +164,10 @@ stonework:Bot
 		stonework:MalwareType
 		;
 	skos:definition "Malware that connects an infected host to a command-and-control network, enabling remote tasking as part of a botnet."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "bot" ;
 	skos:prefLabel "Bot"@en ;
 	.
@@ -294,6 +310,10 @@ stonework:DDoS
 		stonework:MalwareType
 		;
 	skos:definition "Malware designed to conduct or participate in distributed denial-of-service attacks against target systems or networks."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "ddos" ;
 	skos:prefLabel "DDoS Malware"@en ;
 	.
@@ -373,6 +393,10 @@ stonework:Downloader
 		stonework:MalwareType
 		;
 	skos:definition "Malware whose primary function is to download and execute additional malicious payloads from a remote source."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "downloader" ;
 	skos:prefLabel "Downloader"@en ;
 	.
@@ -383,6 +407,10 @@ stonework:Dropper
 		stonework:MalwareType
 		;
 	skos:definition "Malware that carries and installs one or more secondary payloads onto a target system, often unpacking them from within itself."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "dropper" ;
 	skos:prefLabel "Dropper"@en ;
 	.
@@ -426,6 +454,10 @@ stonework:ExploitKit
 		stonework:MalwareType
 		;
 	skos:definition "A toolkit that automates exploitation of client-side vulnerabilities to deliver malware, typically via drive-by download from compromised or malicious web pages."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "exploit-kit" ;
 	skos:prefLabel "Exploit Kit"@en ;
 	.
@@ -605,6 +637,10 @@ stonework:Keylogger
 		stonework:MalwareType
 		;
 	skos:definition "Malware that records keystrokes on an infected system to capture credentials, sensitive data, or communications."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "keylogger" ;
 	skos:prefLabel "Keylogger"@en ;
 	.
@@ -937,6 +973,10 @@ stonework:Ransomware
 		stonework:MalwareType
 		;
 	skos:definition "Malware that encrypts or locks victim data or systems and demands payment for restoration of access."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "ransomware" ;
 	skos:prefLabel "Ransomware"@en ;
 	.
@@ -975,6 +1015,10 @@ stonework:RemoteAccessTrojan
 		stonework:MalwareType
 		;
 	skos:definition "Malware providing covert remote control of an infected host, typically including capabilities such as file access, screen capture, keylogging, and command execution."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "remote-access-trojan" ;
 	skos:prefLabel "Remote Access Trojan"@en ;
 	.
@@ -992,6 +1036,10 @@ stonework:ResourceExploitation
 		stonework:MalwareType
 		;
 	skos:definition "Malware that abuses the computational resources of an infected host, such as for cryptocurrency mining or proxying network traffic."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "resource-exploitation" ;
 	skos:prefLabel "Resource Exploitation"@en ;
 	.
@@ -1019,6 +1067,10 @@ stonework:RogueSecuritySoftware
 		stonework:MalwareType
 		;
 	skos:definition "Malware that masquerades as legitimate security software to deceive users into paying for fake threat removal or granting elevated privileges."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "rogue-security-software" ;
 	skos:prefLabel "Rogue Security Software"@en ;
 	.
@@ -1045,6 +1097,10 @@ stonework:Rootkit
 		stonework:MalwareType
 		;
 	skos:definition "Malware that conceals itself and other malicious software by subverting operating system or hypervisor mechanisms, typically to maintain privileged persistence."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "rootkit" ;
 	skos:prefLabel "Rootkit"@en ;
 	.
@@ -1063,6 +1119,10 @@ stonework:ScreenCapture
 		stonework:MalwareType
 		;
 	skos:definition "Malware that periodically or continuously captures screenshots of the victim's display and exfiltrates them to an attacker."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "screen-capture" ;
 	skos:prefLabel "Screen Capture"@en ;
 	.
@@ -1122,6 +1182,10 @@ stonework:Spyware
 		stonework:MalwareType
 		;
 	skos:definition "Malware that covertly monitors user activity, collects personal or sensitive information, and transmits it to a remote party."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "spyware" ;
 	skos:prefLabel "Spyware"@en ;
 	.
@@ -1217,6 +1281,10 @@ stonework:Trojan
 		stonework:MalwareType
 		;
 	skos:definition "Malware disguised as or bundled with legitimate software to deceive users into executing it, enabling a range of malicious payloads."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "trojan" ;
 	skos:prefLabel "Trojan"@en ;
 	.
@@ -1234,6 +1302,10 @@ stonework:UnknownMalware
 		stonework:MalwareType
 		;
 	skos:definition "The malware type has not been determined or cannot be classified into a known category."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "unknown" ;
 	skos:prefLabel "Unknown Malware Type"@en ;
 	.
@@ -1283,6 +1355,10 @@ stonework:Virus
 		stonework:MalwareType
 		;
 	skos:definition "Malware that replicates by inserting copies of itself into other executable files or documents, spreading when those files are executed or opened."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "virus" ;
 	skos:prefLabel "Virus"@en ;
 	.
@@ -1318,6 +1394,10 @@ stonework:Webshell
 		stonework:MalwareType
 		;
 	skos:definition "Malware deployed on a web server that provides remote command execution via HTTP requests, enabling persistent access through the web application layer."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "webshell" ;
 	skos:prefLabel "Webshell"@en ;
 	.
@@ -1328,6 +1408,10 @@ stonework:Wiper
 		stonework:MalwareType
 		;
 	skos:definition "Malware designed to irreversibly destroy data or render systems inoperable, typically used for sabotage or to obscure attacker activity."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "wiper" ;
 	skos:prefLabel "Wiper"@en ;
 	.
@@ -1338,6 +1422,10 @@ stonework:Worm
 		stonework:MalwareType
 		;
 	skos:definition "Self-replicating malware that spreads across networks or systems without requiring user interaction or a host file to attach to."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "worm" ;
 	skos:prefLabel "Worm"@en ;
 	.
