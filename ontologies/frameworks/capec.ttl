@@ -1,3 +1,5 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
 @prefix attack: <https://cyberterrain.org/ns/frameworks/attack#> .
 @prefix capec: <https://cyberterrain.org/ns/frameworks/capec#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -11,6 +13,9 @@
 	a owl:Ontology ;
 	rdfs:label "CAPEC Framework Ontology"@en ;
 	rdfs:comment "OWL vocabulary for MITRE Common Attack Pattern Enumeration and Classification (CAPEC) data as represented in the CTI Encyclopedia."@en ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/capec/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
 	.
 
 capec:AttackPattern

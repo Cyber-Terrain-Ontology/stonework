@@ -76,6 +76,24 @@ Load the CTI reference datasets (ATT&CK, CAPEC, CVE, CWE, NIST SP 800-53, CIS) a
 
 ---
 
+## Modeling convention: OWL classes and SKOS concepts
+
+Use an OWL class for an intrinsic kind of thing whose instances should participate in class reasoning—for example, `stonework:Malware`, `stonework:ThreatActor`, or `stonework:Vulnerability`. Use a SKOS concept for a controlled vocabulary value that classifies or qualifies something—for example, `stonework:Ransomware`, a named individual of `stonework:MalwareType`. A ransomware sample is categorized by that concept; the concept is not an OWL subclass of Malware.
+
+`stonework:categoryScheme` is the umbrella scheme for every STONEWORK category. Narrower schemes such as `stonework:malwareTypeScheme`, `stonework:incidentStatusScheme`, and `stonework:threatActorRoleScheme` organize individual vocabularies. Category subclasses carry `skos:inScheme` value restrictions, so an OWL reasoner infers both umbrella and vocabulary-specific scheme membership for their instances without treating a vocabulary class as a SKOS concept.
+
+```turtle
+ex:sample-1
+    a stonework:MalwareSample ;
+    stonework:categorizedBy stonework:Ransomware .
+
+stonework:Ransomware
+    a stonework:MalwareType ;
+    skos:notation "ransomware" .
+```
+
+---
+
 ## Developer Setup
 
 ### Clone the repo
@@ -108,10 +126,14 @@ The first command parses every Turtle file and checks high-value OWL integrity r
 **What the hook does on each commit:**
 - Canonicalizes all staged `.ttl` files via rdf-toolkit (alphabetical prefixes, tab indentation, consistent triple ordering) so diffs reflect content changes, not style noise
 - Strips Protégé's injected default `:` prefix when present
-- Parses every Turtle file and rejects common OWL integrity errors, including accidental domain/range intersections, incompatible inverse-property endpoints, property-kind collisions, class/individual punning, conflicting definitions, and duplicate controlled-vocabulary labels
+- Parses every Turtle file and rejects common OWL integrity errors, including accidental domain/range intersections, incompatible inverse-property endpoints, property-kind collisions, class/individual punning, conflicting definitions, duplicate controlled-vocabulary labels, unresolved imports, inconsistent version metadata, and incomplete category-scheme declarations
 - Sets `ontologies/catalog-v001.xml` read-only so Protégé cannot overwrite it
 
 **Requirements:** Java 11+ and Python 3 on `PATH`.
+
+### Ontology imports and versions
+
+Import the stable ontology IRI, such as `https://cyberterrain.org/ns/frameworks/cve`. Each ontology also declares an `owl:versionIRI` for consumers that need to pin an exact vocabulary release. The local XML catalog resolves both forms. Every bundled framework module imports the STONEWORK core directly and declares any additional bundled dependency, so a module can be loaded independently as well as through a profile.
 
 ---
 

@@ -19,21 +19,42 @@
 
 stonework:AccountType
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:accountTypeScheme ;
+		]
+		;
 	skos:definition "A classification of a user account by its authentication or deployment context."@en ;
 	skos:prefLabel "Account Type"@en ;
 	.
 
 stonework:FalsePositiveRate
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:falsePositiveRateScheme ;
+		]
+		;
 	skos:definition "An ordinal classification of the expected false-positive frequency of a detection rule."@en ;
 	skos:prefLabel "False Positive Rate"@en ;
 	.
 
 stonework:HypothesisStatus
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:hypothesisStatusScheme ;
+		]
+		;
 	skos:definition "A classification of a Hypothesis's position in the confirm/refute lifecycle." ;
 	skos:prefLabel "Hypothesis Status" ;
 	skos:scopeNote "Applied via stonework:hasHypothesisStatus to Hypothesis individuals. Named individuals: pending (not yet tested), confirmed (actual result matched the prediction), refuted (actual result did not match the prediction)."@en ;
@@ -41,28 +62,56 @@ stonework:HypothesisStatus
 
 stonework:ImpactLevel
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:impactLevelScheme ;
+		]
+		;
 	skos:definition "An ordinal classification of the magnitude of a security impact."@en ;
 	skos:prefLabel "Impact Level"@en ;
 	.
 
 stonework:ImpactType
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:impactTypeScheme ;
+		]
+		;
 	skos:definition "A classification of the security dimension or consequence affected by an impact."@en ;
 	skos:prefLabel "Impact Type"@en ;
 	.
 
 stonework:IncidentStatus
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:incidentStatusScheme ;
+		]
+		;
 	skos:definition "A classification of an incident's position in the response lifecycle."@en ;
 	skos:prefLabel "Incident Status"@en ;
 	.
 
 stonework:Industry
 	a owl:Class ;
-	rdfs:subClassOf stonework:Sector ;
+	rdfs:subClassOf
+		stonework:Sector ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:industryScheme ;
+		]
+		;
 	skos:definition "A specific branch of economic activity or commercial sector (typically modeled using NAICS or similar codes)."@en ;
 	skos:prefLabel "Industry" ;
 	skos:scopeNote "Examples: Financial Services, Manufacturing, Retail, Pharmaceuticals."@en ;
@@ -70,7 +119,14 @@ stonework:Industry
 
 stonework:InfrastructureType
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:infrastructureTypeScheme ;
+		]
+		;
 	skos:definition "A classification of infrastructure by its operational role or purpose within a cyber operation." ;
 	skos:prefLabel "Infrastructure Type" ;
 	skos:scopeNote "Applied via stonework:categorizedBy to Infrastructure individuals. Covers both adversary-controlled infrastructure (C2, staging, phishing) and defender infrastructure (firewall, workstation). Aligns with the STIX 2.1 infrastructure-type open vocabulary."@en ;
@@ -78,7 +134,14 @@ stonework:InfrastructureType
 
 stonework:KillChainPhase
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:killChainPhaseScheme ;
+		]
+		;
 	skos:definition "A named phase within a kill chain or attack lifecycle framework used to categorize the stage of an offensive or defensive operation."@en ;
 	skos:prefLabel "Kill Chain Phase" ;
 	skos:scopeNote "Applies to both offensive frameworks (Lockheed Martin Cyber Kill Chain, MITRE ATT&CK) and defensive lifecycle models. Used to tag AttackTechniques, Procedures, or Events with their operational phase."@en ;
@@ -86,21 +149,42 @@ stonework:KillChainPhase
 
 stonework:LikelihoodLevel
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:likelihoodLevelScheme ;
+		]
+		;
 	skos:definition "An ordinal classification of the assessed likelihood that a security outcome will occur."@en ;
 	skos:prefLabel "Likelihood Level"@en ;
 	.
 
 stonework:Markings
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:markingScheme ;
+		]
+		;
 	skos:definition "Defines a data handling marking used to restrict or label how data can be shared or handled, such as TLP markings. Referenced by object_marking_refs or granular_markings."@en ;
 	skos:prefLabel "Markings"@en ;
 	.
 
 stonework:Motivation
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:motivationScheme ;
+		]
+		;
 	skos:definition "The reason or driving force behind an adversary's decision to conduct an attack or operation." ;
 	skos:prefLabel "Motivation" ;
 	skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor, Campaign, or Operation individuals. Named individuals cover the STIX 2.1 attack-motivation open vocabulary. Custom motivations may be added as additional individuals."@en ;
@@ -108,7 +192,14 @@ stonework:Motivation
 
 stonework:ProductType
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:productTypeScheme ;
+		]
+		;
 	skos:definition "A classification of a product by its primary functional category within a system or architecture." ;
 	skos:prefLabel "Product Type" ;
 	skos:scopeNote "Applied via stonework:hasProductType to Product individuals. Aligns with CPE component type designations. A product may have more than one type (e.g. an embedded OS is both firmware and operating-system)."@en ;
@@ -116,21 +207,42 @@ stonework:ProductType
 
 stonework:ResourceLevel
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:resourceLevelScheme ;
+		]
+		;
 	skos:definition "A classification of the organizational resources available to a threat actor."@en ;
 	skos:prefLabel "Resource Level"@en ;
 	.
 
 stonework:RiskLevel
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:riskLevelScheme ;
+		]
+		;
 	skos:definition "An ordinal classification of the assessed magnitude of a security risk."@en ;
 	skos:prefLabel "Risk Level"@en ;
 	.
 
 stonework:Sector
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:sectorScheme ;
+		]
+		;
 	skos:definition "A broad division or category of economic activity, infrastructure, or society used for classification and targeting purposes."@en ;
 	skos:prefLabel "Sector"@en ;
 	skos:scopeNote "Can represent both commercial industries and critical infrastructure sectors (e.g., from CISA or NIST frameworks)."@en ;
@@ -138,7 +250,14 @@ stonework:Sector
 
 stonework:SophisticationLevel
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:sophisticationLevelScheme ;
+		]
+		;
 	skos:definition "A classification of a threat actor's assessed technical sophistication."@en ;
 	skos:prefLabel "Sophistication Level"@en ;
 	.
@@ -147,7 +266,12 @@ stonework:ThreatActorRole
 	a owl:Class ;
 	rdfs:subClassOf
 		stonework:Category ,
-		stonework:Role
+		stonework:Role ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:threatActorRoleScheme ;
+		]
 		;
 	skos:definition "A controlled role type describing the function played by a threat actor within a specific operation, campaign, or criminal organization." ;
 	skos:prefLabel "Threat Actor Role" ;
@@ -156,7 +280,14 @@ stonework:ThreatActorRole
 
 stonework:ThreatActorType
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:threatActorTypeScheme ;
+		]
+		;
 	skos:definition "A classification of a threat actor by their organizational form, affiliation, or primary mode of operation." ;
 	skos:prefLabel "Threat Actor Type" ;
 	skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor individuals. A threat actor may have multiple types. Aligns with the STIX 2.1 threat-actor-type open vocabulary."@en ;
@@ -190,6 +321,14 @@ stonework:accountTypeLocal
 	skos:definition "An account managed locally by a host or application."@en ;
 	skos:notation "local" ;
 	skos:prefLabel "Local"@en ;
+	.
+
+stonework:accountTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Account Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of account authentication and deployment contexts."@en ;
+	skos:prefLabel "STONEWORK Account Type Scheme"@en ;
 	.
 
 stonework:accountTypeService
@@ -240,6 +379,14 @@ stonework:falsePositiveRateMedium
 	skos:definition "The rule is expected to generate false positives at a moderate frequency."@en ;
 	skos:notation "medium" ;
 	skos:prefLabel "Medium"@en ;
+	.
+
+stonework:falsePositiveRateScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK False Positive Rate Scheme"@en ;
+	skos:definition "The ordinal controlled vocabulary of expected detection-rule false-positive frequency."@en ;
+	skos:prefLabel "STONEWORK False Positive Rate Scheme"@en ;
 	.
 
 stonework:hasAccountType
@@ -416,6 +563,14 @@ stonework:hypothesisStatusRefuted
 	skos:prefLabel "Refuted"@en ;
 	.
 
+stonework:hypothesisStatusScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Hypothesis Status Scheme"@en ;
+	skos:definition "The controlled vocabulary of hypothesis lifecycle states."@en ;
+	skos:prefLabel "STONEWORK Hypothesis Status Scheme"@en ;
+	.
+
 stonework:impactLevelCatastrophic
 	a
 		owl:NamedIndividual ,
@@ -444,6 +599,14 @@ stonework:impactLevelModerate
 	skos:definition "An impact causing material but manageable harm."@en ;
 	skos:notation "moderate" ;
 	skos:prefLabel "Moderate"@en ;
+	.
+
+stonework:impactLevelScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Impact Level Scheme"@en ;
+	skos:definition "The ordinal controlled vocabulary of security-impact magnitude."@en ;
+	skos:prefLabel "STONEWORK Impact Level Scheme"@en ;
 	.
 
 stonework:impactLevelSevere
@@ -516,6 +679,14 @@ stonework:impactTypeSafety
 	skos:prefLabel "Safety"@en ;
 	.
 
+stonework:impactTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Impact Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of affected security dimensions and consequences."@en ;
+	skos:prefLabel "STONEWORK Impact Type Scheme"@en ;
+	.
+
 stonework:incidentStatusClosed
 	a
 		owl:NamedIndividual ,
@@ -556,6 +727,14 @@ stonework:incidentStatusOpen
 	skos:prefLabel "Open"@en ;
 	.
 
+stonework:incidentStatusScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Incident Status Scheme"@en ;
+	skos:definition "The controlled vocabulary of incident-response lifecycle states."@en ;
+	skos:prefLabel "STONEWORK Incident Status Scheme"@en ;
+	.
+
 stonework:indicator
 	a
 		owl:NamedIndividual ,
@@ -564,6 +743,14 @@ stonework:indicator
 	skos:definition "An assertion that a specific pattern or set of Digital Artifacts is associated with malicious behavior, enabling detection, correlation, and response."@en ;
 	skos:prefLabel "Indicator" ;
 	skos:scopeNote "In STONEWORK, Indicators can be simple (single IOC like a hash or IP) or complex (full STIX patterns combining multiple artifacts and conditions)."@en ;
+	.
+
+stonework:industryScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Industry Scheme"@en ;
+	skos:definition "The controlled vocabulary of specific branches of economic activity."@en ;
+	skos:prefLabel "STONEWORK Industry Scheme"@en ;
 	.
 
 stonework:infraTypeAmplification
@@ -683,6 +870,22 @@ stonework:infraTypeWorkstation
 	skos:prefLabel "Workstation"@en ;
 	.
 
+stonework:infrastructureTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Infrastructure Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of infrastructure operational roles and purposes."@en ;
+	skos:prefLabel "STONEWORK Infrastructure Type Scheme"@en ;
+	.
+
+stonework:killChainPhaseScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Kill Chain Phase Scheme"@en ;
+	skos:definition "The controlled vocabulary of phases in cyber attack and defense lifecycle frameworks."@en ;
+	skos:prefLabel "STONEWORK Kill Chain Phase Scheme"@en ;
+	.
+
 stonework:likelihoodLevelAlmostCertain
 	a
 		owl:NamedIndividual ,
@@ -723,6 +926,14 @@ stonework:likelihoodLevelRare
 	skos:prefLabel "Rare"@en ;
 	.
 
+stonework:likelihoodLevelScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Likelihood Level Scheme"@en ;
+	skos:definition "The ordinal controlled vocabulary of assessed likelihood."@en ;
+	skos:prefLabel "STONEWORK Likelihood Level Scheme"@en ;
+	.
+
 stonework:likelihoodLevelUnlikely
 	a
 		owl:NamedIndividual ,
@@ -731,6 +942,14 @@ stonework:likelihoodLevelUnlikely
 	skos:definition "The outcome is assessed as not expected to occur in most circumstances."@en ;
 	skos:notation "unlikely" ;
 	skos:prefLabel "Unlikely"@en ;
+	.
+
+stonework:markingScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Data Marking Scheme"@en ;
+	skos:definition "The controlled vocabulary of data-handling and sharing markings."@en ;
+	skos:prefLabel "STONEWORK Data Marking Scheme"@en ;
 	.
 
 stonework:metricConfidence
@@ -874,6 +1093,14 @@ stonework:motivationRevenge
 	skos:prefLabel "Revenge"@en ;
 	.
 
+stonework:motivationScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Motivation Scheme"@en ;
+	skos:definition "The controlled vocabulary of adversary motivations."@en ;
+	skos:prefLabel "STONEWORK Motivation Scheme"@en ;
+	.
+
 stonework:motivationUnpredictable
 	a
 		owl:NamedIndividual ,
@@ -964,6 +1191,14 @@ stonework:productTypeSDK
 	skos:prefLabel "SDK"@en ;
 	.
 
+stonework:productTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Product Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of product functional categories."@en ;
+	skos:prefLabel "STONEWORK Product Type Scheme"@en ;
+	.
+
 stonework:productTypeService
 	a
 		owl:NamedIndividual ,
@@ -1023,6 +1258,14 @@ stonework:resourceLevelOrganization
 	skos:prefLabel "Organization"@en ;
 	.
 
+stonework:resourceLevelScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Resource Level Scheme"@en ;
+	skos:definition "The ordinal controlled vocabulary of organizational resources available to a threat actor."@en ;
+	skos:prefLabel "STONEWORK Resource Level Scheme"@en ;
+	.
+
 stonework:resourceLevelTeam
 	a
 		owl:NamedIndividual ,
@@ -1071,6 +1314,22 @@ stonework:riskLevelMedium
 	skos:definition "Risk requiring planned treatment and continued monitoring."@en ;
 	skos:notation "medium" ;
 	skos:prefLabel "Medium"@en ;
+	.
+
+stonework:riskLevelScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Risk Level Scheme"@en ;
+	skos:definition "The ordinal controlled vocabulary of assessed security-risk magnitude."@en ;
+	skos:prefLabel "STONEWORK Risk Level Scheme"@en ;
+	.
+
+stonework:sectorScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Sector Scheme"@en ;
+	skos:definition "The controlled vocabulary of broad economic, infrastructure, and societal sectors."@en ;
+	skos:prefLabel "STONEWORK Sector Scheme"@en ;
 	.
 
 stonework:sophisticationLevelAdvanced
@@ -1133,6 +1392,14 @@ stonework:sophisticationLevelNone
 	skos:prefLabel "None"@en ;
 	.
 
+stonework:sophisticationLevelScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Sophistication Level Scheme"@en ;
+	skos:definition "The ordinal controlled vocabulary of assessed threat-actor technical sophistication."@en ;
+	skos:prefLabel "STONEWORK Sophistication Level Scheme"@en ;
+	.
+
 stonework:sophisticationLevelStrategic
 	a
 		owl:NamedIndividual ,
@@ -1191,6 +1458,14 @@ stonework:threatActorRoleMalwareAuthor
 	skos:definition "A threat actor who develops malicious code used in operations."@en ;
 	skos:notation "malware-author" ;
 	skos:prefLabel "Malware Author"@en ;
+	.
+
+stonework:threatActorRoleScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Threat Actor Role Scheme"@en ;
+	skos:definition "The controlled vocabulary of contextual functions played by threat actors."@en ;
+	skos:prefLabel "STONEWORK Threat Actor Role Scheme"@en ;
 	.
 
 stonework:threatActorRoleSponsor
@@ -1273,6 +1548,14 @@ stonework:threatActorTypeNationState
 		;
 	skos:definition "A government or state-sponsored actor conducting cyber operations for geopolitical objectives."@en ;
 	skos:prefLabel "Nation State"@en ;
+	.
+
+stonework:threatActorTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Threat Actor Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of threat-actor organizational forms and affiliations."@en ;
+	skos:prefLabel "STONEWORK Threat Actor Type Scheme"@en ;
 	.
 
 stonework:threatActorTypeSensationalist

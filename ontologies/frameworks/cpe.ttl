@@ -1,3 +1,5 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
 @prefix cpe: <https://cyberterrain.org/ns/frameworks/cpe#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -10,6 +12,9 @@
 	a owl:Ontology ;
 	rdfs:label "CPE Framework Ontology"@en ;
 	rdfs:comment "OWL vocabulary for NVD Common Platform Enumeration (CPE) 2.3 data as represented in the CTI Encyclopedia. Stub stonework:VersionedProduct individuals are created by the CVE serializer; this ontology describes the enrichment properties added by the CPE ingest."@en ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/cpe/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
 	.
 
 cpe:cpeName

@@ -701,7 +701,14 @@ stonework:MalwareSample
 
 stonework:MalwareType
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:malwareTypeScheme ;
+		]
+		;
 	skos:definition "A behavioral or functional classification of malware, describing what the malware does rather than what it is. Corresponds to the STIX 2.1 malware-type open vocabulary."@en ;
 	skos:prefLabel "Malware Type"@en ;
 	skos:scopeNote "Instances (e.g., stonework:Ransomware, stonework:Trojan) are assigned via stonework:categorizedBy. A malware object may carry multiple types. The skos:notation value gives the STIX 2.1 wire-format string for aspirational round-trip export."@en ;
@@ -717,7 +724,14 @@ stonework:MetricObservation
 
 stonework:MetricType
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:metricTypeScheme ;
+		]
+		;
 	skos:definition "A controlled classification identifying the meaning and scale of a qualified metric observation."@en ;
 	skos:prefLabel "Metric Type"@en ;
 	.
@@ -1518,6 +1532,13 @@ stonework:asNumber
 	skos:prefLabel "asNumber"@en ;
 	.
 
+stonework:assessmentOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Assessment ;
+	skos:definition "Relates an Assessment to the entity being assessed."@en ;
+	skos:prefLabel "assessmentOf"@en ;
+	.
+
 stonework:assignedRole
 	a
 		owl:ObjectProperty ,
@@ -1527,13 +1548,6 @@ stonework:assignedRole
 	rdfs:range stonework:Role ;
 	skos:definition "The Role assigned by a qualified RoleAssignment."@en ;
 	skos:prefLabel "assignedRole"@en ;
-	.
-
-stonework:assessmentOf
-	a owl:ObjectProperty ;
-	rdfs:domain stonework:Assessment ;
-	skos:definition "Relates an Assessment to the entity being assessed."@en ;
-	skos:prefLabel "assessmentOf"@en ;
 	.
 
 stonework:associatedWith
@@ -1621,8 +1635,9 @@ stonework:categorizedBy
 stonework:categoryScheme
 	a skos:ConceptScheme ;
 	dcterms:title "STONEWORK Category Scheme"@en ;
-	skos:definition "The concept scheme containing STONEWORK classification and tagging values modeled as instances of stonework:Category subclasses."@en ;
+	skos:definition "The umbrella concept scheme containing all STONEWORK classification and tagging values modeled as instances of stonework:Category subclasses."@en ;
 	skos:prefLabel "STONEWORK Category Scheme"@en ;
+	skos:scopeNote "More specific schemes organize individual controlled vocabularies. Category instances remain members of this umbrella scheme through the restriction on stonework:Category."@en ;
 	.
 
 stonework:certIssuerDN
@@ -3226,6 +3241,14 @@ stonework:madeBySensor
 	skos:scopeNote "Inspired by SOSA sosa:madeBySensor. Enables queries such as 'which sensor produced this observation?' and 'what has this IDS sensor observed in the last 24 hours?' The producing sensor may also be the created_by_ref identity in the STIX wire format."@en ;
 	.
 
+stonework:malwareTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Malware Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of malware behavioral and functional types."@en ;
+	skos:prefLabel "STONEWORK Malware Type Scheme"@en ;
+	.
+
 stonework:manifestsAs
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Threat ;
@@ -3292,6 +3315,14 @@ stonework:metricType
 	rdfs:range stonework:MetricType ;
 	skos:definition "Identifies the meaning and scale of the recorded metric value."@en ;
 	skos:prefLabel "metricType"@en ;
+	.
+
+stonework:metricTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Metric Type Scheme"@en ;
+	skos:definition "The controlled vocabulary identifying the semantics and scale of qualified metric observations."@en ;
+	skos:prefLabel "STONEWORK Metric Type Scheme"@en ;
 	.
 
 stonework:metricValue
@@ -4497,6 +4528,28 @@ stonework:usesRule
 	skos:prefLabel "usesRule" ;
 	.
 
+stonework:validFrom
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:QualifiedAssertion ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The start of the interval during which a qualified assertion is considered applicable."@en ;
+	skos:prefLabel "validFrom"@en ;
+	.
+
+stonework:validUntil
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:QualifiedAssertion ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The end of the interval during which a qualified assertion is considered applicable."@en ;
+	skos:prefLabel "validUntil"@en ;
+	.
+
 stonework:variableName
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Variable ;
@@ -4523,28 +4576,6 @@ stonework:variantOf
 	] ;
 	skos:definition "Relates a MalwareFamily or MalwareSample to another family or sample from which it is derived, modified, or evolved, indicating shared code lineage, forked development, or deliberate repackaging."@en ;
 	skos:prefLabel "variantOf" ;
-	.
-
-stonework:validFrom
-	a
-		owl:DatatypeProperty ,
-		owl:FunctionalProperty
-		;
-	rdfs:domain stonework:QualifiedAssertion ;
-	rdfs:range xsd:dateTime ;
-	skos:definition "The start of the interval during which a qualified assertion is considered applicable."@en ;
-	skos:prefLabel "validFrom"@en ;
-	.
-
-stonework:validUntil
-	a
-		owl:DatatypeProperty ,
-		owl:FunctionalProperty
-		;
-	rdfs:domain stonework:QualifiedAssertion ;
-	rdfs:range xsd:dateTime ;
-	skos:definition "The end of the interval during which a qualified assertion is considered applicable."@en ;
-	skos:prefLabel "validUntil"@en ;
 	.
 
 stonework:vendorOf

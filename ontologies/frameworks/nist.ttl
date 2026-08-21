@@ -1,3 +1,5 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
 @prefix nist: <https://cyberterrain.org/ns/frameworks/nist#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -10,6 +12,9 @@
 	a owl:Ontology ;
 	rdfs:label "NIST SP 800-53 Framework Ontology"@en ;
 	rdfs:comment "OWL vocabulary for NIST SP 800-53 Rev 5 security controls as represented in the CTI Encyclopedia. Base controls and control enhancements are both modeled as nist:Control individuals. Enhancements carry a nist:enhancementOf link to their parent control. Withdrawn controls are excluded from the data graph."@en ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/nist/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
 	.
 
 nist:Control

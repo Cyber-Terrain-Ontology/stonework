@@ -19,6 +19,7 @@ RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 RDFS = "http://www.w3.org/2000/01/rdf-schema#"
 OWL = "http://www.w3.org/2002/07/owl#"
 SKOS = "http://www.w3.org/2004/02/skos/core#"
+DCTERMS = "http://purl.org/dc/terms/"
 STONEWORK = "https://cyberterrain.org/ns/stonework#"
 STONEX = "https://cyberterrain.org/ns/stonex#"
 
@@ -204,6 +205,78 @@ def main() -> int:
     datatype_property = OWL + "DatatypeProperty"
     named_individual = OWL + "NamedIndividual"
     owl_class = OWL + "Class"
+    owl_ontology = OWL + "Ontology"
+    concept_scheme = SKOS + "ConceptScheme"
+    required_local_imports = {
+        "https://cyberterrain.org/ns/frameworks/cwe": {
+            "https://cyberterrain.org/ns/frameworks/capec",
+        },
+        "https://cyberterrain.org/ns/frameworks/email": {
+            "https://cyberterrain.org/ns/frameworks/dns",
+        },
+        "https://cyberterrain.org/ns/frameworks/killchain": {
+            "https://cyberterrain.org/ns/frameworks/stix",
+            "https://cyberterrain.org/ns/stonework/categories#",
+        },
+        "https://cyberterrain.org/ns/frameworks/registry": {
+            "https://cyberterrain.org/ns/frameworks/stix",
+        },
+        "https://cyberterrain.org/ns/frameworks/stix": {
+            "https://cyberterrain.org/ns/stonework/categories#",
+        },
+    }
+
+    for subject, subject_types in sorted(types.items()):
+        if owl_ontology not in subject_types:
+            continue
+
+        location = ", ".join(sorted(sources.get(subject, ())))
+        version_iris = {
+            obj[1] for obj in values[(subject, OWL + "versionIRI")] if obj[0] == "iri"
+        }
+        version_infos = {
+            obj[1] for obj in values[(subject, OWL + "versionInfo")] if obj[0] == "literal"
+        }
+        if len(version_iris) != 1:
+            errors.append(
+                f"{describe(subject)} ({location}) must declare exactly one IRI-valued "
+                "owl:versionIRI"
+            )
+        if len(version_infos) != 1:
+            errors.append(
+                f"{describe(subject)} ({location}) must declare exactly one literal "
+                "owl:versionInfo"
+            )
+        if len(version_iris) == 1 and len(version_infos) == 1:
+            version_info = next(iter(version_infos))
+            version_iri = next(iter(version_iris))
+            expected_version_iri = subject.rstrip("#/") + "/" + version_info
+            if version_iri != expected_version_iri:
+                errors.append(
+                    f"{describe(subject)} ({location}) has a version IRI that does not match "
+                    f"owl:versionInfo {version_info!r}; expected {expected_version_iri}"
+                )
+            for catalog_iri in (subject, version_iri):
+                if catalog_iri not in catalog_names:
+                    errors.append(
+                        f"{describe(subject)} ({location}) is not cataloged under "
+                        f"{catalog_iri} in ontologies/catalog-v001.xml"
+                    )
+
+        if any(path.startswith("ontologies/frameworks/") for path in sources.get(subject, ())):
+            imports = {
+                obj[1] for obj in values[(subject, OWL + "imports")] if obj[0] == "iri"
+            }
+            if STONEWORK not in imports:
+                errors.append(
+                    f"{describe(subject)} ({location}) is a framework module but does not "
+                    "directly import the STONEWORK core ontology"
+                )
+            for required_import in sorted(required_local_imports.get(subject, set()) - imports):
+                errors.append(
+                    f"{describe(subject)} ({location}) does not import required local dependency "
+                    f"{required_import}"
+                )
 
     for subject, subject_types in sorted(types.items()):
         location = ", ".join(sorted(sources.get(subject, ())))
@@ -221,6 +294,53 @@ def main() -> int:
                         f"{describe(subject)} ({location}) has multiple named rdfs:{label} values "
                         f"({rendered}); use an owl:unionOf class expression for alternatives"
                     )
+
+    category = STONEWORK + "Category"
+    category_scheme = STONEWORK + "categoryScheme"
+
+    for subject, subject_types in sorted(types.items()):
+        if concept_scheme not in subject_types or not subject.startswith(STONEWORK):
+            continue
+        if subject == category_scheme:
+            continue
+        if ("iri", category_scheme) not in values[(subject, DCTERMS + "isPartOf")]:
+            errors.append(
+                f"{describe(subject)} must declare dcterms:isPartOf stonework:categoryScheme"
+            )
+
+    for subject, subject_types in sorted(types.items()):
+        if owl_class not in subject_types or not subject.startswith(STONEWORK):
+            continue
+        if subject == category or category not in ancestors(subject):
+            continue
+
+        schemes = set()
+        for superclass in values[(subject, RDFS + "subClassOf")]:
+            if superclass[0] != "bnode":
+                continue
+            restriction = superclass[1]
+            if ("iri", SKOS + "inScheme") not in values[(restriction, OWL + "onProperty")]:
+                continue
+            schemes.update(
+                obj[1]
+                for obj in values[(restriction, OWL + "hasValue")]
+                if obj[0] == "iri" and obj[1] != category_scheme
+            )
+
+        if not schemes:
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) is a Category subclass but has no "
+                "vocabulary-specific skos:inScheme restriction"
+            )
+            continue
+
+        for scheme in schemes:
+            if concept_scheme not in types[scheme]:
+                errors.append(
+                    f"{describe(subject)} references {describe(scheme)} as its concept scheme, "
+                    "but that resource is not a skos:ConceptScheme"
+                )
 
     for subject in sorted(sources):
         definitions = values[(subject, SKOS + "definition")]

@@ -1,4 +1,5 @@
 # imports: https://cyberterrain.org/ns/frameworks/dns
+# imports: https://cyberterrain.org/ns/stonework#
 
 @prefix dns: <https://cyberterrain.org/ns/frameworks/dns#> .
 @prefix email: <https://cyberterrain.org/ns/frameworks/email#> .
@@ -13,7 +14,10 @@
 	a owl:Ontology ;
 	rdfs:label "Email Framework Ontology"@en ;
 	rdfs:comment "Ontology for origins, delivery and content of email"@en ;
-	owl:imports <https://cyberterrain.org/ns/frameworks/dns> ;
+	owl:imports
+		<https://cyberterrain.org/ns/frameworks/dns> ,
+		<https://cyberterrain.org/ns/stonework#>
+		;
 	owl:versionIRI <https://cyberterrain.org/ns/frameworks/email/0.1.0> ;
 	owl:versionInfo "0.1.0" ;
 	.

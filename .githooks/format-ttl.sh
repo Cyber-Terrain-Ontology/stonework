@@ -25,6 +25,16 @@ for f in "$@"; do
     java -jar "$JAR" -sfmt turtle -tfmt turtle --inline-blank-nodes -s "$f" -t "$TMPFILE"
     mv "$TMPFILE" "$f"
 
+    # rdf-toolkit emits an extra blank line at EOF. Keep one final newline so
+    # canonicalization also remains clean under `git diff --check`.
+    python3 - "$f" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+path.write_text(path.read_text().rstrip() + "\n")
+PY
+
     # Re-stage the reformatted file
     git add "$f"
 done
