@@ -1,0 +1,733 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix frameworks: <https://cyberterrain.org/ns/frameworks/> .
+@prefix ocsf: <https://cyberterrain.org/ns/frameworks/ocsf#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+frameworks:ocsf
+	a owl:Ontology ;
+	rdfs:label "STONEWORK: OCSF 1.9.0 Mapping"@en ;
+	dcterms:description "An OWL adapter for the Open Cybersecurity Schema Framework (OCSF) 1.9.0 core event taxonomy. OCSF event categories and concrete event classes are represented as subclasses of stonework:Event while retaining their published category and class identifiers. The adapter does not copy the OCSF attribute dictionary or impose JSON-schema constraints."@en ;
+	dcterms:source <https://github.com/ocsf/ocsf-schema/tree/1.9.0> ;
+	rdfs:seeAlso <https://schema.ocsf.io/1.9.0/> ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/ocsf/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
+	.
+
+ocsf:APIActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:ApplicationActivityEvent ;
+	rdfs:label "API Activity"@en ;
+	dcterms:identifier "6003" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/application/api_activity.json> ;
+	.
+
+ocsf:AccountChange
+	a owl:Class ;
+	rdfs:subClassOf ocsf:IdentityAndAccessManagementEvent ;
+	rdfs:label "Account Change"@en ;
+	dcterms:identifier "3001" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/iam/account_change.json> ;
+	.
+
+ocsf:AdminGroupQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Admin Group Query"@en ;
+	dcterms:identifier "5009" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/admin_group_query.json> ;
+	.
+
+ocsf:AirborneBroadcastActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:UnmannedSystemsEvent ;
+	rdfs:label "Airborne Broadcast Activity"@en ;
+	dcterms:identifier "8002" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/unmanned_systems/airborne_broadcast_activity.json> ;
+	.
+
+ocsf:ApplicationActivityEvent
+	a owl:Class ;
+	rdfs:subClassOf ocsf:Event ;
+	rdfs:label "Application Activity Event"@en ;
+	dcterms:identifier "6" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/categories.json> ;
+	.
+
+ocsf:ApplicationError
+	a owl:Class ;
+	rdfs:subClassOf ocsf:ApplicationActivityEvent ;
+	rdfs:label "Application Error"@en ;
+	dcterms:identifier "6008" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/application/application_error.json> ;
+	.
+
+ocsf:ApplicationLifecycle
+	a owl:Class ;
+	rdfs:subClassOf ocsf:ApplicationActivityEvent ;
+	rdfs:label "Application Lifecycle"@en ;
+	dcterms:identifier "6002" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/application/application_lifecycle.json> ;
+	.
+
+ocsf:ApplicationSecurityPostureFinding
+	a owl:Class ;
+	rdfs:subClassOf ocsf:FindingEvent ;
+	rdfs:label "Application Security Posture Finding"@en ;
+	dcterms:identifier "2007" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/findings/application_security_posture_finding.json> ;
+	.
+
+ocsf:Authentication
+	a owl:Class ;
+	rdfs:subClassOf ocsf:IdentityAndAccessManagementEvent ;
+	rdfs:label "Authentication"@en ;
+	dcterms:identifier "3002" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/iam/authentication.json> ;
+	.
+
+ocsf:AuthorizeSession
+	a owl:Class ;
+	rdfs:subClassOf ocsf:IdentityAndAccessManagementEvent ;
+	rdfs:label "Authorize Session"@en ;
+	dcterms:identifier "3003" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/iam/authorize_session.json> ;
+	.
+
+ocsf:ClipboardActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Clipboard Activity"@en ;
+	dcterms:identifier "1012" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/clipboard_activity.json> ;
+	.
+
+ocsf:CloudResourcesInventoryInfo
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryEvent ;
+	rdfs:label "Cloud Resources Inventory Info"@en ;
+	dcterms:identifier "5023" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/cloud_resources_inventory_info.json> ;
+	.
+
+ocsf:ComplianceFinding
+	a owl:Class ;
+	rdfs:subClassOf ocsf:FindingEvent ;
+	rdfs:label "Compliance Finding"@en ;
+	dcterms:identifier "2003" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/findings/compliance_finding.json> ;
+	.
+
+ocsf:DHCPActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "DHCP Activity"@en ;
+	dcterms:identifier "4004" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/dhcp_activity.json> ;
+	.
+
+ocsf:DNSActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "DNS Activity"@en ;
+	dcterms:identifier "4003" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/dns_activity.json> ;
+	.
+
+ocsf:DataSecurityFinding
+	a owl:Class ;
+	rdfs:subClassOf ocsf:FindingEvent ;
+	rdfs:label "Data Security Finding"@en ;
+	dcterms:identifier "2006" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/findings/data_security_finding.json> ;
+	.
+
+ocsf:DatastoreActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:ApplicationActivityEvent ;
+	rdfs:label "Datastore Activity"@en ;
+	dcterms:identifier "6005" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/application/datastore_activity.json> ;
+	.
+
+ocsf:DetectionFinding
+	a owl:Class ;
+	rdfs:subClassOf ocsf:FindingEvent ;
+	rdfs:label "Detection Finding"@en ;
+	dcterms:identifier "2004" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/findings/detection_finding.json> ;
+	.
+
+ocsf:DeviceConfigState
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryEvent ;
+	rdfs:label "Device Config State"@en ;
+	dcterms:identifier "5002" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/config_state.json> ;
+	.
+
+ocsf:DeviceConfigStateChange
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryEvent ;
+	rdfs:label "Device Config State Change"@en ;
+	dcterms:identifier "5019" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/device_config_state_change.json> ;
+	.
+
+ocsf:DeviceInventoryInfo
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryEvent ;
+	rdfs:label "Device Inventory Info"@en ;
+	dcterms:identifier "5001" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/inventory_info.json> ;
+	.
+
+ocsf:DevicePowerStateActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Device Power State Activity"@en ;
+	dcterms:identifier "1011" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/device_power_state_activity.json> ;
+	.
+
+ocsf:DiscoveryEvent
+	a owl:Class ;
+	rdfs:subClassOf ocsf:Event ;
+	rdfs:label "Discovery Event"@en ;
+	dcterms:identifier "5" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/categories.json> ;
+	.
+
+ocsf:DiscoveryResult
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryEvent ;
+	rdfs:label "Discovery Result"@en ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/discovery_result.json> ;
+	.
+
+ocsf:DroneFlightsActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:UnmannedSystemsEvent ;
+	rdfs:label "Drone Flights Activity"@en ;
+	dcterms:identifier "8001" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/unmanned_systems/drone_flights_activity.json> ;
+	.
+
+ocsf:EmailActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "Email Activity"@en ;
+	dcterms:identifier "4009" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/email_activity.json> ;
+	.
+
+ocsf:EmailFileActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "Email File Activity"@en ;
+	dcterms:identifier "4011" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/email_file_activity.json> ;
+	.
+
+ocsf:EmailURLActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "Email URL Activity"@en ;
+	dcterms:identifier "4012" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/email_url_activity.json> ;
+	.
+
+ocsf:EntityManagement
+	a owl:Class ;
+	rdfs:subClassOf ocsf:IdentityAndAccessManagementEvent ;
+	rdfs:label "Entity Management"@en ;
+	dcterms:identifier "3004" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/iam/entity_management.json> ;
+	.
+
+ocsf:Event
+	a owl:Class ;
+	rdfs:subClassOf stonework:Event ;
+	rdfs:label "OCSF Event"@en ;
+	skos:definition "A security or operational event record classified by the OCSF core schema."@en ;
+	skos:scopeNote "Instances preserve OCSF event semantics and identifiers while participating in STONEWORK event queries. OCSF embedded objects remain source-schema structures unless a separate object mapping is supplied."@en ;
+	.
+
+ocsf:EventLogActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Event Log Activity"@en ;
+	dcterms:identifier "1008" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/event_log_activity.json> ;
+	.
+
+ocsf:FTPActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "FTP Activity"@en ;
+	dcterms:identifier "4008" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/ftp_activity.json> ;
+	.
+
+ocsf:FileHostingActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:ApplicationActivityEvent ;
+	rdfs:label "File Hosting Activity"@en ;
+	dcterms:identifier "6006" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/application/file_hosting.json> ;
+	.
+
+ocsf:FileQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "File Query"@en ;
+	dcterms:identifier "5007" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/file_query.json> ;
+	.
+
+ocsf:FileRemediationActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:RemediationActivity ;
+	rdfs:label "File Remediation Activity"@en ;
+	dcterms:identifier "7002" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/remediation/file_remediation_activity.json> ;
+	.
+
+ocsf:FileSystemActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "File System Activity"@en ;
+	dcterms:identifier "1001" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/file_activity.json> ;
+	.
+
+ocsf:FindingEvent
+	a owl:Class ;
+	rdfs:subClassOf ocsf:Event ;
+	rdfs:label "Finding Event"@en ;
+	dcterms:identifier "2" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/categories.json> ;
+	.
+
+ocsf:FolderQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Folder Query"@en ;
+	dcterms:identifier "5008" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/folder_query.json> ;
+	.
+
+ocsf:GroupManagement
+	a owl:Class ;
+	rdfs:subClassOf ocsf:IdentityAndAccessManagementEvent ;
+	rdfs:label "Group Management"@en ;
+	dcterms:identifier "3006" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/iam/group_management.json> ;
+	.
+
+ocsf:HTTPActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "HTTP Activity"@en ;
+	dcterms:identifier "4002" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/http_activity.json> ;
+	.
+
+ocsf:IAMAnalysisFinding
+	a owl:Class ;
+	rdfs:subClassOf ocsf:FindingEvent ;
+	rdfs:label "IAM Analysis Finding"@en ;
+	dcterms:identifier "2008" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/findings/iam_analysis_finding.json> ;
+	.
+
+ocsf:IdentityAndAccessManagementEvent
+	a owl:Class ;
+	rdfs:subClassOf ocsf:Event ;
+	rdfs:label "Identity and Access Management Event"@en ;
+	dcterms:identifier "3" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/categories.json> ;
+	.
+
+ocsf:IncidentFinding
+	a owl:Class ;
+	rdfs:subClassOf ocsf:FindingEvent ;
+	rdfs:label "Incident Finding"@en ;
+	dcterms:identifier "2005" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/findings/incident_finding.json> ;
+	.
+
+ocsf:JobQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Job Query"@en ;
+	dcterms:identifier "5010" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/job_query.json> ;
+	.
+
+ocsf:KernelActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Kernel Activity"@en ;
+	dcterms:identifier "1003" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/kernel_activity.json> ;
+	.
+
+ocsf:KernelExtensionActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Kernel Extension Activity"@en ;
+	dcterms:identifier "1002" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/kernel_extension_activity.json> ;
+	.
+
+ocsf:KernelObjectQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Kernel Object Query"@en ;
+	dcterms:identifier "5006" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/kernel_object_query.json> ;
+	.
+
+ocsf:LiveEvidenceInfo
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Live Evidence Info"@en ;
+	dcterms:identifier "5040" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/evidence_info.json> ;
+	.
+
+ocsf:MemoryActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Memory Activity"@en ;
+	dcterms:identifier "1004" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/memory_activity.json> ;
+	.
+
+ocsf:ModuleActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Module Activity"@en ;
+	dcterms:identifier "1005" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/module_activity.json> ;
+	.
+
+ocsf:ModuleQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Module Query"@en ;
+	dcterms:identifier "5011" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/module_query.json> ;
+	.
+
+ocsf:NTPActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "NTP Activity"@en ;
+	dcterms:identifier "4013" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/ntp_activity.json> ;
+	.
+
+ocsf:NetworkActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "Network Activity"@en ;
+	dcterms:identifier "4001" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/network_activity.json> ;
+	.
+
+ocsf:NetworkActivityEvent
+	a owl:Class ;
+	rdfs:subClassOf ocsf:Event ;
+	rdfs:label "Network Activity Event"@en ;
+	dcterms:identifier "4" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/categories.json> ;
+	.
+
+ocsf:NetworkConnectionQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Network Connection Query"@en ;
+	dcterms:identifier "5012" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/network_connection_query.json> ;
+	.
+
+ocsf:NetworkFileActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "Network File Activity"@en ;
+	dcterms:identifier "4010" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/network_file_activity.json> ;
+	.
+
+ocsf:NetworkRemediationActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:RemediationActivity ;
+	rdfs:label "Network Remediation Activity"@en ;
+	dcterms:identifier "7004" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/remediation/network_remediation_activity.json> ;
+	.
+
+ocsf:NetworksQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Networks Query"@en ;
+	dcterms:identifier "5013" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/networks_query.json> ;
+	.
+
+ocsf:OSINTInventoryInfo
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryEvent ;
+	rdfs:label "OSINT Inventory Info"@en ;
+	dcterms:identifier "5021" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/osint_inventory_info.json> ;
+	.
+
+ocsf:OperatingSystemPatchState
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryEvent ;
+	rdfs:label "Operating System Patch State"@en ;
+	dcterms:identifier "5004" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/patch_state.json> ;
+	.
+
+ocsf:PeripheralActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Peripheral Activity"@en ;
+	dcterms:identifier "1010" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/peripheral_activity.json> ;
+	.
+
+ocsf:PeripheralDeviceQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Peripheral Device Query"@en ;
+	dcterms:identifier "5014" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/peripheral_device_query.json> ;
+	.
+
+ocsf:ProcessActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Process Activity"@en ;
+	dcterms:identifier "1007" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/process_activity.json> ;
+	.
+
+ocsf:ProcessQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Process Query"@en ;
+	dcterms:identifier "5015" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/process_query.json> ;
+	.
+
+ocsf:ProcessRemediationActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:RemediationActivity ;
+	rdfs:label "Process Remediation Activity"@en ;
+	dcterms:identifier "7003" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/remediation/process_remediation_activity.json> ;
+	.
+
+ocsf:RDPActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "RDP Activity"@en ;
+	dcterms:identifier "4005" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/rdp_activity.json> ;
+	.
+
+ocsf:RemediationActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:RemediationEvent ;
+	rdfs:label "Remediation Activity"@en ;
+	dcterms:identifier "7001" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/remediation/remediation_activity.json> ;
+	.
+
+ocsf:RemediationEvent
+	a owl:Class ;
+	rdfs:subClassOf ocsf:Event ;
+	rdfs:label "Remediation Event"@en ;
+	dcterms:identifier "7" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/categories.json> ;
+	.
+
+ocsf:RoleManagement
+	a owl:Class ;
+	rdfs:subClassOf ocsf:IdentityAndAccessManagementEvent ;
+	rdfs:label "Role Management"@en ;
+	dcterms:identifier "3008" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/iam/role_management.json> ;
+	.
+
+ocsf:SMBActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "SMB Activity"@en ;
+	dcterms:identifier "4006" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/smb_activity.json> ;
+	.
+
+ocsf:SSHActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "SSH Activity"@en ;
+	dcterms:identifier "4007" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/ssh_activity.json> ;
+	.
+
+ocsf:ScanActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:ApplicationActivityEvent ;
+	rdfs:label "Scan Activity"@en ;
+	dcterms:identifier "6007" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/application/scan_activity.json> ;
+	.
+
+ocsf:ScheduledJobActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Scheduled Job Activity"@en ;
+	dcterms:identifier "1006" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/scheduled_job_activity.json> ;
+	.
+
+ocsf:ScriptActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:SystemActivityEvent ;
+	rdfs:label "Script Activity"@en ;
+	dcterms:identifier "1009" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/system/script_activity.json> ;
+	.
+
+ocsf:SecurityFinding
+	a owl:Class ;
+	rdfs:subClassOf ocsf:FindingEvent ;
+	rdfs:label "Security Finding"@en ;
+	dcterms:identifier "2001" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/findings/security_finding.json> ;
+	.
+
+ocsf:ServiceQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Service Query"@en ;
+	dcterms:identifier "5016" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/service_query.json> ;
+	.
+
+ocsf:SoftwareInventoryInfo
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryEvent ;
+	rdfs:label "Software Inventory Info"@en ;
+	dcterms:identifier "5020" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/software_info.json> ;
+	.
+
+ocsf:StartupItemQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "Startup Item Query"@en ;
+	dcterms:identifier "5022" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/startup_item_query.json> ;
+	.
+
+ocsf:SystemActivityEvent
+	a owl:Class ;
+	rdfs:subClassOf ocsf:Event ;
+	rdfs:label "System Activity Event"@en ;
+	dcterms:identifier "1" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/categories.json> ;
+	.
+
+ocsf:TunnelActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:NetworkActivityEvent ;
+	rdfs:label "Tunnel Activity"@en ;
+	dcterms:identifier "4014" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/network/tunnel_activity.json> ;
+	.
+
+ocsf:UnmannedSystemsEvent
+	a owl:Class ;
+	rdfs:subClassOf ocsf:Event ;
+	rdfs:label "Unmanned Systems Event"@en ;
+	dcterms:identifier "8" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/categories.json> ;
+	.
+
+ocsf:UserAccessManagement
+	a owl:Class ;
+	rdfs:subClassOf ocsf:IdentityAndAccessManagementEvent ;
+	rdfs:label "User Access Management"@en ;
+	dcterms:identifier "3005" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/iam/user_access.json> ;
+	.
+
+ocsf:UserInventoryInfo
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryEvent ;
+	rdfs:label "User Inventory Info"@en ;
+	dcterms:identifier "5003" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/user_inventory.json> ;
+	.
+
+ocsf:UserManagement
+	a owl:Class ;
+	rdfs:subClassOf ocsf:IdentityAndAccessManagementEvent ;
+	rdfs:label "User Management"@en ;
+	dcterms:identifier "3007" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/iam/user_management.json> ;
+	.
+
+ocsf:UserQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "User Query"@en ;
+	dcterms:identifier "5018" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/user_query.json> ;
+	.
+
+ocsf:UserSessionQuery
+	a owl:Class ;
+	rdfs:subClassOf ocsf:DiscoveryResult ;
+	rdfs:label "User Session Query"@en ;
+	dcterms:identifier "5017" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/discovery/session_query.json> ;
+	.
+
+ocsf:VulnerabilityFinding
+	a owl:Class ;
+	rdfs:subClassOf ocsf:FindingEvent ;
+	rdfs:label "Vulnerability Finding"@en ;
+	dcterms:identifier "2002" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/findings/vulnerability_finding.json> ;
+	.
+
+ocsf:WebResourceAccessActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:ApplicationActivityEvent ;
+	rdfs:label "Web Resource Access Activity"@en ;
+	dcterms:identifier "6004" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/application/web_resource_access_activity.json> ;
+	.
+
+ocsf:WebResourcesActivity
+	a owl:Class ;
+	rdfs:subClassOf ocsf:ApplicationActivityEvent ;
+	rdfs:label "Web Resources Activity"@en ;
+	dcterms:identifier "6001" ;
+	rdfs:seeAlso <https://github.com/ocsf/ocsf-schema/blob/1.9.0/events/application/web_resources_activity.json> ;
+	.

@@ -22,6 +22,8 @@ SKOS = "http://www.w3.org/2004/02/skos/core#"
 DCTERMS = "http://purl.org/dc/terms/"
 STONEWORK = "https://cyberterrain.org/ns/stonework#"
 STONEX = "https://cyberterrain.org/ns/stonex#"
+OCSF = "https://cyberterrain.org/ns/frameworks/ocsf#"
+UCO = "https://ontology.unifiedcyberontology.org/uco/"
 
 RDF_TYPE = RDF + "type"
 RDF_ABOUT = "{" + RDF + "}about"
@@ -207,6 +209,113 @@ def main() -> int:
     owl_class = OWL + "Class"
     owl_ontology = OWL + "Ontology"
     concept_scheme = SKOS + "ConceptScheme"
+
+    ocsf_event = OCSF + "Event"
+    ocsf_discovery_result = OCSF + "DiscoveryResult"
+    ocsf_classes = {
+        subject
+        for subject, subject_types in types.items()
+        if owl_class in subject_types and subject.startswith(OCSF)
+    }
+    if ocsf_classes:
+        if STONEWORK + "Event" not in ancestors(ocsf_event):
+            errors.append("ocsf:Event must be a subclass of stonework:Event")
+
+        expected_ocsf_categories = {
+            OCSF + "SystemActivityEvent": "1",
+            OCSF + "FindingEvent": "2",
+            OCSF + "IdentityAndAccessManagementEvent": "3",
+            OCSF + "NetworkActivityEvent": "4",
+            OCSF + "DiscoveryEvent": "5",
+            OCSF + "ApplicationActivityEvent": "6",
+            OCSF + "RemediationEvent": "7",
+            OCSF + "UnmannedSystemsEvent": "8",
+        }
+        for category_class, expected_identifier in expected_ocsf_categories.items():
+            identifiers = values[(category_class, DCTERMS + "identifier")]
+            if identifiers != {("literal", expected_identifier, None, None)}:
+                errors.append(
+                    f"{category_class} must declare OCSF category identifier "
+                    f"{expected_identifier!r}"
+                )
+
+        identifier_owners = defaultdict(set)
+        for subject in sorted(ocsf_classes - {ocsf_event}):
+            if ocsf_event not in ancestors(subject):
+                errors.append(f"{subject} must descend from ocsf:Event")
+
+            identifiers = values[(subject, DCTERMS + "identifier")]
+            if subject == ocsf_discovery_result:
+                if identifiers:
+                    errors.append("ocsf:DiscoveryResult must not declare a concrete class ID")
+            elif len(identifiers) != 1 or any(obj[0] != "literal" for obj in identifiers):
+                errors.append(f"{subject} must declare exactly one literal OCSF identifier")
+            else:
+                identifier = next(iter(identifiers))[1]
+                identifier_owners[identifier].add(subject)
+
+            see_also = values[(subject, RDFS + "seeAlso")]
+            if len(see_also) != 1 or any(obj[0] != "iri" for obj in see_also):
+                errors.append(f"{subject} must declare exactly one IRI-valued rdfs:seeAlso")
+
+        if len(identifier_owners) != 87:
+            errors.append(
+                "the OCSF 1.9.0 adapter must contain 87 category and concrete class IDs; "
+                f"found {len(identifier_owners)}"
+            )
+        for identifier, owners in sorted(identifier_owners.items()):
+            if len(owners) > 1:
+                rendered = ", ".join(sorted(owners))
+                errors.append(f"duplicate OCSF identifier {identifier!r}: {rendered}")
+
+    uco_prefixes = (
+        UCO + "action/",
+        UCO + "core/",
+        UCO + "identity/",
+        UCO + "location/",
+        UCO + "observable/",
+    )
+    uco_mapped_classes = {
+        subject
+        for subject in direct_superclasses
+        if subject.startswith(uco_prefixes)
+        and "ontologies/frameworks/uco.ttl" in sources.get(subject, set())
+    }
+    if uco_mapped_classes:
+        expected_uco_mappings = {
+            UCO + "action/Action": STONEWORK + "CyberActivity",
+            UCO + "core/Event": STONEWORK + "Event",
+            UCO + "core/Grouping": STONEWORK + "Grouping",
+            UCO + "core/Relationship": STONEWORK + "QualifiedAssertion",
+            UCO + "observable/File": STONEWORK + "File",
+            UCO + "observable/ObservableObject": STONEWORK + "CyberEntity",
+            UCO + "observable/Observation": STONEWORK + "CyberActivity",
+            UCO + "observable/Process": STONEWORK + "RuntimeProcess",
+            UCO + "observable/UserAccount": STONEWORK + "UserAccount",
+            UCO + "observable/WindowsRegistryKey": STONEWORK + "RegistryKey",
+            UCO + "observable/X509Certificate": STONEWORK + "Certificate",
+        }
+        for uco_class, stonework_class in expected_uco_mappings.items():
+            if stonework_class not in direct_superclasses[uco_class]:
+                errors.append(
+                    f"{uco_class} must map directly to {describe(stonework_class)}"
+                )
+        if len(uco_mapped_classes) != 49:
+            errors.append(
+                "the UCO 1.5.0 adapter must contain 49 class mappings; "
+                f"found {len(uco_mapped_classes)}"
+            )
+        for subject in sorted(uco_mapped_classes):
+            for target in direct_superclasses[subject]:
+                if not target.startswith(STONEWORK):
+                    errors.append(
+                        f"{subject} maps outside the STONEWORK namespace: {target}"
+                    )
+                elif owl_class not in types[target]:
+                    errors.append(
+                        f"{subject} maps to {describe(target)}, which is not an owl:Class"
+                    )
+
     required_local_imports = {
         "https://cyberterrain.org/ns/frameworks/cwe": {
             "https://cyberterrain.org/ns/frameworks/capec",
