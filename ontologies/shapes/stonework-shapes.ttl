@@ -313,3 +313,27 @@ stonework:RoleAssignmentShape
 		;
 	sh:targetClass stonework:RoleAssignment ;
 	.
+
+stonework:SecurityActuationShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:Countermeasure ;
+			sh:path stonework:appliesCountermeasure ;
+		] ,
+		[
+			sh:class stonework:CyberEntity ;
+			sh:message "A SecurityActuation must identify at least one affected CyberEntity."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:actsOn ;
+		] ,
+		[
+			sh:class stonework:SecurityActuator ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A SecurityActuation must identify exactly one SecurityActuator."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:madeByActuator ;
+		]
+		;
+	sh:targetClass stonework:SecurityActuation ;
+	.

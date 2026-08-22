@@ -35,7 +35,13 @@ def main() -> int:
         print(valid.stderr or valid.stdout, file=sys.stderr)
         return 1
 
-    invalid_fixtures = ("shacl-invalid.ttl", "shacl-invalid-ordering.ttl")
+    invalid_fixtures = (
+        "shacl-invalid.ttl",
+        "shacl-invalid-ordering.ttl",
+        "shacl-invalid-actuator.ttl",
+        "shacl-invalid-actuation-target.ttl",
+        "shacl-invalid-multiple-actuators.ttl",
+    )
     for fixture in invalid_fixtures:
         invalid = validate(fixture)
         if invalid.returncode == 0:
