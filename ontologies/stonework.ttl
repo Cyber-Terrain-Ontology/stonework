@@ -1413,14 +1413,6 @@ stonework:affiliatedWith
 	skos:prefLabel "affiliatedWith" ;
 	.
 
-stonework:alias
-	a owl:DatatypeProperty ;
-	rdfs:range xsd:string ;
-	skos:definition "An alternative name or pseudonym used by or associated with the entity."@en ;
-	skos:prefLabel "alias"@en ;
-	skos:scopeNote "Domain is intentionally unset because agents, malware, campaigns, products, infrastructure, and other entities may all have multiple aliases."@en ;
-	.
-
 stonework:analysisOf
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Analysis ;
@@ -4414,4 +4406,3 @@ stonework:worksFor
 	skos:definition "Relates a Person to the Organization they work for."@en ;
 	skos:prefLabel "worksFor"@en ;
 	.
-

@@ -119,6 +119,10 @@ python3 tools/check-ontology.py
 | Namespace | `https://cyberterrain.org/ns/stonework#` |
 | Base ontology | [STONES](https://github.com/Cyber-Terrain-Ontology/stones) |
 
+### Names and aliases
+
+Use `skos:prefLabel` for an entity's preferred human-readable name and repeat `skos:altLabel` for alternative names, pseudonyms, or spellings. `skos:altLabel` is intentionally not restricted to `stonework:Agent`: threat actors, malware, campaigns, tools, products, infrastructure, and other resources may all have alternate labels. Model a persona or account with its own identifiers and activity as a `stonework:DigitalIdentity`, not as a label.
+
 ---
 
 ## Ecosystem
