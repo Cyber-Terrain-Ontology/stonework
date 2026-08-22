@@ -22,6 +22,15 @@ jobs:
           distribution: temurin
           java-version: "21"
 
+      - name: Cache RDF toolkit
+        uses: actions/cache@v4
+        with:
+          path: tools/rdf-toolkit.jar
+          key: rdf-toolkit-${{ runner.os }}-${{ hashFiles('tools/download-rdf-toolkit.sh') }}
+
+      - name: Download RDF toolkit
+        run: bash tools/download-rdf-toolkit.sh
+
       - name: Check Turtle and OWL integrity
         run: python3 tools/check-ontology.py
 
