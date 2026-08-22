@@ -142,12 +142,13 @@ The SHACL file is an optional application-level data-quality profile; it does no
 
 Import the stable ontology IRI, such as `https://cyberterrain.org/ns/frameworks/cve`. Each ontology also declares an `owl:versionIRI` for consumers that need to pin an exact vocabulary release. The local XML catalog resolves both forms. Every bundled framework module imports the STONEWORK core directly and declares any additional bundled dependency, so a module can be loaded independently as well as through a profile.
 
-### Event and observable interoperability
+### Framework interoperability
 
+- `ontologies/frameworks/d3fend.ttl` maps compatible MITRE D3FEND 1.5.0 defensive and offensive techniques, tactics, events, artifacts, identifiers, and selected relationships into STONEWORK. It preserves D3FEND's source-native hierarchy and class/individual punning rather than asserting equivalence.
 - `ontologies/frameworks/ocsf.ttl` maps the complete OCSF 1.9.0 core event taxonomy into `stonework:Event`, retaining OCSF category and class identifiers for round-tripping.
 - `ontologies/frameworks/uco.ttl` maps compatible UCO 1.5.0 action, identity, location, and observable classes into STONEWORK. It remains class-only because UCO places observable values on facet nodes while STONEWORK commonly projects them directly onto domain entities.
 
-Both adapters are alignment modules rather than copies of their source standards. Load the official OCSF schema or UCO ontologies alongside STONEWORK when source-native constraints and attributes are required.
+These adapters are alignment modules rather than copies of their source standards. Load the official D3FEND ontology, OCSF schema, or UCO ontologies alongside STONEWORK when source-native constraints and attributes are required.
 
 ---
 
