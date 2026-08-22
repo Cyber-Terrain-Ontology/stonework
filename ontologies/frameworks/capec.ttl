@@ -123,4 +123,3 @@ capec:typicalSeverity
 	rdfs:domain capec:AttackPattern ;
 	rdfs:range xsd:string ;
 	.
-

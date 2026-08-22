@@ -1,17 +1,43 @@
 @prefix example: <https://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-example:indicator
-	a stonework:Indicator ;
-	stonework:confidence 85 ;
+example:activity
+	a stonework:CyberActivity ;
+	stonework:endedAtTime "2026-08-20T10:05:00Z"^^xsd:dateTime ;
+	stonework:startedAtTime "2026-08-20T10:00:00Z"^^xsd:dateTime ;
 	.
 
-example:vulnerability
-	a stonework:Vulnerability ;
-	stonework:cvssBaseScore 9.8 ;
-	stonework:epssScore 0.42 ;
-	stonework:isKnownExploited true ;
+example:actor
+	a stonework:ThreatActor ;
+	stonework:hasRoleAssignment example:sponsorAssignment ;
+	.
+
+example:address
+	a stonework:IPAddress ;
+	stonework:ipVersion "4"^^xsd:integer ;
+	.
+
+example:campaign
+	a stonework:Campaign ;
+	.
+
+example:certificate
+	a stonework:Certificate ;
+	stonework:certValidNotAfter "2027-01-01T00:00:00Z"^^xsd:dateTime ;
+	stonework:certValidNotBefore "2026-01-01T00:00:00Z"^^xsd:dateTime ;
+	.
+
+example:domain
+	a stonework:Domain ;
+	stonework:registrationDate "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+	.
+
+example:epssFeed
+	a stonework:Feed ;
 	.
 
 example:epssObservation
@@ -19,52 +45,9 @@ example:epssObservation
 	stonework:hasProvenance example:epssFeed ;
 	stonework:metricFor example:vulnerability ;
 	stonework:metricType stonework:metricEpssScore ;
-	stonework:metricValue 0.42 ;
+	stonework:metricValue "0.42"^^xsd:decimal ;
 	stonework:modelVersion "2026.1" ;
 	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
-	.
-
-example:epssFeed
-	a stonework:Feed ;
-	.
-
-example:likelihood
-	a stonework:Likelihood ;
-	stonework:likelihoodScore 0.6 ;
-	.
-
-example:location
-	a stonework:Location ;
-	stonework:latitude 40.7128 ;
-	stonework:longitude -74.0060 ;
-	.
-
-example:observation
-	a stonework:SecurityObservation ;
-	stonework:firstSeen "2026-08-20T10:00:00Z"^^xsd:dateTime ;
-	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
-	.
-
-example:certificate
-	a stonework:Certificate ;
-	stonework:certValidNotBefore "2026-01-01T00:00:00Z"^^xsd:dateTime ;
-	stonework:certValidNotAfter "2027-01-01T00:00:00Z"^^xsd:dateTime ;
-	.
-
-example:activity
-	a stonework:CyberActivity ;
-	stonework:startedAtTime "2026-08-20T10:00:00Z"^^xsd:dateTime ;
-	stonework:endedAtTime "2026-08-20T10:05:00Z"^^xsd:dateTime ;
-	.
-
-example:service
-	a stonework:NetworkService ;
-	stonework:port "443"^^xsd:unsignedShort ;
-	.
-
-example:address
-	a stonework:IPAddress ;
-	stonework:ipVersion 4 ;
 	.
 
 example:hash
@@ -73,22 +56,35 @@ example:hash
 	stonework:hashValue "dffd6021bb2bd33e0f47df5fcfe00d61010a3f9a8a70d1fc8ad2e72f15f5f65f" ;
 	.
 
-example:domain
-	a stonework:Domain ;
-	stonework:registrationDate "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+example:indicator
+	a stonework:Indicator ;
+	stonework:confidence "85"^^xsd:integer ;
 	.
 
-example:actor
-	a stonework:ThreatActor ;
-	stonework:hasRoleAssignment example:sponsorAssignment ;
+example:likelihood
+	a stonework:Likelihood ;
+	stonework:likelihoodScore "0.6"^^xsd:decimal ;
 	.
 
-example:campaign
-	a stonework:Campaign ;
+example:location
+	a stonework:Location ;
+	stonework:latitude "40.7128"^^xsd:decimal ;
+	stonework:longitude "-74.0060"^^xsd:decimal ;
+	.
+
+example:observation
+	a stonework:SecurityObservation ;
+	stonework:firstSeen "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
 	.
 
 example:roleSource
 	a stonework:Publication ;
+	.
+
+example:service
+	a stonework:NetworkService ;
+	stonework:port "443"^^xsd:unsignedShort ;
 	.
 
 example:sponsorAssignment
@@ -99,4 +95,11 @@ example:sponsorAssignment
 	stonework:rolePlayer example:actor ;
 	stonework:validFrom "2026-01-01T00:00:00Z"^^xsd:dateTime ;
 	stonework:validUntil "2026-12-31T23:59:59Z"^^xsd:dateTime ;
+	.
+
+example:vulnerability
+	a stonework:Vulnerability ;
+	stonework:cvssBaseScore "9.8"^^xsd:decimal ;
+	stonework:epssScore "0.42"^^xsd:decimal ;
+	stonework:isKnownExploited "true"^^xsd:boolean ;
 	.

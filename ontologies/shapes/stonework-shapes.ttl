@@ -1,287 +1,315 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-stonework:ConfidenceShape
+stonework:ActivityWindowShape
 	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:confidence ;
-	sh:property [
-		sh:path stonework:confidence ;
-		sh:datatype xsd:integer ;
-		sh:minInclusive 0 ;
-		sh:maxInclusive 100 ;
-		sh:maxCount 1 ;
-		sh:message "confidence must be one integer from 0 through 100."@en ;
-	] ;
-	.
-
-stonework:CvssBaseScoreShape
-	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:cvssBaseScore ;
-	sh:property [
-		sh:path stonework:cvssBaseScore ;
-		sh:datatype xsd:decimal ;
-		sh:minInclusive 0.0 ;
-		sh:maxInclusive 10.0 ;
-		sh:maxCount 1 ;
-		sh:message "cvssBaseScore must be one decimal from 0.0 through 10.0."@en ;
-	] ;
-	.
-
-stonework:EpssScoreShape
-	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:epssScore ;
-	sh:property [
-		sh:path stonework:epssScore ;
-		sh:datatype xsd:decimal ;
-		sh:minInclusive 0.0 ;
-		sh:maxInclusive 1.0 ;
-		sh:maxCount 1 ;
-		sh:message "epssScore must be one decimal from 0.0 through 1.0."@en ;
-	] ;
-	.
-
-stonework:LikelihoodScoreShape
-	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:likelihoodScore ;
-	sh:property [
-		sh:path stonework:likelihoodScore ;
-		sh:datatype xsd:decimal ;
-		sh:minInclusive 0.0 ;
-		sh:maxInclusive 1.0 ;
-		sh:maxCount 1 ;
-		sh:message "likelihoodScore must be one decimal from 0.0 through 1.0."@en ;
-	] ;
-	.
-
-stonework:LatitudeShape
-	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:latitude ;
-	sh:property [
-		sh:path stonework:latitude ;
-		sh:datatype xsd:decimal ;
-		sh:minInclusive -90.0 ;
-		sh:maxInclusive 90.0 ;
-		sh:maxCount 1 ;
-		sh:message "latitude must be one decimal from -90.0 through 90.0."@en ;
-	] ;
-	.
-
-stonework:LongitudeShape
-	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:longitude ;
-	sh:property [
-		sh:path stonework:longitude ;
-		sh:datatype xsd:decimal ;
-		sh:minInclusive -180.0 ;
-		sh:maxInclusive 180.0 ;
-		sh:maxCount 1 ;
-		sh:message "longitude must be one decimal from -180.0 through 180.0."@en ;
-	] ;
-	.
-
-stonework:ObservationWindowShape
-	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:firstSeen , stonework:lastSeen ;
 	sh:property
 		[
-			sh:path stonework:firstSeen ;
 			sh:datatype xsd:dateTime ;
-			sh:lessThanOrEquals stonework:lastSeen ;
-			sh:maxCount 1 ;
-			sh:message "firstSeen must be no later than lastSeen."@en ;
+			sh:lessThanOrEquals stonework:endedAtTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "startedAtTime must be no later than endedAtTime."@en ;
+			sh:path stonework:startedAtTime ;
 		] ,
 		[
-			sh:path stonework:lastSeen ;
 			sh:datatype xsd:dateTime ;
-			sh:maxCount 1 ;
-		] ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:endedAtTime ;
+		]
+		;
+	sh:targetSubjectsOf
+		stonework:endedAtTime ,
+		stonework:startedAtTime
+		;
 	.
 
 stonework:CertificateValidityShape
 	a sh:NodeShape ;
-	sh:targetClass stonework:Certificate ;
 	sh:property
 		[
-			sh:path stonework:certValidNotBefore ;
 			sh:datatype xsd:dateTime ;
 			sh:lessThanOrEquals stonework:certValidNotAfter ;
-			sh:maxCount 1 ;
+			sh:maxCount "1"^^xsd:integer ;
 			sh:message "certValidNotBefore must be no later than certValidNotAfter."@en ;
+			sh:path stonework:certValidNotBefore ;
 		] ,
 		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
 			sh:path stonework:certValidNotAfter ;
-			sh:datatype xsd:dateTime ;
-			sh:maxCount 1 ;
-		] ;
+		]
+		;
+	sh:targetClass stonework:Certificate ;
 	.
 
-stonework:ActivityWindowShape
+stonework:ConfidenceShape
 	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:startedAtTime , stonework:endedAtTime ;
-	sh:property
-		[
-			sh:path stonework:startedAtTime ;
-			sh:datatype xsd:dateTime ;
-			sh:lessThanOrEquals stonework:endedAtTime ;
-			sh:maxCount 1 ;
-			sh:message "startedAtTime must be no later than endedAtTime."@en ;
-		] ,
-		[
-			sh:path stonework:endedAtTime ;
-			sh:datatype xsd:dateTime ;
-			sh:maxCount 1 ;
-		] ;
-	.
-
-stonework:IpVersionShape
-	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:ipVersion ;
 	sh:property [
-		sh:path stonework:ipVersion ;
 		sh:datatype xsd:integer ;
-		sh:in ( 4 6 ) ;
-		sh:maxCount 1 ;
-		sh:message "ipVersion must be the integer 4 or 6."@en ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:maxInclusive "100"^^xsd:integer ;
+		sh:message "confidence must be one integer from 0 through 100."@en ;
+		sh:minInclusive "0"^^xsd:integer ;
+		sh:path stonework:confidence ;
 	] ;
+	sh:targetSubjectsOf stonework:confidence ;
 	.
 
-stonework:KnownExploitedShape
+stonework:CvssBaseScoreShape
 	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:isKnownExploited ;
 	sh:property [
-		sh:path stonework:isKnownExploited ;
-		sh:datatype xsd:boolean ;
-		sh:maxCount 1 ;
+		sh:datatype xsd:decimal ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:maxInclusive "10.0"^^xsd:decimal ;
+		sh:message "cvssBaseScore must be one decimal from 0.0 through 10.0."@en ;
+		sh:minInclusive "0.0"^^xsd:decimal ;
+		sh:path stonework:cvssBaseScore ;
 	] ;
+	sh:targetSubjectsOf stonework:cvssBaseScore ;
 	.
 
-stonework:PortShape
+stonework:EpssScoreShape
 	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:port , stonework:srcPort , stonework:dstPort ;
-	sh:property
-		[
-			sh:path stonework:port ;
-			sh:datatype xsd:unsignedShort ;
-			sh:maxCount 1 ;
-		] ,
-		[
-			sh:path stonework:srcPort ;
-			sh:datatype xsd:unsignedShort ;
-			sh:maxCount 1 ;
-		] ,
-		[
-			sh:path stonework:dstPort ;
-			sh:datatype xsd:unsignedShort ;
-			sh:maxCount 1 ;
-		] ;
-	.
-
-stonework:RegistrationDateShape
-	a sh:NodeShape ;
-	sh:targetSubjectsOf stonework:registrationDate ;
 	sh:property [
-		sh:path stonework:registrationDate ;
-		sh:datatype xsd:dateTime ;
-		sh:maxCount 1 ;
+		sh:datatype xsd:decimal ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:maxInclusive "1.0"^^xsd:decimal ;
+		sh:message "epssScore must be one decimal from 0.0 through 1.0."@en ;
+		sh:minInclusive "0.0"^^xsd:decimal ;
+		sh:path stonework:epssScore ;
 	] ;
+	sh:targetSubjectsOf stonework:epssScore ;
 	.
 
 stonework:HashShape
 	a sh:NodeShape ;
-	sh:targetClass stonework:Hash ;
 	sh:property
 		[
-			sh:path stonework:hashAlgorithm ;
 			sh:datatype xsd:string ;
-			sh:minCount 1 ;
-			sh:maxCount 1 ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:hashAlgorithm ;
 		] ,
 		[
-			sh:path stonework:hashValue ;
 			sh:datatype xsd:string ;
-			sh:minCount 1 ;
-			sh:maxCount 1 ;
-		] ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:hashValue ;
+		]
+		;
+	sh:targetClass stonework:Hash ;
 	.
 
-stonework:QualifiedAssertionShape
+stonework:IpVersionShape
 	a sh:NodeShape ;
-	sh:targetClass stonework:QualifiedAssertion ;
-	sh:property
-		[
-			sh:path stonework:hasProvenance ;
-			sh:class stonework:Provenance ;
-			sh:minCount 1 ;
-			sh:message "A qualified assertion must identify at least one provenance source."@en ;
-		] ,
-		[
-			sh:path stonework:validFrom ;
-			sh:datatype xsd:dateTime ;
-			sh:lessThanOrEquals stonework:validUntil ;
-			sh:maxCount 1 ;
-			sh:message "validFrom must be no later than validUntil."@en ;
-		] ,
-		[
-			sh:path stonework:validUntil ;
-			sh:datatype xsd:dateTime ;
-			sh:maxCount 1 ;
-		] ;
+	sh:property [
+		sh:datatype xsd:integer ;
+		sh:in (
+			"4"^^xsd:integer
+			"6"^^xsd:integer
+		) ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "ipVersion must be the integer 4 or 6."@en ;
+		sh:path stonework:ipVersion ;
+	] ;
+	sh:targetSubjectsOf stonework:ipVersion ;
+	.
+
+stonework:KnownExploitedShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:datatype xsd:boolean ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:path stonework:isKnownExploited ;
+	] ;
+	sh:targetSubjectsOf stonework:isKnownExploited ;
+	.
+
+stonework:LatitudeShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:datatype xsd:decimal ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:maxInclusive "90.0"^^xsd:decimal ;
+		sh:message "latitude must be one decimal from -90.0 through 90.0."@en ;
+		sh:minInclusive "-90.0"^^xsd:decimal ;
+		sh:path stonework:latitude ;
+	] ;
+	sh:targetSubjectsOf stonework:latitude ;
+	.
+
+stonework:LikelihoodScoreShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:datatype xsd:decimal ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:maxInclusive "1.0"^^xsd:decimal ;
+		sh:message "likelihoodScore must be one decimal from 0.0 through 1.0."@en ;
+		sh:minInclusive "0.0"^^xsd:decimal ;
+		sh:path stonework:likelihoodScore ;
+	] ;
+	sh:targetSubjectsOf stonework:likelihoodScore ;
+	.
+
+stonework:LongitudeShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:datatype xsd:decimal ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:maxInclusive "180.0"^^xsd:decimal ;
+		sh:message "longitude must be one decimal from -180.0 through 180.0."@en ;
+		sh:minInclusive "-180.0"^^xsd:decimal ;
+		sh:path stonework:longitude ;
+	] ;
+	sh:targetSubjectsOf stonework:longitude ;
 	.
 
 stonework:MetricObservationShape
 	a sh:NodeShape ;
-	sh:targetClass stonework:MetricObservation ;
 	sh:property
 		[
-			sh:path stonework:metricFor ;
 			sh:class stonework:CyberEntity ;
-			sh:minCount 1 ;
-			sh:maxCount 1 ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:metricFor ;
 		] ,
 		[
-			sh:path stonework:metricType ;
 			sh:class stonework:MetricType ;
-			sh:minCount 1 ;
-			sh:maxCount 1 ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:metricType ;
 		] ,
 		[
-			sh:path stonework:metricValue ;
-			sh:nodeKind sh:Literal ;
-			sh:minCount 1 ;
-			sh:maxCount 1 ;
-		] ,
-		[
-			sh:path stonework:observedAt ;
 			sh:datatype xsd:dateTime ;
-			sh:minCount 1 ;
-			sh:maxCount 1 ;
-		] ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:observedAt ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path stonework:metricValue ;
+		]
+		;
+	sh:targetClass stonework:MetricObservation ;
+	.
+
+stonework:ObservationWindowShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:datatype xsd:dateTime ;
+			sh:lessThanOrEquals stonework:lastSeen ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "firstSeen must be no later than lastSeen."@en ;
+			sh:path stonework:firstSeen ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:lastSeen ;
+		]
+		;
+	sh:targetSubjectsOf
+		stonework:firstSeen ,
+		stonework:lastSeen
+		;
+	.
+
+stonework:PortShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:datatype xsd:unsignedShort ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:dstPort ;
+		] ,
+		[
+			sh:datatype xsd:unsignedShort ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:port ;
+		] ,
+		[
+			sh:datatype xsd:unsignedShort ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:srcPort ;
+		]
+		;
+	sh:targetSubjectsOf
+		stonework:dstPort ,
+		stonework:port ,
+		stonework:srcPort
+		;
+	.
+
+stonework:QualifiedAssertionShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:Provenance ;
+			sh:message "A qualified assertion must identify at least one provenance source."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:hasProvenance ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
+			sh:lessThanOrEquals stonework:validUntil ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "validFrom must be no later than validUntil."@en ;
+			sh:path stonework:validFrom ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:validUntil ;
+		]
+		;
+	sh:targetClass stonework:QualifiedAssertion ;
+	.
+
+stonework:RegistrationDateShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:datatype xsd:dateTime ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:path stonework:registrationDate ;
+	] ;
+	sh:targetSubjectsOf stonework:registrationDate ;
 	.
 
 stonework:RoleAssignmentShape
 	a sh:NodeShape ;
-	sh:targetClass stonework:RoleAssignment ;
 	sh:property
 		[
-			sh:path stonework:rolePlayer ;
 			sh:class stonework:CyberEntity ;
-			sh:minCount 1 ;
-			sh:maxCount 1 ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:rolePlayer ;
 		] ,
 		[
-			sh:path stonework:assignedRole ;
 			sh:class stonework:Role ;
-			sh:minCount 1 ;
-			sh:maxCount 1 ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:assignedRole ;
 		] ,
 		[
-			sh:path stonework:roleContext ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:minCount "1"^^xsd:integer ;
 			sh:or (
-				[ sh:class stonework:CyberActivity ]
-				[ sh:class stonework:CyberEntity ]
+				[
+					sh:class stonework:CyberActivity ;
+				]
+				[
+					sh:class stonework:CyberEntity ;
+				]
 			) ;
-			sh:minCount 1 ;
-			sh:maxCount 1 ;
-		] ;
+			sh:path stonework:roleContext ;
+		]
+		;
+	sh:targetClass stonework:RoleAssignment ;
 	.

@@ -31,6 +31,9 @@ jobs:
       - name: Download RDF toolkit
         run: bash tools/download-rdf-toolkit.sh
 
+      - name: Check Turtle formatting
+        run: bash .githooks/format-ttl.sh --check
+
       - name: Check Turtle and OWL integrity
         run: python3 tools/check-ontology.py
 

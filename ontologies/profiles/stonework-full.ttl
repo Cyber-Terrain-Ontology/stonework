@@ -1,9 +1,31 @@
+# imports: https://cyberterrain.org/ns/frameworks/bfo
+# imports: https://cyberterrain.org/ns/frameworks/capec
+# imports: https://cyberterrain.org/ns/frameworks/cis
+# imports: https://cyberterrain.org/ns/frameworks/cpe
+# imports: https://cyberterrain.org/ns/frameworks/cve
+# imports: https://cyberterrain.org/ns/frameworks/cwe
+# imports: https://cyberterrain.org/ns/frameworks/d3fend
+# imports: https://cyberterrain.org/ns/frameworks/dhcp
+# imports: https://cyberterrain.org/ns/frameworks/dns
+# imports: https://cyberterrain.org/ns/frameworks/email
+# imports: https://cyberterrain.org/ns/frameworks/killchain
+# imports: https://cyberterrain.org/ns/frameworks/nist
+# imports: https://cyberterrain.org/ns/frameworks/registry
+# imports: https://cyberterrain.org/ns/frameworks/stix
+# imports: https://cyberterrain.org/ns/frameworks/uri
+# imports: https://cyberterrain.org/ns/stonework#
+# imports: https://cyberterrain.org/ns/stonework/categories#
+
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xs: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://cyberterrain.org/ns/stonework/profiles/full>
 	a owl:Ontology ;
+	rdfs:label "STONEWORK Full Bundled Profile"@en ;
+	dcterms:description "Import-only profile loading the STONEWORK core, controlled vocabularies, and every framework mapping bundled with this repository. External source datasets such as ATT&CK and D3FEND data remain separately loadable peer graphs."@en ;
 	owl:imports
 		<https://cyberterrain.org/ns/frameworks/bfo> ,
 		<https://cyberterrain.org/ns/frameworks/capec> ,
@@ -25,6 +47,4 @@
 		;
 	owl:versionIRI <https://cyberterrain.org/ns/stonework/profiles/full/0.1.0> ;
 	owl:versionInfo "0.1.0" ;
-	dcterms:description "Import-only profile loading the STONEWORK core, controlled vocabularies, and every framework mapping bundled with this repository. External source datasets such as ATT&CK and D3FEND data remain separately loadable peer graphs."@en ;
-	rdfs:label "STONEWORK Full Bundled Profile"@en ;
 	.

@@ -1218,4 +1218,3 @@ cve:workarounds
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:LocalizedText ;
 	.
-

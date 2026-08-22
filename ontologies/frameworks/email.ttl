@@ -242,4 +242,3 @@ email:returnPath
 	rdfs:domain email:EmailHeader ;
 	rdfs:range stonework:EmailAddress ;
 	.
-

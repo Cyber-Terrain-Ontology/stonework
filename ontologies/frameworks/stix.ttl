@@ -587,4 +587,3 @@ stonex:_workstation
 stonex:_worm
 	owl:sameAs stonework:Worm ;
 	.
-

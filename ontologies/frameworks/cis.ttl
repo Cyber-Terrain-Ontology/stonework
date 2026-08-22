@@ -97,4 +97,3 @@ cis:title
 	rdfs:domain cis:Control ;
 	rdfs:range xsd:string ;
 	.
-

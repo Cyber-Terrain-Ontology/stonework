@@ -105,4 +105,3 @@ nist:title
 	rdfs:domain nist:Control ;
 	rdfs:range xsd:string ;
 	.
-

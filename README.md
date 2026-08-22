@@ -121,11 +121,12 @@ The first command activates the hooks tracked in `.githooks/`. The second downlo
 Run the ontology checks directly at any time with:
 
 ```bash
+bash .githooks/format-ttl.sh --check
 python3 tools/check-ontology.py
 python3 tools/check-shacl.py
 ```
 
-The first command parses every Turtle file and checks high-value OWL integrity rules. The second executes the SHACL profile in `ontologies/shapes/stonework-shapes.ttl` with the repository's bundled RDF4J runtime, accepting a conforming fixture and proving that a non-conforming fixture is rejected.
+The first command verifies canonical Turtle formatting without modifying files. The second parses every Turtle file and checks high-value OWL integrity rules. The third executes the SHACL profile in `ontologies/shapes/stonework-shapes.ttl` with the repository's bundled RDF4J runtime, accepting a conforming fixture and proving that a non-conforming fixture is rejected. CI runs all three checks for every pull request.
 
 **What the hook does on each commit:**
 - Canonicalizes all staged `.ttl` files via rdf-toolkit (alphabetical prefixes, tab indentation, consistent triple ordering) so diffs reflect content changes, not style noise
