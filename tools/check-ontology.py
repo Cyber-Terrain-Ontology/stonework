@@ -1,0 +1,290 @@
+#!/usr/bin/env python3
+"""Parse every Turtle file and enforce a few high-value OWL integrity rules."""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+import tempfile
+import xml.etree.ElementTree as ET
+from collections import defaultdict
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+JAR = ROOT / "tools" / "rdf-toolkit.jar"
+
+RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+RDFS = "http://www.w3.org/2000/01/rdf-schema#"
+OWL = "http://www.w3.org/2002/07/owl#"
+SKOS = "http://www.w3.org/2004/02/skos/core#"
+STONEWORK = "https://cyberterrain.org/ns/stonework#"
+STONEX = "https://cyberterrain.org/ns/stonex#"
+
+RDF_TYPE = RDF + "type"
+RDF_ABOUT = "{" + RDF + "}about"
+RDF_RESOURCE = "{" + RDF + "}resource"
+RDF_NODE_ID = "{" + RDF + "}nodeID"
+RDF_DATATYPE = "{" + RDF + "}datatype"
+XML_LANG = "{http://www.w3.org/XML/1998/namespace}lang"
+
+
+def expanded_name(tag: str) -> str:
+    if not tag.startswith("{"):
+        return tag
+    namespace, local = tag[1:].split("}", 1)
+    return namespace + local
+
+
+def parse_file(path: Path, output: Path):
+    command = [
+        "java",
+        "-jar",
+        str(JAR),
+        "-sfmt",
+        "turtle",
+        "-tfmt",
+        "rdf-xml",
+        "-dtd",
+        "-s",
+        str(path),
+        "-t",
+        str(output),
+    ]
+    result = subprocess.run(command, capture_output=True, text=True)
+    if result.returncode:
+        detail = (result.stderr or result.stdout).strip()
+        raise ValueError(detail or "rdf-toolkit could not parse the file")
+
+    triples = []
+    root = ET.parse(output).getroot()
+    file_key = path.relative_to(ROOT).as_posix()
+    for element in root:
+        subject = element.get(RDF_ABOUT)
+        if subject is None:
+            node_id = element.get(RDF_NODE_ID)
+            if node_id is None:
+                continue
+            subject = f"_:{file_key}:{node_id}"
+
+        element_type = expanded_name(element.tag)
+        if element_type != RDF + "Description":
+            triples.append((subject, RDF_TYPE, ("iri", element_type)))
+
+        for predicate_element in element:
+            predicate = expanded_name(predicate_element.tag)
+            resource = predicate_element.get(RDF_RESOURCE)
+            if resource is not None:
+                obj = ("iri", resource)
+            else:
+                node_id = predicate_element.get(RDF_NODE_ID)
+                if node_id is not None:
+                    obj = ("bnode", f"_:{file_key}:{node_id}")
+                else:
+                    obj = (
+                        "literal",
+                        predicate_element.text or "",
+                        predicate_element.get(XML_LANG),
+                        predicate_element.get(RDF_DATATYPE),
+                    )
+            triples.append((subject, predicate, obj))
+    return triples
+
+
+def describe(resource: str) -> str:
+    return resource.replace(STONEWORK, "stonework:")
+
+
+def main() -> int:
+    if not JAR.is_file():
+        print(f"ERROR: rdf-toolkit.jar not found at {JAR}", file=sys.stderr)
+        print("Run once: bash tools/download-rdf-toolkit.sh", file=sys.stderr)
+        return 1
+
+    ttl_files = sorted(ROOT.glob("**/*.ttl"))
+    triples = []
+    sources = defaultdict(set)
+    errors = []
+
+    with tempfile.TemporaryDirectory(prefix="stonework-check-") as temp_dir:
+        for index, path in enumerate(ttl_files):
+            try:
+                file_triples = parse_file(path, Path(temp_dir) / f"{index}.rdf")
+            except (ValueError, ET.ParseError) as exc:
+                errors.append(f"{path.relative_to(ROOT)}: parse failure: {exc}")
+                continue
+            triples.extend(file_triples)
+            for subject, _, _ in file_triples:
+                if not subject.startswith("_:"):
+                    sources[subject].add(path.relative_to(ROOT).as_posix())
+
+    values = defaultdict(set)
+    types = defaultdict(set)
+    for subject, predicate, obj in triples:
+        values[(subject, predicate)].add(obj)
+        if predicate == RDF_TYPE and obj[0] == "iri":
+            types[subject].add(obj[1])
+
+    def list_members(head):
+        members = set()
+        seen = set()
+        while head[0] == "bnode" and head[1] not in seen:
+            seen.add(head[1])
+            first = values[(head[1], RDF + "first")]
+            rest = values[(head[1], RDF + "rest")]
+            members.update(obj[1] for obj in first if obj[0] == "iri")
+            if len(rest) != 1:
+                break
+            head = next(iter(rest))
+        return members
+
+    def class_expression_members(obj):
+        if obj[0] == "iri":
+            return {obj[1]}
+        if obj[0] != "bnode":
+            return set()
+        members = set()
+        for union_head in values[(obj[1], OWL + "unionOf")]:
+            members.update(list_members(union_head))
+        return members
+
+    def endpoints(subject, predicate):
+        result = set()
+        for obj in values[(subject, predicate)]:
+            result.update(class_expression_members(obj))
+        return result
+
+    direct_superclasses = defaultdict(set)
+    for (subject, predicate), objects in values.items():
+        if predicate == RDFS + "subClassOf":
+            direct_superclasses[subject].update(obj[1] for obj in objects if obj[0] == "iri")
+
+    def ancestors(subject):
+        result = {subject}
+        pending = [subject]
+        while pending:
+            current = pending.pop()
+            for superclass in direct_superclasses[current] - result:
+                result.add(superclass)
+                pending.append(superclass)
+        return result
+
+    def compatible(left, right):
+        return any(
+            right_class in ancestors(left_class) or left_class in ancestors(right_class)
+            for left_class in left
+            for right_class in right
+        )
+
+    object_property = OWL + "ObjectProperty"
+    datatype_property = OWL + "DatatypeProperty"
+    named_individual = OWL + "NamedIndividual"
+    owl_class = OWL + "Class"
+
+    for subject, subject_types in sorted(types.items()):
+        location = ", ".join(sorted(sources.get(subject, ())))
+        if object_property in subject_types and datatype_property in subject_types:
+            errors.append(f"{describe(subject)} ({location}) is both an object and datatype property")
+        if owl_class in subject_types and named_individual in subject_types:
+            errors.append(f"{describe(subject)} ({location}) is both a class and named individual")
+
+        if object_property in subject_types or datatype_property in subject_types:
+            for predicate, label in ((RDFS + "domain", "domain"), (RDFS + "range", "range")):
+                named = sorted(obj[1] for obj in values[(subject, predicate)] if obj[0] == "iri")
+                if len(named) > 1:
+                    rendered = ", ".join(describe(item) for item in named)
+                    errors.append(
+                        f"{describe(subject)} ({location}) has multiple named rdfs:{label} values "
+                        f"({rendered}); use an owl:unionOf class expression for alternatives"
+                    )
+
+    for subject in sorted(sources):
+        definitions = values[(subject, SKOS + "definition")]
+        lexical_definitions = {obj[1:] for obj in definitions if obj[0] == "literal"}
+        if subject.startswith(STONEWORK) and len(lexical_definitions) > 1:
+            location = ", ".join(sorted(sources[subject]))
+            errors.append(f"{describe(subject)} ({location}) has conflicting skos:definition values")
+
+        deprecated = any(
+            obj[0] == "literal" and obj[1].casefold() == "true"
+            for obj in values[(subject, OWL + "deprecated")]
+        )
+        if deprecated and values[(subject, OWL + "sameAs")]:
+            errors.append(
+                f"{describe(subject)} is deprecated and declares owl:sameAs; use a replacement "
+                "link so deprecation is not inferred onto the canonical resource"
+            )
+
+    malware_type = STONEWORK + "MalwareType"
+    for subject, subject_types in sorted(types.items()):
+        if malware_type not in subject_types:
+            continue
+        for notation in values[(subject, SKOS + "notation")]:
+            if notation[0] != "literal":
+                continue
+            stonex_value = STONEX + "_" + notation[1]
+            if ("iri", subject) not in values[(stonex_value, OWL + "sameAs")]:
+                errors.append(
+                    f"{describe(subject)} has STIX notation {notation[1]!r} but "
+                    f"{stonex_value} does not map to it with owl:sameAs"
+                )
+
+    checked_inverses = set()
+    for subject, predicate, obj in triples:
+        if predicate != OWL + "inverseOf" or obj[0] != "iri":
+            continue
+        inverse = obj[1]
+        pair = tuple(sorted((subject, inverse)))
+        if pair in checked_inverses:
+            continue
+        checked_inverses.add(pair)
+        comparisons = (
+            (endpoints(subject, RDFS + "domain"), endpoints(inverse, RDFS + "range"), "domain/range"),
+            (endpoints(subject, RDFS + "range"), endpoints(inverse, RDFS + "domain"), "range/domain"),
+        )
+        for left, right, endpoint_names in comparisons:
+            if left and right and not compatible(left, right):
+                errors.append(
+                    f"{describe(subject)} and {describe(inverse)} declare owl:inverseOf but have "
+                    f"incompatible {endpoint_names} classes"
+                )
+
+    label_owners = defaultdict(set)
+    for subject, subject_types in types.items():
+        if named_individual not in subject_types:
+            continue
+        domain_types = subject_types - {named_individual}
+        for label in values[(subject, SKOS + "prefLabel")]:
+            if label[0] != "literal":
+                continue
+            for domain_type in domain_types:
+                label_owners[(domain_type, label[1].casefold())].add(subject)
+
+    same_as = defaultdict(set)
+    for subject, predicate, obj in triples:
+        if predicate == OWL + "sameAs" and obj[0] == "iri":
+            same_as[subject].add(obj[1])
+            same_as[obj[1]].add(subject)
+
+    for (domain_type, label), owners in sorted(label_owners.items()):
+        if len(owners) < 2:
+            continue
+        if all(other in same_as[owner] for owner in owners for other in owners if other != owner):
+            continue
+        rendered = ", ".join(describe(owner) for owner in sorted(owners))
+        errors.append(
+            f'duplicate skos:prefLabel "{label}" for {describe(domain_type)} individuals: {rendered}'
+        )
+
+    if errors:
+        print("Ontology integrity check failed:", file=sys.stderr)
+        for error in errors:
+            print(f"  - {error}", file=sys.stderr)
+        return 1
+
+    print(f"Ontology integrity check passed ({len(ttl_files)} Turtle files).")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
