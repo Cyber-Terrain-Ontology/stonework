@@ -128,6 +128,8 @@ python3 tools/check-shacl.py
 
 The first command verifies canonical Turtle formatting without modifying files. The second parses every Turtle file and checks high-value OWL integrity rules. The third executes the SHACL profile in `ontologies/shapes/stonework-shapes.ttl` with the repository's bundled RDF4J runtime, accepting a conforming fixture and proving that a non-conforming fixture is rejected. CI runs all three checks for every pull request.
 
+The SHACL file is an optional application-level data-quality profile; it does not change STONEWORK's open-world OWL semantics and is not part of the core, STIX, or full-profile import closure. `tools/check-shacl.py` explicitly registers the shapes and validates only the repository's test fixtures. It does not validate external framework datasets or consumer graphs. Existing ingest pipelines are therefore unaffected unless they deliberately load the shapes into a SHACL-aware engine and invoke validation. When the profile is applied, required fields and cardinalities express payload completeness for that validation context rather than asserting that missing RDF statements are false.
+
 **What the hook does on each commit:**
 - Canonicalizes all staged `.ttl` files via rdf-toolkit (alphabetical prefixes, tab indentation, consistent triple ordering) so diffs reflect content changes, not style noise
 - Strips Protégé's injected default `:` prefix when present
