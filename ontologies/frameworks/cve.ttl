@@ -366,6 +366,7 @@ cve:RESERVED
 cve:Reference
 	a owl:Class ;
 	rdfs:subClassOf
+		stonework:OnlineReference ,
 		[
 			a owl:Restriction ;
 			owl:onProperty cve:name ;
@@ -560,7 +561,7 @@ cve:cveId
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
-	rdfs:subPropertyOf stonework:vulnerabilityId ;
+	rdfs:subPropertyOf stonework:cveId ;
 	rdfs:label "cve_id"@en ;
 	rdfs:comment "CVE identifier, e.g. 'CVE-2021-44228'"@en ;
 	rdfs:domain cve:CveRecord ;
@@ -885,10 +886,11 @@ cve:purl
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:purl ;
 	rdfs:label "purl"@en ;
 	rdfs:comment "Package URL (purl) — v5 5.2+"@en ;
 	rdfs:domain cve:AffectedProduct ;
-	rdfs:range xsd:string ;
+	rdfs:range xsd:anyURI ;
 	.
 
 cve:raw
@@ -1087,6 +1089,7 @@ cve:timestamp
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:timestamp ;
 	rdfs:label "timestamp"@en ;
 	rdfs:domain cve:TimelineEntry ;
 	rdfs:range xsd:dateTime ;
@@ -1097,6 +1100,7 @@ cve:title
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:title ;
 	rdfs:label "title"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:string ;
@@ -1126,9 +1130,10 @@ cve:url
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:url ;
 	rdfs:label "url"@en ;
 	rdfs:domain cve:Reference ;
-	rdfs:range xsd:string ;
+	rdfs:range xsd:anyURI ;
 	.
 
 cve:value

@@ -202,7 +202,7 @@ vulnerability assessment, ...).
 | `stonework:predictedType` | `Hypothesis` → `rdfs:Class` | Predicted *class* of outcome (mirrors `guardType`) — the common case, since a Hypothesis formed before execution usually can't name a specific not-yet-constructed individual. |
 | `stonework:predictedValue` | `Hypothesis` → `owl:Thing` | Predicted specific individual (mirrors `boundTo`) — rare case. |
 | `stonework:predictedLiteral` | `Hypothesis` → `rdfs:Literal` | Predicted scalar (mirrors `boundToLiteral`). |
-| `stonework:confidence` | `Hypothesis` → `xsd:integer` | 0–100, matching STIX's confidence scale. |
+| `stonework:confidence` | domain unset → `xsd:integer` | 0–100 confidence used by Hypotheses and STIX-derived intelligence objects. |
 | `stonework:hasHypothesisStatus` | `Hypothesis` → `HypothesisStatus` (in `categories.ttl`) | Explicit `Pending`/`Confirmed`/`Refuted` status — not inferred from which Transition fired. |
 | `stonework:produces` | `CyberActivity` → `CyberEntity` | General "this activity constructed this thing" link. |
 | `stonework:actsOn` | `CyberActivity` → `CyberEntity` | The asset/artifact an activity operated against. Mirrors `prov:used`. |
