@@ -53,6 +53,11 @@ stones:CourseOfAction
 	rdfs:subClassOf stonework:CourseOfAction ;
 	.
 
+stones:DirectoryObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:Directory ;
+	.
+
 stones:DomainNameObject
 	a owl:Class ;
 	rdfs:subClassOf stonework:Domain ;
@@ -61,6 +66,16 @@ stones:DomainNameObject
 stones:EmailAddressObject
 	a owl:Class ;
 	rdfs:subClassOf stonework:EmailAddress ;
+	.
+
+stones:EmailMessageObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:EmailMessage ;
+	.
+
+stones:ExtensionDefinitionObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
 	.
 
 stones:ExternalReference
@@ -128,6 +143,11 @@ stones:KillChainPhase
 	rdfs:subClassOf stonework:KillChainPhase ;
 	.
 
+stones:LanguageContentObject
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	.
+
 stones:Location
 	a owl:Class ;
 	rdfs:subClassOf stonework:Location ;
@@ -186,6 +206,11 @@ stones:Opinion
 stones:ProcessObject
 	a owl:Class ;
 	rdfs:subClassOf stonework:RuntimeProcess ;
+	.
+
+stones:Relationship
+	a owl:Class ;
+	rdfs:subClassOf stonework:QualifiedAssertion ;
 	.
 
 stones:Report
