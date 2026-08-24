@@ -22,6 +22,7 @@ SKOS = "http://www.w3.org/2004/02/skos/core#"
 DCTERMS = "http://purl.org/dc/terms/"
 STONEWORK = "https://cyberterrain.org/ns/stonework#"
 STONEX = "https://cyberterrain.org/ns/stonex#"
+D3FEND = "http://d3fend.mitre.org/ontologies/d3fend.owl#"
 OCSF = "https://cyberterrain.org/ns/frameworks/ocsf#"
 UCO = "https://ontology.unifiedcyberontology.org/uco/"
 
@@ -96,7 +97,7 @@ def parse_file(path: Path, output: Path):
 
 
 def describe(resource: str) -> str:
-    return resource.replace(STONEWORK, "stonework:")
+    return resource.replace(STONEWORK, "stonework:").replace(D3FEND, "d3f:")
 
 
 def main() -> int:
@@ -182,9 +183,12 @@ def main() -> int:
         return result
 
     direct_superclasses = defaultdict(set)
+    direct_superproperties = defaultdict(set)
     for (subject, predicate), objects in values.items():
         if predicate == RDFS + "subClassOf":
             direct_superclasses[subject].update(obj[1] for obj in objects if obj[0] == "iri")
+        elif predicate == RDFS + "subPropertyOf":
+            direct_superproperties[subject].update(obj[1] for obj in objects if obj[0] == "iri")
 
     def ancestors(subject):
         result = {subject}
@@ -209,6 +213,118 @@ def main() -> int:
     owl_class = OWL + "Class"
     owl_ontology = OWL + "Ontology"
     concept_scheme = SKOS + "ConceptScheme"
+
+    d3fend_file = "ontologies/frameworks/d3fend.ttl"
+    d3fend_ontology = "https://cyberterrain.org/ns/frameworks/d3fend"
+    expected_d3fend_source = (
+        "https://d3fend.mitre.org/ontologies/d3fend/1.5.0/d3fend.owl"
+    )
+    if d3fend_file in sources.get(d3fend_ontology, set()):
+        if ("iri", expected_d3fend_source) not in values[
+            (d3fend_ontology, DCTERMS + "source")
+        ]:
+            errors.append(
+                "the D3FEND adapter must cite the version-pinned D3FEND 1.5.0 ontology "
+                "with dcterms:source"
+            )
+
+    expected_d3fend_classes = {
+        D3FEND + "AccessControlList": {STONEWORK + "AccessControlList"},
+        D3FEND + "Agent": {STONEWORK + "Agent"},
+        D3FEND + "AgentGroup": {STONEWORK + "Group"},
+        D3FEND + "AnalyticTechnique": {STONEWORK + "AnalyticTechnique"},
+        D3FEND + "Certificate": {STONEWORK + "Certificate"},
+        D3FEND + "ComputerPlatform": {STONEWORK + "Host"},
+        D3FEND + "CyberTechnique": {STONEWORK + "CyberTechnique"},
+        D3FEND + "DefensiveTactic": {STONEWORK + "DefensiveTactic"},
+        D3FEND + "DefensiveTechnique": {
+            STONEWORK + "Countermeasure",
+            STONEWORK + "DefendTechnique",
+        },
+        D3FEND + "DigitalArtifact": {STONEWORK + "DigitalArtifact"},
+        D3FEND + "DigitalEvent": {STONEWORK + "CyberActivity"},
+        D3FEND + "DigitalIdentity": {STONEWORK + "DigitalIdentity"},
+        D3FEND + "Directory": {STONEWORK + "Directory"},
+        D3FEND + "DomainName": {STONEWORK + "Domain", STONEWORK + "Identifier"},
+        D3FEND + "Event": {STONEWORK + "Event"},
+        D3FEND + "File": {STONEWORK + "File"},
+        D3FEND + "Host": {STONEWORK + "Host"},
+        D3FEND + "IPAddress": {STONEWORK + "IPAddress", STONEWORK + "Identifier"},
+        D3FEND + "Identifier": {STONEWORK + "Identifier"},
+        D3FEND + "Log": {STONEWORK + "Log"},
+        D3FEND + "MACAddress": {STONEWORK + "MACAddress"},
+        D3FEND + "NetworkNode": {STONEWORK + "Infrastructure"},
+        D3FEND + "NetworkServiceApplicationProcess": {STONEWORK + "NetworkService"},
+        D3FEND + "NetworkTraffic": {STONEWORK + "NetworkTraffic"},
+        D3FEND + "OffensiveTactic": {STONEWORK + "OffensiveTactic"},
+        D3FEND + "OffensiveTechnique": {STONEWORK + "AttackTechnique"},
+        D3FEND + "OperationalActivityPlan": {STONEWORK + "Behavior"},
+        D3FEND + "Organization": {STONEWORK + "Organization"},
+        D3FEND + "Person": {STONEWORK + "Person"},
+        D3FEND + "PhysicalArtifact": {STONEWORK + "CyberEntity"},
+        D3FEND + "Process": {STONEWORK + "RuntimeProcess"},
+        D3FEND + "Procedure": {STONEWORK + "Procedure"},
+        D3FEND + "Sensor": {STONEWORK + "Sensor"},
+        D3FEND + "Step": {STONEWORK + "Step"},
+        D3FEND + "System": {STONEWORK + "Infrastructure"},
+        D3FEND + "Technique": {STONEWORK + "Technique"},
+        D3FEND + "URL": {STONEWORK + "URI"},
+        D3FEND + "UserAccount": {STONEWORK + "UserAccount"},
+        D3FEND + "UserGroup": {STONEWORK + "UserGroup"},
+        D3FEND + "Vulnerability": {STONEWORK + "Vulnerability"},
+        D3FEND + "Weakness": {STONEWORK + "Weakness"},
+    }
+    actual_d3fend_classes = {
+        subject: targets
+        for subject, targets in direct_superclasses.items()
+        if subject.startswith(D3FEND) and d3fend_file in sources.get(subject, set())
+    }
+    for subject in sorted(expected_d3fend_classes.keys() | actual_d3fend_classes.keys()):
+        expected_targets = expected_d3fend_classes.get(subject, set())
+        actual_targets = actual_d3fend_classes.get(subject, set())
+        if actual_targets != expected_targets:
+            expected_rendered = ", ".join(describe(item) for item in sorted(expected_targets))
+            actual_rendered = ", ".join(describe(item) for item in sorted(actual_targets))
+            errors.append(
+                f"{describe(subject)} has unexpected D3FEND class mappings; expected "
+                f"[{expected_rendered}], found [{actual_rendered}]"
+            )
+
+    expected_d3fend_properties = {
+        D3FEND + "associated-with": {STONEWORK + "relatedTo"},
+        D3FEND + "counters": {STONEWORK + "counters"},
+        D3FEND + "d3fend-id": {STONEWORK + "externalId"},
+        D3FEND + "definition": {SKOS + "definition"},
+        D3FEND + "detects": {STONEWORK + "detects"},
+        D3FEND + "enables": {STONEWORK + "techniqueOf"},
+        D3FEND + "synonym": {SKOS + "altLabel"},
+    }
+    actual_d3fend_properties = {
+        subject: targets
+        for subject, targets in direct_superproperties.items()
+        if subject.startswith(D3FEND) and d3fend_file in sources.get(subject, set())
+    }
+    for subject in sorted(expected_d3fend_properties.keys() | actual_d3fend_properties.keys()):
+        expected_targets = expected_d3fend_properties.get(subject, set())
+        actual_targets = actual_d3fend_properties.get(subject, set())
+        if actual_targets != expected_targets:
+            expected_rendered = ", ".join(describe(item) for item in sorted(expected_targets))
+            actual_rendered = ", ".join(describe(item) for item in sorted(actual_targets))
+            errors.append(
+                f"{describe(subject)} has unexpected D3FEND property mappings; expected "
+                f"[{expected_rendered}], found [{actual_rendered}]"
+            )
+
+    for subject, predicate, _ in triples:
+        if (
+            subject.startswith(D3FEND)
+            and d3fend_file in sources.get(subject, set())
+            and predicate in {OWL + "equivalentClass", OWL + "equivalentProperty"}
+        ):
+            errors.append(
+                f"{describe(subject)} uses an OWL equivalence axiom; D3FEND mappings must be "
+                "one-way"
+            )
 
     ocsf_event = OCSF + "Event"
     ocsf_discovery_result = OCSF + "DiscoveryResult"

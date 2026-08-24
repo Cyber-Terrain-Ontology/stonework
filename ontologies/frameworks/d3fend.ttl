@@ -12,16 +12,26 @@
 
 frameworks:d3fend
 	a owl:Ontology ;
-	rdfs:label "STONEWORK: D3FEND Mapping"@en ;
-	dcterms:description "Declares subclass mappings from D3FEND classes into STONEWORK. D3FEND classes are mapped as subclasses of their STONEWORK counterparts, consistent with STONEWORK's role as the middle-tier ontology. Load alongside D3FEND when countermeasure knowledge graph reasoning is required."@en ;
-	rdfs:seeAlso <http://d3fend.mitre.org/ontologies/d3fend.owl> ;
+	rdfs:label "STONEWORK: D3FEND 1.5.0 Mapping"@en ;
+	dcterms:description "Declares conservative class, property, identifier, and annotation mappings from MITRE D3FEND 1.5.0 into STONEWORK. Load this adapter alongside the official D3FEND ontology when countermeasure knowledge graph reasoning is required; it does not reproduce the D3FEND taxonomy or its OWL restrictions."@en ;
+	dcterms:source <https://d3fend.mitre.org/ontologies/d3fend/1.5.0/d3fend.owl> ;
+	rdfs:seeAlso <https://d3fend.mitre.org/resources/ontology/> ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/d3fend/0.1.0> ;
-	owl:versionInfo "0.1.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/d3fend/0.2.0> ;
+	owl:versionInfo "0.2.0" ;
+	skos:scopeNote "Mappings are intentionally one-way: D3FEND terms remain governed by the source ontology's hierarchy, class/individual punning, and restrictions while gaining compatible STONEWORK types and predicates. No owl:equivalentClass or owl:equivalentProperty claims are made. Where the upper models differ, a D3FEND resource may retain source-native artifact typing while also receiving a STONEWORK functional type such as DigitalIdentity or NetworkService."@en ;
+	.
+
+d3f:AccessControlList
+	rdfs:subClassOf stonework:AccessControlList ;
 	.
 
 d3f:Agent
 	rdfs:subClassOf stonework:Agent ;
+	.
+
+d3f:AgentGroup
+	rdfs:subClassOf stonework:Group ;
 	.
 
 d3f:AnalyticTechnique
@@ -32,12 +42,12 @@ d3f:Certificate
 	rdfs:subClassOf stonework:Certificate ;
 	.
 
-d3f:CyberTechnique
-	rdfs:subClassOf stonework:CyberTechnique ;
+d3f:ComputerPlatform
+	rdfs:subClassOf stonework:Host ;
 	.
 
-d3f:DefensiveArtifact
-	rdfs:subClassOf stonework:Countermeasure ;
+d3f:CyberTechnique
+	rdfs:subClassOf stonework:CyberTechnique ;
 	.
 
 d3f:DefensiveTactic
@@ -45,7 +55,10 @@ d3f:DefensiveTactic
 	.
 
 d3f:DefensiveTechnique
-	rdfs:subClassOf stonework:DefendTechnique ;
+	rdfs:subClassOf
+		stonework:Countermeasure ,
+		stonework:DefendTechnique
+		;
 	.
 
 d3f:DigitalArtifact
@@ -56,6 +69,21 @@ d3f:DigitalEvent
 	rdfs:subClassOf stonework:CyberActivity ;
 	.
 
+d3f:DigitalIdentity
+	rdfs:subClassOf stonework:DigitalIdentity ;
+	.
+
+d3f:Directory
+	rdfs:subClassOf stonework:Directory ;
+	.
+
+d3f:DomainName
+	rdfs:subClassOf
+		stonework:Domain ,
+		stonework:Identifier
+		;
+	.
+
 d3f:Event
 	rdfs:subClassOf stonework:Event ;
 	.
@@ -64,27 +92,34 @@ d3f:File
 	rdfs:subClassOf stonework:File ;
 	.
 
-d3f:Goal
-	rdfs:subClassOf stonework:Tactic ;
-	.
-
-d3f:Group
-	rdfs:subClassOf stonework:Group ;
-	.
-
 d3f:Host
 	rdfs:subClassOf stonework:Host ;
 	.
 
 d3f:IPAddress
-	rdfs:subClassOf stonework:IPAddress ;
+	rdfs:subClassOf
+		stonework:IPAddress ,
+		stonework:Identifier
+		;
+	.
+
+d3f:Identifier
+	rdfs:subClassOf stonework:Identifier ;
 	.
 
 d3f:Log
 	rdfs:subClassOf stonework:Log ;
 	.
 
-d3f:NetworkService
+d3f:MACAddress
+	rdfs:subClassOf stonework:MACAddress ;
+	.
+
+d3f:NetworkNode
+	rdfs:subClassOf stonework:Infrastructure ;
+	.
+
+d3f:NetworkServiceApplicationProcess
 	rdfs:subClassOf stonework:NetworkService ;
 	.
 
@@ -101,7 +136,7 @@ d3f:OffensiveTechnique
 	.
 
 d3f:OperationalActivityPlan
-	rdfs:subClassOf stonework:Process ;
+	rdfs:subClassOf stonework:Behavior ;
 	.
 
 d3f:Organization
@@ -113,15 +148,23 @@ d3f:Person
 	.
 
 d3f:PhysicalArtifact
-	rdfs:subClassOf stonework:Infrastructure ;
+	rdfs:subClassOf stonework:CyberEntity ;
 	.
 
 d3f:Procedure
 	rdfs:subClassOf stonework:Procedure ;
 	.
 
+d3f:Process
+	rdfs:subClassOf stonework:RuntimeProcess ;
+	.
+
 d3f:Sensor
 	rdfs:subClassOf stonework:Sensor ;
+	.
+
+d3f:Step
+	rdfs:subClassOf stonework:Step ;
 	.
 
 d3f:System
@@ -132,8 +175,16 @@ d3f:Technique
 	rdfs:subClassOf stonework:Technique ;
 	.
 
+d3f:URL
+	rdfs:subClassOf stonework:URI ;
+	.
+
 d3f:UserAccount
 	rdfs:subClassOf stonework:UserAccount ;
+	.
+
+d3f:UserGroup
+	rdfs:subClassOf stonework:UserGroup ;
 	.
 
 d3f:Vulnerability
@@ -142,4 +193,32 @@ d3f:Vulnerability
 
 d3f:Weakness
 	rdfs:subClassOf stonework:Weakness ;
+	.
+
+d3f:associated-with
+	rdfs:subPropertyOf stonework:relatedTo ;
+	.
+
+d3f:counters
+	rdfs:subPropertyOf stonework:counters ;
+	.
+
+d3f:d3fend-id
+	rdfs:subPropertyOf stonework:externalId ;
+	.
+
+d3f:definition
+	rdfs:subPropertyOf skos:definition ;
+	.
+
+d3f:detects
+	rdfs:subPropertyOf stonework:detects ;
+	.
+
+d3f:enables
+	rdfs:subPropertyOf stonework:techniqueOf ;
+	.
+
+d3f:synonym
+	rdfs:subPropertyOf skos:altLabel ;
 	.
