@@ -1,3 +1,5 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -10,6 +12,7 @@
 	a owl:Ontology ;
 	rdfs:label "URI Framework Ontology"@en ;
 	rdfs:comment "Ontology describing the structure and nature of URI sequences."@en ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
 	owl:versionIRI <https://cyberterrain.org/ns/frameworks/uri/0.1.0> ;
 	owl:versionInfo "0.1.0" ;
 	.
@@ -47,6 +50,7 @@ uri:location
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:uriValue ;
 	rdfs:label "URI Location"@en ;
 	rdfs:comment "The complete absolute location for this URI"@en ;
 	rdfs:domain stonework:URI ;
@@ -66,4 +70,3 @@ uri:servedFrom
 		) ;
 	] ;
 	.
-

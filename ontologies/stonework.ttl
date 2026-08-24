@@ -44,9 +44,14 @@ stonework:AccessControlList
 stonework:Adware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Software that automatically displays or downloads advertising material, often without user consent."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "adware" ;
 	skos:prefLabel "Adware"@en ;
 	.
@@ -112,9 +117,14 @@ stonework:AutonomousSystem
 stonework:Backdoor
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that provides covert, persistent remote access to a compromised system, bypassing normal authentication."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "backdoor" ;
 	skos:prefLabel "Backdoor"@en ;
 	.
@@ -139,9 +149,14 @@ stonework:BomEntry
 stonework:Bootkit
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that infects the boot sector or master boot record to load before the operating system, enabling deep persistence and defense evasion."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "bootkit" ;
 	skos:prefLabel "Bootkit"@en ;
 	.
@@ -149,9 +164,14 @@ stonework:Bootkit
 stonework:Bot
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that connects an infected host to a command-and-control network, enabling remote tasking as part of a botnet."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "bot" ;
 	skos:prefLabel "Bot"@en ;
 	.
@@ -291,9 +311,14 @@ stonework:CyberTechnique
 stonework:DDoS
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware designed to conduct or participate in distributed denial-of-service attacks against target systems or networks."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "ddos" ;
 	skos:prefLabel "DDoS Malware"@en ;
 	.
@@ -370,9 +395,14 @@ stonework:Domain
 stonework:Downloader
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware whose primary function is to download and execute additional malicious payloads from a remote source."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "downloader" ;
 	skos:prefLabel "Downloader"@en ;
 	.
@@ -380,9 +410,14 @@ stonework:Downloader
 stonework:Dropper
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that carries and installs one or more secondary payloads onto a target system, often unpacking them from within itself."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "dropper" ;
 	skos:prefLabel "Dropper"@en ;
 	.
@@ -423,9 +458,14 @@ stonework:Event
 stonework:ExploitKit
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "A toolkit that automates exploitation of client-side vulnerabilities to deliver malware, typically via drive-by download from compromised or malicious web pages."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "exploit-kit" ;
 	skos:prefLabel "Exploit Kit"@en ;
 	.
@@ -602,9 +642,14 @@ stonework:InvestigationPlan
 stonework:Keylogger
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that records keystrokes on an infected system to capture credentials, sensitive data, or communications."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "keylogger" ;
 	skos:prefLabel "Keylogger"@en ;
 	.
@@ -701,10 +746,39 @@ stonework:MalwareSample
 
 stonework:MalwareType
 	a owl:Class ;
-	rdfs:subClassOf stonework:Category ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:malwareTypeScheme ;
+		]
+		;
 	skos:definition "A behavioral or functional classification of malware, describing what the malware does rather than what it is. Corresponds to the STIX 2.1 malware-type open vocabulary."@en ;
 	skos:prefLabel "Malware Type"@en ;
 	skos:scopeNote "Instances (e.g., stonework:Ransomware, stonework:Trojan) are assigned via stonework:categorizedBy. A malware object may carry multiple types. The skos:notation value gives the STIX 2.1 wire-format string for aspirational round-trip export."@en ;
+	.
+
+stonework:MetricObservation
+	a owl:Class ;
+	rdfs:subClassOf stonework:QualifiedAssertion ;
+	skos:definition "A qualified, time-stamped metric value about a cyber entity, carrying its metric type, source provenance, and optional calculation-model version."@en ;
+	skos:prefLabel "Metric Observation"@en ;
+	skos:scopeNote "Use for values that change over time or differ by source, including EPSS probability, KEV membership, confidence, likelihood, and risk scores. Direct datatype properties remain convenience projections for consumers that need a single current value."@en ;
+	.
+
+stonework:MetricType
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:metricTypeScheme ;
+		]
+		;
+	skos:definition "A controlled classification identifying the meaning and scale of a qualified metric observation."@en ;
+	skos:prefLabel "Metric Type"@en ;
 	.
 
 stonework:Mitigation
@@ -894,12 +968,25 @@ stonework:Publication
 	skos:prefLabel "Publication" ;
 	.
 
+stonework:QualifiedAssertion
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A record that qualifies an assertion or relationship with provenance, time, and other context that cannot be represented by an unqualified binary property or scalar value."@en ;
+	skos:prefLabel "Qualified Assertion"@en ;
+	skos:scopeNote "Subclasses provide the assertion-specific structure. Use direct properties as query-friendly projections when their loss of source, time, or relationship context is acceptable."@en ;
+	.
+
 stonework:Ransomware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that encrypts or locks victim data or systems and demands payment for restoration of access."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "ransomware" ;
 	skos:prefLabel "Ransomware"@en ;
 	.
@@ -918,12 +1005,31 @@ stonework:Registry
 	skos:prefLabel "Registry" ;
 	.
 
+stonework:RegistryKey
+	a owl:Class ;
+	rdfs:subClassOf stonework:Registry ;
+	skos:definition "A named key in a Windows Registry hierarchy that may contain subordinate keys and registry values."@en ;
+	skos:prefLabel "Registry Key"@en ;
+	.
+
+stonework:RegistryValue
+	a owl:Class ;
+	rdfs:subClassOf stonework:Registry ;
+	skos:definition "A named or default value stored beneath a Windows Registry key, including its value type and literal data."@en ;
+	skos:prefLabel "Registry Value"@en ;
+	.
+
 stonework:RemoteAccessTrojan
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware providing covert remote control of an infected host, typically including capabilities such as file access, screen capture, keylogging, and command execution."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "remote-access-trojan" ;
 	skos:prefLabel "Remote Access Trojan"@en ;
 	.
@@ -938,9 +1044,14 @@ stonework:Report
 stonework:ResourceExploitation
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that abuses the computational resources of an infected host, such as for cryptocurrency mining or proxying network traffic."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "resource-exploitation" ;
 	skos:prefLabel "Resource Exploitation"@en ;
 	.
@@ -965,9 +1076,14 @@ stonework:RiskFactor
 stonework:RogueSecuritySoftware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that masquerades as legitimate security software to deceive users into paying for fake threat removal or granting elevated privileges."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "rogue-security-software" ;
 	skos:prefLabel "Rogue Security Software"@en ;
 	.
@@ -980,12 +1096,25 @@ stonework:Role
 	skos:scopeNote "Roles are typically more stable and relational than Categories. An entity can play multiple Roles. Aligns with patterns in BFO, CCO, and D3FEND (e.g., functional roles of infrastructure or actors)."@en ;
 	.
 
+stonework:RoleAssignment
+	a owl:Class ;
+	rdfs:subClassOf stonework:QualifiedAssertion ;
+	skos:definition "A qualified record assigning a Role to an entity within a particular campaign, operation, organization, or other context."@en ;
+	skos:prefLabel "Role Assignment"@en ;
+	skos:scopeNote "Create separate assignments when the same entity plays different roles in different contexts or time intervals. The assignment can infer the context-free stonework:playsRole projection through the declared property chain."@en ;
+	.
+
 stonework:Rootkit
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that conceals itself and other malicious software by subverting operating system or hypervisor mechanisms, typically to maintain privileged persistence."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "rootkit" ;
 	skos:prefLabel "Rootkit"@en ;
 	.
@@ -1001,9 +1130,14 @@ stonework:RuntimeProcess
 stonework:ScreenCapture
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that periodically or continuously captures screenshots of the victim's display and exfiltrates them to an attacker."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "screen-capture" ;
 	skos:prefLabel "Screen Capture"@en ;
 	.
@@ -1060,9 +1194,14 @@ stonework:SoftwareBillOfMaterials
 stonework:Spyware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that covertly monitors user activity, collects personal or sensitive information, and transmits it to a remote party."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "spyware" ;
 	skos:prefLabel "Spyware"@en ;
 	.
@@ -1155,9 +1294,14 @@ stonework:Transition
 stonework:Trojan
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware disguised as or bundled with legitimate software to deceive users into executing it, enabling a range of malicious payloads."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "trojan" ;
 	skos:prefLabel "Trojan"@en ;
 	.
@@ -1172,9 +1316,14 @@ stonework:URI
 stonework:UnknownMalware
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "The malware type has not been determined or cannot be classified into a known category."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "unknown" ;
 	skos:prefLabel "Unknown Malware Type"@en ;
 	.
@@ -1221,9 +1370,14 @@ stonework:VersionedProduct
 stonework:Virus
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware that replicates by inserting copies of itself into other executable files or documents, spreading when those files are executed or opened."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "virus" ;
 	skos:prefLabel "Virus"@en ;
 	.
@@ -1256,9 +1410,14 @@ stonework:Weakness
 stonework:Webshell
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware deployed on a web server that provides remote command execution via HTTP requests, enabling persistent access through the web application layer."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "webshell" ;
 	skos:prefLabel "Webshell"@en ;
 	.
@@ -1266,9 +1425,14 @@ stonework:Webshell
 stonework:Wiper
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Malware designed to irreversibly destroy data or render systems inoperable, typically used for sabotage or to obscure attacker activity."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "wiper" ;
 	skos:prefLabel "Wiper"@en ;
 	.
@@ -1276,9 +1440,14 @@ stonework:Wiper
 stonework:Worm
 	a
 		owl:NamedIndividual ,
+		skos:Concept ,
 		stonework:MalwareType
 		;
 	skos:definition "Self-replicating malware that spreads across networks or systems without requiring user interaction or a host file to attach to."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:malwareTypeScheme
+		;
 	skos:notation "worm" ;
 	skos:prefLabel "Worm"@en ;
 	.
@@ -1480,6 +1649,17 @@ stonework:assessmentOf
 	skos:prefLabel "assessmentOf"@en ;
 	.
 
+stonework:assignedRole
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:RoleAssignment ;
+	rdfs:range stonework:Role ;
+	skos:definition "The Role assigned by a qualified RoleAssignment."@en ;
+	skos:prefLabel "assignedRole"@en ;
+	.
+
 stonework:associatedWith
 	a owl:ObjectProperty ;
 	skos:definition "Generic association between two entities. Use a more specific property where one exists."@en ;
@@ -1565,8 +1745,9 @@ stonework:categorizedBy
 stonework:categoryScheme
 	a skos:ConceptScheme ;
 	dcterms:title "STONEWORK Category Scheme"@en ;
-	skos:definition "The concept scheme containing STONEWORK classification and tagging values modeled as instances of stonework:Category subclasses."@en ;
+	skos:definition "The umbrella concept scheme containing all STONEWORK classification and tagging values modeled as instances of stonework:Category subclasses."@en ;
 	skos:prefLabel "STONEWORK Category Scheme"@en ;
+	skos:scopeNote "More specific schemes organize individual controlled vocabularies. Category instances remain members of this umbrella scheme through the restriction on stonework:Category."@en ;
 	.
 
 stonework:certIssuerDN
@@ -1714,7 +1895,7 @@ stonework:confidence
 	rdfs:range xsd:integer ;
 	skos:definition "An integer score from 0 to 100 representing confidence in the accuracy of an assertion or the expected outcome of a Hypothesis."@en ;
 	skos:prefLabel "confidence" ;
-	skos:scopeNote "Domain is intentionally unset because the property is shared by Hypotheses and STIX-derived intelligence objects. Matches the STIX 2.1 confidence scale for round-tripping."@en ;
+	skos:scopeNote "Domain is intentionally unset because the property is shared by Hypotheses and STIX-derived intelligence objects. Matches the STIX 2.1 confidence scale for round-tripping. For source- and time-qualified confidence history, use stonework:MetricObservation with stonework:metricConfidence."@en ;
 	.
 
 stonework:consistsOf
@@ -2191,6 +2372,7 @@ stonework:epssScore
 	rdfs:range xsd:decimal ;
 	skos:definition "The EPSS (Exploit Prediction Scoring System) score (0.0–1.0), estimating the probability of exploitation in the wild within 30 days."@en ;
 	skos:prefLabel "epssScore"@en ;
+	skos:scopeNote "Convenience projection for a current score. Preserve dated values, source, and EPSS model version with stonework:MetricObservation and stonework:metricEpssScore."@en ;
 	.
 
 stonework:evidencedBy
@@ -2589,6 +2771,15 @@ stonework:hasMember
 	skos:prefLabel "hasMember"@en ;
 	.
 
+stonework:hasMetricObservation
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberEntity ;
+	rdfs:range stonework:MetricObservation ;
+	owl:inverseOf stonework:metricFor ;
+	skos:definition "Relates an entity to a source- and time-qualified metric observation about it."@en ;
+	skos:prefLabel "hasMetricObservation"@en ;
+	.
+
 stonework:hasNetworkAddress
 	a owl:ObjectProperty ;
 	rdfs:domain [
@@ -2664,10 +2855,16 @@ stonework:hasProductInstallation
 
 stonework:hasProvenance
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:IntelligenceProduct ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:IntelligenceProduct
+			stonework:QualifiedAssertion
+		) ;
+	] ;
 	rdfs:range stonework:Provenance ;
 	owl:inverseOf stonework:provenanceOf ;
-	skos:definition "Relates an IntelligenceProduct to a Provenance record documenting its origin or evidentiary basis."@en ;
+	skos:definition "Relates an IntelligenceProduct or QualifiedAssertion to a Provenance record documenting its origin or evidentiary basis."@en ;
 	skos:prefLabel "hasProvenance"@en ;
 	.
 
@@ -2684,6 +2881,15 @@ stonework:hasRisk
 	rdfs:range stonework:Risk ;
 	skos:definition "Relates an asset or organization to an assessed Risk."@en ;
 	skos:prefLabel "hasRisk"@en ;
+	.
+
+stonework:hasRoleAssignment
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberEntity ;
+	rdfs:range stonework:RoleAssignment ;
+	owl:inverseOf stonework:rolePlayer ;
+	skos:definition "Relates an entity to a qualified assignment of a Role in a specific context."@en ;
+	skos:prefLabel "hasRoleAssignment"@en ;
 	.
 
 stonework:hasSignature
@@ -2977,6 +3183,7 @@ stonework:isKnownExploited
 	rdfs:range xsd:boolean ;
 	skos:definition "Indicates whether this vulnerability appears in CISA's Known Exploited Vulnerabilities (KEV) catalog."@en ;
 	skos:prefLabel "isKnownExploited"@en ;
+	skos:scopeNote "Convenience projection for a current catalog snapshot. A false value is only meaningful as of a specific time; preserve dated membership evidence with stonework:MetricObservation and stonework:metricKevMembership."@en ;
 	.
 
 stonework:isPacked
@@ -3080,6 +3287,7 @@ stonework:likelihoodScore
 	rdfs:range xsd:decimal ;
 	skos:definition "A numeric score (0.0–1.0) representing the estimated probability of occurrence."@en ;
 	skos:prefLabel "likelihoodScore"@en ;
+	skos:scopeNote "Convenience projection for a current value. Use stonework:MetricObservation with stonework:metricLikelihoodScore when source, assessment time, or model version must be preserved."@en ;
 	.
 
 stonework:linkedTo
@@ -3143,6 +3351,15 @@ stonework:madeBySensor
 	skos:scopeNote "Inspired by SOSA sosa:madeBySensor. Enables queries such as 'which sensor produced this observation?' and 'what has this IDS sensor observed in the last 24 hours?' The producing sensor may also be the created_by_ref identity in the STIX wire format."@en ;
 	.
 
+stonework:malwareTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:source <https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html> ;
+	dcterms:title "STONEWORK Malware Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of malware behavioral and functional types."@en ;
+	skos:prefLabel "STONEWORK Malware Type Scheme"@en ;
+	.
+
 stonework:manifestsAs
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Threat ;
@@ -3188,6 +3405,48 @@ stonework:mentions
 	skos:prefLabel "mentions" ;
 	.
 
+stonework:metricFor
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range stonework:CyberEntity ;
+	owl:inverseOf stonework:hasMetricObservation ;
+	skos:definition "The entity whose value is recorded by a MetricObservation."@en ;
+	skos:prefLabel "metricFor"@en ;
+	.
+
+stonework:metricType
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range stonework:MetricType ;
+	skos:definition "Identifies the meaning and scale of the recorded metric value."@en ;
+	skos:prefLabel "metricType"@en ;
+	.
+
+stonework:metricTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Metric Type Scheme"@en ;
+	skos:definition "The controlled vocabulary identifying the semantics and scale of qualified metric observations."@en ;
+	skos:prefLabel "STONEWORK Metric Type Scheme"@en ;
+	.
+
+stonework:metricValue
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range rdfs:Literal ;
+	skos:definition "The typed literal value recorded by a MetricObservation."@en ;
+	skos:prefLabel "metricValue"@en ;
+	.
+
 stonework:mimeType
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:File ;
@@ -3219,6 +3478,17 @@ stonework:mitigatesVulnerability
 	rdfs:range stonework:Vulnerability ;
 	skos:definition "A CourseOfAction (patch, workaround, compensating control) addresses this Vulnerability. Distinct from stonework:mitigates (Countermeasure → AttackPattern)."@en ;
 	skos:prefLabel "mitigatesVulnerability"@en ;
+	.
+
+stonework:modelVersion
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range xsd:string ;
+	skos:definition "The version identifier of the scoring, prediction, or assessment model that produced a metric observation."@en ;
+	skos:prefLabel "modelVersion"@en ;
 	.
 
 stonework:modified
@@ -3266,6 +3536,17 @@ stonework:objective
 	rdfs:range xsd:string ;
 	skos:definition "A description of the strategic goal or objective being pursued."@en ;
 	skos:prefLabel "objective"@en ;
+	.
+
+stonework:observedAt
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The date and time at which a metric observation was made or calculated."@en ;
+	skos:prefLabel "observedAt"@en ;
 	.
 
 stonework:observedIn
@@ -3457,8 +3738,13 @@ stonework:playbookVersion
 stonework:playsRole
 	a owl:ObjectProperty ;
 	rdfs:range stonework:Role ;
-	skos:definition "The Role this entity plays in a given context or operation."@en ;
+	owl:propertyChainAxiom (
+		stonework:hasRoleAssignment
+		stonework:assignedRole
+	) ;
+	skos:definition "A context-free projection of a Role played by an entity."@en ;
 	skos:prefLabel "playsRole" ;
+	skos:scopeNote "Use stonework:RoleAssignment with stonework:roleContext when the campaign, operation, organization, provenance, or time interval matters. The qualified pattern infers this direct projection through a property chain."@en ;
 	.
 
 stonework:port
@@ -3613,8 +3899,14 @@ stonework:protects
 stonework:provenanceOf
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Provenance ;
-	rdfs:range stonework:IntelligenceProduct ;
-	skos:definition "Relates a Provenance record to the IntelligenceProduct whose origin or evidentiary basis it documents."@en ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:IntelligenceProduct
+			stonework:QualifiedAssertion
+		) ;
+	] ;
+	skos:definition "Relates a Provenance record to the IntelligenceProduct or QualifiedAssertion whose origin or evidentiary basis it documents."@en ;
 	skos:prefLabel "provenanceOf"@en ;
 	.
 
@@ -3684,14 +3976,15 @@ stonework:registeredWith
 stonework:registrationDate
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Domain ;
-	rdfs:range xsd:date ;
-	skos:definition "The date the domain was first registered."@en ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The date and time when the domain was first registered."@en ;
 	skos:prefLabel "registrationDate"@en ;
+	skos:scopeNote "Uses xsd:dateTime so source-native registration timestamps, including dns:registeredOn, can map without losing precision."@en ;
 	.
 
 stonework:registryKeyPath
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:Registry ;
+	rdfs:domain stonework:RegistryKey ;
 	rdfs:range xsd:string ;
 	skos:definition "The full registry key path (e.g. HKEY_LOCAL_MACHINE\\SOFTWARE\\...)."@en ;
 	skos:prefLabel "registryKeyPath"@en ;
@@ -3699,15 +3992,16 @@ stonework:registryKeyPath
 
 stonework:registryValueData
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:Registry ;
-	rdfs:range xsd:string ;
-	skos:definition "The data stored in the registry value."@en ;
+	rdfs:domain stonework:RegistryValue ;
+	rdfs:range rdfs:Literal ;
+	skos:definition "The typed literal data stored in the registry value."@en ;
 	skos:prefLabel "registryValueData"@en ;
+	skos:scopeNote "The broad literal range preserves string, numeric, multi-string, and binary-valued source representations. Use stonework:registryValueType to record the Windows registry type explicitly."@en ;
 	.
 
 stonework:registryValueName
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:Registry ;
+	rdfs:domain stonework:RegistryValue ;
 	rdfs:range xsd:string ;
 	skos:definition "The name of the registry value."@en ;
 	skos:prefLabel "registryValueName"@en ;
@@ -3715,7 +4009,7 @@ stonework:registryValueName
 
 stonework:registryValueType
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:Registry ;
+	rdfs:domain stonework:RegistryValue ;
 	rdfs:range xsd:string ;
 	skos:definition "The type of the registry value (e.g. REG_SZ, REG_DWORD, REG_BINARY)."@en ;
 	skos:prefLabel "registryValueType"@en ;
@@ -3838,6 +4132,36 @@ stonework:riskScore
 	rdfs:range xsd:decimal ;
 	skos:definition "A numeric risk score expressing combined impact and likelihood."@en ;
 	skos:prefLabel "riskScore"@en ;
+	skos:scopeNote "Convenience projection for a current score. Use stonework:MetricObservation with stonework:metricRiskScore when methodology, source, model version, or assessment time must be preserved."@en ;
+	.
+
+stonework:roleContext
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:RoleAssignment ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:CyberActivity
+			stonework:CyberEntity
+		) ;
+	] ;
+	skos:definition "The campaign, operation, organization, or other context in which a RoleAssignment applies."@en ;
+	skos:prefLabel "roleContext"@en ;
+	.
+
+stonework:rolePlayer
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:RoleAssignment ;
+	rdfs:range stonework:CyberEntity ;
+	owl:inverseOf stonework:hasRoleAssignment ;
+	skos:definition "The entity that bears the Role in a qualified RoleAssignment."@en ;
+	skos:prefLabel "rolePlayer"@en ;
 	.
 
 stonework:ruleContent
@@ -4313,6 +4637,28 @@ stonework:usesRule
 	rdfs:range stonework:DetectionRule ;
 	skos:definition "Relates a Sensor to the Detection Rules it applies." ;
 	skos:prefLabel "usesRule" ;
+	.
+
+stonework:validFrom
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:QualifiedAssertion ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The start of the interval during which a qualified assertion is considered applicable."@en ;
+	skos:prefLabel "validFrom"@en ;
+	.
+
+stonework:validUntil
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:QualifiedAssertion ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The end of the interval during which a qualified assertion is considered applicable."@en ;
+	skos:prefLabel "validUntil"@en ;
 	.
 
 stonework:variableName

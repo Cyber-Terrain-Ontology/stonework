@@ -318,4 +318,3 @@ ex:var-procdump-outcome
 	stonework:boundTo ex:cond-procdump-credential-material ;
 	stonework:variableName "procdumpOutcome" ;
 	.
-

@@ -1,0 +1,71 @@
+@prefix example: <https://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:activity
+	a stonework:CyberActivity ;
+	stonework:endedAtTime "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+	stonework:startedAtTime "2026-08-20T11:00:00Z"^^xsd:dateTime ;
+	.
+
+example:address
+	a stonework:IPAddress ;
+	stonework:ipVersion "5"^^xsd:integer ;
+	.
+
+example:certificate
+	a stonework:Certificate ;
+	stonework:certValidNotAfter "2026-01-01T00:00:00Z"^^xsd:dateTime ;
+	stonework:certValidNotBefore "2027-01-01T00:00:00Z"^^xsd:dateTime ;
+	.
+
+example:domain
+	a stonework:Domain ;
+	stonework:registrationDate "2026-08-20"^^xsd:date ;
+	.
+
+example:hash
+	a stonework:Hash ;
+	stonework:hashAlgorithm "SHA-256" ;
+	.
+
+example:incompleteMetric
+	a stonework:MetricObservation ;
+	stonework:metricValue "0.5"^^xsd:decimal ;
+	.
+
+example:incompleteRoleAssignment
+	a stonework:RoleAssignment ;
+	stonework:assignedRole stonework:threatActorRoleSponsor ;
+	.
+
+example:indicator
+	a stonework:Indicator ;
+	stonework:confidence "101"^^xsd:integer ;
+	.
+
+example:location
+	a stonework:Location ;
+	stonework:latitude "91.0"^^xsd:decimal ;
+	stonework:longitude "-181.0"^^xsd:decimal ;
+	.
+
+example:observation
+	a stonework:SecurityObservation ;
+	stonework:firstSeen "2026-08-20T12:00:00Z"^^xsd:dateTime ;
+	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
+	.
+
+example:service
+	a stonework:NetworkService ;
+	stonework:port "70000"^^xsd:integer ;
+	.
+
+example:vulnerability
+	a stonework:Vulnerability ;
+	stonework:cvssBaseScore "-1.0"^^xsd:decimal ;
+	stonework:epssScore "1.2"^^xsd:decimal ;
+	.

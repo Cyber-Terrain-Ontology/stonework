@@ -1,0 +1,105 @@
+@prefix example: <https://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:activity
+	a stonework:CyberActivity ;
+	stonework:endedAtTime "2026-08-20T10:05:00Z"^^xsd:dateTime ;
+	stonework:startedAtTime "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+	.
+
+example:actor
+	a stonework:ThreatActor ;
+	stonework:hasRoleAssignment example:sponsorAssignment ;
+	.
+
+example:address
+	a stonework:IPAddress ;
+	stonework:ipVersion "4"^^xsd:integer ;
+	.
+
+example:campaign
+	a stonework:Campaign ;
+	.
+
+example:certificate
+	a stonework:Certificate ;
+	stonework:certValidNotAfter "2027-01-01T00:00:00Z"^^xsd:dateTime ;
+	stonework:certValidNotBefore "2026-01-01T00:00:00Z"^^xsd:dateTime ;
+	.
+
+example:domain
+	a stonework:Domain ;
+	stonework:registrationDate "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+	.
+
+example:epssFeed
+	a stonework:Feed ;
+	.
+
+example:epssObservation
+	a stonework:MetricObservation ;
+	stonework:hasProvenance example:epssFeed ;
+	stonework:metricFor example:vulnerability ;
+	stonework:metricType stonework:metricEpssScore ;
+	stonework:metricValue "0.42"^^xsd:decimal ;
+	stonework:modelVersion "2026.1" ;
+	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
+	.
+
+example:hash
+	a stonework:Hash ;
+	stonework:hashAlgorithm "SHA-256" ;
+	stonework:hashValue "dffd6021bb2bd33e0f47df5fcfe00d61010a3f9a8a70d1fc8ad2e72f15f5f65f" ;
+	.
+
+example:indicator
+	a stonework:Indicator ;
+	stonework:confidence "85"^^xsd:integer ;
+	.
+
+example:likelihood
+	a stonework:Likelihood ;
+	stonework:likelihoodScore "0.6"^^xsd:decimal ;
+	.
+
+example:location
+	a stonework:Location ;
+	stonework:latitude "40.7128"^^xsd:decimal ;
+	stonework:longitude "-74.0060"^^xsd:decimal ;
+	.
+
+example:observation
+	a stonework:SecurityObservation ;
+	stonework:firstSeen "2026-08-20T10:00:00Z"^^xsd:dateTime ;
+	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
+	.
+
+example:roleSource
+	a stonework:Publication ;
+	.
+
+example:service
+	a stonework:NetworkService ;
+	stonework:port "443"^^xsd:unsignedShort ;
+	.
+
+example:sponsorAssignment
+	a stonework:RoleAssignment ;
+	stonework:assignedRole stonework:threatActorRoleSponsor ;
+	stonework:hasProvenance example:roleSource ;
+	stonework:roleContext example:campaign ;
+	stonework:rolePlayer example:actor ;
+	stonework:validFrom "2026-01-01T00:00:00Z"^^xsd:dateTime ;
+	stonework:validUntil "2026-12-31T23:59:59Z"^^xsd:dateTime ;
+	.
+
+example:vulnerability
+	a stonework:Vulnerability ;
+	stonework:cvssBaseScore "9.8"^^xsd:decimal ;
+	stonework:epssScore "0.42"^^xsd:decimal ;
+	stonework:isKnownExploited "true"^^xsd:boolean ;
+	.

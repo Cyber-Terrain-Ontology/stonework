@@ -1,0 +1,41 @@
+name: Ontology validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Cache RDF toolkit
+        uses: actions/cache@v4
+        with:
+          path: tools/rdf-toolkit.jar
+          key: rdf-toolkit-${{ runner.os }}-${{ hashFiles('tools/download-rdf-toolkit.sh') }}
+
+      - name: Download RDF toolkit
+        run: bash tools/download-rdf-toolkit.sh
+
+      - name: Check Turtle formatting
+        run: bash .githooks/format-ttl.sh --check
+
+      - name: Check Turtle and OWL integrity
+        run: python3 tools/check-ontology.py
+
+      - name: Check SHACL constraints
+        run: python3 tools/check-shacl.py

@@ -13,11 +13,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 JAR = ROOT / "tools" / "rdf-toolkit.jar"
+CATALOG = ROOT / "ontologies" / "catalog-v001.xml"
 
 RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 RDFS = "http://www.w3.org/2000/01/rdf-schema#"
 OWL = "http://www.w3.org/2002/07/owl#"
 SKOS = "http://www.w3.org/2004/02/skos/core#"
+DCTERMS = "http://purl.org/dc/terms/"
 STONEWORK = "https://cyberterrain.org/ns/stonework#"
 STONEX = "https://cyberterrain.org/ns/stonex#"
 
@@ -125,6 +127,29 @@ def main() -> int:
         if predicate == RDF_TYPE and obj[0] == "iri":
             types[subject].add(obj[1])
 
+    try:
+        catalog_root = ET.parse(CATALOG).getroot()
+        catalog_names = {
+            element.get("name")
+            for element in catalog_root.iter()
+            if expanded_name(element.tag) == "urn:oasis:names:tc:entity:xmlns:xml:cataloguri"
+            and element.get("name")
+        }
+    except ET.ParseError as exc:
+        catalog_names = set()
+        errors.append(f"{CATALOG.relative_to(ROOT)}: parse failure: {exc}")
+
+    for subject, predicate, obj in triples:
+        if predicate != OWL + "imports" or obj[0] != "iri":
+            continue
+        imported_iri = obj[1]
+        if imported_iri.startswith("https://cyberterrain.org/ns/") and imported_iri not in catalog_names:
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) imports {imported_iri}, which is not resolved "
+                "by ontologies/catalog-v001.xml"
+            )
+
     def list_members(head):
         members = set()
         seen = set()
@@ -180,6 +205,78 @@ def main() -> int:
     datatype_property = OWL + "DatatypeProperty"
     named_individual = OWL + "NamedIndividual"
     owl_class = OWL + "Class"
+    owl_ontology = OWL + "Ontology"
+    concept_scheme = SKOS + "ConceptScheme"
+    required_local_imports = {
+        "https://cyberterrain.org/ns/frameworks/cwe": {
+            "https://cyberterrain.org/ns/frameworks/capec",
+        },
+        "https://cyberterrain.org/ns/frameworks/email": {
+            "https://cyberterrain.org/ns/frameworks/dns",
+        },
+        "https://cyberterrain.org/ns/frameworks/killchain": {
+            "https://cyberterrain.org/ns/frameworks/stix",
+            "https://cyberterrain.org/ns/stonework/categories#",
+        },
+        "https://cyberterrain.org/ns/frameworks/registry": {
+            "https://cyberterrain.org/ns/frameworks/stix",
+        },
+        "https://cyberterrain.org/ns/frameworks/stix": {
+            "https://cyberterrain.org/ns/stonework/categories#",
+        },
+    }
+
+    for subject, subject_types in sorted(types.items()):
+        if owl_ontology not in subject_types:
+            continue
+
+        location = ", ".join(sorted(sources.get(subject, ())))
+        version_iris = {
+            obj[1] for obj in values[(subject, OWL + "versionIRI")] if obj[0] == "iri"
+        }
+        version_infos = {
+            obj[1] for obj in values[(subject, OWL + "versionInfo")] if obj[0] == "literal"
+        }
+        if len(version_iris) != 1:
+            errors.append(
+                f"{describe(subject)} ({location}) must declare exactly one IRI-valued "
+                "owl:versionIRI"
+            )
+        if len(version_infos) != 1:
+            errors.append(
+                f"{describe(subject)} ({location}) must declare exactly one literal "
+                "owl:versionInfo"
+            )
+        if len(version_iris) == 1 and len(version_infos) == 1:
+            version_info = next(iter(version_infos))
+            version_iri = next(iter(version_iris))
+            expected_version_iri = subject.rstrip("#/") + "/" + version_info
+            if version_iri != expected_version_iri:
+                errors.append(
+                    f"{describe(subject)} ({location}) has a version IRI that does not match "
+                    f"owl:versionInfo {version_info!r}; expected {expected_version_iri}"
+                )
+            for catalog_iri in (subject, version_iri):
+                if catalog_iri not in catalog_names:
+                    errors.append(
+                        f"{describe(subject)} ({location}) is not cataloged under "
+                        f"{catalog_iri} in ontologies/catalog-v001.xml"
+                    )
+
+        if any(path.startswith("ontologies/frameworks/") for path in sources.get(subject, ())):
+            imports = {
+                obj[1] for obj in values[(subject, OWL + "imports")] if obj[0] == "iri"
+            }
+            if STONEWORK not in imports:
+                errors.append(
+                    f"{describe(subject)} ({location}) is a framework module but does not "
+                    "directly import the STONEWORK core ontology"
+                )
+            for required_import in sorted(required_local_imports.get(subject, set()) - imports):
+                errors.append(
+                    f"{describe(subject)} ({location}) does not import required local dependency "
+                    f"{required_import}"
+                )
 
     for subject, subject_types in sorted(types.items()):
         location = ", ".join(sorted(sources.get(subject, ())))
@@ -197,6 +294,168 @@ def main() -> int:
                         f"{describe(subject)} ({location}) has multiple named rdfs:{label} values "
                         f"({rendered}); use an owl:unionOf class expression for alternatives"
                     )
+
+    category = STONEWORK + "Category"
+    category_scheme = STONEWORK + "categoryScheme"
+    stix_specification = "https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html"
+    expected_scheme_sources = {
+        STONEWORK + "infrastructureTypeScheme": {stix_specification},
+        STONEWORK + "killChainPhaseScheme": {
+            "https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html"
+        },
+        STONEWORK + "malwareTypeScheme": {stix_specification},
+        STONEWORK + "markingScheme": {"https://www.first.org/tlp/"},
+        STONEWORK + "motivationScheme": {stix_specification},
+        STONEWORK + "resourceLevelScheme": {stix_specification},
+        STONEWORK + "sophisticationLevelScheme": {stix_specification},
+        STONEWORK + "threatActorRoleScheme": {stix_specification},
+        STONEWORK + "threatActorTypeScheme": {stix_specification},
+    }
+
+    def require_english_vocabulary_annotations(subject):
+        location = ", ".join(sorted(sources.get(subject, ())))
+        for predicate, field_name in (
+            (SKOS + "prefLabel", "skos:prefLabel"),
+            (SKOS + "definition", "skos:definition"),
+        ):
+            english_values = [
+                obj
+                for obj in values[(subject, predicate)]
+                if obj[0] == "literal" and (obj[2] or "").casefold() == "en"
+            ]
+            if len(english_values) != 1:
+                errors.append(
+                    f"{describe(subject)} ({location}) must declare exactly one English "
+                    f"{field_name}"
+                )
+
+    def class_schemes(subject):
+        schemes = set()
+        for superclass in values[(subject, RDFS + "subClassOf")]:
+            if superclass[0] != "bnode":
+                continue
+            restriction = superclass[1]
+            if ("iri", SKOS + "inScheme") not in values[(restriction, OWL + "onProperty")]:
+                continue
+            schemes.update(
+                obj[1]
+                for obj in values[(restriction, OWL + "hasValue")]
+                if obj[0] == "iri"
+            )
+        return schemes
+
+    for subject, subject_types in sorted(types.items()):
+        if concept_scheme not in subject_types or not subject.startswith(STONEWORK):
+            continue
+        require_english_vocabulary_annotations(subject)
+
+        declared_source_values = values[(subject, DCTERMS + "source")]
+        declared_sources = {obj[1] for obj in declared_source_values if obj[0] == "iri"}
+        if len(declared_sources) != len(declared_source_values):
+            errors.append(f"{describe(subject)} must use IRI-valued dcterms:source links")
+        missing_sources = expected_scheme_sources.get(subject, set()) - declared_sources
+        if missing_sources:
+            rendered = ", ".join(sorted(missing_sources))
+            errors.append(
+                f"{describe(subject)} is missing its authoritative dcterms:source: {rendered}"
+            )
+
+        if subject == category_scheme:
+            continue
+        if ("iri", category_scheme) not in values[(subject, DCTERMS + "isPartOf")]:
+            errors.append(
+                f"{describe(subject)} must declare dcterms:isPartOf stonework:categoryScheme"
+            )
+
+    for subject, subject_types in sorted(types.items()):
+        if owl_class not in subject_types or not subject.startswith(STONEWORK):
+            continue
+        if subject == category or category not in ancestors(subject):
+            continue
+
+        require_english_vocabulary_annotations(subject)
+
+        schemes = class_schemes(subject) - {category_scheme}
+
+        if not schemes:
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) is a Category subclass but has no "
+                "vocabulary-specific skos:inScheme restriction"
+            )
+            continue
+
+        for scheme in schemes:
+            if concept_scheme not in types[scheme]:
+                errors.append(
+                    f"{describe(subject)} references {describe(scheme)} as its concept scheme, "
+                    "but that resource is not a skos:ConceptScheme"
+                )
+
+    scheme_notation_owners = defaultdict(set)
+
+    for subject, subject_types in sorted(types.items()):
+        if named_individual not in subject_types:
+            continue
+        # Compatibility aliases point at the canonical vocabulary individual;
+        # require materialized membership on the canonical resource instead.
+        if values[(subject, OWL + "sameAs")]:
+            continue
+
+        required_schemes = set()
+        for subject_type in subject_types - {named_individual}:
+            if category not in ancestors(subject_type):
+                continue
+            for ancestor in ancestors(subject_type):
+                required_schemes.update(class_schemes(ancestor))
+
+        if required_schemes:
+            require_english_vocabulary_annotations(subject)
+
+        materialized_schemes = {
+            obj[1] for obj in values[(subject, SKOS + "inScheme")] if obj[0] == "iri"
+        }
+        if required_schemes and SKOS + "Concept" not in subject_types:
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) must explicitly materialize rdf:type "
+                "skos:Concept"
+            )
+        specific_schemes = required_schemes - {category_scheme}
+        notation_values = values[(subject, SKOS + "notation")]
+        notations = [obj for obj in notation_values if obj[0] == "literal"]
+        if specific_schemes and (len(notation_values) != 1 or len(notations) != 1):
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) must declare exactly one literal "
+                "skos:notation"
+            )
+        elif specific_schemes:
+            notation = notations[0]
+            if notation[2] is not None:
+                location = ", ".join(sorted(sources.get(subject, ())))
+                errors.append(
+                    f"{describe(subject)} ({location}) has a language-tagged skos:notation; "
+                    "notations must be language-neutral"
+                )
+            for scheme in specific_schemes:
+                scheme_notation_owners[(scheme, notation[1].casefold())].add(subject)
+        missing_schemes = required_schemes - materialized_schemes
+        if missing_schemes:
+            rendered = ", ".join(describe(scheme) for scheme in sorted(missing_schemes))
+            location = ", ".join(sorted(sources.get(subject, ())))
+            errors.append(
+                f"{describe(subject)} ({location}) must explicitly materialize skos:inScheme "
+                f"for {rendered}"
+            )
+
+    for (scheme, notation), owners in sorted(scheme_notation_owners.items()):
+        if len(owners) < 2:
+            continue
+        rendered = ", ".join(describe(owner) for owner in sorted(owners))
+        errors.append(
+            f"duplicate skos:notation {notation!r} in {describe(scheme)}: {rendered}"
+        )
 
     for subject in sorted(sources):
         definitions = values[(subject, SKOS + "definition")]
@@ -253,7 +512,7 @@ def main() -> int:
     for subject, subject_types in types.items():
         if named_individual not in subject_types:
             continue
-        domain_types = subject_types - {named_individual}
+        domain_types = subject_types - {named_individual, SKOS + "Concept"}
         for label in values[(subject, SKOS + "prefLabel")]:
             if label[0] != "literal":
                 continue

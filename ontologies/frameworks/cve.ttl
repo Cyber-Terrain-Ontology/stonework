@@ -1,3 +1,5 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
 @prefix cve: <https://cyberterrain.org/ns/frameworks/cve#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -10,6 +12,9 @@
 	a owl:Ontology ;
 	rdfs:label "CVE Unified Ontology"@en ;
 	rdfs:comment "Unified OWL ontology for CVE records. Derived from the framework_cve Pydantic model, supporting both CVE JSON 2.x and CVE JSON 5.x source schemas."@en ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/cve/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
 	.
 
 cve:2_0
@@ -1213,4 +1218,3 @@ cve:workarounds
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:LocalizedText ;
 	.
-

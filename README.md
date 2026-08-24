@@ -4,7 +4,7 @@
 
 **STONEWORK is an OWL 2 extension of STONES that adds what STIX 2.1 does not define.**
 
-[STONES](https://github.com/Cyber-Terrain-Ontology/stones) provides a faithful ontological binding of STIX 2.1. STONEWORK imports STONES and extends the cyber terrain to cover adversary techniques, software weaknesses, and defensive controls — drawing from MITRE ATT&CK, MITRE D3FEND, CWE, NIST SP 800-53, and CIS Critical Controls. Together, STONES and STONEWORK form a composable semantic stack for AI-driven cyber threat intelligence analysis.
+[STONES](https://github.com/Cyber-Terrain-Ontology/stones) provides a faithful ontological binding of STIX 2.1. STONEWORK extends that cyber terrain to cover adversary techniques, software weaknesses, and defensive controls — drawing from MITRE ATT&CK, MITRE D3FEND, CWE, NIST SP 800-53, and CIS Critical Controls. The core remains lightweight; import-only profiles compose it with the controlled vocabularies and framework mappings needed for a particular use case. Together, STONES and STONEWORK form a composable semantic stack for AI-driven cyber threat intelligence analysis.
 
 STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or CIS.
 
@@ -41,17 +41,19 @@ Both NIST SP 800-53 and CIS Controls now carry real, materialized `stonework:mit
 
 ### 1. Download
 
-Download the STONEWORK ontology file:
+Choose the smallest ontology entry point that fits the use case:
 
 ```
-ontologies/stonework.ttl
+ontologies/stonework.ttl                         # core vocabulary only
+ontologies/profiles/stonework-stix.ttl           # core + categories + STIX mapping
+ontologies/profiles/stonework-full.ttl           # all bundled mappings
 ```
 
-STONEWORK treats STONES and the other CTI framework ontologies (ATT&CK, CAPEC, CWE, CVE, CPE, ...) as peer reference vocabularies rather than ontologies it imports — load whichever ones you need alongside it.
+STONEWORK treats STONES and the other CTI framework ontologies (ATT&CK, CAPEC, CWE, CVE, CPE, ...) as peer reference vocabularies. The profile ontologies declare a dependable import closure without adding vocabulary of their own. External framework datasets remain separately loadable peer graphs.
 
 ### 2. Load into a triplestore
 
-Load both `stones-merged.ttl` (from the STONES repo) and `stonework.ttl` into any OWL-compatible triplestore:
+Load the selected entry point and any external source datasets, such as `stones-merged.ttl` from the STONES repo, into an OWL-compatible triplestore:
 [AllegroGraph](https://allegrograph.com) · [Stardog](https://stardog.com) · [GraphDB](https://graphdb.ontotext.com) · [Apache Jena / Fuseki](https://jena.apache.org)
 
 ### 3. Verify with SPARQL
@@ -71,6 +73,28 @@ ORDER BY ?label
 ### 4. Try the worked example
 
 Load the CTI reference datasets (ATT&CK, CAPEC, CVE, CWE, NIST SP 800-53, CIS) and run the Log4Shell chain query: from a vulnerable product to a threat actor to a defensive control in a single SPARQL query. Full walkthrough at [cyberterrain.org](https://cyberterrain.org).
+
+---
+
+## Modeling convention: OWL classes and SKOS concepts
+
+Use an OWL class for an intrinsic kind of thing whose instances should participate in class reasoning—for example, `stonework:Malware`, `stonework:ThreatActor`, or `stonework:Vulnerability`. Use a SKOS concept for a controlled vocabulary value that classifies or qualifies something—for example, `stonework:Ransomware`, a named individual of `stonework:MalwareType`. A ransomware sample is categorized by that concept; the concept is not an OWL subclass of Malware.
+
+`stonework:categoryScheme` is the umbrella scheme for every STONEWORK category. Narrower schemes such as `stonework:malwareTypeScheme`, `stonework:incidentStatusScheme`, and `stonework:threatActorRoleScheme` organize individual vocabularies. Vocabulary values explicitly assert `rdf:type skos:Concept` plus both umbrella and vocabulary-specific `skos:inScheme` membership, so plain RDF and SKOS clients can discover them without reasoning. Matching OWL value restrictions on each category subclass keep extensions semantically consistent without treating a vocabulary class as a SKOS concept.
+
+Every controlled-vocabulary class, scheme, and canonical value has exactly one English `skos:prefLabel` and `skos:definition`; additional languages may be supplied. Every value in a specific scheme also carries exactly one language-neutral `skos:notation`, unique within that scheme. Use the notation as the stable wire identifier and the preferred label for human-facing text.
+
+Schemes derived from an external standard declare an IRI-valued `dcterms:source` on the scheme itself. The source records provenance; it does not assert that every STONEWORK extension is defined by, or exactly equivalent to, the cited standard.
+
+```turtle
+ex:sample-1
+    a stonework:MalwareSample ;
+    stonework:categorizedBy stonework:Ransomware .
+
+stonework:Ransomware
+    a stonework:MalwareType ;
+    skos:notation "ransomware" .
+```
 
 ---
 
@@ -97,16 +121,26 @@ The first command activates the hooks tracked in `.githooks/`. The second downlo
 Run the ontology checks directly at any time with:
 
 ```bash
+bash .githooks/format-ttl.sh --check
 python3 tools/check-ontology.py
+python3 tools/check-shacl.py
 ```
+
+The first command verifies canonical Turtle formatting without modifying files. The second parses every Turtle file and checks high-value OWL integrity rules. The third executes the SHACL profile in `ontologies/shapes/stonework-shapes.ttl` with the repository's bundled RDF4J runtime, accepting a conforming fixture and proving that a non-conforming fixture is rejected. CI runs all three checks for every pull request.
+
+The SHACL file is an optional application-level data-quality profile; it does not change STONEWORK's open-world OWL semantics and is not part of the core, STIX, or full-profile import closure. `tools/check-shacl.py` explicitly registers the shapes and validates only the repository's test fixtures. It does not validate external framework datasets or consumer graphs. Existing ingest pipelines are therefore unaffected unless they deliberately load the shapes into a SHACL-aware engine and invoke validation. When the profile is applied, required fields and cardinalities express payload completeness for that validation context rather than asserting that missing RDF statements are false.
 
 **What the hook does on each commit:**
 - Canonicalizes all staged `.ttl` files via rdf-toolkit (alphabetical prefixes, tab indentation, consistent triple ordering) so diffs reflect content changes, not style noise
 - Strips Protégé's injected default `:` prefix when present
-- Parses every Turtle file and rejects common OWL integrity errors, including accidental domain/range intersections, incompatible inverse-property endpoints, property-kind collisions, class/individual punning, conflicting definitions, and duplicate controlled-vocabulary labels
+- Parses every Turtle file and rejects common OWL integrity errors, including accidental domain/range intersections, incompatible inverse-property endpoints, property-kind collisions, class/individual punning, conflicting definitions, duplicate controlled-vocabulary labels, unresolved imports, inconsistent version metadata, and incomplete category-scheme declarations
 - Sets `ontologies/catalog-v001.xml` read-only so Protégé cannot overwrite it
 
 **Requirements:** Java 11+ and Python 3 on `PATH`.
+
+### Ontology imports and versions
+
+Import the stable ontology IRI, such as `https://cyberterrain.org/ns/frameworks/cve`. Each ontology also declares an `owl:versionIRI` for consumers that need to pin an exact vocabulary release. The local XML catalog resolves both forms. Every bundled framework module imports the STONEWORK core directly and declares any additional bundled dependency, so a module can be loaded independently as well as through a profile.
 
 ---
 

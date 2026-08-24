@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Download the rdf-toolkit.jar used by the pre-commit TTL formatting hook.
+# Download the rdf-toolkit.jar used by ontology validation and TTL formatting.
 # Run this once after cloning: bash tools/download-rdf-toolkit.sh
 set -euo pipefail
 
