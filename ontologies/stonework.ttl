@@ -253,7 +253,7 @@ stonework:Countermeasure
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "Any control, mitigation, or safeguard applied to protect against, reduce, or respond to security risks."@en ;
 	skos:prefLabel "Countermeasure" ;
-	skos:scopeNote "Includes Controls, Mitigations, CoursesOfAction, and DetectionRules. The two primary branches are preventive/reactive measures (Mitigation, CourseOfAction, Control) and detection logic (DetectionRule, Signature)."@en ;
+	skos:scopeNote "Includes Controls, Mitigations, CoursesOfAction, and DetectionRules. The two primary branches are preventive/reactive measures (Mitigation, CourseOfAction, Control) and detection logic (DetectionRule, Signature). A Countermeasure describes the safeguard or procedure; the deployed mechanism that can apply it is a stonework:SecurityActuator, and a particular application is a stonework:SecurityActuation."@en ;
 	.
 
 stonework:Country
@@ -1142,6 +1142,24 @@ stonework:ScreenCapture
 	skos:prefLabel "Screen Capture"@en ;
 	.
 
+stonework:SecurityActuation
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberActivity ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAActuation> ;
+	skos:definition "A specific cyber activity in which a deployed security mechanism changes the security state of one or more cyber entities."@en ;
+	skos:prefLabel "Security Actuation"@en ;
+	skos:scopeNote "Use stonework:madeByActuator for the deployed mechanism, stonework:appliesCountermeasure for the safeguard or procedure being carried out, and stonework:actsOn for each affected entity. Unlike a Countermeasure specification, a SecurityActuation is an occurrence and may carry execution times and produced results. Inspired by SOSA sosa:Actuation without formally importing SOSA."@en ;
+	.
+
+stonework:SecurityActuator
+	a owl:Class ;
+	rdfs:subClassOf stonework:Infrastructure ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAActuator> ;
+	skos:definition "A deployed system, service, appliance, or software agent capable of changing the security state of a cyber environment by applying a countermeasure."@en ;
+	skos:prefLabel "Security Actuator"@en ;
+	skos:scopeNote "A SecurityActuator is the mechanism that applies a safeguard, not the safeguard specification itself. Firewalls, EDR agents, access-control services, and patch-management systems are typical examples. A mechanism such as an IPS or EDR agent may be both a stonework:Sensor and a SecurityActuator. Inspired by SOSA sosa:Actuator without formally importing SOSA."@en ;
+	.
+
 stonework:SecurityCondition
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
@@ -1602,6 +1620,14 @@ stonework:appliesControl
 	rdfs:range stonework:Control ;
 	skos:definition "A CourseOfAction specifies this Control as part of its recommended defensive posture. Primary arc into the Control class."@en ;
 	skos:prefLabel "appliesControl"@en ;
+	.
+
+stonework:appliesCountermeasure
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:SecurityActuation ;
+	rdfs:range stonework:Countermeasure ;
+	skos:definition "Relates a SecurityActuation to the Countermeasure, rule, control, or mitigation carried out during that activity."@en ;
+	skos:prefLabel "appliesCountermeasure"@en ;
 	.
 
 stonework:appliesTo
@@ -3055,6 +3081,19 @@ stonework:implements
 	skos:scopeNote "General-purpose relationship covering both offense (a Procedure implements a Technique) and defense (a ControlPlan implements a Control) with one property rather than a bespoke one per pairing."@en ;
 	.
 
+stonework:implementsCountermeasure
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:SecurityActuator ;
+	rdfs:range stonework:Countermeasure ;
+	owl:propertyChainAxiom (
+		stonework:madeActuation
+		stonework:appliesCountermeasure
+	) ;
+	skos:definition "Relates a SecurityActuator to a Countermeasure it is configured or capable of applying."@en ;
+	skos:prefLabel "implementsCountermeasure"@en ;
+	skos:scopeNote "May be asserted directly for configured capabilities. It is also inferred when the actuator made a SecurityActuation that applies the Countermeasure."@en ;
+	.
+
 stonework:implementsTechnique
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:uses ;
@@ -3339,6 +3378,28 @@ stonework:longitude
 	rdfs:range xsd:decimal ;
 	skos:definition "The geographic longitude in decimal degrees (WGS 84)."@en ;
 	skos:prefLabel "longitude"@en ;
+	.
+
+stonework:madeActuation
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:SecurityActuator ;
+	rdfs:range stonework:SecurityActuation ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAmadeActuation> ;
+	owl:inverseOf stonework:madeByActuator ;
+	skos:definition "Relates a SecurityActuator to a SecurityActuation it performed."@en ;
+	skos:prefLabel "madeActuation"@en ;
+	.
+
+stonework:madeByActuator
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:SecurityActuation ;
+	rdfs:range stonework:SecurityActuator ;
+	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAmadeByActuator> ;
+	skos:definition "Relates a SecurityActuation to the SecurityActuator that performed it."@en ;
+	skos:prefLabel "madeByActuator"@en ;
 	.
 
 stonework:madeBySensor

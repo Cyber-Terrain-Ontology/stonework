@@ -36,6 +36,11 @@ example:domain
 	stonework:registrationDate "2026-08-20T10:00:00Z"^^xsd:dateTime ;
 	.
 
+example:edrActuator
+	a stonework:SecurityActuator ;
+	stonework:implementsCountermeasure example:isolationControl ;
+	.
+
 example:epssFeed
 	a stonework:Feed ;
 	.
@@ -61,6 +66,17 @@ example:indicator
 	stonework:confidence "85"^^xsd:integer ;
 	.
 
+example:isolationActuation
+	a stonework:SecurityActuation ;
+	stonework:actsOn example:protectedHost ;
+	stonework:appliesCountermeasure example:isolationControl ;
+	stonework:madeByActuator example:edrActuator ;
+	.
+
+example:isolationControl
+	a stonework:DetectionRule ;
+	.
+
 example:likelihood
 	a stonework:Likelihood ;
 	stonework:likelihoodScore "0.6"^^xsd:decimal ;
@@ -76,6 +92,10 @@ example:observation
 	a stonework:SecurityObservation ;
 	stonework:firstSeen "2026-08-20T10:00:00Z"^^xsd:dateTime ;
 	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
+	.
+
+example:protectedHost
+	a stonework:Host ;
 	.
 
 example:roleSource

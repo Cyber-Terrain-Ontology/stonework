@@ -96,6 +96,22 @@ stonework:Ransomware
     skos:notation "ransomware" .
 ```
 
+### SOSA-inspired observation and actuation
+
+STONEWORK distinguishes a persistent safeguard specification from the deployed mechanism and the activity that applies it. A `stonework:Countermeasure` describes the rule, control, or mitigation; a `stonework:SecurityActuator` is the deployed infrastructure capable of applying it; and a `stonework:SecurityActuation` records a particular application. This mirrors the SOSA actuator/actuation pattern without formally importing SOSA. Systems such as IPS and EDR platforms may be both sensors and actuators.
+
+```turtle
+ex:edr-agent
+    a stonework:SecurityActuator ;
+    stonework:implementsCountermeasure ex:isolate-host-rule .
+
+ex:isolation-2026-08-21
+    a stonework:SecurityActuation ;
+    stonework:madeByActuator ex:edr-agent ;
+    stonework:appliesCountermeasure ex:isolate-host-rule ;
+    stonework:actsOn ex:compromised-host .
+```
+
 ---
 
 ## Developer Setup
