@@ -21,6 +21,7 @@ frameworks:stix
 		;
 	owl:versionIRI <https://cyberterrain.org/ns/frameworks/stix/0.1.0> ;
 	owl:versionInfo "0.1.0" ;
+	skos:scopeNote "STIX Bundle is intentionally not mapped to a STONEWORK domain class. A bundle is a transport container rather than a STIX Core Object or an assertion about the cyber domain; consumers may retain it as packaging metadata without treating it as a CyberEntity."@en ;
 	.
 
 stones:ArtifactObject
@@ -314,6 +315,7 @@ stones:relationshipType
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:assertionRelationType ;
 	rdfs:domain stones:Relationship ;
 	rdfs:range xsd:string ;
 	skos:definition "The relationship_type string value from the STIX 2.1 SRO (e.g. 'uses', 'mitigates', 'subtechnique-of'). Drawn from the STIX 2.1 open vocabulary; corresponding named individuals are declared as stones:RelationshipTypeVocabulary instances in vocabularies.ttl. A shortcut object property is also asserted: stones:<type_underscored> from source to target." ;
@@ -325,9 +327,19 @@ stones:revoked_by
 	rdfs:subPropertyOf stonework:revokedBy ;
 	.
 
+stones:sourceRef
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:assertionSubject ;
+	.
+
 stones:subtechnique_of
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:techniqueOf ;
+	.
+
+stones:targetRef
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:assertionObject ;
 	.
 
 stones:targets

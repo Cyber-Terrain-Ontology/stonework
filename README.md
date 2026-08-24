@@ -142,9 +142,9 @@ python3 tools/check-ontology.py
 python3 tools/check-shacl.py
 ```
 
-The first command verifies canonical Turtle formatting without modifying files. The second parses every Turtle file and checks high-value OWL integrity rules. The third executes the SHACL profile in `ontologies/shapes/stonework-shapes.ttl` with the repository's bundled RDF4J runtime, accepting a conforming fixture and proving that a non-conforming fixture is rejected. CI runs all three checks for every pull request.
+The first command verifies canonical Turtle formatting without modifying files. The second parses every Turtle file and checks high-value OWL integrity rules. The third exercises both the baseline SHACL profile in `ontologies/shapes/stonework-shapes.ttl` and the additive strict overlay in `ontologies/shapes/stonework-strict-shapes.ttl` with the repository's bundled RDF4J runtime. CI runs all three checks for every pull request.
 
-The SHACL file is an optional application-level data-quality profile; it does not change STONEWORK's open-world OWL semantics and is not part of the core, STIX, or full-profile import closure. `tools/check-shacl.py` explicitly registers the shapes and validates only the repository's test fixtures. It does not validate external framework datasets or consumer graphs. Existing ingest pipelines are therefore unaffected unless they deliberately load the shapes into a SHACL-aware engine and invoke validation. When the profile is applied, required fields and cardinalities express payload completeness for that validation context rather than asserting that missing RDF statements are false.
+The SHACL files are optional application-level data-quality profiles; they do not change STONEWORK's open-world OWL semantics and are not part of the core, STIX, or full-profile import closure. The baseline profile accepts externally mapped qualified assertions without normalized provenance while still validating provenance values when present. Consumers that require complete, normalized STONEWORK records can load the strict overlay alongside the baseline profile to require provenance on every `stonework:QualifiedAssertion`. `tools/check-shacl.py` explicitly registers each profile and validates only the repository's test fixtures. Existing ingest pipelines are unaffected unless they deliberately load the shapes into a SHACL-aware engine and invoke validation.
 
 **What the hook does on each commit:**
 - Canonicalizes all staged `.ttl` files via rdf-toolkit (alphabetical prefixes, tab indentation, consistent triple ordering) so diffs reflect content changes, not style noise
@@ -160,6 +160,7 @@ Import the stable ontology IRI, such as `https://cyberterrain.org/ns/frameworks/
 
 ### Framework interoperability
 
+- `ontologies/frameworks/stix.ttl` maps STONES classes and properties into STONEWORK. STIX relationship source, target, and open-vocabulary type values project through the generic qualified-assertion properties. STIX Bundle remains intentionally unmapped because it is a transport container rather than a STIX Core Object or cyber-domain assertion.
 - `ontologies/frameworks/d3fend.ttl` maps compatible MITRE D3FEND 1.5.0 defensive and offensive techniques, tactics, events, artifacts, identifiers, and selected relationships into STONEWORK. It preserves D3FEND's source-native hierarchy and class/individual punning rather than asserting equivalence.
 - `ontologies/frameworks/ocsf.ttl` maps the complete OCSF 1.9.0 core event taxonomy into `stonework:Event`, retaining OCSF category and class identifiers for round-tripping.
 - `ontologies/frameworks/uco.ttl` maps compatible UCO 1.5.0 action, identity, location, and observable classes into STONEWORK. It remains class-only because UCO places observable values on facet nodes while STONEWORK commonly projects them directly onto domain entities.

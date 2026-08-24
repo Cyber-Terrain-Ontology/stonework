@@ -971,9 +971,9 @@ stonework:Publication
 stonework:QualifiedAssertion
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
-	skos:definition "A record that qualifies an assertion or relationship with provenance, time, and other context that cannot be represented by an unqualified binary property or scalar value."@en ;
+	skos:definition "A first-class record of an assertion or relationship that may carry provenance, time, and other context not represented by an unqualified binary property or scalar value."@en ;
 	skos:prefLabel "Qualified Assertion"@en ;
-	skos:scopeNote "Subclasses provide the assertion-specific structure. Use direct properties as query-friendly projections when their loss of source, time, or relationship context is acceptable."@en ;
+	skos:scopeNote "Use assertionSubject, assertionObject, and assertionRelationType for generic directed relationships; subclasses may provide more specific structure. Use direct properties as query-friendly projections when their loss of source, time, or relationship context is acceptable. Provenance is optional in the baseline interoperability profile and required by the strict SHACL overlay."@en ;
 	.
 
 stonework:Ransomware
@@ -1666,6 +1666,31 @@ stonework:asNumber
 	rdfs:range xsd:unsignedInt ;
 	skos:definition "The Autonomous System Number (ASN) assigned by IANA."@en ;
 	skos:prefLabel "asNumber"@en ;
+	.
+
+stonework:assertionObject
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:QualifiedAssertion ;
+	skos:definition "Identifies the resource in the object or target position of a qualified assertion."@en ;
+	skos:prefLabel "assertion object"@en ;
+	skos:scopeNote "Range is intentionally unset because framework relationships may target either a CyberEntity, a CyberActivity, or another externally defined resource."@en ;
+	.
+
+stonework:assertionRelationType
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:QualifiedAssertion ;
+	rdfs:range xsd:string ;
+	skos:definition "The source vocabulary's wire-level name for the relation expressed by a qualified assertion."@en ;
+	skos:prefLabel "assertion relation type"@en ;
+	skos:scopeNote "Preserves open relationship vocabularies such as STIX relationship_type strings. A separately materialized object property may provide a query-friendly projection of the same assertion."@en ;
+	.
+
+stonework:assertionSubject
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:QualifiedAssertion ;
+	skos:definition "Identifies the resource in the subject or source position of a qualified assertion."@en ;
+	skos:prefLabel "assertion subject"@en ;
+	skos:scopeNote "Range is intentionally unset because framework relationships may originate from either a CyberEntity, a CyberActivity, or another externally defined resource."@en ;
 	.
 
 stonework:assessmentOf
