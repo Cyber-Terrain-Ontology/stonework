@@ -1,0 +1,223 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
+@prefix action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix frameworks: <https://cyberterrain.org/ns/frameworks/> .
+@prefix identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+frameworks:uco
+	a owl:Ontology ;
+	rdfs:label "STONEWORK: UCO 1.5.0 Mapping"@en ;
+	dcterms:description "Declares conservative subclass mappings from Unified Cyber Ontology (UCO) 1.5.0 core, action, identity, location, and observable classes into STONEWORK. Load this adapter alongside the official UCO ontologies when cross-model reasoning is required; it deliberately does not import UCO or reproduce UCO SHACL constraints."@en ;
+	dcterms:source <https://github.com/ucoProject/UCO/tree/1.5.0> ;
+	rdfs:seeAlso <https://unifiedcyberontology.org/releases/1.5.0/> ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/uco/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
+	skos:scopeNote "UCO observable characteristics are represented through facet nodes, while STONEWORK commonly uses direct properties. This adapter maps compatible classes only and intentionally avoids subproperty axioms that would incorrectly type UCO facet nodes as the observable objects they characterize. UCO observable:Observation is mapped to stonework:CyberActivity because it denotes the act of observing; stonework:SecurityObservation denotes the resulting machine-produced intelligence record."@en ;
+	.
+
+action:Action
+	rdfs:subClassOf stonework:CyberActivity ;
+	.
+
+action:Technique
+	rdfs:subClassOf stonework:Technique ;
+	.
+
+core:Assertion
+	rdfs:subClassOf stonework:QualifiedAssertion ;
+	.
+
+core:Event
+	rdfs:subClassOf stonework:Event ;
+	.
+
+core:Grouping
+	rdfs:subClassOf stonework:Grouping ;
+	.
+
+core:Relationship
+	rdfs:subClassOf stonework:QualifiedAssertion ;
+	.
+
+identity:Identity
+	rdfs:subClassOf stonework:Agent ;
+	.
+
+identity:Organization
+	rdfs:subClassOf stonework:Organization ;
+	.
+
+identity:Person
+	rdfs:subClassOf stonework:Person ;
+	.
+
+location:Location
+	rdfs:subClassOf stonework:Location ;
+	.
+
+observable:Account
+	rdfs:subClassOf stonework:DigitalIdentity ;
+	.
+
+observable:Application
+	rdfs:subClassOf stonework:Product ;
+	.
+
+observable:ApplicationAccount
+	rdfs:subClassOf stonework:UserAccount ;
+	.
+
+observable:ApplicationVersion
+	rdfs:subClassOf stonework:VersionedProduct ;
+	.
+
+observable:AutonomousSystem
+	rdfs:subClassOf stonework:AutonomousSystem ;
+	.
+
+observable:Computer
+	rdfs:subClassOf stonework:Host ;
+	.
+
+observable:ConfiguredSoftware
+	rdfs:subClassOf stonework:ProductInstallation ;
+	.
+
+observable:Device
+	rdfs:subClassOf stonework:Infrastructure ;
+	.
+
+observable:DigitalAccount
+	rdfs:subClassOf stonework:DigitalIdentity ;
+	.
+
+observable:Directory
+	rdfs:subClassOf stonework:Directory ;
+	.
+
+observable:DomainName
+	rdfs:subClassOf stonework:Domain ;
+	.
+
+observable:EmailAddress
+	rdfs:subClassOf stonework:EmailAddress ;
+	.
+
+observable:EmailMessage
+	rdfs:subClassOf stonework:EmailMessage ;
+	.
+
+observable:EventLog
+	rdfs:subClassOf stonework:Log ;
+	.
+
+observable:File
+	rdfs:subClassOf stonework:File ;
+	.
+
+observable:Hostname
+	rdfs:subClassOf stonework:Identifier ;
+	.
+
+observable:IPAddress
+	rdfs:subClassOf stonework:IPAddress ;
+	.
+
+observable:MACAddress
+	rdfs:subClassOf stonework:MACAddress ;
+	.
+
+observable:MobileDevice
+	rdfs:subClassOf stonework:MobileDevice ;
+	.
+
+observable:Mutex
+	rdfs:subClassOf stonework:Mutex ;
+	.
+
+observable:NetworkAppliance
+	rdfs:subClassOf stonework:Infrastructure ;
+	.
+
+observable:NetworkConnection
+	rdfs:subClassOf stonework:NetworkTraffic ;
+	.
+
+observable:NetworkFlow
+	rdfs:subClassOf stonework:NetworkTraffic ;
+	.
+
+observable:Note
+	rdfs:subClassOf stonework:Note ;
+	.
+
+observable:ObservableAction
+	rdfs:subClassOf stonework:CyberActivity ;
+	.
+
+observable:ObservableObject
+	rdfs:subClassOf stonework:CyberEntity ;
+	.
+
+observable:Observation
+	rdfs:subClassOf stonework:CyberActivity ;
+	.
+
+observable:OnlineService
+	rdfs:subClassOf stonework:NetworkService ;
+	.
+
+observable:OperatingSystem
+	rdfs:subClassOf stonework:Product ;
+	.
+
+observable:Process
+	rdfs:subClassOf stonework:RuntimeProcess ;
+	.
+
+observable:SecurityAppliance
+	rdfs:subClassOf stonework:Infrastructure ;
+	.
+
+observable:Server
+	rdfs:subClassOf stonework:Host ;
+	.
+
+observable:Software
+	rdfs:subClassOf stonework:Product ;
+	.
+
+observable:URL
+	rdfs:subClassOf stonework:URI ;
+	.
+
+observable:UserAccount
+	rdfs:subClassOf stonework:UserAccount ;
+	.
+
+observable:WindowsRegistryKey
+	rdfs:subClassOf stonework:RegistryKey ;
+	.
+
+observable:WindowsRegistryValue
+	rdfs:subClassOf stonework:RegistryValue ;
+	.
+
+observable:X509Certificate
+	rdfs:subClassOf stonework:Certificate ;
+	.
+
+observable:X509V3Certificate
+	rdfs:subClassOf stonework:Certificate ;
+	.

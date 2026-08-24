@@ -33,10 +33,14 @@
         <uri name="https://cyberterrain.org/ns/frameworks/killchain/0.1.0" uri="frameworks/killchain.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/nist" uri="frameworks/nist.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/nist/0.1.0" uri="frameworks/nist.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/ocsf" uri="frameworks/ocsf.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/ocsf/0.1.0" uri="frameworks/ocsf.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/registry" uri="frameworks/registry.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/registry/0.1.0" uri="frameworks/registry.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/stix" uri="frameworks/stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/stix/0.1.0" uri="frameworks/stix.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/uco" uri="frameworks/uco.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/uco/0.1.0" uri="frameworks/uco.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uri" uri="frameworks/uri.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uri/0.1.0" uri="frameworks/uri.ttl"/>
         <!-- stix.ttl is STONEWORK's self-contained local crosswalk for the STONES/STIX 2.1 vocabulary; resolve stones# to that mapping rather than fetching it over the network -->

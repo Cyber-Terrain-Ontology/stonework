@@ -10,8 +10,10 @@
 # imports: https://cyberterrain.org/ns/frameworks/email
 # imports: https://cyberterrain.org/ns/frameworks/killchain
 # imports: https://cyberterrain.org/ns/frameworks/nist
+# imports: https://cyberterrain.org/ns/frameworks/ocsf
 # imports: https://cyberterrain.org/ns/frameworks/registry
 # imports: https://cyberterrain.org/ns/frameworks/stix
+# imports: https://cyberterrain.org/ns/frameworks/uco
 # imports: https://cyberterrain.org/ns/frameworks/uri
 # imports: https://cyberterrain.org/ns/stonework#
 # imports: https://cyberterrain.org/ns/stonework/categories#
@@ -39,8 +41,10 @@
 		<https://cyberterrain.org/ns/frameworks/email> ,
 		<https://cyberterrain.org/ns/frameworks/killchain> ,
 		<https://cyberterrain.org/ns/frameworks/nist> ,
+		<https://cyberterrain.org/ns/frameworks/ocsf> ,
 		<https://cyberterrain.org/ns/frameworks/registry> ,
 		<https://cyberterrain.org/ns/frameworks/stix> ,
+		<https://cyberterrain.org/ns/frameworks/uco> ,
 		<https://cyberterrain.org/ns/frameworks/uri> ,
 		<https://cyberterrain.org/ns/stonework#> ,
 		<https://cyberterrain.org/ns/stonework/categories#>
