@@ -579,7 +579,7 @@ stonework:Identifier
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "A first-class representation of a security-relevant identifier value, such as an email address, cryptographic hash, MAC address, phone number, URI, or user-agent string."@en ;
 	skos:prefLabel "Identifier" ;
-	skos:scopeNote "Identifier does not provide the RDF identity of every CyberEntity and does not imply that every CyberEntity has an Identifier. Named RDF resources are identified by their IRIs; identifiers originating in external systems are recorded with dcterms:identifier or stonework:externalId."@en ;
+	skos:scopeNote "Identifier does not provide the RDF identity of every CyberEntity and does not imply that every CyberEntity has an Identifier. Named RDF resources are identified by their IRIs; identifiers originating in external systems are recorded with dcterms:identifier or stonework:externalId. Use the most specific available subclass, such as EmailAddress, Hash, MACAddress, PhoneNumber, URI, or UserAgent. Instantiate Identifier directly only when the identifier type is unknown or no suitable subclass exists."@en ;
 	.
 
 stonework:Impact
