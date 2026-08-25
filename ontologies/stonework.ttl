@@ -577,9 +577,9 @@ stonework:IPBlock
 stonework:Identifier
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
-	skos:definition "An atomic label, string, or token used to uniquely identify, locate, or reference a cyber entity, resource, or principal."@en ;
+	skos:definition "A first-class representation of a security-relevant identifier value, such as an email address, cryptographic hash, MAC address, phone number, URI, or user-agent string."@en ;
 	skos:prefLabel "Identifier" ;
-	skos:scopeNote "Includes contact identifiers, network locators, accounts, and similar atomic artifacts."@en ;
+	skos:scopeNote "Identifier does not provide the RDF identity of every CyberEntity and does not imply that every CyberEntity has an Identifier. Named RDF resources are identified by their IRIs; identifiers originating in external systems are recorded with dcterms:identifier or stonework:externalId."@en ;
 	.
 
 stonework:Impact
