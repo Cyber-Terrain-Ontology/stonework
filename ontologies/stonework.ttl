@@ -179,8 +179,9 @@ stonework:Bot
 stonework:Campaign
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberActivity ;
-	skos:definition "A grouping of adversary behaviours and resources with a common objective pursued over a period of time. Campaigns may be attributed to ThreatActors and may evolve from a CyberActivityCluster as attribution and objectives become established." ;
+	skos:definition "A grouping of adversary behaviours and resources with a common objective pursued over a period of time. Campaigns may be attributed to ThreatActors and may form part of a broader IntrusionActivitySet." ;
 	skos:prefLabel "Campaign"@en ;
+	skos:scopeNote "A Campaign and an IntrusionActivitySet classify adversarial activity along different dimensions: a Campaign is organized around an objective and time period, while an IntrusionActivitySet is organized by analytic correlation. A Campaign that is one episode within a broader activity set is linked to it with stonework:memberOfActivitySet. The same body of activity may be typed as both classes when both descriptions apply."@en ;
 	.
 
 stonework:Category
@@ -282,15 +283,7 @@ stonework:CyberActivity
 	a owl:Class ;
 	skos:definition "A specific occurrence or performance of actions by one or more agents over time within a cyber or sociotechnical context."@en ;
 	skos:prefLabel "Cyber Activity" ;
-	skos:scopeNote "One of two root classes in STONEWORK alongside CyberEntity. Superclass for Campaigns, Incidents, Operations, Events, and Processes. Aligns with BFO Occurrent and BFO Process."@en ;
-	.
-
-stonework:CyberActivityCluster
-	a owl:Class ;
-	rdfs:subClassOf stonework:CyberActivity ;
-	skos:definition "An analytically-defined grouping of correlated adversarial behaviors, tools, malware, infrastructure, and participants believed to share a common source or campaign thread."@en ;
-	skos:prefLabel "Cyber Activity Cluster"@en ;
-	skos:scopeNote "Represents the intelligence analyst's working construct before enough is known to declare a Campaign: a cluster of correlated observations attributed (loosely or firmly) to a common adversary source. May evolve into a stonework:Campaign when an objective, timeline, and attribution are sufficiently established. Corresponds to the intended meaning of STIX intrusion-set — the correlated set of activity, not the actor responsible for it. Distinct from stonework:ThreatActorGroup, which is the adversary entity; a CyberActivityCluster is the attributed set of activity linked to that entity."@en ;
+	skos:scopeNote "One of two root classes in STONEWORK alongside CyberEntity. Superclass for Campaigns, IntrusionActivitySets, Incidents, Operations, Events, and Processes. Aligns with BFO Occurrent and BFO Process."@en ;
 	.
 
 stonework:CyberEntity
@@ -620,6 +613,15 @@ stonework:IntelligenceProduct
 	skos:definition "A structured artifact produced by an intelligence or analytical process, intended to convey findings, assessments, observations, or sourcing context to support decision-making."@en ;
 	skos:prefLabel "Intelligence Product"@en ;
 	skos:scopeNote "The intelligence product hierarchy covers the outputs of the intelligence lifecycle: Reports, Assessments, Sightings, Notes, and Provenance records. Distinguished from stonework:DigitalArtifact (raw observable technical data) and stonework:Behavior (plan specifications and TTP patterns). Intelligence products are the result of human or automated analytical work applied to raw data — they carry judgment, context, and traceability that raw artifacts do not."@en ;
+	.
+
+stonework:IntrusionActivitySet
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberActivity ;
+	skos:altLabel "Cyber Activity Cluster"@en ;
+	skos:definition "An analytically defined set of correlated adversarial activity, behaviors, tools, malware, infrastructure, and participants believed to share a common source."@en ;
+	skos:prefLabel "Intrusion Activity Set"@en ;
+	skos:scopeNote "Corresponds to the intended meaning of the STIX 2.1 intrusion-set object: the tracked body of correlated activity and resources, not the ThreatActor or ThreatActorGroup believed responsible for it. An IntrusionActivitySet may remain a long-lived umbrella containing multiple Campaigns, while the same body of activity may also be typed as a Campaign when both classifications apply. Link a contained Campaign or other CyberActivity with stonework:memberOfActivitySet, and link the set to a responsible Agent with stonework:attributedTo only when the attribution is supported."@en ;
 	.
 
 stonework:Investigation
@@ -1274,7 +1276,7 @@ stonework:ThreatActorGroup
 	rdfs:subClassOf stonework:ThreatActor ;
 	skos:definition "A collective, organization, or coordinated set of individuals operating with common intent to conduct adversarial cyber activities."@en ;
 	skos:prefLabel "Threat Actor Group"@en ;
-	skos:scopeNote "Covers nation-state units, cybercriminal organizations, hacktivist collectives, and other named adversary groups (e.g., APT29, Lazarus Group). MITRE ATT&CK serializes these as STIX intrusion-set objects; in STONEWORK they are correctly typed as ThreatActorGroup — an adversary entity rather than an activity cluster. Distinguished from stonework:ThreatActorIndividual, which represents a single human actor, and from stonework:CyberActivityCluster, which is the attributed set of activity linked to the group."@en ;
+	skos:scopeNote "Covers nation-state units, cybercriminal organizations, hacktivist collectives, and other named adversary groups. Industry names such as APT20 or APT29 are often used for both a tracked body of activity and the presumed group behind it. Model the activity as a separate stonework:IntrusionActivitySet and link it to the ThreatActorGroup with stonework:attributedTo when supported. MITRE ATT&CK serializes tracked Groups as STIX intrusion-set objects; that source representation alone does not establish that the activity set and responsible group are the same entity. Distinguished from stonework:ThreatActorIndividual, which represents a single human actor."@en ;
 	.
 
 stonework:ThreatActorIndividual
@@ -2797,6 +2799,15 @@ stonework:hasMember
 	skos:prefLabel "hasMember"@en ;
 	.
 
+stonework:hasMemberActivity
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:IntrusionActivitySet ;
+	rdfs:range stonework:CyberActivity ;
+	owl:inverseOf stonework:memberOfActivitySet ;
+	skos:definition "Relates an IntrusionActivitySet to a CyberActivity analytically grouped within it."@en ;
+	skos:prefLabel "hasMemberActivity"@en ;
+	.
+
 stonework:hasMetricObservation
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:CyberEntity ;
@@ -3124,7 +3135,7 @@ stonework:indicates
 	rdfs:domain stonework:Indicator ;
 	skos:definition "Asserts that when the source Indicator's pattern is matched, it signals the presence of the target adversary behavior, malware, campaign, or threat actor." ;
 	skos:prefLabel "indicates"@en ;
-	skos:scopeNote "Corresponds to STIX relationship_type 'indicates'. Domain is stonework:Indicator — unlike the source side of other STIX relationship shortcuts, this is definitional rather than open-world convention: an object is only ever an Indicator because it indicates something, per STIX's own spec role for that object type. Range is intentionally left unset: an Indicator may indicate all sorts of things (AttackPattern/AttackTechnique, Malware, Campaign, CyberActivityCluster, ThreatActor, Infrastructure, Tool, and whatever else a producer's pattern targets), and STIX does not schema-constrain the target_ref type for a given relationship_type. A single Indicator may indicate multiple targets."@en ;
+	skos:scopeNote "Corresponds to STIX relationship_type 'indicates'. Domain is stonework:Indicator — unlike the source side of other STIX relationship shortcuts, this is definitional rather than open-world convention: an object is only ever an Indicator because it indicates something, per STIX's own spec role for that object type. Range is intentionally left unset: an Indicator may indicate all sorts of things (AttackPattern/AttackTechnique, Malware, Campaign, IntrusionActivitySet, ThreatActor, Infrastructure, Tool, and whatever else a producer's pattern targets), and STIX does not schema-constrain the target_ref type for a given relationship_type. A single Indicator may indicate multiple targets."@en ;
 	.
 
 stonework:initiatedBy
@@ -3449,6 +3460,15 @@ stonework:memberOf
 	owl:inverseOf stonework:hasMember ;
 	skos:definition "Relates an entity to a Group, Organization, or ThreatActor to which it belongs."@en ;
 	skos:prefLabel "memberOf"@en ;
+	.
+
+stonework:memberOfActivitySet
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range stonework:IntrusionActivitySet ;
+	owl:inverseOf stonework:hasMemberActivity ;
+	skos:definition "Relates a Campaign or other CyberActivity to the IntrusionActivitySet that analytically groups it."@en ;
+	skos:prefLabel "memberOfActivitySet"@en ;
 	.
 
 stonework:memberOfFamily
@@ -4689,6 +4709,24 @@ stonework:usesDetectionRule
 	skos:definition "Relates a DetectionPlan or Step to a DetectionRule that it evaluates or invokes."@en ;
 	skos:prefLabel "usesDetectionRule"@en ;
 	skos:scopeNote "Use stonework:usesRule for the deployment-side relationship between a Sensor and a DetectionRule."@en ;
+	.
+
+stonework:usesInfrastructure
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:uses ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:Malware
+			stonework:Product
+			stonework:CyberActivity
+			stonework:Agent
+		) ;
+	] ;
+	rdfs:range stonework:Infrastructure ;
+	skos:definition "Relates malware, a product, cyber activity, or agent to infrastructure it uses."@en ;
+	skos:prefLabel "usesInfrastructure"@en ;
+	skos:scopeNote "Use for an operational dependency on infrastructure, such as malware using command-and-control infrastructure, an IntrusionActivitySet or Campaign using hosting infrastructure, a product using a supporting service, or an Agent using infrastructure in an operation. This relationship asserts use, not ownership, compromise, or attribution."@en ;
 	.
 
 stonework:usesRule
