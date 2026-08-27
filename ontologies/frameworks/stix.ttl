@@ -120,7 +120,7 @@ stones:InfrastuctureTypeVocabulary
 
 stones:IntrusionSet
 	a owl:Class ;
-	rdfs:subClassOf stonework:IntrusionActivitySet ;
+	rdfs:subClassOf stonework:CyberActivityCluster ;
 	.
 
 stones:KillChainPhase
