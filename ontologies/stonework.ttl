@@ -41,6 +41,14 @@ stonework:AccessControlList
 	skos:scopeNote "Applies across filesystems, operating system objects (registry keys, processes), network devices (firewall rules), cloud IAM policies, and APIs. In a CTI context, adversaries frequently modify ACLs to establish persistence, escalate privileges, or deny defenders access to compromised resources. Framework-specific extensions (e.g. Windows DACL/SACL structure) are modeled at the framework layer."@en ;
 	.
 
+stonework:Actuator
+	a owl:Class ;
+	rdfs:subClassOf stonework:PhysicalArtifact ;
+	skos:definition "A physical device that effects a change in a physical process or plant — for example a valve, motor, relay, or servo — as distinct from a cyber security safeguard mechanism."@en ;
+	skos:prefLabel "Actuator"@en ;
+	skos:scopeNote "Use for ICS and OT field devices that act on a physical process. Distinct from stonework:SecurityActuator, which is deployed infrastructure that applies a countermeasure. A PLC or motor starter is an Actuator; an EDR agent or firewall is a SecurityActuator. An ICS device that also runs processes and participates in networks may additionally be typed as stonework:Host."@en ;
+	.
+
 stonework:Adware
 	a
 		owl:NamedIndividual ,
@@ -297,7 +305,7 @@ stonework:CyberEntity
 	a owl:Class ;
 	skos:definition "Any concept, object, or resource that exists or operates within a cyber or sociotechnical domain."@en ;
 	skos:prefLabel "Cyber Entity" ;
-	skos:scopeNote "One of two root classes in STONEWORK. Groups all persistent entities — Agents, Infrastructure, DigitalArtifacts, Behaviors, IntelligenceProducts, SecurityConditions, RiskFactors, Countermeasures, and related classes. Aligns with BFO Continuant. The sibling root class CyberActivity covers happenings (Campaigns, Incidents, Operations, etc.)."@en ;
+	skos:scopeNote "One of two root classes in STONEWORK. Groups all persistent entities — Agents, Infrastructure, DigitalArtifacts, PhysicalArtifacts, Behaviors, IntelligenceProducts, SecurityConditions, RiskFactors, Countermeasures, and related classes. Aligns with BFO Continuant. The sibling root class CyberActivity covers happenings (Campaigns, Incidents, Operations, etc.)."@en ;
 	.
 
 stonework:CyberTechnique
@@ -363,12 +371,20 @@ stonework:DetectionRule
 	skos:scopeNote "Encompasses pattern-matching signatures (YARA, Snort, Suricata), behavioral rules (Sigma), SIEM correlation logic, and analytic detections. Signature is a subclass for content-centric, indicator-matching rules."@en ;
 	.
 
+stonework:DeviceProperty
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A quality, capability, or architectural characteristic of a physical or embedded device that can enable threats and inform mitigations."@en ;
+	skos:prefLabel "Device Property"@en ;
+	skos:scopeNote "Aligns with MITRE EMB3D device properties (for example presence of a debug port, microprocessor, or network stack). Relate a device to its properties with stonework:hasDeviceProperty. DeviceProperty is an OWL class for qualities of a device, not a SKOS vocabulary value."@en ;
+	.
+
 stonework:DigitalArtifact
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "Any discrete digital object or content entity that can be observed, transmitted, stored, or acted upon in a cyber environment."@en ;
 	skos:prefLabel "Digital Artifact" ;
-	skos:scopeNote "Includes files, hashes, malware samples, network traffic captures, and other content-bearing items. Aligns with D3FEND DigitalArtifact concepts."@en ;
+	skos:scopeNote "Includes files, hashes, malware samples, network traffic captures, and other content-bearing items. Aligns with D3FEND DigitalArtifact concepts. Sibling of stonework:PhysicalArtifact."@en ;
 	.
 
 stonework:DigitalIdentity
@@ -688,6 +704,7 @@ stonework:Location
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "Represents a geographic location. May be as specific as a latitude/longitude coordinate or as broad as a continent. At least one of region, country, or latitude/longitude must be provided." ;
 	skos:prefLabel "Location"@en ;
+	skos:scopeNote "STONEWORK Location is a STIX-style geographic designator, not a BFO Site of occupancy. The BFO adapter maps it to an information content entity that denotes a place."@en ;
 	.
 
 stonework:Log
@@ -901,6 +918,14 @@ stonework:PhoneNumber
 	rdfs:subClassOf stonework:Identifier ;
 	skos:definition "A telephone number used to contact or identify an Agent. Used for attribution, OSINT pivoting, and identity clustering."@en ;
 	skos:prefLabel "Phone Number"@en ;
+	.
+
+stonework:PhysicalArtifact
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	skos:definition "A discrete material object relevant to cyber operations — a device, appliance, plant component, or other physical artifact that can be observed, located, or acted upon."@en ;
+	skos:prefLabel "Physical Artifact"@en ;
+	skos:scopeNote "Sibling of stonework:DigitalArtifact. Covers ICS and OT assets such as PLCs, RTUs, safety systems, and HMIs, as well as other tangible devices in a cyber-physical environment. An ICS device that runs processes and participates in networks may also be typed as stonework:Host. Classify ATT&CK ICS asset kinds with stonework:hasICSAssetType rather than OWL subclasses. Distinct from stonework:Infrastructure, which groups resources used to conduct cyber operations."@en ;
 	.
 
 stonework:Playbook
@@ -1157,7 +1182,7 @@ stonework:SecurityActuator
 	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAActuator> ;
 	skos:definition "A deployed system, service, appliance, or software agent capable of changing the security state of a cyber environment by applying a countermeasure."@en ;
 	skos:prefLabel "Security Actuator"@en ;
-	skos:scopeNote "A SecurityActuator is the mechanism that applies a safeguard, not the safeguard specification itself. Firewalls, EDR agents, access-control services, and patch-management systems are typical examples. A mechanism such as an IPS or EDR agent may be both a stonework:Sensor and a SecurityActuator. Inspired by SOSA sosa:Actuator without formally importing SOSA."@en ;
+	skos:scopeNote "A SecurityActuator is the mechanism that applies a safeguard, not the safeguard specification itself. Firewalls, EDR agents, access-control services, and patch-management systems are typical examples. A mechanism such as an IPS or EDR agent may be both a stonework:Sensor and a SecurityActuator. Distinct from stonework:Actuator, which is a physical process or plant actuator. Inspired by SOSA sosa:Actuator without formally importing SOSA."@en ;
 	.
 
 stonework:SecurityCondition
@@ -2694,6 +2719,15 @@ stonework:hasDestinationAddress
 	skos:prefLabel "hasDestinationAddress"@en ;
 	.
 
+stonework:hasDeviceProperty
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:PhysicalArtifact ;
+	rdfs:range stonework:DeviceProperty ;
+	skos:definition "Relates a physical or embedded device to a quality, capability, or architectural characteristic it exhibits."@en ;
+	skos:prefLabel "hasDeviceProperty"@en ;
+	skos:scopeNote "Aligns with the MITRE EMB3D property-to-device association. Use this property rather than treating device qualities as SKOS categories."@en ;
+	.
+
 stonework:hasEmail
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Agent ;
@@ -3343,6 +3377,7 @@ stonework:locatedAt
 			stonework:Host
 			stonework:Infrastructure
 			stonework:Organization
+			stonework:PhysicalArtifact
 		) ;
 	] ;
 	rdfs:range stonework:Location ;

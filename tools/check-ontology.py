@@ -261,7 +261,7 @@ def main() -> int:
         D3FEND + "OperationalActivityPlan": {STONEWORK + "Behavior"},
         D3FEND + "Organization": {STONEWORK + "Organization"},
         D3FEND + "Person": {STONEWORK + "Person"},
-        D3FEND + "PhysicalArtifact": {STONEWORK + "CyberEntity"},
+        D3FEND + "PhysicalArtifact": {STONEWORK + "PhysicalArtifact"},
         D3FEND + "Process": {STONEWORK + "RuntimeProcess"},
         D3FEND + "Procedure": {STONEWORK + "Procedure"},
         D3FEND + "Sensor": {STONEWORK + "Sensor"},
@@ -524,6 +524,7 @@ def main() -> int:
     category_scheme = STONEWORK + "categoryScheme"
     stix_specification = "https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html"
     expected_scheme_sources = {
+        STONEWORK + "icsAssetTypeScheme": {"https://attack.mitre.org/assets/"},
         STONEWORK + "infrastructureTypeScheme": {stix_specification},
         STONEWORK + "killChainPhaseScheme": {
             "https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html"

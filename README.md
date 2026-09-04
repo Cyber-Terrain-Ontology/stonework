@@ -4,7 +4,7 @@
 
 **STONEWORK is an OWL 2 extension of STONES that adds what STIX 2.1 does not define.**
 
-[STONES](https://github.com/Cyber-Terrain-Ontology/stones) provides a faithful ontological binding of STIX 2.1. STONEWORK extends that cyber terrain to cover adversary techniques, software weaknesses, and defensive controls — drawing from MITRE ATT&CK, MITRE D3FEND, CWE, NIST SP 800-53, and CIS Critical Controls. The core remains lightweight; import-only profiles compose it with the controlled vocabularies and framework mappings needed for a particular use case. Together, STONES and STONEWORK form a composable semantic stack for AI-driven cyber threat intelligence analysis.
+[STONES](https://github.com/Cyber-Terrain-Ontology/stones) provides a faithful ontological binding of STIX 2.1. STONEWORK extends that cyber terrain to cover adversary techniques, software weaknesses, defensive controls, and cyber-physical assets — drawing from MITRE ATT&CK (including ATT&CK for ICS), MITRE D3FEND, MITRE EMB3D, CWE, NIST SP 800-53, and CIS Critical Controls. The core remains lightweight; import-only profiles compose it with the controlled vocabularies and framework mappings needed for a particular use case. Together, STONES and STONEWORK form a composable semantic stack for AI-driven cyber threat intelligence analysis.
 
 STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or CIS.
 
@@ -16,19 +16,20 @@ STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or 
 
 **v0.6.1 — Active Development**
 
-The namespace (`https://cyberterrain.org/ns/stonework#`) is stable and will not change. Core extension vocabulary is in place. Framework coverage (ATT&CK, D3FEND, CWE, NIST SP 800-53, CIS) is expanding. The scope of coverage will grow as the ontology matures. Feedback, issues, and contributions are welcome.
+The namespace (`https://cyberterrain.org/ns/stonework#`) is stable and will not change. Core extension vocabulary is in place. Framework coverage (ATT&CK, ATT&CK ICS, D3FEND, EMB3D, CWE, NIST SP 800-53, CIS, BFO 2020) is expanding. The scope of coverage will grow as the ontology matures. Feedback, issues, and contributions are welcome.
 
 ---
 
 ## What STONEWORK adds
 
-STONEWORK extends STONES across four concrete domains:
+STONEWORK extends STONES across five concrete domains:
 
 | Domain | Sources |
 |---|---|
-| Adversary techniques (TTPs) | MITRE ATT&CK, MITRE D3FEND |
+| Adversary techniques (TTPs) | MITRE ATT&CK, MITRE ATT&CK for ICS, MITRE D3FEND |
 | Software weaknesses | CWE (Common Weakness Enumeration) |
 | Defensive controls | NIST SP 800-53, CIS Critical Controls |
+| Cyber-physical / OT assets | MITRE ATT&CK ICS assets, MITRE EMB3D, MITRE D3FEND PhysicalArtifact |
 | Vulnerability linkage | Connects CVE → CWE → ATT&CK technique → control |
 
 This coverage enables queries that no single standard can answer on its own. A SPARQL query can trace a CVE to the weakness it exploits, to the attack patterns that leverage that weakness, to the APT groups known to use them, and to the controls that mitigate the risk — in a single federated query.
@@ -80,7 +81,7 @@ Load the CTI reference datasets (ATT&CK, CAPEC, CVE, CWE, NIST SP 800-53, CIS) a
 
 Use an OWL class for an intrinsic kind of thing whose instances should participate in class reasoning—for example, `stonework:Malware`, `stonework:ThreatActor`, or `stonework:Vulnerability`. Use a SKOS concept for a controlled vocabulary value that classifies or qualifies something—for example, `stonework:Ransomware`, a named individual of `stonework:MalwareType`. A ransomware sample is categorized by that concept; the concept is not an OWL subclass of Malware.
 
-`stonework:categoryScheme` is the umbrella scheme for every STONEWORK category. Narrower schemes such as `stonework:malwareTypeScheme`, `stonework:incidentStatusScheme`, and `stonework:threatActorRoleScheme` organize individual vocabularies. Vocabulary values explicitly assert `rdf:type skos:Concept` plus both umbrella and vocabulary-specific `skos:inScheme` membership, so plain RDF and SKOS clients can discover them without reasoning. Matching OWL value restrictions on each category subclass keep extensions semantically consistent without treating a vocabulary class as a SKOS concept.
+`stonework:categoryScheme` is the umbrella scheme for every STONEWORK category. Narrower schemes such as `stonework:malwareTypeScheme`, `stonework:incidentStatusScheme`, `stonework:threatActorRoleScheme`, and `stonework:icsAssetTypeScheme` organize individual vocabularies. Vocabulary values explicitly assert `rdf:type skos:Concept` plus both umbrella and vocabulary-specific `skos:inScheme` membership, so plain RDF and SKOS clients can discover them without reasoning. Matching OWL value restrictions on each category subclass keep extensions semantically consistent without treating a vocabulary class as a SKOS concept.
 
 Every controlled-vocabulary class, scheme, and canonical value has exactly one English `skos:prefLabel` and `skos:definition`; additional languages may be supplied. Every value in a specific scheme also carries exactly one language-neutral `skos:notation`, unique within that scheme. Use the notation as the stable wire identifier and the preferred label for human-facing text.
 
@@ -99,6 +100,8 @@ stonework:Ransomware
 ### SOSA-inspired observation and actuation
 
 STONEWORK distinguishes a persistent safeguard specification from the deployed mechanism and the activity that applies it. A `stonework:Countermeasure` describes the rule, control, or mitigation; a `stonework:SecurityActuator` is the deployed infrastructure capable of applying it; and a `stonework:SecurityActuation` records a particular application. This mirrors the SOSA actuator/actuation pattern without formally importing SOSA. Systems such as IPS and EDR platforms may be both sensors and actuators.
+
+`stonework:Actuator` is a different class: a physical plant or process device (valve, motor, relay) that subclasses `stonework:PhysicalArtifact`. Do not conflate it with `SecurityActuator`. ICS and OT assets live under `PhysicalArtifact`; classify ATT&CK ICS roles such as PLC, RTU, SIS, HMI, historian, and engineering workstation with `stonework:hasICSAssetType` rather than OWL subclasses. A device that also runs processes and participates in networks may additionally be typed as `stonework:Host`. Relate embedded-device qualities to EMB3D-style properties with `stonework:hasDeviceProperty`.
 
 ```turtle
 ex:edr-agent
@@ -160,11 +163,14 @@ Import the stable ontology IRI, such as `https://cyberterrain.org/ns/frameworks/
 
 ### Framework interoperability
 
-- `ontologies/frameworks/d3fend.ttl` maps compatible MITRE D3FEND 1.5.0 defensive and offensive techniques, tactics, events, artifacts, identifiers, and selected relationships into STONEWORK. It preserves D3FEND's source-native hierarchy and class/individual punning rather than asserting equivalence.
+- `ontologies/frameworks/d3fend.ttl` maps compatible MITRE D3FEND 1.5.0 defensive and offensive techniques, tactics, events, artifacts, identifiers, and selected relationships into STONEWORK. It preserves D3FEND's source-native hierarchy and class/individual punning rather than asserting equivalence. `d3f:PhysicalArtifact` subclasses `stonework:PhysicalArtifact`.
+- `ontologies/frameworks/attack-ics.ttl` maps MITRE ATT&CK for ICS techniques, assets, and mitigations into `AttackTechnique`, `PhysicalArtifact`, and `Mitigation` without reproducing the ICS matrix.
+- `ontologies/frameworks/emb3d.ttl` maps MITRE EMB3D device properties, threats, and mitigations into `DeviceProperty`, `Threat`, and `Mitigation`, preserving the property → threat → mitigation graph.
+- `ontologies/frameworks/bfo.ttl` asserts one-way BFO 2020 alignments only. `Location` maps to generically dependent continuant / information content entity (`BFO_0000031`), not Site; `PhysicalArtifact` and `Actuator` map to material entity (`BFO_0000040`); `DeviceProperty` maps to quality (`BFO_0000019`).
 - `ontologies/frameworks/ocsf.ttl` maps the complete OCSF 1.9.0 core event taxonomy into `stonework:Event`, retaining OCSF category and class identifiers for round-tripping.
 - `ontologies/frameworks/uco.ttl` maps compatible UCO 1.5.0 action, identity, location, and observable classes into STONEWORK. It remains class-only because UCO places observable values on facet nodes while STONEWORK commonly projects them directly onto domain entities.
 
-These adapters are alignment modules rather than copies of their source standards. Load the official D3FEND ontology, OCSF schema, or UCO ontologies alongside STONEWORK when source-native constraints and attributes are required.
+These adapters are alignment modules rather than copies of their source standards. Load the official D3FEND ontology, ATT&CK ICS data, EMB3D catalog, OCSF schema, UCO ontologies, or BFO 2020 alongside STONEWORK when source-native constraints and attributes are required.
 
 ---
 
@@ -188,7 +194,7 @@ Use `skos:prefLabel` for an entity's preferred human-readable name and repeat `s
 **STONES + STONEWORK** form a composable semantic stack for AI-driven CTI analysis:
 
 - **STONES** — faithful OWL 2 binding of STIX 2.1
-- **STONEWORK** — extends STONES with ATT&CK, D3FEND, CWE, NIST SP 800-53, and CIS *(this repository)*
+- **STONEWORK** — extends STONES with ATT&CK, ATT&CK ICS, D3FEND, EMB3D, CWE, NIST SP 800-53, and CIS *(this repository)*
 
 Both ontologies are candidate submissions to the **Cyber Ontology Foundry**, alongside MITRE's D3FEND Framework Ontology.
 

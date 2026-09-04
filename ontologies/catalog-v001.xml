@@ -9,6 +9,8 @@
         <uri name="https://cyberterrain.org/ns/stonework/profiles/full/0.1.0" uri="profiles/stonework-full.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/stix" uri="profiles/stonework-stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/stix/0.1.0" uri="profiles/stonework-stix.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/attack-ics" uri="frameworks/attack-ics.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/attack-ics/0.1.0" uri="frameworks/attack-ics.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/bfo" uri="frameworks/bfo.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/bfo/0.1.0" uri="frameworks/bfo.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/capec" uri="frameworks/capec.ttl"/>
@@ -29,6 +31,8 @@
         <uri name="https://cyberterrain.org/ns/frameworks/dns/0.1.0" uri="frameworks/dns.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/email" uri="frameworks/email.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/email/0.1.0" uri="frameworks/email.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/emb3d" uri="frameworks/emb3d.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/emb3d/0.1.0" uri="frameworks/emb3d.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/killchain" uri="frameworks/killchain.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/killchain/0.1.0" uri="frameworks/killchain.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/nist" uri="frameworks/nist.ttl"/>

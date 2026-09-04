@@ -1,3 +1,4 @@
+# imports: https://cyberterrain.org/ns/frameworks/attack-ics
 # imports: https://cyberterrain.org/ns/frameworks/bfo
 # imports: https://cyberterrain.org/ns/frameworks/capec
 # imports: https://cyberterrain.org/ns/frameworks/cis
@@ -8,6 +9,7 @@
 # imports: https://cyberterrain.org/ns/frameworks/dhcp
 # imports: https://cyberterrain.org/ns/frameworks/dns
 # imports: https://cyberterrain.org/ns/frameworks/email
+# imports: https://cyberterrain.org/ns/frameworks/emb3d
 # imports: https://cyberterrain.org/ns/frameworks/killchain
 # imports: https://cyberterrain.org/ns/frameworks/nist
 # imports: https://cyberterrain.org/ns/frameworks/ocsf
@@ -29,6 +31,7 @@
 	rdfs:label "STONEWORK Full Bundled Profile"@en ;
 	dcterms:description "Import-only profile loading the STONEWORK core, controlled vocabularies, and every framework mapping bundled with this repository. External source datasets such as ATT&CK and D3FEND data remain separately loadable peer graphs."@en ;
 	owl:imports
+		<https://cyberterrain.org/ns/frameworks/attack-ics> ,
 		<https://cyberterrain.org/ns/frameworks/bfo> ,
 		<https://cyberterrain.org/ns/frameworks/capec> ,
 		<https://cyberterrain.org/ns/frameworks/cis> ,
@@ -39,6 +42,7 @@
 		<https://cyberterrain.org/ns/frameworks/dhcp> ,
 		<https://cyberterrain.org/ns/frameworks/dns> ,
 		<https://cyberterrain.org/ns/frameworks/email> ,
+		<https://cyberterrain.org/ns/frameworks/emb3d> ,
 		<https://cyberterrain.org/ns/frameworks/killchain> ,
 		<https://cyberterrain.org/ns/frameworks/nist> ,
 		<https://cyberterrain.org/ns/frameworks/ocsf> ,

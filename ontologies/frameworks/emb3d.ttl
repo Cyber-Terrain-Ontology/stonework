@@ -1,0 +1,100 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix emb3d: <https://cyberterrain.org/ns/frameworks/emb3d#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://cyberterrain.org/ns/frameworks/emb3d>
+	a owl:Ontology ;
+	rdfs:label "STONEWORK: EMB3D Mapping"@en ;
+	dcterms:description "Declares a lightweight vocabulary for MITRE EMB3D device properties, threats, and mitigations as STONEWORK types. This adapter does not reproduce the EMB3D catalog; load official EMB3D data alongside it when instance-level coverage is required."@en ;
+	dcterms:source <https://emb3d.mitre.org/> ;
+	rdfs:seeAlso <https://emb3d.mitre.org/properties-mapper/> ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/emb3d/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
+	skos:scopeNote "EMB3D is a property-to-threat-to-mitigation graph rather than a class tree. Relate a physical device to an EMB3D property with stonework:hasDeviceProperty, then follow emb3d:enablesThreat and emb3d:mitigatedBy."@en ;
+	.
+
+emb3d:DeviceProperty
+	a owl:Class ;
+	rdfs:subClassOf stonework:DeviceProperty ;
+	rdfs:label "EMB3D Device Property"@en ;
+	rdfs:comment "A hardware, firmware, or software characteristic of an embedded device in MITRE EMB3D, such as presence of a microprocessor, debug port, or network stack."@en ;
+	.
+
+emb3d:Mitigation
+	a owl:Class ;
+	rdfs:subClassOf stonework:Mitigation ;
+	rdfs:label "EMB3D Mitigation"@en ;
+	rdfs:comment "A control from MITRE EMB3D that reduces the likelihood or impact of an embedded-device threat. Mitigations are grouped by deployment tier: foundational, intermediate, or leading."@en ;
+	.
+
+emb3d:Threat
+	a owl:Class ;
+	rdfs:subClassOf stonework:Threat ;
+	rdfs:label "EMB3D Threat"@en ;
+	rdfs:comment "A way a threat actor could abuse an EMB3D device property to achieve a harmful goal on an embedded device."@en ;
+	.
+
+emb3d:enablesThreat
+	a owl:ObjectProperty ;
+	rdfs:label "enables threat"@en ;
+	rdfs:comment "EMB3D threat that can be realized by abusing this device property."@en ;
+	rdfs:domain emb3d:DeviceProperty ;
+	rdfs:range emb3d:Threat ;
+	.
+
+emb3d:mitigatedBy
+	a owl:ObjectProperty ;
+	rdfs:label "mitigated by"@en ;
+	rdfs:comment "EMB3D mitigation that addresses this threat. Direction follows EMB3D (threat to mitigation); use stonework:mitigates from the mitigation back to the threat when a STIX-style mitigates edge is required."@en ;
+	rdfs:domain emb3d:Threat ;
+	rdfs:range emb3d:Mitigation ;
+	.
+
+emb3d:mitigationId
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "EMB3D mitigation ID"@en ;
+	rdfs:comment "EMB3D mitigation identifier string."@en ;
+	rdfs:domain emb3d:Mitigation ;
+	rdfs:range xsd:string ;
+	.
+
+emb3d:mitigationTier
+	a owl:DatatypeProperty ;
+	rdfs:label "mitigation tier"@en ;
+	rdfs:comment "EMB3D deployment tier for this mitigation: foundational, intermediate, or leading."@en ;
+	rdfs:domain emb3d:Mitigation ;
+	rdfs:range xsd:string ;
+	.
+
+emb3d:propertyId
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "EMB3D property ID"@en ;
+	rdfs:comment "EMB3D device-property identifier string, e.g. 'PID-11'."@en ;
+	rdfs:domain emb3d:DeviceProperty ;
+	rdfs:range xsd:string ;
+	.
+
+emb3d:threatId
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "EMB3D threat ID"@en ;
+	rdfs:comment "EMB3D threat identifier string."@en ;
+	rdfs:domain emb3d:Threat ;
+	rdfs:range xsd:string ;
+	.
