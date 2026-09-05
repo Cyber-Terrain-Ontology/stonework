@@ -18,14 +18,14 @@
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
 	owl:versionIRI <https://cyberterrain.org/ns/frameworks/emb3d/0.1.0> ;
 	owl:versionInfo "0.1.0" ;
-	skos:scopeNote "EMB3D is a property-to-threat-to-mitigation graph rather than a class tree. Relate a physical device to an EMB3D property with stonework:hasDeviceProperty, then follow emb3d:enablesThreat and emb3d:mitigatedBy."@en ;
+	skos:scopeNote "EMB3D is a property-to-threat-to-mitigation graph rather than a class tree. Relate a physical device to an EMB3D property with emb3d:hasDeviceProperty, then follow emb3d:enablesThreat and emb3d:mitigatedBy. DeviceProperty lives in this adapter, not in STONEWORK core."@en ;
 	.
 
 emb3d:DeviceProperty
 	a owl:Class ;
-	rdfs:subClassOf stonework:DeviceProperty ;
+	rdfs:subClassOf stonework:CyberEntity ;
 	rdfs:label "EMB3D Device Property"@en ;
-	rdfs:comment "A hardware, firmware, or software characteristic of an embedded device in MITRE EMB3D, such as presence of a microprocessor, debug port, or network stack."@en ;
+	rdfs:comment "A hardware, firmware, or software characteristic of an embedded device in MITRE EMB3D, such as presence of a microprocessor, debug port, or network stack. A quality of a PhysicalArtifact, not an artifact itself."@en ;
 	.
 
 emb3d:Mitigation
@@ -48,6 +48,14 @@ emb3d:enablesThreat
 	rdfs:comment "EMB3D threat that can be realized by abusing this device property."@en ;
 	rdfs:domain emb3d:DeviceProperty ;
 	rdfs:range emb3d:Threat ;
+	.
+
+emb3d:hasDeviceProperty
+	a owl:ObjectProperty ;
+	rdfs:label "has device property"@en ;
+	rdfs:comment "Relates a physical or embedded device to an EMB3D device property it exhibits."@en ;
+	rdfs:domain stonework:PhysicalArtifact ;
+	rdfs:range emb3d:DeviceProperty ;
 	.
 
 emb3d:mitigatedBy

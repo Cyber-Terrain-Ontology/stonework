@@ -1,4 +1,3 @@
-# imports: https://cyberterrain.org/ns/frameworks/attack-ics
 # imports: https://cyberterrain.org/ns/frameworks/bfo
 # imports: https://cyberterrain.org/ns/frameworks/capec
 # imports: https://cyberterrain.org/ns/frameworks/cis
@@ -31,7 +30,6 @@
 	rdfs:label "STONEWORK Full Bundled Profile"@en ;
 	dcterms:description "Import-only profile loading the STONEWORK core, controlled vocabularies, and every framework mapping bundled with this repository. External source datasets such as ATT&CK and D3FEND data remain separately loadable peer graphs."@en ;
 	owl:imports
-		<https://cyberterrain.org/ns/frameworks/attack-ics> ,
 		<https://cyberterrain.org/ns/frameworks/bfo> ,
 		<https://cyberterrain.org/ns/frameworks/capec> ,
 		<https://cyberterrain.org/ns/frameworks/cis> ,

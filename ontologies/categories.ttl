@@ -31,21 +31,6 @@ stonework:AccountType
 	skos:prefLabel "Account Type"@en ;
 	.
 
-stonework:EngineeringWorkstation
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A computer dedicated to configuring, programming, and monitoring industrial control systems."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "engineering-workstation" ;
-	skos:prefLabel "Engineering Workstation"@en ;
-	.
-
 stonework:FalsePositiveRate
 	a owl:Class ;
 	rdfs:subClassOf
@@ -58,36 +43,6 @@ stonework:FalsePositiveRate
 		;
 	skos:definition "An ordinal classification of the expected false-positive frequency of a detection rule."@en ;
 	skos:prefLabel "False Positive Rate"@en ;
-	.
-
-stonework:HMI
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A workstation or device that visualizes process data and enables human control of industrial operations."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "hmi" ;
-	skos:prefLabel "Human-Machine Interface"@en ;
-	.
-
-stonework:Historian
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A system that collects and stores industrial process data for long-term analysis and trending."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "historian" ;
-	skos:prefLabel "Historian"@en ;
 	.
 
 stonework:HypothesisStatus
@@ -103,21 +58,6 @@ stonework:HypothesisStatus
 	skos:definition "A classification of a Hypothesis's position in the confirm/refute lifecycle."@en ;
 	skos:prefLabel "Hypothesis Status"@en ;
 	skos:scopeNote "Applied via stonework:hasHypothesisStatus to Hypothesis individuals. Named individuals: pending (not yet tested), confirmed (actual result matched the prediction), refuted (actual result did not match the prediction)."@en ;
-	.
-
-stonework:ICSAssetType
-	a owl:Class ;
-	rdfs:subClassOf
-		stonework:Category ,
-		[
-			a owl:Restriction ;
-			owl:onProperty skos:inScheme ;
-			owl:hasValue stonework:icsAssetTypeScheme ;
-		]
-		;
-	skos:definition "A classification of an industrial control or operational-technology asset by its ATT&CK ICS asset role."@en ;
-	skos:prefLabel "ICS Asset Type"@en ;
-	skos:scopeNote "Applied via stonework:hasICSAssetType to PhysicalArtifact or Host individuals. Aligns with MITRE ATT&CK ICS x-mitre-asset kinds (PLC, RTU, SIS, HMI, historian, engineering workstation). Use SKOS concepts rather than OWL subclasses for these roles."@en ;
 	.
 
 stonework:ImpactLevel
@@ -250,21 +190,6 @@ stonework:Motivation
 	skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor, Campaign, or Operation individuals. Named individuals cover the STIX 2.1 attack-motivation open vocabulary. Custom motivations may be added as additional individuals."@en ;
 	.
 
-stonework:PLC
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A dedicated industrial controller used to automate physical processes, often targeted for process manipulation."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "plc" ;
-	skos:prefLabel "Programmable Logic Controller"@en ;
-	.
-
 stonework:ProductType
 	a owl:Class ;
 	rdfs:subClassOf
@@ -278,21 +203,6 @@ stonework:ProductType
 	skos:definition "A classification of a product by its primary functional category within a system or architecture."@en ;
 	skos:prefLabel "Product Type"@en ;
 	skos:scopeNote "Applied via stonework:hasProductType to Product individuals. Aligns with CPE component type designations. A product may have more than one type (e.g. an embedded OS is both firmware and operating-system)."@en ;
-	.
-
-stonework:RTU
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A field device that provides remote telemetry and input/output for process automation."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "rtu" ;
-	skos:prefLabel "Remote Terminal Unit"@en ;
 	.
 
 stonework:ResourceLevel
@@ -321,21 +231,6 @@ stonework:RiskLevel
 		;
 	skos:definition "An ordinal classification of the assessed magnitude of a security risk."@en ;
 	skos:prefLabel "Risk Level"@en ;
-	.
-
-stonework:SIS
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A specialized system that monitors industrial processes and drives them to a safe state when unsafe conditions are detected."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "sis" ;
-	skos:prefLabel "Safety Instrumented System"@en ;
 	.
 
 stonework:Sector
@@ -559,22 +454,6 @@ stonework:hasHypothesisStatus
 	skos:scopeNote "Kept explicit (rather than inferred from which Transition fired) so a Hypothesis's status is directly queryable without replaying the Step graph it was tested in."@en ;
 	.
 
-stonework:hasICSAssetType
-	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:categorizedBy ;
-	rdfs:domain [
-		a owl:Class ;
-		owl:unionOf (
-			stonework:Host
-			stonework:PhysicalArtifact
-		) ;
-	] ;
-	rdfs:range stonework:ICSAssetType ;
-	skos:definition "Relates a physical or host asset to one or more ATT&CK ICS asset-type classifications."@en ;
-	skos:prefLabel "hasICSAssetType"@en ;
-	skos:scopeNote "A device may carry more than one ICS asset type. Aligns with MITRE ATT&CK ICS x-mitre-asset."@en ;
-	.
-
 stonework:hasImpactLevel
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:categorizedBy ;
@@ -745,15 +624,6 @@ stonework:hypothesisStatusScheme
 	dcterms:title "STONEWORK Hypothesis Status Scheme"@en ;
 	skos:definition "The controlled vocabulary of hypothesis lifecycle states."@en ;
 	skos:prefLabel "STONEWORK Hypothesis Status Scheme"@en ;
-	.
-
-stonework:icsAssetTypeScheme
-	a skos:ConceptScheme ;
-	dcterms:isPartOf stonework:categoryScheme ;
-	dcterms:source <https://attack.mitre.org/assets/> ;
-	dcterms:title "STONEWORK ICS Asset Type Scheme"@en ;
-	skos:definition "The controlled vocabulary of industrial control and operational-technology asset roles aligned with MITRE ATT&CK ICS."@en ;
-	skos:prefLabel "STONEWORK ICS Asset Type Scheme"@en ;
 	.
 
 stonework:impactLevelCatastrophic

@@ -371,14 +371,6 @@ stonework:DetectionRule
 	skos:scopeNote "Encompasses pattern-matching signatures (YARA, Snort, Suricata), behavioral rules (Sigma), SIEM correlation logic, and analytic detections. Signature is a subclass for content-centric, indicator-matching rules."@en ;
 	.
 
-stonework:DeviceProperty
-	a owl:Class ;
-	rdfs:subClassOf stonework:CyberEntity ;
-	skos:definition "A quality, capability, or architectural characteristic of a physical or embedded device that can enable threats and inform mitigations."@en ;
-	skos:prefLabel "Device Property"@en ;
-	skos:scopeNote "Aligns with MITRE EMB3D device properties (for example presence of a debug port, microprocessor, or network stack). Relate a device to its properties with stonework:hasDeviceProperty. DeviceProperty is an OWL class for qualities of a device, not a SKOS vocabulary value. It subclasses CyberEntity directly (a continuant quality, BFO_0000019); do not nest it under PhysicalArtifact, which is the bearer of the quality."@en ;
-	.
-
 stonework:DigitalArtifact
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
@@ -925,7 +917,7 @@ stonework:PhysicalArtifact
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "A discrete material object relevant to cyber operations — a device, appliance, plant component, or other physical artifact that can be observed, located, or acted upon."@en ;
 	skos:prefLabel "Physical Artifact"@en ;
-	skos:scopeNote "Sibling of stonework:DigitalArtifact. Covers ICS and OT assets such as PLCs, RTUs, safety systems, and HMIs, as well as other tangible devices in a cyber-physical environment. An ICS device that runs processes and participates in networks may also be typed as stonework:Host. Classify ATT&CK ICS asset kinds with stonework:hasICSAssetType rather than OWL subclasses. Distinct from stonework:Infrastructure, which groups resources used to conduct cyber operations."@en ;
+	skos:scopeNote "Sibling of stonework:DigitalArtifact. Covers ICS and OT assets such as PLCs, RTUs, safety systems, and HMIs, as well as other tangible devices in a cyber-physical environment. An ICS device that runs processes and participates in networks may also be typed as stonework:Host. Distinct from stonework:Infrastructure, which groups resources used to conduct cyber operations."@en ;
 	.
 
 stonework:Playbook
@@ -2717,15 +2709,6 @@ stonework:hasDestinationAddress
 	rdfs:range stonework:IPAddress ;
 	skos:definition "Relates NetworkTraffic to the destination IP address."@en ;
 	skos:prefLabel "hasDestinationAddress"@en ;
-	.
-
-stonework:hasDeviceProperty
-	a owl:ObjectProperty ;
-	rdfs:domain stonework:PhysicalArtifact ;
-	rdfs:range stonework:DeviceProperty ;
-	skos:definition "Relates a physical or embedded device to a quality, capability, or architectural characteristic it exhibits."@en ;
-	skos:prefLabel "hasDeviceProperty"@en ;
-	skos:scopeNote "Aligns with the MITRE EMB3D property-to-device association. Use this property rather than treating device qualities as SKOS categories."@en ;
 	.
 
 stonework:hasEmail

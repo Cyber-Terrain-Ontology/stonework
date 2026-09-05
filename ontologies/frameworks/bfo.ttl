@@ -47,10 +47,6 @@ stonework:CyberEntity
 	rdfs:subClassOf bfo:0000002 ;
 	.
 
-stonework:DeviceProperty
-	rdfs:subClassOf bfo:0000019 ;
-	.
-
 stonework:DigitalArtifact
 	rdfs:subClassOf bfo:0000031 ;
 	.

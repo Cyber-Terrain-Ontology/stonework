@@ -524,7 +524,6 @@ def main() -> int:
     category_scheme = STONEWORK + "categoryScheme"
     stix_specification = "https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html"
     expected_scheme_sources = {
-        STONEWORK + "icsAssetTypeScheme": {"https://attack.mitre.org/assets/"},
         STONEWORK + "infrastructureTypeScheme": {stix_specification},
         STONEWORK + "killChainPhaseScheme": {
             "https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html"

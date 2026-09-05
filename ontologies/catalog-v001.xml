@@ -9,8 +9,6 @@
         <uri name="https://cyberterrain.org/ns/stonework/profiles/full/0.1.0" uri="profiles/stonework-full.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/stix" uri="profiles/stonework-stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/stix/0.1.0" uri="profiles/stonework-stix.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/attack-ics" uri="frameworks/attack-ics.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/attack-ics/0.1.0" uri="frameworks/attack-ics.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/bfo" uri="frameworks/bfo.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/bfo/0.1.0" uri="frameworks/bfo.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/capec" uri="frameworks/capec.ttl"/>
