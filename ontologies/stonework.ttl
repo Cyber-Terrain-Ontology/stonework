@@ -376,7 +376,7 @@ stonework:DeviceProperty
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "A quality, capability, or architectural characteristic of a physical or embedded device that can enable threats and inform mitigations."@en ;
 	skos:prefLabel "Device Property"@en ;
-	skos:scopeNote "Aligns with MITRE EMB3D device properties (for example presence of a debug port, microprocessor, or network stack). Relate a device to its properties with stonework:hasDeviceProperty. DeviceProperty is an OWL class for qualities of a device, not a SKOS vocabulary value."@en ;
+	skos:scopeNote "Aligns with MITRE EMB3D device properties (for example presence of a debug port, microprocessor, or network stack). Relate a device to its properties with stonework:hasDeviceProperty. DeviceProperty is an OWL class for qualities of a device, not a SKOS vocabulary value. It subclasses CyberEntity directly (a continuant quality, BFO_0000019); do not nest it under PhysicalArtifact, which is the bearer of the quality."@en ;
 	.
 
 stonework:DigitalArtifact

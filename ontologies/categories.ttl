@@ -31,6 +31,21 @@ stonework:AccountType
 	skos:prefLabel "Account Type"@en ;
 	.
 
+stonework:EngineeringWorkstation
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ICSAssetType
+		;
+	skos:definition "A computer dedicated to configuring, programming, and monitoring industrial control systems."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:icsAssetTypeScheme
+		;
+	skos:notation "engineering-workstation" ;
+	skos:prefLabel "Engineering Workstation"@en ;
+	.
+
 stonework:FalsePositiveRate
 	a owl:Class ;
 	rdfs:subClassOf
@@ -43,6 +58,36 @@ stonework:FalsePositiveRate
 		;
 	skos:definition "An ordinal classification of the expected false-positive frequency of a detection rule."@en ;
 	skos:prefLabel "False Positive Rate"@en ;
+	.
+
+stonework:HMI
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ICSAssetType
+		;
+	skos:definition "A workstation or device that visualizes process data and enables human control of industrial operations."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:icsAssetTypeScheme
+		;
+	skos:notation "hmi" ;
+	skos:prefLabel "Human-Machine Interface"@en ;
+	.
+
+stonework:Historian
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ICSAssetType
+		;
+	skos:definition "A system that collects and stores industrial process data for long-term analysis and trending."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:icsAssetTypeScheme
+		;
+	skos:notation "historian" ;
+	skos:prefLabel "Historian"@en ;
 	.
 
 stonework:HypothesisStatus
@@ -205,6 +250,21 @@ stonework:Motivation
 	skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor, Campaign, or Operation individuals. Named individuals cover the STIX 2.1 attack-motivation open vocabulary. Custom motivations may be added as additional individuals."@en ;
 	.
 
+stonework:PLC
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ICSAssetType
+		;
+	skos:definition "A dedicated industrial controller used to automate physical processes, often targeted for process manipulation."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:icsAssetTypeScheme
+		;
+	skos:notation "plc" ;
+	skos:prefLabel "Programmable Logic Controller"@en ;
+	.
+
 stonework:ProductType
 	a owl:Class ;
 	rdfs:subClassOf
@@ -218,6 +278,21 @@ stonework:ProductType
 	skos:definition "A classification of a product by its primary functional category within a system or architecture."@en ;
 	skos:prefLabel "Product Type"@en ;
 	skos:scopeNote "Applied via stonework:hasProductType to Product individuals. Aligns with CPE component type designations. A product may have more than one type (e.g. an embedded OS is both firmware and operating-system)."@en ;
+	.
+
+stonework:RTU
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ICSAssetType
+		;
+	skos:definition "A field device that provides remote telemetry and input/output for process automation."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:icsAssetTypeScheme
+		;
+	skos:notation "rtu" ;
+	skos:prefLabel "Remote Terminal Unit"@en ;
 	.
 
 stonework:ResourceLevel
@@ -246,6 +321,21 @@ stonework:RiskLevel
 		;
 	skos:definition "An ordinal classification of the assessed magnitude of a security risk."@en ;
 	skos:prefLabel "Risk Level"@en ;
+	.
+
+stonework:SIS
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ICSAssetType
+		;
+	skos:definition "A specialized system that monitors industrial processes and drives them to a safe state when unsafe conditions are detected."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:icsAssetTypeScheme
+		;
+	skos:notation "sis" ;
+	skos:prefLabel "Safety Instrumented System"@en ;
 	.
 
 stonework:Sector
@@ -657,81 +747,6 @@ stonework:hypothesisStatusScheme
 	skos:prefLabel "STONEWORK Hypothesis Status Scheme"@en ;
 	.
 
-stonework:icsAssetTypeEngineeringWorkstation
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A computer dedicated to configuring, programming, and monitoring industrial control systems."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "engineering-workstation" ;
-	skos:prefLabel "Engineering Workstation"@en ;
-	.
-
-stonework:icsAssetTypeHistorian
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A system that collects and stores industrial process data for long-term analysis and trending."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "historian" ;
-	skos:prefLabel "Historian"@en ;
-	.
-
-stonework:icsAssetTypeHmi
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A workstation or device that visualizes process data and enables human control of industrial operations."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "hmi" ;
-	skos:prefLabel "Human-Machine Interface"@en ;
-	.
-
-stonework:icsAssetTypePlc
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A dedicated industrial controller used to automate physical processes, often targeted for process manipulation."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "plc" ;
-	skos:prefLabel "Programmable Logic Controller"@en ;
-	.
-
-stonework:icsAssetTypeRtu
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A field device that provides remote telemetry and input/output for process automation."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "rtu" ;
-	skos:prefLabel "Remote Terminal Unit"@en ;
-	.
-
 stonework:icsAssetTypeScheme
 	a skos:ConceptScheme ;
 	dcterms:isPartOf stonework:categoryScheme ;
@@ -739,21 +754,6 @@ stonework:icsAssetTypeScheme
 	dcterms:title "STONEWORK ICS Asset Type Scheme"@en ;
 	skos:definition "The controlled vocabulary of industrial control and operational-technology asset roles aligned with MITRE ATT&CK ICS."@en ;
 	skos:prefLabel "STONEWORK ICS Asset Type Scheme"@en ;
-	.
-
-stonework:icsAssetTypeSis
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:ICSAssetType
-		;
-	skos:definition "A specialized system that monitors industrial processes and drives them to a safe state when unsafe conditions are detected."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:icsAssetTypeScheme
-		;
-	skos:notation "sis" ;
-	skos:prefLabel "Safety Instrumented System"@en ;
 	.
 
 stonework:impactLevelCatastrophic

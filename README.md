@@ -95,13 +95,21 @@ ex:sample-1
 stonework:Ransomware
     a stonework:MalwareType ;
     skos:notation "ransomware" .
+
+ex:plant-plc-1
+    a stonework:PhysicalArtifact ;
+    stonework:hasICSAssetType stonework:PLC .
+
+stonework:PLC
+    a stonework:ICSAssetType ;
+    skos:notation "plc" .
 ```
 
 ### SOSA-inspired observation and actuation
 
 STONEWORK distinguishes a persistent safeguard specification from the deployed mechanism and the activity that applies it. A `stonework:Countermeasure` describes the rule, control, or mitigation; a `stonework:SecurityActuator` is the deployed infrastructure capable of applying it; and a `stonework:SecurityActuation` records a particular application. This mirrors the SOSA actuator/actuation pattern without formally importing SOSA. Systems such as IPS and EDR platforms may be both sensors and actuators.
 
-`stonework:Actuator` is a different class: a physical plant or process device (valve, motor, relay) that subclasses `stonework:PhysicalArtifact`. Do not conflate it with `SecurityActuator`. ICS and OT assets live under `PhysicalArtifact`; classify ATT&CK ICS roles such as PLC, RTU, SIS, HMI, historian, and engineering workstation with `stonework:hasICSAssetType` rather than OWL subclasses. A device that also runs processes and participates in networks may additionally be typed as `stonework:Host`. Relate embedded-device qualities to EMB3D-style properties with `stonework:hasDeviceProperty`.
+`stonework:Actuator` is a different class: a physical plant or process device (valve, motor, relay) that subclasses `stonework:PhysicalArtifact`. Do not conflate it with `SecurityActuator`. ICS and OT assets live under `PhysicalArtifact`; classify ATT&CK ICS roles with `stonework:hasICSAssetType` rather than OWL subclasses. Vocabulary values use natural local names (`stonework:PLC`, `stonework:RTU`, `stonework:SIS`, `stonework:HMI`, `stonework:Historian`, `stonework:EngineeringWorkstation`) in `stonework:icsAssetTypeScheme`. A device that also runs processes and participates in networks may additionally be typed as `stonework:Host`. Relate embedded-device qualities to EMB3D-style properties with `stonework:hasDeviceProperty`; `DeviceProperty` subclasses `CyberEntity` directly as a quality of the device, not a subclass of `PhysicalArtifact`.
 
 ```turtle
 ex:edr-agent
