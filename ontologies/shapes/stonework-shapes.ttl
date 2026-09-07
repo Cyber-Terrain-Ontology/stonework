@@ -252,8 +252,7 @@ stonework:QualifiedAssertionShape
 	sh:property
 		[
 			sh:class stonework:Provenance ;
-			sh:message "A qualified assertion must identify at least one provenance source."@en ;
-			sh:minCount "1"^^xsd:integer ;
+			sh:message "A qualified assertion's provenance value must be a STONEWORK Provenance instance."@en ;
 			sh:path stonework:hasProvenance ;
 		] ,
 		[

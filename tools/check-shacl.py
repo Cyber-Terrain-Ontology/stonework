@@ -14,15 +14,25 @@ JAVA_COMMAND = [
     "-cp",
     str(ROOT / "tools" / "rdf-toolkit.jar"),
     str(ROOT / "tools" / "ShaclValidator.java"),
-    str(ROOT / "ontologies" / "shapes" / "stonework-shapes.ttl"),
+]
+BASELINE_SHAPES = ROOT / "ontologies" / "shapes" / "stonework-shapes.ttl"
+STRICT_SHAPES = ROOT / "ontologies" / "shapes" / "stonework-strict-shapes.ttl"
+SCHEMAS = [
     str(ROOT / "ontologies" / "stonework.ttl"),
     str(ROOT / "ontologies" / "categories.ttl"),
 ]
 
 
-def validate(fixture: str) -> subprocess.CompletedProcess[str]:
+def validate(
+    fixture: str, shapes: Path = BASELINE_SHAPES
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [*JAVA_COMMAND, str(ROOT / "tests" / "fixtures" / fixture)],
+        [
+            *JAVA_COMMAND,
+            str(shapes),
+            *SCHEMAS,
+            str(ROOT / "tests" / "fixtures" / fixture),
+        ],
         capture_output=True,
         text=True,
     )
@@ -33,6 +43,18 @@ def main() -> int:
     if valid.returncode:
         print("Conforming SHACL fixture was rejected:", file=sys.stderr)
         print(valid.stderr or valid.stdout, file=sys.stderr)
+        return 1
+
+    external_relationship = validate("shacl-valid-external-relationship.ttl")
+    if external_relationship.returncode:
+        print(
+            "Baseline profile rejected an external relationship without normalized provenance:",
+            file=sys.stderr,
+        )
+        print(
+            external_relationship.stderr or external_relationship.stdout,
+            file=sys.stderr,
+        )
         return 1
 
     invalid_fixtures = (
@@ -53,7 +75,37 @@ def main() -> int:
             print(invalid.stderr or invalid.stdout, file=sys.stderr)
             return 1
 
-    print("SHACL validation checks passed (valid fixture accepted; invalid fixtures rejected).")
+    strict_valid = validate("shacl-valid.ttl", STRICT_SHAPES)
+    if strict_valid.returncode:
+        print("Conforming fixture was rejected by the strict SHACL overlay:", file=sys.stderr)
+        print(strict_valid.stderr or strict_valid.stdout, file=sys.stderr)
+        return 1
+
+    strict_external_relationship = validate(
+        "shacl-valid-external-relationship.ttl", STRICT_SHAPES
+    )
+    if strict_external_relationship.returncode == 0:
+        print(
+            "Strict SHACL overlay accepted a qualified assertion without provenance.",
+            file=sys.stderr,
+        )
+        return 1
+
+    if "SHACL validation failed" not in strict_external_relationship.stderr:
+        print(
+            "Strict SHACL overlay failed unexpectedly:",
+            file=sys.stderr,
+        )
+        print(
+            strict_external_relationship.stderr or strict_external_relationship.stdout,
+            file=sys.stderr,
+        )
+        return 1
+
+    print(
+        "SHACL validation checks passed "
+        "(baseline interoperability and strict provenance profiles verified)."
+    )
     return 0
 
 
