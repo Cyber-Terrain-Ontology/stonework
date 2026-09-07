@@ -1,0 +1,73 @@
+name: Discord PR notification
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - ready_for_review
+
+permissions: {}
+
+jobs:
+  notify:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post PR to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_BASE: ${{ github.event.pull_request.base.ref }}
+          PR_HEAD: ${{ github.event.pull_request.head.ref }}
+          PR_ACTION: ${{ github.event.action }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
+            echo "DISCORD_WEBHOOK_URL secret is not set; skipping notification."
+            exit 0
+          fi
+
+          verb="opened"
+          [ "$PR_ACTION" = "reopened" ] && verb="reopened"
+          [ "$PR_ACTION" = "ready_for_review" ] && verb="marked ready for review"
+
+          # First ~500 chars of the PR body as context, JSON-escaped by jq.
+          excerpt=$(printf '%s' "$PR_BODY" | head -c 500)
+
+          payload=$(jq -n \
+            --arg num "$PR_NUMBER" \
+            --arg verb "$verb" \
+            --arg prtitle "$PR_TITLE" \
+            --arg url "$PR_URL" \
+            --arg author "$PR_AUTHOR" \
+            --arg head "$PR_HEAD" \
+            --arg base "$PR_BASE" \
+            --arg excerpt "$excerpt" \
+            '{
+               username: "STONEWORK PRs",
+               embeds: [ {
+                 title: ("PR #" + $num + " " + $verb + ": " + $prtitle),
+                 url: $url,
+                 description: $excerpt,
+                 color: 5814783,
+                 fields: [
+                   { name: "Author", value: $author, inline: true },
+                   { name: "Branches", value: ("`" + $head + "` → `" + $base + "`"), inline: true }
+                 ]
+               } ]
+             }')
+
+          code=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -H "Content-Type: application/json" \
+            -d "$payload" \
+            "$DISCORD_WEBHOOK_URL")
+
+          echo "Discord responded with HTTP $code"
+          case "$code" in
+            2*) : ;;
+            *) echo "::warning::Discord webhook returned HTTP $code" ;;
+          esac
