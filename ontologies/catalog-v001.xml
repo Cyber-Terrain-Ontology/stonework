@@ -29,6 +29,8 @@
         <uri name="https://cyberterrain.org/ns/frameworks/dns/0.1.0" uri="frameworks/dns.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/email" uri="frameworks/email.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/email/0.1.0" uri="frameworks/email.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/fatf" uri="frameworks/fatf.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/fatf/0.1.0" uri="frameworks/fatf.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/killchain" uri="frameworks/killchain.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/killchain/0.1.0" uri="frameworks/killchain.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/nist" uri="frameworks/nist.ttl"/>
