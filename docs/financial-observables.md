@@ -144,22 +144,41 @@ attributed to the actor, exhibiting `fatf:Layering`, `fatf:CryptoMixing`,
 `fatf:ChainHopping`, and `fatf:MoneyMuleNetwork`, and linked to the incident with
 `stonework:fundsActivity`.
 
-The money is traversable in one query — from the incident to the mule's IBAN and
+The money is traversable in one query — from the incident, along
+`beneficiaryAccount` / `^originatorAccount` alternately, to the mule's IBAN and
 the people on the path:
 
 ```sparql
 PREFIX stonework: <https://cyberterrain.org/ns/stonework#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX ex: <https://cyberterrain.org/ns/stonework/examples/follow-the-money#>
 
-SELECT ?step ?fromHolder ?toHolder ?toIban WHERE {
-  ?firstHop stonework:fundsActivity ex:incident-ransom .
-  ?firstHop (stonework:beneficiaryAccount/^stonework:originatorAccount)* ?step .
-  ?step stonework:originatorAccount ?from ;
-        stonework:beneficiaryAccount ?to .
-  OPTIONAL { ?from stonework:accountOf ?fromHolder }
-  OPTIONAL { ?to   stonework:accountOf ?toHolder }
-  OPTIONAL { ?to   stonework:hasIdentifier ?id . ?id stonework:iban ?toIban }
+SELECT ?hop ?type ?from ?to ?toIban ?exhibits WHERE {
+  ?first stonework:fundsActivity ex:incident-ransom .
+  ?first (stonework:beneficiaryAccount/^stonework:originatorAccount)* ?hop .
+  ?hop stonework:originatorAccount ?fromAcct ;
+       stonework:beneficiaryAccount ?toAcct ;
+       stonework:startedAtTime ?t .
+  OPTIONAL { ?hop stonework:categorizedBy ?tt . ?tt skos:notation ?type }
+  OPTIONAL { ?fromAcct stonework:accountOf ?a1 . ?a1 skos:prefLabel ?from }
+  OPTIONAL { ?toAcct   stonework:accountOf ?a2 . ?a2 skos:prefLabel ?to }
+  OPTIONAL { ?toAcct   stonework:hasIdentifier ?id . ?id stonework:iban ?toIban }
+  OPTIONAL { ?hop stonework:hasBehavior ?b .
+             ?b a stonework:IllicitFinanceTechnique ; skos:prefLabel ?exhibits }
 }
+ORDER BY ?t
 ```
+
+Result (RDF4J in-memory, loading `stonework.ttl`, `categories.ttl`,
+`frameworks/fatf.ttl`, and the example):
+
+| hop | type | from | to | toIban | exhibits |
+|---|---|---|---|---|---|
+| `ex:txn-ransom-payment` | payment | Example victim company | Example ransomware crew | | |
+| `ex:txn-mix` | transfer | Example ransomware crew | Example ransomware crew | | Crypto Mixing |
+| `ex:txn-chain-hop` | currency-exchange | Example ransomware crew | Example ransomware crew | | Chain Hopping |
+| `ex:txn-exchange-deposit` | deposit | Example ransomware crew | Example ransomware crew | | |
+| `ex:txn-cashout` | withdrawal | Example ransomware crew | Example money mule | GB29EXMP60161331926819 | Money Mule Network |
 
 ## Deferred
 
