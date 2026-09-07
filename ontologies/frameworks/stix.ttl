@@ -136,7 +136,7 @@ stones:InfrastuctureTypeVocabulary
 
 stones:IntrusionSet
 	a owl:Class ;
-	rdfs:subClassOf stonework:ThreatActor ;
+	rdfs:subClassOf stonework:CyberActivityCluster ;
 	.
 
 stones:KillChainPhase
