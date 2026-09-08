@@ -21,6 +21,10 @@ example:address
 	stonework:ipVersion "4"^^xsd:integer ;
 	.
 
+example:boundEntity
+	a stonework:CyberEntity ;
+	.
+
 example:campaign
 	a stonework:Campaign ;
 	.
@@ -29,6 +33,11 @@ example:certificate
 	a stonework:Certificate ;
 	stonework:certValidNotAfter "2027-01-01T00:00:00Z"^^xsd:dateTime ;
 	stonework:certValidNotBefore "2026-01-01T00:00:00Z"^^xsd:dateTime ;
+	.
+
+example:componentContext
+	a stonework:ComponentContext ;
+	stonework:installationOf example:versionedProduct ;
 	.
 
 example:domain
@@ -59,6 +68,12 @@ example:hash
 	a stonework:Hash ;
 	stonework:hashAlgorithm "SHA-256" ;
 	stonework:hashValue "dffd6021bb2bd33e0f47df5fcfe00d61010a3f9a8a70d1fc8ad2e72f15f5f65f" ;
+	.
+
+example:hypothesis
+	a stonework:Hypothesis ;
+	stonework:predictedType stonework:SecurityCondition ;
+	stonework:predictsVariable example:variable ;
 	.
 
 example:indicator
@@ -94,6 +109,16 @@ example:observation
 	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
 	.
 
+example:product
+	a stonework:Product ;
+	.
+
+example:productInstallation
+	a stonework:ProductInstallation ;
+	stonework:installationOf example:versionedProduct ;
+	stonework:installedOn example:protectedHost ;
+	.
+
 example:protectedHost
 	a stonework:Host ;
 	.
@@ -107,6 +132,15 @@ example:service
 	stonework:port "443"^^xsd:unsignedShort ;
 	.
 
+example:sighting
+	a stonework:Sighting ;
+	stonework:sightedObject example:indicator ;
+	.
+
+example:sourceStep
+	a stonework:Step ;
+	.
+
 example:sponsorAssignment
 	a stonework:RoleAssignment ;
 	stonework:assignedRole stonework:threatActorRoleSponsor ;
@@ -115,6 +149,26 @@ example:sponsorAssignment
 	stonework:rolePlayer example:actor ;
 	stonework:validFrom "2026-01-01T00:00:00Z"^^xsd:dateTime ;
 	stonework:validUntil "2026-12-31T23:59:59Z"^^xsd:dateTime ;
+	.
+
+example:targetStep
+	a stonework:Step ;
+	.
+
+example:transition
+	a stonework:Transition ;
+	stonework:fromStep example:sourceStep ;
+	stonework:toStep example:targetStep ;
+	.
+
+example:variable
+	a stonework:Variable ;
+	stonework:boundTo example:boundEntity ;
+	.
+
+example:versionedProduct
+	a stonework:VersionedProduct ;
+	stonework:versionOf example:product ;
 	.
 
 example:vulnerability

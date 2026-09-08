@@ -9,6 +9,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+STONEWORK = "https://cyberterrain.org/ns/stonework#"
 JAVA_COMMAND = [
     "java",
     "-cp",
@@ -57,14 +58,35 @@ def main() -> int:
         )
         return 1
 
-    invalid_fixtures = (
-        "shacl-invalid.ttl",
-        "shacl-invalid-ordering.ttl",
-        "shacl-invalid-actuator.ttl",
-        "shacl-invalid-actuation-target.ttl",
-        "shacl-invalid-multiple-actuators.ttl",
-    )
-    for fixture in invalid_fixtures:
+    invalid_fixtures = {
+        "shacl-invalid.ttl": (),
+        "shacl-invalid-ordering.ttl": (),
+        "shacl-invalid-actuator.ttl": (),
+        "shacl-invalid-actuation-target.ttl": (),
+        "shacl-invalid-multiple-actuators.ttl": (),
+        "shacl-invalid-functional-records.ttl": (
+            "assertionObject",
+            "assertionRelationType",
+            "assertionSubject",
+            "boundTo",
+            "boundToLiteral",
+            "fromStep",
+            "guardLiteralValue",
+            "guardOperator",
+            "guardType",
+            "guardVariable",
+            "installationOf",
+            "installedOn",
+            "predictedLiteral",
+            "predictedType",
+            "predictedValue",
+            "predictsVariable",
+            "sightedObject",
+            "toStep",
+            "versionOf",
+        ),
+    }
+    for fixture, expected_paths in invalid_fixtures.items():
         invalid = validate(fixture)
         if invalid.returncode == 0:
             print(f"Non-conforming SHACL fixture was accepted: {fixture}", file=sys.stderr)
@@ -74,6 +96,17 @@ def main() -> int:
             print(f"Non-conforming fixture failed unexpectedly: {fixture}", file=sys.stderr)
             print(invalid.stderr or invalid.stdout, file=sys.stderr)
             return 1
+
+        report = invalid.stderr or invalid.stdout
+        for path in expected_paths:
+            result_path = f"{STONEWORK}{path}>"
+            if result_path not in report:
+                print(
+                    f"Non-conforming fixture did not violate the {path} shape: {fixture}",
+                    file=sys.stderr,
+                )
+                print(report, file=sys.stderr)
+                return 1
 
     strict_valid = validate("shacl-valid.ttl", STRICT_SHAPES)
     if strict_valid.returncode:
