@@ -71,6 +71,7 @@ already carries properties — so subclassing gives both the event semantics
 | `usesInstrument` → `PaymentInstrument` | wire, ACH, SEPA, card, cash, on-chain, money order |
 | `categorizedBy` → `TransactionType` | deposit, withdrawal, transfer, payment, currency-exchange, fee |
 | `fundsActivity` → `CyberActivity` | the campaign, operation, or incident this transfer finances |
+| `respondsToActivity` → `CyberActivity` | the activity that prompted or contextualizes this transfer without being financed by it |
 | `transactionReference` | wire reference / end-to-end ID / memo / on-chain tx hash |
 
 Divergent source records of one economic event (originating vs. beneficiary bank,
@@ -78,6 +79,10 @@ a blockchain-analytics interpretation) are handled through `hasProvenance` and
 `Sighting`, not a separate record class. A dedicated `TransactionRecord` and an
 ordered correspondent chain are deferred until a reconciliation workflow needs
 them.
+
+`fundsActivity` asserts that the transaction finances the linked activity. A
+victim's ransom payment does not finance the ransomware incident itself; link
+that contextual response with `respondsToActivity` instead.
 
 A currency exchange can state both sides without collapsing them into one
 functional currency: use `originatorMonetaryValue` for the input amount and
@@ -164,8 +169,9 @@ login, and a wire cash-out into the mule's bank account. The ransom amount also
 has a USD-normalized observation with an explicit valuation currency and cited
 rate source. The five transfers are one `stonework:CyberActivityCluster`
 attributed to the actor, exhibiting `fatf:Layering`, `fatf:CryptoMixing`,
-`fatf:ChainHopping`, and `fatf:MoneyMuleNetwork`, and linked to the incident with
-`stonework:fundsActivity`.
+`fatf:ChainHopping`, and `fatf:MoneyMuleNetwork`. The initial ransom payment is
+linked to the incident with `stonework:respondsToActivity`, which records why the
+payment occurred without asserting that the victim financed the incident.
 
 The money is traversable in one query — from the incident, along
 `beneficiaryAccount` / `^originatorAccount` alternately, to the mule's IBAN and
@@ -177,7 +183,7 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX ex: <https://cyberterrain.org/ns/stonework/examples/follow-the-money#>
 
 SELECT ?hop ?type ?from ?to ?toIban ?exhibits WHERE {
-  ?first stonework:fundsActivity ex:incident-ransom .
+  ?first stonework:respondsToActivity ex:incident-ransom .
   ?first (stonework:beneficiaryAccount/^stonework:originatorAccount)* ?hop .
   ?hop stonework:originatorAccount ?fromAcct ;
        stonework:beneficiaryAccount ?toAcct ;

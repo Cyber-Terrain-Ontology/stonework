@@ -233,9 +233,9 @@ ex:txn-ransom-payment
 	stonework:beneficiaryAccount ex:wallet-ransom ;
 	stonework:categorizedBy stonework:transactionTypePayment ;
 	stonework:endedAtTime "2026-05-04T09:41:00Z"^^xsd:dateTime ;
-	stonework:fundsActivity ex:incident-ransom ;
 	stonework:hasMonetaryValue ex:amt-ransom ;
 	stonework:originatorAccount ex:wallet-victim ;
+	stonework:respondsToActivity ex:incident-ransom ;
 	stonework:startedAtTime "2026-05-04T09:38:00Z"^^xsd:dateTime ;
 	stonework:transactionAmount "12.5"^^xsd:decimal ;
 	stonework:transactionCurrency ex:btc ;

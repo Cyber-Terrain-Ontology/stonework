@@ -422,7 +422,7 @@ stonework:FinancialTransaction
 	rdfs:subClassOf stonework:CyberActivity ;
 	skos:definition "A movement of economic value from one financial account to another, occurring over a definite period and optionally attributed to the agents responsible for initiating it."@en ;
 	skos:prefLabel "Financial Transaction"@en ;
-	skos:scopeNote "An occurrent: it starts and settles at a time (stonework:startedAtTime and stonework:endedAtTime), is attributed with stonework:attributedTo, and can be sighted, investigated, and grouped into a stonework:CyberActivityCluster. Originator and beneficiary are given by stonework:originatorAccount and stonework:beneficiaryAccount; correspondent hops by stonework:intermediaryAccount. The transferred value is a stonework:MonetaryAmount via stonework:hasMonetaryValue. Use stonework:originatorMonetaryValue and stonework:beneficiaryMonetaryValue when the debited input and credited output differ, as in a currency exchange. Flat stonework:transactionAmount and stonework:transactionCurrency are convenience projections only for a single-denomination transfer. A blockchain transaction is a FinancialTransaction whose accounts are crypto wallets. Divergent source records of one economic event are handled through stonework:hasProvenance and stonework:Sighting rather than a distinct record class. Use stonework:hasBehavior to link a transaction, or a cluster of them, to a stonework:IllicitFinanceTechnique it exhibits, and stonework:fundsActivity to link it to the campaign, operation, or incident it finances."@en ;
+	skos:scopeNote "An occurrent: it starts and settles at a time (stonework:startedAtTime and stonework:endedAtTime), is attributed with stonework:attributedTo, and can be sighted, investigated, and grouped into a stonework:CyberActivityCluster. Originator and beneficiary are given by stonework:originatorAccount and stonework:beneficiaryAccount; correspondent hops by stonework:intermediaryAccount. The transferred value is a stonework:MonetaryAmount via stonework:hasMonetaryValue. Use stonework:originatorMonetaryValue and stonework:beneficiaryMonetaryValue when the debited input and credited output differ, as in a currency exchange. Flat stonework:transactionAmount and stonework:transactionCurrency are convenience projections only for a single-denomination transfer. A blockchain transaction is a FinancialTransaction whose accounts are crypto wallets. Divergent source records of one economic event are handled through stonework:hasProvenance and stonework:Sighting rather than a distinct record class. Use stonework:hasBehavior to link a transaction, or a cluster of them, to a stonework:IllicitFinanceTechnique it exhibits. Use stonework:fundsActivity only when the transaction finances an activity; use stonework:respondsToActivity when a transaction occurs in response to an activity, such as a victim's ransom payment."@en ;
 	.
 
 stonework:GranularMarking
@@ -2403,8 +2403,9 @@ stonework:fundsActivity
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:FinancialTransaction ;
 	rdfs:range stonework:CyberActivity ;
-	skos:definition "A cyber activity that this transaction finances or is a payment toward — for example a ransom payment linked to the incident it resolves, or an infrastructure purchase linked to the campaign it supports."@en ;
+	skos:definition "A cyber activity that this transaction finances — for example an infrastructure purchase linked to the campaign or operation it supports."@en ;
 	skos:prefLabel "fundsActivity"@en ;
+	skos:scopeNote "This property asserts a financing relationship. For a payment made in response to an activity without financing it, such as a victim's ransom payment made because of an incident, use stonework:respondsToActivity."@en ;
 	.
 
 stonework:generatedBy
@@ -4129,6 +4130,15 @@ stonework:resolvesTo
 	rdfs:range stonework:Infrastructure ;
 	skos:definition "Relates one Infrastructure entity to another Infrastructure entity to which it resolves, such as a Domain resolving to an IPAddress."@en ;
 	skos:prefLabel "resolvesTo"@en ;
+	.
+
+stonework:respondsToActivity
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:FinancialTransaction ;
+	rdfs:range stonework:CyberActivity ;
+	skos:definition "A cyber activity whose occurrence prompted or provides the context for this financial transaction, without asserting that the transaction financed the activity."@en ;
+	skos:prefLabel "respondsToActivity"@en ;
+	skos:scopeNote "Use for a victim's ransom payment linked to the incident it responds to, restitution or remediation payments, and similar contextual relationships. Use stonework:fundsActivity only when the transaction finances the linked activity."@en ;
 	.
 
 stonework:revokedBy
