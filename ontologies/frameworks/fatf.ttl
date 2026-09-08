@@ -1,0 +1,171 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fatf: <https://cyberterrain.org/ns/frameworks/fatf#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://cyberterrain.org/ns/frameworks/fatf>
+	a owl:Ontology ;
+	rdfs:label "FATF Illicit-Finance Typology Module"@en ;
+	rdfs:comment "A starter set of money-laundering typology individuals drawn from Financial Action Task Force (FATF) methods-and-trends guidance, mapped into stonework:IllicitFinanceTechnique and stonework:LaunderingStage. This module is an illustrative, non-exhaustive, non-normative alignment convenience — it does not reproduce FATF guidance and is not an authoritative list. Load FATF's own publications for the canonical typology set. STONEWORK is not affiliated with FATF."@en ;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/fatf/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
+	.
+
+fatf:AccountLayering
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "Moving funds rapidly through a chain of accounts, institutions, and jurisdictions to obscure the audit trail between source and destination."@en ;
+	skos:prefLabel "Account Layering"@en ;
+	.
+
+fatf:BulkCashSmuggling
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "Physically transporting large quantities of currency across borders to place it into the financial system in a jurisdiction with weaker controls."@en ;
+	skos:prefLabel "Bulk Cash Smuggling"@en ;
+	.
+
+fatf:CashIntensiveBusinessCommingling
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "Blending illicit proceeds with the genuine takings of a cash-intensive business (restaurant, car wash, casino) and depositing the total as legitimate revenue."@en ;
+	skos:prefLabel "Cash-Intensive Business Commingling"@en ;
+	.
+
+fatf:ChainHopping
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "Rapidly converting a crypto asset into other assets or across ledgers — including through decentralized exchanges and cross-chain bridges — to break on-chain traceability."@en ;
+	skos:prefLabel "Chain Hopping"@en ;
+	.
+
+fatf:CryptoMixing
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:altLabel "tumbling"@en ;
+	skos:definition "Pooling crypto-asset transfers from many parties through a mixing service so that outputs cannot be linked to specific inputs on the ledger."@en ;
+	skos:prefLabel "Crypto Mixing"@en ;
+	.
+
+fatf:InformalValueTransfer
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:altLabel "hawala"@en ;
+	skos:definition "Transferring value through informal broker networks that settle obligations outside the regulated banking system, leaving no conventional transaction record between sender and recipient."@en ;
+	skos:prefLabel "Informal Value Transfer System"@en ;
+	.
+
+fatf:Integration
+	a
+		owl:NamedIndividual ,
+		stonework:LaunderingStage
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "The third stage of laundering: returning laundered value to the economy as apparently legitimate wealth, income, or investment."@en ;
+	skos:prefLabel "Integration"@en ;
+	stonework:hasTechnique
+		fatf:CashIntensiveBusinessCommingling ,
+		fatf:ShellCompanyInterposition ,
+		fatf:TradeBasedLaundering
+		;
+	.
+
+fatf:Layering
+	a
+		owl:NamedIndividual ,
+		stonework:LaunderingStage
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "The second stage of laundering: separating illicit proceeds from their source through layers of transactions, conversions, and jurisdictions."@en ;
+	skos:prefLabel "Layering"@en ;
+	stonework:hasTechnique
+		fatf:AccountLayering ,
+		fatf:ChainHopping ,
+		fatf:CryptoMixing ,
+		fatf:InformalValueTransfer ,
+		fatf:ShellCompanyInterposition
+		;
+	.
+
+fatf:MoneyMuleNetwork
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "Recruiting individuals to receive illicit funds into their personal accounts and forward them onward, interposing unwitting or complicit account holders between source and destination."@en ;
+	skos:prefLabel "Money Mule Network"@en ;
+	.
+
+fatf:Placement
+	a
+		owl:NamedIndividual ,
+		stonework:LaunderingStage
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "The first stage of laundering: introducing illicit proceeds, typically cash, into the financial system."@en ;
+	skos:prefLabel "Placement"@en ;
+	stonework:hasTechnique
+		fatf:BulkCashSmuggling ,
+		fatf:CashIntensiveBusinessCommingling ,
+		fatf:MoneyMuleNetwork ,
+		fatf:Structuring
+		;
+	.
+
+fatf:ShellCompanyInterposition
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "Routing funds through shell or front companies with no genuine operations so that transfers appear to be legitimate commercial payments."@en ;
+	skos:prefLabel "Shell Company Interposition"@en ;
+	.
+
+fatf:Structuring
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:altLabel "smurfing"@en ;
+	skos:definition "Breaking a large amount of cash into many smaller deposits or transfers, each kept below a reporting or scrutiny threshold, often across multiple accounts, branches, or people."@en ;
+	skos:prefLabel "Structuring"@en ;
+	.
+
+fatf:TradeBasedLaundering
+	a
+		owl:NamedIndividual ,
+		stonework:IllicitFinanceTechnique
+		;
+	dcterms:source <https://www.fatf-gafi.org/en/topics/money-laundering.html> ;
+	skos:definition "Disguising the movement of value through international trade by misrepresenting the price, quantity, or quality of goods on invoices, or by invoicing goods that are never shipped."@en ;
+	skos:prefLabel "Trade-Based Money Laundering"@en ;
+	.
