@@ -1,0 +1,34 @@
+@prefix example: <https://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:missingAmount
+	a stonework:MonetaryAmount ;
+	stonework:currency stonework:currencyUSD ;
+	.
+
+example:missingCurrency
+	a stonework:MonetaryAmount ;
+	stonework:amount "10.00"^^xsd:decimal ;
+	.
+
+example:multipleAmounts
+	a stonework:MonetaryAmount ;
+	stonework:amount
+		"10.00"^^xsd:decimal ,
+		"20.00"^^xsd:decimal
+		;
+	stonework:currency stonework:currencyUSD ;
+	.
+
+example:multipleCurrencies
+	a stonework:MonetaryAmount ;
+	stonework:amount "10.00"^^xsd:decimal ;
+	stonework:currency
+		stonework:currencyGBP ,
+		stonework:currencyUSD
+		;
+	.

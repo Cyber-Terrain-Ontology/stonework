@@ -1,0 +1,44 @@
+@prefix example: <https://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:btc
+	a stonework:CryptoAsset ;
+	stonework:blockchainNetwork "Bitcoin" ;
+	.
+
+example:exchange
+	a stonework:FinancialTransaction ;
+	stonework:beneficiaryMonetaryValue example:outputAmount ;
+	stonework:categorizedBy stonework:transactionTypeCurrencyExchange ;
+	stonework:originatorMonetaryValue example:inputAmount ;
+	.
+
+example:inputAmount
+	a stonework:MonetaryAmount ;
+	stonework:amount "1.0"^^xsd:decimal ;
+	stonework:currency example:btc ;
+	.
+
+example:outputAmount
+	a stonework:MonetaryAmount ;
+	stonework:amount "65000.00"^^xsd:decimal ;
+	stonework:currency stonework:currencyUSD ;
+	.
+
+example:rateSource
+	a stonework:Publication ;
+	.
+
+example:valuation
+	a stonework:MetricObservation ;
+	stonework:hasProvenance example:rateSource ;
+	stonework:metricFor example:inputAmount ;
+	stonework:metricType stonework:metricNormalizedValue ;
+	stonework:metricValue "65000.00"^^xsd:decimal ;
+	stonework:observedAt "2026-05-04T09:41:00Z"^^xsd:dateTime ;
+	stonework:valuationCurrency stonework:currencyUSD ;
+	.
