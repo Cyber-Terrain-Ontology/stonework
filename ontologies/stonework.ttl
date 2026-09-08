@@ -233,7 +233,7 @@ stonework:CryptoAddress
 	rdfs:subClassOf stonework:Identifier ;
 	skos:definition "An on-chain address that identifies a destination for value on a distributed ledger."@en ;
 	skos:prefLabel "Crypto Address"@en ;
-	skos:scopeNote "The address string is stonework:walletAddress. Attach a CryptoAddress to the wallet it identifies, a stonework:FinancialAccount, with stonework:hasIdentifier. Sibling of stonework:EmailAddress and stonework:MACAddress."@en ;
+	skos:scopeNote "The address string is stonework:walletAddress. Attach a CryptoAddress to the wallet it identifies, a stonework:FinancialAccount, with stonework:hasIdentifier; the address's asset and network are then traversable through ^stonework:hasIdentifier/stonework:accountCurrency and stonework:blockchainNetwork. Sibling of stonework:EmailAddress and stonework:MACAddress."@en ;
 	.
 
 stonework:CryptoAsset
@@ -406,7 +406,7 @@ stonework:FinancialAccount
 	rdfs:subClassOf stonework:Account ;
 	skos:definition "An account that can hold a balance of, or transfer, economic value — fiat currency, cryptocurrency, or monetary-equivalent stored value such as gift-card credit, gaming currency, or loyalty points redeemable for goods."@en ;
 	skos:prefLabel "Financial Account"@en ;
-	skos:scopeNote "Defined by function, not by the holder: an account at a regulated bank, brokerage, or exchange and a stored-value balance at a non-financial merchant are both FinancialAccounts. Whether it is held at a regulated institution is recorded with the optional stonework:heldAt link, not by the class. Account kind (checking, custodial wallet, prepaid card, exchange account) is asserted with stonework:categorizedBy a stonework:FinancialAccountType. Identifiers such as an IBAN, domestic account number, or crypto address attach with stonework:hasIdentifier. Balance over time is a stonework:MetricObservation. A crypto wallet is a FinancialAccount; its on-chain address is a stonework:CryptoAddress."@en ;
+	skos:scopeNote "Defined by function, not by the holder: an account at a regulated bank, brokerage, or exchange and a stored-value balance at a non-financial merchant are both FinancialAccounts. Whether it is held at a regulated institution is recorded with the optional stonework:heldAt link, not by the class. Account kind (checking, custodial wallet, prepaid card, exchange account) is asserted with stonework:categorizedBy a stonework:FinancialAccountType. Identifiers such as an IBAN, domestic account number, or crypto address attach with stonework:hasIdentifier. Use stonework:accountCurrency for each currency or crypto asset the account holds or is denominated in; it is intentionally multi-valued. Balance over time is a stonework:MetricObservation. A crypto wallet is a FinancialAccount; its on-chain address is a stonework:CryptoAddress."@en ;
 	.
 
 stonework:FinancialInstitution
@@ -422,7 +422,7 @@ stonework:FinancialTransaction
 	rdfs:subClassOf stonework:CyberActivity ;
 	skos:definition "A movement of economic value from one financial account to another, occurring over a definite period and optionally attributed to the agents responsible for initiating it."@en ;
 	skos:prefLabel "Financial Transaction"@en ;
-	skos:scopeNote "An occurrent: it starts and settles at a time (stonework:startedAtTime and stonework:endedAtTime), is attributed with stonework:attributedTo, and can be sighted, investigated, and grouped into a stonework:CyberActivityCluster. Originator and beneficiary are given by stonework:originatorAccount and stonework:beneficiaryAccount; correspondent hops by stonework:intermediaryAccount. The transferred value is a stonework:MonetaryAmount via stonework:hasMonetaryValue, with flat stonework:transactionAmount and stonework:transactionCurrency projections for single-hop queries. A blockchain transaction is a FinancialTransaction whose accounts are crypto wallets. Divergent source records of one economic event are handled through stonework:hasProvenance and stonework:Sighting rather than a distinct record class. Use stonework:hasBehavior to link a transaction, or a cluster of them, to a stonework:IllicitFinanceTechnique it exhibits, and stonework:fundsActivity to link it to the campaign, operation, or incident it finances."@en ;
+	skos:scopeNote "An occurrent: it starts and settles at a time (stonework:startedAtTime and stonework:endedAtTime), is attributed with stonework:attributedTo, and can be sighted, investigated, and grouped into a stonework:CyberActivityCluster. Originator and beneficiary are given by stonework:originatorAccount and stonework:beneficiaryAccount; correspondent hops by stonework:intermediaryAccount. The transferred value is a stonework:MonetaryAmount via stonework:hasMonetaryValue. Use stonework:originatorMonetaryValue and stonework:beneficiaryMonetaryValue when the debited input and credited output differ, as in a currency exchange. Flat stonework:transactionAmount and stonework:transactionCurrency are convenience projections only for a single-denomination transfer. A blockchain transaction is a FinancialTransaction whose accounts are crypto wallets. Divergent source records of one economic event are handled through stonework:hasProvenance and stonework:Sighting rather than a distinct record class. Use stonework:hasBehavior to link a transaction, or a cluster of them, to a stonework:IllicitFinanceTechnique it exhibits, and stonework:fundsActivity to link it to the campaign, operation, or incident it finances."@en ;
 	.
 
 stonework:GranularMarking
@@ -697,7 +697,7 @@ stonework:MetricObservation
 	rdfs:subClassOf stonework:QualifiedAssertion ;
 	skos:definition "A qualified, time-stamped metric value about a cyber entity, carrying its metric type, source provenance, and optional calculation-model version."@en ;
 	skos:prefLabel "Metric Observation"@en ;
-	skos:scopeNote "Use for values that change over time or differ by source, including EPSS probability, KEV membership, confidence, likelihood, and risk scores. Direct datatype properties remain convenience projections for consumers that need a single current value."@en ;
+	skos:scopeNote "Use for values that change over time or differ by source, including EPSS probability, KEV membership, confidence, likelihood, risk scores, and normalized monetary valuations. A stonework:metricNormalizedValue observation records its output currency with stonework:valuationCurrency. Direct datatype properties remain convenience projections for consumers that need a single current value."@en ;
 	.
 
 stonework:MetricType
@@ -736,7 +736,7 @@ stonework:MonetaryAmount
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "A quantity of money: a decimal magnitude paired with the currency that denominates it."@en ;
 	skos:prefLabel "Monetary Amount"@en ;
-	skos:scopeNote "Reified so magnitude and currency always travel together, mirroring how stonework:Hash pairs algorithm and digest. Attached to a transaction, account, impact, or demand with stonework:hasMonetaryValue. The magnitude is stonework:amount and the unit is stonework:currency. A currency-normalized valuation of the same amount, for example its USD equivalent at a stated time and rate source, is not put here — it is a stonework:MetricObservation on the entity the amount belongs to."@en ;
+	skos:scopeNote "Reified so magnitude and currency always travel together, mirroring how stonework:Hash pairs algorithm and digest. Attached to a transaction, account, impact, or demand with stonework:hasMonetaryValue or a monetary-value role subproperty. The magnitude is stonework:amount and the unit is stonework:currency. A currency-normalized valuation of the same amount, for example its USD equivalent at a stated time and rate source, is a stonework:MetricObservation on this amount with stonework:valuationCurrency identifying the output currency."@en ;
 	.
 
 stonework:Mutex
@@ -1250,6 +1250,15 @@ stonework:accessesRegistry
 	skos:prefLabel "accessesRegistry"@en ;
 	.
 
+stonework:accountCurrency
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:FinancialAccount ;
+	rdfs:range stonework:Currency ;
+	skos:definition "A currency or crypto asset that this financial account holds or is denominated in."@en ;
+	skos:prefLabel "accountCurrency"@en ;
+	skos:scopeNote "Intentionally multi-valued: an account, including a hosted exchange account or multi-asset wallet, may hold or support more than one currency."@en ;
+	.
+
 stonework:accountName
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:UserAccount ;
@@ -1527,6 +1536,16 @@ stonework:beneficiaryAccount
 	rdfs:range stonework:FinancialAccount ;
 	skos:definition "The account credited by this transaction — the destination of the transferred value."@en ;
 	skos:prefLabel "beneficiaryAccount"@en ;
+	.
+
+stonework:beneficiaryMonetaryValue
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasMonetaryValue ;
+	rdfs:domain stonework:FinancialTransaction ;
+	rdfs:range stonework:MonetaryAmount ;
+	skos:definition "The monetary amount credited to the beneficiary account as this transaction's output."@en ;
+	skos:prefLabel "beneficiaryMonetaryValue"@en ;
+	skos:scopeNote "Use with stonework:originatorMonetaryValue when a transaction changes denomination, as in a currency exchange. Both properties remain queryable through their stonework:hasMonetaryValue superproperty."@en ;
 	.
 
 stonework:bic
@@ -3610,6 +3629,16 @@ stonework:originatorAccount
 	skos:scopeNote "Naming follows the FATF Travel Rule and ISO 20022 originator-beneficiary convention. Direction of value is carried by these roles, not by the sign of stonework:amount."@en ;
 	.
 
+stonework:originatorMonetaryValue
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasMonetaryValue ;
+	rdfs:domain stonework:FinancialTransaction ;
+	rdfs:range stonework:MonetaryAmount ;
+	skos:definition "The monetary amount debited from the originator account as this transaction's input."@en ;
+	skos:prefLabel "originatorMonetaryValue"@en ;
+	skos:scopeNote "Use with stonework:beneficiaryMonetaryValue when a transaction changes denomination, as in a currency exchange. Both properties remain queryable through their stonework:hasMonetaryValue superproperty."@en ;
+	.
+
 stonework:osName
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Host ;
@@ -4521,8 +4550,9 @@ stonework:transactionAmount
 		;
 	rdfs:domain stonework:FinancialTransaction ;
 	rdfs:range xsd:decimal ;
-	skos:definition "Convenience projection of the magnitude of this transaction's stonework:MonetaryAmount, paired with stonework:transactionCurrency."@en ;
+	skos:definition "Convenience projection of the magnitude of a single-denomination transaction's stonework:MonetaryAmount, paired with stonework:transactionCurrency."@en ;
 	skos:prefLabel "transactionAmount"@en ;
+	skos:scopeNote "Do not use for a currency exchange with distinct input and output amounts; use stonework:originatorMonetaryValue and stonework:beneficiaryMonetaryValue instead."@en ;
 	.
 
 stonework:transactionCurrency
@@ -4532,8 +4562,9 @@ stonework:transactionCurrency
 		;
 	rdfs:domain stonework:FinancialTransaction ;
 	rdfs:range stonework:Currency ;
-	skos:definition "Convenience projection of the currency of this transaction's stonework:MonetaryAmount, for consumers that need a single value without traversing stonework:hasMonetaryValue."@en ;
+	skos:definition "Convenience projection of the currency of a single-denomination transaction's stonework:MonetaryAmount, for consumers that need one value without traversing stonework:hasMonetaryValue."@en ;
 	skos:prefLabel "transactionCurrency"@en ;
+	skos:scopeNote "Do not use for a currency exchange with distinct input and output currencies; traverse stonework:originatorMonetaryValue and stonework:beneficiaryMonetaryValue to their stonework:currency values instead."@en ;
 	.
 
 stonework:transactionReference
@@ -4707,6 +4738,18 @@ stonework:validUntil
 	skos:prefLabel "validUntil"@en ;
 	.
 
+stonework:valuationCurrency
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MetricObservation ;
+	rdfs:range stonework:Currency ;
+	skos:definition "The currency in which a normalized monetary metric value is expressed."@en ;
+	skos:prefLabel "valuationCurrency"@en ;
+	skos:scopeNote "Required for a stonework:MetricObservation whose stonework:metricType is stonework:metricNormalizedValue. The source amount retains its own stonework:currency; this property identifies the output unit produced by the cited exchange-rate source."@en ;
+	.
+
 stonework:variableName
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Variable ;
@@ -4777,8 +4820,9 @@ stonework:walletAddress
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:CryptoAddress ;
 	rdfs:range xsd:string ;
-	skos:definition "The on-chain address string (e.g. a Bitcoin or Ethereum address). The ledger the address belongs to is recorded with stonework:blockchainNetwork on the associated stonework:CryptoAsset, or inferred from address format."@en ;
+	skos:definition "The on-chain address string (e.g. a Bitcoin or Ethereum address)."@en ;
 	skos:prefLabel "walletAddress"@en ;
+	skos:scopeNote "Resolve the address's asset through ^stonework:hasIdentifier/stonework:accountCurrency and then its ledger through stonework:blockchainNetwork on a stonework:CryptoAsset. Do not rely on the address string alone to identify the asset or network."@en ;
 	.
 
 stonework:weaknessOf

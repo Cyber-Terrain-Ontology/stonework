@@ -40,8 +40,13 @@ attacker holds.
 Identifiers attach with `stonework:hasIdentifier`: `stonework:IBAN` (the
 cross-jurisdiction normalized form), `stonework:BankAccountNumber` (a domestic
 number, which can coexist with an IBAN on the same account), and
-`stonework:CryptoAddress` (`stonework:walletAddress`). Institution codes that
-should not broaden bare `Organization` — `stonework:bic`,
+`stonework:CryptoAddress` (`stonework:walletAddress`). Each currency or crypto
+asset the account holds or is denominated in is linked with the intentionally
+multi-valued `stonework:accountCurrency`; this supports both single-asset wallets
+and multi-currency exchange accounts. A crypto address's asset is therefore
+traversable as `^stonework:hasIdentifier/stonework:accountCurrency`, and a
+`CryptoAsset`'s `stonework:blockchainNetwork` identifies its ledger. Institution
+codes that should not broaden bare `Organization` — `stonework:bic`,
 `stonework:abaRoutingNumber` — sit on `stonework:FinancialInstitution`;
 `stonework:lei` sits on `stonework:Organization` because a Legal Entity
 Identifier applies to any counterparty, not only institutions.
@@ -60,8 +65,9 @@ already carries properties — so subclassing gives both the event semantics
 |---|---|
 | `originatorAccount` / `beneficiaryAccount` | source and destination (FATF Travel Rule / ISO 20022 naming) |
 | `intermediaryAccount` | correspondent hops (multi-valued, unordered in this revision) |
-| `hasMonetaryValue` → `MonetaryAmount` | the transferred sum and its currency |
-| `transactionAmount` / `transactionCurrency` | flat single-hop projections of the above |
+| `hasMonetaryValue` → `MonetaryAmount` | generic transferred sum and its currency |
+| `originatorMonetaryValue` / `beneficiaryMonetaryValue` | input debited from the originator and output credited to the beneficiary; both are subproperties of `hasMonetaryValue` |
+| `transactionAmount` / `transactionCurrency` | flat projections only for a single-denomination transfer |
 | `usesInstrument` → `PaymentInstrument` | wire, ACH, SEPA, card, cash, on-chain, money order |
 | `categorizedBy` → `TransactionType` | deposit, withdrawal, transfer, payment, currency-exchange, fee |
 | `fundsActivity` → `CyberActivity` | the campaign, operation, or incident this transfer finances |
@@ -73,12 +79,21 @@ a blockchain-analytics interpretation) are handled through `hasProvenance` and
 ordered correspondent chain are deferred until a reconciliation workflow needs
 them.
 
+A currency exchange can state both sides without collapsing them into one
+functional currency: use `originatorMonetaryValue` for the input amount and
+`beneficiaryMonetaryValue` for the output amount. Both remain visible to generic
+queries through `hasMonetaryValue`. Do not assert the functional
+`transactionAmount` / `transactionCurrency` convenience pair when a transaction
+has different input and output denominations.
+
 ## Monetary amounts and currency
 
 `stonework:MonetaryAmount` reifies magnitude (`stonework:amount`, `xsd:decimal`)
 and unit (`stonework:currency`) so the two always travel together — the same
 choice `stonework:Hash` makes for algorithm and digest. `stonework:hasMonetaryValue`
-attaches one to a `FinancialTransaction`, `FinancialAccount`, or `Impact`.
+attaches one to a `FinancialTransaction`, `FinancialAccount`, or `Impact`. The
+baseline SHACL profile requires every `MonetaryAmount` to have exactly one
+decimal `amount` and exactly one `Currency`.
 
 `stonework:Currency` is the unit of denomination:
 
@@ -92,9 +107,13 @@ attaches one to a `FinancialTransaction`, `FinancialAccount`, or `Impact`.
 A **time- and rate-sensitive valuation** — the USD equivalent of a crypto
 transfer at a stated moment — is deliberately kept out of `MonetaryAmount`. It is
 a `stonework:MetricObservation` (`metricType stonework:metricNormalizedValue`,
-`observedAt`, with the rate source as provenance) attached to the `MonetaryAmount`
-via `stonework:hasMetricObservation` — the amount is a `CyberEntity`, and the
-observation carries the time the valuation applies to.
+`observedAt`, `metricValue`, and `valuationCurrency`) attached to the
+`MonetaryAmount` via `stonework:hasMetricObservation` — the amount is a
+`CyberEntity`, and the observation carries the time the valuation applies to.
+`stonework:valuationCurrency` makes the value's output unit machine-readable;
+`stonework:hasProvenance` cites the concrete exchange-rate source. The strict
+SHACL profile requires that provenance, while the baseline profile requires a
+normalized valuation to have exactly one decimal value and one currency.
 
 ## CryptoAsset, re-grounded
 
@@ -104,7 +123,9 @@ observation carries the time the valuation applies to.
 on multiple ledgers is distinct individuals, distinguished by
 `stonework:blockchainNetwork` (kept a free string). A wallet is now a
 `stonework:FinancialAccount`; its address is a `stonework:CryptoAddress`, onto
-which `stonework:walletAddress` was re-domained.
+which `stonework:walletAddress` was re-domained. The wallet's
+`stonework:accountCurrency` points to the asset, making the full
+address-to-network path explicit rather than inferring it from address syntax.
 
 **Breaking change:** `stonework:cryptoCurrency` (the `"BTC"` string property) is
 **removed**. Replace it by linking the amount or wallet to the `CryptoAsset`
@@ -137,9 +158,11 @@ no rework.
 
 `examples/financial-follow-the-money.ttl` traces the proceeds of a ransomware
 incident: a Bitcoin ransom payment to the actor's collection wallet, then
-mixing, a chain-hop into Monero, a deposit to a hosted account at a non-compliant
-exchange operated through a money mule's KYC login, and a wire cash-out into the
-mule's bank account. The five transfers are one `stonework:CyberActivityCluster`
+mixing, a chain-hop with explicit BTC input and XMR output amounts, a deposit to
+a hosted account at a non-compliant exchange operated through a money mule's KYC
+login, and a wire cash-out into the mule's bank account. The ransom amount also
+has a USD-normalized observation with an explicit valuation currency and cited
+rate source. The five transfers are one `stonework:CyberActivityCluster`
 attributed to the actor, exhibiting `fatf:Layering`, `fatf:CryptoMixing`,
 `fatf:ChainHopping`, and `fatf:MoneyMuleNetwork`, and linked to the incident with
 `stonework:fundsActivity`.
