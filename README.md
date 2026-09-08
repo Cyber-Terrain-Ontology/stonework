@@ -47,7 +47,7 @@ STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or 
 
 ## Status
 
-**v0.6.1 — Active Development**
+**Active Development**
 
 The namespace (`https://cyberterrain.org/ns/stonework#`) is stable and will not change. Core vocabulary is in place. Framework coverage (ATT&CK, D3FEND, EMB3D, CWE, NIST SP 800-53, CIS, BFO 2020, OCSF, UCO, FATF, and STIX/STONES) is expanding. The scope of coverage will grow as the ontology matures. Feedback, issues, and contributions are welcome.
 
