@@ -877,7 +877,7 @@ stonework:Procedure
 	rdfs:comment "Procedures are instances or patterns of execution that realize a technique. They may include command lines, API calls, malware behaviors, or operator playbook steps. Procedures are distinct from techniques, which describe generalized methods." ;
 	skos:definition "A concrete, observable sequence of actions, commands, or behaviors that implements a technique in a specific operational context." ;
 	skos:prefLabel "Procedure" ;
-	skos:scopeNote "Procedures describe the actual steps an adversary takes, such as specific commands, scripts, tools, or configurations. They represent the most granular level of adversary behavior. Links back to the AttackTechnique it operationalizes via stonework:implements (Procedure implements AttackTechnique); may itself decompose into stonework:Step individuals via stonework:hasStep." ;
+	skos:scopeNote "One realization path for a single Technique — the specific commands, scripts, tools, or configuration that carry it out (e.g. the comsvcs.dll MiniDump way of doing OS Credential Dumping: LSASS Memory). Technique-scoped and typically linear. A Procedure may be only a prose description — the common case when ingesting MITRE ATT&CK procedure examples — or decomposed into stonework:Step individuals via stonework:hasStep for sub-step depth. Links to the Technique it operationalizes via stonework:implements or its specialization stonework:procedureFor. Distinct from stonework:Playbook / stonework:OperationPlan / stonework:ControlPlan, which are objective-scoped plans that orchestrate several Procedures or Techniques with branching, retry, and control flow; a Plan's Step commonly stonework:implements a Procedure." ;
 	.
 
 stonework:Process
@@ -1101,7 +1101,7 @@ stonework:Technique
 	rdfs:comment "Mirrors D3FEND's Technique class and reflects the PROV-O Plan philosophy: a technique is a plan that describes how an action should be carried out, distinct from the activity that executes it. Subclassed by stonework:CyberTechnique for cyber-specific methods." ;
 	skos:definition "A reusable, prescribed method for achieving an objective, which may be instantiated as a concrete execution by an actor or system." ;
 	skos:prefLabel "Technique" ;
-	skos:scopeNote "Technique is intentionally not a subclass of stones:AttackPattern. Attack patterns (e.g. CAPEC) are abstract descriptions of attack classes in the STIX sense; techniques are operationalized plans. See stonework:CyberTechnique, stonework:AttackTechnique, stonework:DefendTechnique." ;
+	skos:scopeNote "A method specification, not a plan: a Technique describes an approach ('access credential material in LSASS process memory') without prescribing an ordered, branched sequence of steps. Concrete step structure appears one level down, in a stonework:Procedure that realizes the Technique, or in a stonework:Playbook / stonework:OperationPlan that orchestrates several. An execution links to the Technique it performs directly with stonework:executionOf — no Procedure, Plan, or Step is required for the lightweight case. Technique is intentionally not a subclass of stones:AttackPattern: attack patterns such as CAPEC are abstract taxonomy entries, while Techniques are operationalized methods closer to execution. See stonework:CyberTechnique, stonework:AttackTechnique, stonework:DefendTechnique, and docs/technique-modeling.md." ;
 	.
 
 stonework:Threat
@@ -1159,7 +1159,7 @@ stonework:Transition
 	a owl:Class ;
 	skos:definition "A directed edge between two Steps within the same parent Behavior's Step graph, representing progression from one Step to the next."@en ;
 	skos:prefLabel "Transition" ;
-	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Guard/condition properties for conditional branching (testing a bound Variable's value) are not yet defined — this class currently captures only the structural edge via stonework:fromStep and stonework:toStep."@en ;
+	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Conditional branching is expressed with the guard properties stonework:guardVariable (the Variable tested), stonework:guardType (a class the bound value must be an instance of) or stonework:guardLiteralValue (a scalar it must equal), and stonework:guardOperator (the comparison; omitting it defaults to equality). The Transition fires when its guard holds against the from-Step's bound Variable."@en ;
 	.
 
 stonework:URI
@@ -2306,7 +2306,7 @@ stonework:executionOf
 	owl:inverseOf stonework:hasExecution ;
 	skos:definition "Relates a CyberActivity to the Behavior plan whose execution it represents."@en ;
 	skos:prefLabel "executionOf"@en ;
-	skos:scopeNote "Links an overall execution to its plan, such as an Investigation to an InvestigationPlan, an Operation to an OperationPlan, or a Process to a Playbook or ControlPlan. Use stonework:correspondsToStep for the finer-grained link between an executing CyberActivity and an individual Step."@en ;
+	skos:scopeNote "Links an overall execution to the Behavior it carries out. This may be a full plan — an Investigation to an InvestigationPlan, an Operation to an OperationPlan, a Process to a Playbook or ControlPlan — or, in the lightweight case, a bare method: a CyberActivity may point directly at the stonework:Technique (or stonework:AttackTechnique) it performs, with no intervening Procedure, Plan, or Step. The lightweight form is the common one for sightings and incident timelines ('actor performed T1003.001 against this host at this time'); it can be elaborated into a Step-decomposed Plan later without changing the executionOf assertion. Use stonework:correspondsToStep for the finer-grained link between an executing CyberActivity and an individual Step when a Plan is present."@en ;
 	.
 
 stonework:expirationDate
