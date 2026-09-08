@@ -176,6 +176,16 @@ The SHACL files are optional application-level data-quality profiles; they do no
 
 Import the stable ontology IRI, such as `https://cyberterrain.org/ns/frameworks/cve`. Each ontology also declares an `owl:versionIRI` for consumers that need to pin an exact vocabulary release. The local XML catalog resolves both forms. Every bundled framework module imports the STONEWORK core directly and declares any additional bundled dependency, so a module can be loaded independently as well as through a profile.
 
+### Single-file merge for publication
+
+`ontologies/stonework.ttl` (core) and `ontologies/categories.ttl` (Category/Role subclasses, SKOS concept schemes, and the controlled-vocabulary individuals) are kept separate so the core loads without the full vocabulary set. A client that dereferences the namespace IRI, however, expects every `stonework:` term in one document.
+
+```bash
+bash tools/build-merged.sh              # -> build/stonework-merged.ttl (gitignored)
+```
+
+This concatenates the two files under the core's single `owl:Ontology` header, canonicalizes with rdf-toolkit, and sanity-checks the result. The output is what gets published as `cyberterrain.org/ns/stonework.ttl`, and the WIDOCO documentation is generated from it so it covers the vocabulary individuals.
+
 ### Framework interoperability
 
 - `ontologies/frameworks/stix.ttl` maps STONES classes and properties into STONEWORK. STIX relationship source, target, and open-vocabulary type values project through the generic qualified-assertion properties. STIX Bundle remains intentionally unmapped because it is a transport container rather than a STIX Core Object or cyber-domain assertion.
