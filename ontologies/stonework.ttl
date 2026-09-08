@@ -49,21 +49,6 @@ stonework:Actuator
 	skos:scopeNote "Use for ICS and OT field devices that act on a physical process. Distinct from stonework:SecurityActuator, which is deployed infrastructure that applies a countermeasure. A PLC or motor starter is an Actuator; an EDR agent or firewall is a SecurityActuator. An ICS device that also runs processes and participates in networks may additionally be typed as stonework:Host."@en ;
 	.
 
-stonework:Adware
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Software that automatically displays or downloads advertising material, often without user consent."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "adware" ;
-	skos:prefLabel "Adware"@en ;
-	.
-
 stonework:Agent
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
@@ -122,21 +107,6 @@ stonework:AutonomousSystem
 	skos:prefLabel "Autonomous System"@en ;
 	.
 
-stonework:Backdoor
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that provides covert, persistent remote access to a compromised system, bypassing normal authentication."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "backdoor" ;
-	skos:prefLabel "Backdoor"@en ;
-	.
-
 stonework:Behavior
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
@@ -154,41 +124,12 @@ stonework:BomEntry
 	skos:scopeNote "An SBOM import creates one BomEntry per declared component. The BomEntry IRI is scoped to the SBOM (e.g. <sbom-iri/entry/<component-ref>>). Multiple BomEntry instances across different SBOMs may reference the same VersionedProduct via stonework:installationOf."@en ;
 	.
 
-stonework:Bootkit
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that infects the boot sector or master boot record to load before the operating system, enabling deep persistence and defense evasion."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "bootkit" ;
-	skos:prefLabel "Bootkit"@en ;
-	.
-
-stonework:Bot
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that connects an infected host to a command-and-control network, enabling remote tasking as part of a botnet."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "bot" ;
-	skos:prefLabel "Bot"@en ;
-	.
-
 stonework:Campaign
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberActivity ;
-	skos:definition "A grouping of adversary behaviours and resources with a common objective pursued over a period of time. Campaigns may be attributed to ThreatActors and may evolve from a CyberActivityCluster as attribution and objectives become established." ;
+	skos:definition "A grouping of adversary behaviours and resources with a common objective pursued over a period of time. Campaigns may be attributed to ThreatActors and may form part of a broader CyberActivityCluster." ;
 	skos:prefLabel "Campaign"@en ;
+	skos:scopeNote "A Campaign is organized around an objective and time period, while a CyberActivityCluster is organized by analytic correlation. A Campaign that is one episode within a broader activity cluster is linked to it with stonework:memberOfActivityCluster. The same body of activity may be typed as both classes when both descriptions apply."@en ;
 	.
 
 stonework:Category
@@ -290,15 +231,15 @@ stonework:CyberActivity
 	a owl:Class ;
 	skos:definition "A specific occurrence or performance of actions by one or more agents over time within a cyber or sociotechnical context."@en ;
 	skos:prefLabel "Cyber Activity" ;
-	skos:scopeNote "One of two root classes in STONEWORK alongside CyberEntity. Superclass for Campaigns, Incidents, Operations, Events, and Processes. Aligns with BFO Occurrent and BFO Process."@en ;
+	skos:scopeNote "One of two root classes in STONEWORK alongside CyberEntity. Superclass for Campaigns, CyberActivityClusters, Incidents, Operations, Events, and Processes. Aligns with BFO Occurrent and BFO Process."@en ;
 	.
 
 stonework:CyberActivityCluster
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberActivity ;
-	skos:definition "An analytically-defined grouping of correlated adversarial behaviors, tools, malware, infrastructure, and participants believed to share a common source or campaign thread."@en ;
+	skos:definition "An analytically identified aggregate of cyber activities grouped because available evidence suggests a common source, mechanism, or operational thread."@en ;
 	skos:prefLabel "Cyber Activity Cluster"@en ;
-	skos:scopeNote "Represents the intelligence analyst's working construct before enough is known to declare a Campaign: a cluster of correlated observations attributed (loosely or firmly) to a common adversary source. May evolve into a stonework:Campaign when an objective, timeline, and attribution are sufficiently established. Corresponds to the intended meaning of STIX intrusion-set — the correlated set of activity, not the actor responsible for it. Distinct from stonework:ThreatActorGroup, which is the adversary entity; a CyberActivityCluster is the attributed set of activity linked to that entity."@en ;
+	skos:scopeNote "A CyberActivityCluster is unified by analytic correlation rather than the objective and time period of a Campaign, the unified command or intent of an Operation, the execution sequence of a Process, or the inquiry purpose of an Investigation. It does not require a known objective, responsible Agent, precise boundaries, or a conclusion that the activity is adversarial. It denotes the body of activity believed to be related, not the intelligence artifact recording that judgment; use stonework:Grouping, stonework:Report, or stonework:Assessment for the artifact. Only CyberActivity instances are members through stonework:memberOfActivityCluster and stonework:hasMemberActivity; relate tools, malware, infrastructure, and responsible participants through their specific relationships. The STIX adapter maps its narrower intrusion-set source class to CyberActivityCluster."@en ;
 	.
 
 stonework:CyberEntity
@@ -314,21 +255,6 @@ stonework:CyberTechnique
 	skos:definition "A technique performed within or against cyberspace, encompassing both offensive and defensive cyber operations." ;
 	skos:prefLabel "Cyber Technique" ;
 	skos:scopeNote "Mirrors D3FEND's CyberTechnique class. Subclassed by stonework:AttackTechnique (offensive) and stonework:DefendTechnique (defensive), enabling a single property chain to span both ATT&CK and D3FEND individuals." ;
-	.
-
-stonework:DDoS
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware designed to conduct or participate in distributed denial-of-service attacks against target systems or networks."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "ddos" ;
-	skos:prefLabel "DDoS Malware"@en ;
 	.
 
 stonework:DataAsset
@@ -400,36 +326,6 @@ stonework:Domain
 	skos:prefLabel "Domain"@en ;
 	.
 
-stonework:Downloader
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware whose primary function is to download and execute additional malicious payloads from a remote source."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "downloader" ;
-	skos:prefLabel "Downloader"@en ;
-	.
-
-stonework:Dropper
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that carries and installs one or more secondary payloads onto a target system, often unpacking them from within itself."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "dropper" ;
-	skos:prefLabel "Dropper"@en ;
-	.
-
 stonework:EmailAddress
 	a owl:Class ;
 	rdfs:subClassOf stonework:Identifier ;
@@ -461,21 +357,6 @@ stonework:Event
 	skos:definition "An atomic, observable occurrence in a system, network, or environment that has potential security relevance but has not yet been assessed or declared as an Incident."@en ;
 	skos:prefLabel "Event"@en ;
 	skos:scopeNote "Represents the pre-triage state — a raw log entry, alert, or sensor observation. Distinguished from Incident by the absence of human or automated assessment declaring it significant and adverse. Useful for SIEM, log-based, and threat hunting use cases."@en ;
-	.
-
-stonework:ExploitKit
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "A toolkit that automates exploitation of client-side vulnerabilities to deliver malware, typically via drive-by download from compromised or malicious web pages."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "exploit-kit" ;
-	skos:prefLabel "Exploit Kit"@en ;
 	.
 
 stonework:Feed
@@ -585,9 +466,9 @@ stonework:IPBlock
 stonework:Identifier
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
-	skos:definition "An atomic label, string, or token used to uniquely identify, locate, or reference a cyber entity, resource, or principal."@en ;
+	skos:definition "A first-class representation of a security-relevant identifier value, such as an email address, cryptographic hash, MAC address, phone number, URI, or user-agent string."@en ;
 	skos:prefLabel "Identifier" ;
-	skos:scopeNote "Includes contact identifiers, network locators, accounts, and similar atomic artifacts."@en ;
+	skos:scopeNote "Identifier does not provide the RDF identity of every CyberEntity and does not imply that every CyberEntity has an Identifier. Named RDF resources are identified by their IRIs; identifiers originating in external systems are recorded with dcterms:identifier or stonework:externalId. Use the most specific available subclass, such as EmailAddress, Hash, MACAddress, PhoneNumber, URI, or UserAgent. Instantiate Identifier directly only when the identifier type is unknown or no suitable subclass exists."@en ;
 	.
 
 stonework:Impact
@@ -645,21 +526,6 @@ stonework:InvestigationPlan
 	skos:definition "A Step-decomposed sequence of actions for systematically examining a cyber entity, artifact, or event to determine its nature, extent, or significance."@en ;
 	skos:prefLabel "Investigation Plan" ;
 	skos:scopeNote "The general assessment-plan counterpart to stonework:Playbook on the production side: where a Playbook's execution changes state in the world, an InvestigationPlan's execution (a stonework:Investigation) produces judgment about something that already exists or happened — typically a stonework:Analysis or stonework:Assessment. stonework:DetectionPlan is a specialized subclass, narrowly scoped to determining whether observed activity constitutes a security-relevant violation; broader analytical work (forensic analysis, malware analysis, vulnerability assessment) is modeled directly as InvestigationPlan."@en ;
-	.
-
-stonework:Keylogger
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that records keystrokes on an infected system to capture credentials, sensitive data, or communications."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "keylogger" ;
-	skos:prefLabel "Keylogger"@en ;
 	.
 
 stonework:LessThan
@@ -751,21 +617,6 @@ stonework:MalwareSample
 	skos:definition "A discrete, observable instance of malicious code — a specific binary, script, or executable artifact that can be identified by cryptographic hash, file characteristics, or behavioral signature."@en ;
 	skos:prefLabel "Malware Sample"@en ;
 	skos:scopeNote "Represents a concrete sample rather than an abstract family concept. A single MalwareFamily may have thousands of associated samples across versions, packers, and dropper variants. Samples are linked to their family via stonework:memberOfFamily and to their file representation via stonework:hasHash or a direct stonework:File association. Properties such as stonework:drops, stonework:downloads, and stonework:communicatesWith describe the behavior of this specific sample, not the family in general."@en ;
-	.
-
-stonework:MalwareType
-	a owl:Class ;
-	rdfs:subClassOf
-		stonework:Category ,
-		[
-			a owl:Restriction ;
-			owl:onProperty skos:inScheme ;
-			owl:hasValue stonework:malwareTypeScheme ;
-		]
-		;
-	skos:definition "A behavioral or functional classification of malware, describing what the malware does rather than what it is. Corresponds to the STIX 2.1 malware-type open vocabulary."@en ;
-	skos:prefLabel "Malware Type"@en ;
-	skos:scopeNote "Instances (e.g., stonework:Ransomware, stonework:Trojan) are assigned via stonework:categorizedBy. A malware object may carry multiple types. The skos:notation value gives the STIX 2.1 wire-format string for aspirational round-trip export."@en ;
 	.
 
 stonework:MetricObservation
@@ -988,24 +839,9 @@ stonework:Publication
 stonework:QualifiedAssertion
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
-	skos:definition "A record that qualifies an assertion or relationship with provenance, time, and other context that cannot be represented by an unqualified binary property or scalar value."@en ;
+	skos:definition "A first-class record of an assertion or relationship that may carry provenance, time, and other context not represented by an unqualified binary property or scalar value."@en ;
 	skos:prefLabel "Qualified Assertion"@en ;
-	skos:scopeNote "Subclasses provide the assertion-specific structure. Use direct properties as query-friendly projections when their loss of source, time, or relationship context is acceptable."@en ;
-	.
-
-stonework:Ransomware
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that encrypts or locks victim data or systems and demands payment for restoration of access."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "ransomware" ;
-	skos:prefLabel "Ransomware"@en ;
+	skos:scopeNote "Use assertionSubject, assertionObject, and assertionRelationType for generic directed relationships; subclasses may provide more specific structure. Use direct properties as query-friendly projections when their loss of source, time, or relationship context is acceptable. Provenance is optional in the baseline interoperability profile and required by the strict SHACL overlay."@en ;
 	.
 
 stonework:Region
@@ -1036,41 +872,11 @@ stonework:RegistryValue
 	skos:prefLabel "Registry Value"@en ;
 	.
 
-stonework:RemoteAccessTrojan
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware providing covert remote control of an infected host, typically including capabilities such as file access, screen capture, keylogging, and command execution."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "remote-access-trojan" ;
-	skos:prefLabel "Remote Access Trojan"@en ;
-	.
-
 stonework:Report
 	a owl:Class ;
 	rdfs:subClassOf stonework:IntelligenceProduct ;
 	skos:definition "A collection of threat intelligence focused on one or more topics, such as a description of a threat actor, malware, or attack technique." ;
 	skos:prefLabel "Report" ;
-	.
-
-stonework:ResourceExploitation
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that abuses the computational resources of an infected host, such as for cryptocurrency mining or proxying network traffic."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "resource-exploitation" ;
-	skos:prefLabel "Resource Exploitation"@en ;
 	.
 
 stonework:Risk
@@ -1090,21 +896,6 @@ stonework:RiskFactor
 	skos:scopeNote "Includes Risk (overall assessed exposure), Impact (magnitude of harm if realized), and Likelihood (probability of occurrence). These are analytical outputs derived from threat and vulnerability data, distinct from the conditions (SecurityCondition) that give rise to them and the countermeasures (Countermeasure) that address them."@en ;
 	.
 
-stonework:RogueSecuritySoftware
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that masquerades as legitimate security software to deceive users into paying for fake threat removal or granting elevated privileges."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "rogue-security-software" ;
-	skos:prefLabel "Rogue Security Software"@en ;
-	.
-
 stonework:Role
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
@@ -1121,42 +912,12 @@ stonework:RoleAssignment
 	skos:scopeNote "Create separate assignments when the same entity plays different roles in different contexts or time intervals. The assignment can infer the context-free stonework:playsRole projection through the declared property chain."@en ;
 	.
 
-stonework:Rootkit
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that conceals itself and other malicious software by subverting operating system or hypervisor mechanisms, typically to maintain privileged persistence."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "rootkit" ;
-	skos:prefLabel "Rootkit"@en ;
-	.
-
 stonework:RuntimeProcess
 	a owl:Class ;
 	rdfs:subClassOf stonework:DigitalArtifact ;
 	skos:definition "A running or terminated process instance on a host, identified by PID, executable path, command line, parent process, and associated user account."@en ;
 	skos:prefLabel "Runtime Process"@en ;
 	skos:scopeNote "Represents low-level OS process objects observed during execution — distinct from stonework:Process (enterprise-level workflows). Mutex objects created by a process are linked as stonework:Mutex individuals. Corresponds to STIX 2.1 Process SCO."@en ;
-	.
-
-stonework:ScreenCapture
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that periodically or continuously captures screenshots of the victim's display and exfiltrates them to an attacker."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "screen-capture" ;
-	skos:prefLabel "Screen Capture"@en ;
 	.
 
 stonework:SecurityActuation
@@ -1226,21 +987,6 @@ stonework:SoftwareBillOfMaterials
 	skos:scopeNote "SoftwareBillOfMaterials is a native STONEWORK class — not a subclass of any STIX domain object, as STIX 2.1 has no SBOM concept. Instances correspond to SBOM documents; format provenance (CycloneDX 1.6, SPDX 2.3, etc.) is expressed via stonework:bomFormat."@en ;
 	.
 
-stonework:Spyware
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that covertly monitors user activity, collects personal or sensitive information, and transmits it to a remote party."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "spyware" ;
-	skos:prefLabel "Spyware"@en ;
-	.
-
 stonework:Step
 	a owl:Class ;
 	rdfs:subClassOf stonework:Behavior ;
@@ -1291,7 +1037,7 @@ stonework:ThreatActorGroup
 	rdfs:subClassOf stonework:ThreatActor ;
 	skos:definition "A collective, organization, or coordinated set of individuals operating with common intent to conduct adversarial cyber activities."@en ;
 	skos:prefLabel "Threat Actor Group"@en ;
-	skos:scopeNote "Covers nation-state units, cybercriminal organizations, hacktivist collectives, and other named adversary groups (e.g., APT29, Lazarus Group). MITRE ATT&CK serializes these as STIX intrusion-set objects; in STONEWORK they are correctly typed as ThreatActorGroup — an adversary entity rather than an activity cluster. Distinguished from stonework:ThreatActorIndividual, which represents a single human actor, and from stonework:CyberActivityCluster, which is the attributed set of activity linked to the group."@en ;
+	skos:scopeNote "Covers nation-state units, cybercriminal organizations, hacktivist collectives, and other named adversary groups. Industry names such as APT20 or APT29 are often used for both a tracked body of activity and the presumed group behind it. Model the activity as a separate stonework:CyberActivityCluster and link it to the ThreatActorGroup with stonework:attributedTo when supported. MITRE ATT&CK serializes tracked Groups as STIX intrusion-set objects; that source representation alone does not establish that the activity cluster and responsible group are the same entity. Distinguished from stonework:ThreatActorIndividual, which represents a single human actor."@en ;
 	.
 
 stonework:ThreatActorIndividual
@@ -1326,41 +1072,11 @@ stonework:Transition
 	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Guard/condition properties for conditional branching (testing a bound Variable's value) are not yet defined — this class currently captures only the structural edge via stonework:fromStep and stonework:toStep."@en ;
 	.
 
-stonework:Trojan
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware disguised as or bundled with legitimate software to deceive users into executing it, enabling a range of malicious payloads."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "trojan" ;
-	skos:prefLabel "Trojan"@en ;
-	.
-
 stonework:URI
 	a owl:Class ;
 	rdfs:subClassOf stonework:Identifier ;
 	skos:definition "Represents a Uniform Resource Identifier conforming to RFC 3986."@en ;
 	skos:prefLabel "URI"@en ;
-	.
-
-stonework:UnknownMalware
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "The malware type has not been determined or cannot be classified into a known category."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "unknown" ;
-	skos:prefLabel "Unknown Malware Type"@en ;
 	.
 
 stonework:UserAccount
@@ -1402,21 +1118,6 @@ stonework:VersionedProduct
 	skos:scopeNote "Each CPE 2.3 entry with a concrete version component maps to a stonework:VersionedProduct individual. Wildcard-version CPEs map to stonework:Product. Related to its abstract product line via stonework:versionOf."@en ;
 	.
 
-stonework:Virus
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware that replicates by inserting copies of itself into other executable files or documents, spreading when those files are executed or opened."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "virus" ;
-	skos:prefLabel "Virus"@en ;
-	.
-
 stonework:Vulnerability
 	a owl:Class ;
 	rdfs:subClassOf stonework:SecurityCondition ;
@@ -1440,51 +1141,6 @@ stonework:Weakness
 	skos:definition "A type of flaw, fault, or design condition in software, hardware, or system architecture that can enable vulnerabilities, reduce security assurance, or increase the likelihood of exploitable behavior." ;
 	skos:prefLabel "Weakness" ;
 	skos:scopeNote "This class provides a semantic representation of weakness types defined in the Common Weakness Enumeration (CWE). It supports hierarchical relationships, abstraction levels, and mappings to related attack patterns, vulnerabilities, and security controls." ;
-	.
-
-stonework:Webshell
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware deployed on a web server that provides remote command execution via HTTP requests, enabling persistent access through the web application layer."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "webshell" ;
-	skos:prefLabel "Webshell"@en ;
-	.
-
-stonework:Wiper
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Malware designed to irreversibly destroy data or render systems inoperable, typically used for sabotage or to obscure attacker activity."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "wiper" ;
-	skos:prefLabel "Wiper"@en ;
-	.
-
-stonework:Worm
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MalwareType
-		;
-	skos:definition "Self-replicating malware that spreads across networks or systems without requiring user interaction or a host file to attach to."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:malwareTypeScheme
-		;
-	skos:notation "worm" ;
-	skos:prefLabel "Worm"@en ;
 	.
 
 stonework:accessesFile
@@ -1683,6 +1339,31 @@ stonework:asNumber
 	rdfs:range xsd:unsignedInt ;
 	skos:definition "The Autonomous System Number (ASN) assigned by IANA."@en ;
 	skos:prefLabel "asNumber"@en ;
+	.
+
+stonework:assertionObject
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:QualifiedAssertion ;
+	skos:definition "Identifies the resource in the object or target position of a qualified assertion."@en ;
+	skos:prefLabel "assertion object"@en ;
+	skos:scopeNote "Range is intentionally unset because framework relationships may target either a CyberEntity, a CyberActivity, or another externally defined resource."@en ;
+	.
+
+stonework:assertionRelationType
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:QualifiedAssertion ;
+	rdfs:range xsd:string ;
+	skos:definition "The source vocabulary's wire-level name for the relation expressed by a qualified assertion."@en ;
+	skos:prefLabel "assertion relation type"@en ;
+	skos:scopeNote "Preserves open relationship vocabularies such as STIX relationship_type strings. A separately materialized object property may provide a query-friendly projection of the same assertion."@en ;
+	.
+
+stonework:assertionSubject
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:QualifiedAssertion ;
+	skos:definition "Identifies the resource in the subject or source position of a qualified assertion."@en ;
+	skos:prefLabel "assertion subject"@en ;
+	skos:scopeNote "Range is intentionally unset because framework relationships may originate from either a CyberEntity, a CyberActivity, or another externally defined resource."@en ;
 	.
 
 stonework:assessmentOf
@@ -2814,6 +2495,15 @@ stonework:hasMember
 	skos:prefLabel "hasMember"@en ;
 	.
 
+stonework:hasMemberActivity
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberActivityCluster ;
+	rdfs:range stonework:CyberActivity ;
+	owl:inverseOf stonework:memberOfActivityCluster ;
+	skos:definition "Relates a CyberActivityCluster to a CyberActivity analytically grouped within it."@en ;
+	skos:prefLabel "hasMemberActivity"@en ;
+	.
+
 stonework:hasMetricObservation
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:CyberEntity ;
@@ -3430,15 +3120,6 @@ stonework:madeBySensor
 	skos:scopeNote "Inspired by SOSA sosa:madeBySensor. Enables queries such as 'which sensor produced this observation?' and 'what has this IDS sensor observed in the last 24 hours?' The producing sensor may also be the created_by_ref identity in the STIX wire format."@en ;
 	.
 
-stonework:malwareTypeScheme
-	a skos:ConceptScheme ;
-	dcterms:isPartOf stonework:categoryScheme ;
-	dcterms:source <https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html> ;
-	dcterms:title "STONEWORK Malware Type Scheme"@en ;
-	skos:definition "The controlled vocabulary of malware behavioral and functional types."@en ;
-	skos:prefLabel "STONEWORK Malware Type Scheme"@en ;
-	.
-
 stonework:manifestsAs
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Threat ;
@@ -3467,6 +3148,15 @@ stonework:memberOf
 	owl:inverseOf stonework:hasMember ;
 	skos:definition "Relates an entity to a Group, Organization, or ThreatActor to which it belongs."@en ;
 	skos:prefLabel "memberOf"@en ;
+	.
+
+stonework:memberOfActivityCluster
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range stonework:CyberActivityCluster ;
+	owl:inverseOf stonework:hasMemberActivity ;
+	skos:definition "Relates a Campaign or other CyberActivity to the CyberActivityCluster that analytically groups it."@en ;
+	skos:prefLabel "memberOfActivityCluster"@en ;
 	.
 
 stonework:memberOfFamily
@@ -4707,6 +4397,24 @@ stonework:usesDetectionRule
 	skos:definition "Relates a DetectionPlan or Step to a DetectionRule that it evaluates or invokes."@en ;
 	skos:prefLabel "usesDetectionRule"@en ;
 	skos:scopeNote "Use stonework:usesRule for the deployment-side relationship between a Sensor and a DetectionRule."@en ;
+	.
+
+stonework:usesInfrastructure
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:uses ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:Malware
+			stonework:Product
+			stonework:CyberActivity
+			stonework:Agent
+		) ;
+	] ;
+	rdfs:range stonework:Infrastructure ;
+	skos:definition "Relates malware, a product, cyber activity, or agent to infrastructure it uses."@en ;
+	skos:prefLabel "usesInfrastructure"@en ;
+	skos:scopeNote "Use for an operational dependency on infrastructure, such as malware using command-and-control infrastructure, a CyberActivityCluster or Campaign using hosting infrastructure, a product using a supporting service, or an Agent using infrastructure in an operation. This relationship asserts use, not ownership, compromise, or attribution."@en ;
 	.
 
 stonework:usesRule
