@@ -20,6 +20,10 @@ frameworks:bfo
 	owl:versionInfo "0.1.0" ;
 	.
 
+stonework:Actuator
+	rdfs:subClassOf bfo:0000040 ;
+	.
+
 stonework:Agent
 	rdfs:subClassOf bfo:0000040 ;
 	.
@@ -61,6 +65,14 @@ stonework:IntelligenceProduct
 
 stonework:Likelihood
 	rdfs:subClassOf bfo:0000019 ;
+	.
+
+stonework:Location
+	rdfs:subClassOf bfo:0000031 ;
+	.
+
+stonework:PhysicalArtifact
+	rdfs:subClassOf bfo:0000040 ;
 	.
 
 stonework:Process

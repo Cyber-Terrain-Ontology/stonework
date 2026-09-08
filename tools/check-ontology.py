@@ -261,7 +261,7 @@ def main() -> int:
         D3FEND + "OperationalActivityPlan": {STONEWORK + "Behavior"},
         D3FEND + "Organization": {STONEWORK + "Organization"},
         D3FEND + "Person": {STONEWORK + "Person"},
-        D3FEND + "PhysicalArtifact": {STONEWORK + "CyberEntity"},
+        D3FEND + "PhysicalArtifact": {STONEWORK + "PhysicalArtifact"},
         D3FEND + "Process": {STONEWORK + "RuntimeProcess"},
         D3FEND + "Procedure": {STONEWORK + "Procedure"},
         D3FEND + "Sensor": {STONEWORK + "Sensor"},
