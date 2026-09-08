@@ -5,6 +5,11 @@ happened), and the *scientific-method* bridge between them — predicted outcome
 tested against actual ones. Worked example: ATT&CK T1003.001 (OS Credential
 Dumping: LSASS Memory), encoded at `examples/operation-plan-t1003-001.ttl`.
 
+For where this deep machinery sits in the larger picture — the
+Tactic → Technique → Procedure → Plan → Execution gradient, and when the
+lightweight `Process executionOf Technique` path is enough — see
+[`technique-modeling.md`](technique-modeling.md).
+
 ---
 
 ## 1. The parti
