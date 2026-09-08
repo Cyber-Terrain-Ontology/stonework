@@ -1,0 +1,291 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ex: <https://cyberterrain.org/ns/stonework/examples/follow-the-money#> .
+@prefix fatf: <https://cyberterrain.org/ns/frameworks/fatf#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:acct-exchange
+	a stonework:FinancialAccount ;
+	skos:prefLabel "Hosted exchange account"@en ;
+	stonework:accountCurrency
+		stonework:currencyGBP ,
+		ex:xmr
+		;
+	stonework:accountOf ex:actor ;
+	stonework:categorizedBy stonework:financialAccountTypeExchangeHostedWallet ;
+	stonework:heldAt ex:exchange ;
+	.
+
+ex:acct-mule-bank
+	a stonework:FinancialAccount ;
+	skos:prefLabel "Mule checking account"@en ;
+	stonework:accountOf ex:mule ;
+	stonework:categorizedBy stonework:financialAccountTypeChecking ;
+	stonework:hasIdentifier ex:iban-mule ;
+	stonework:heldAt ex:mule-bank ;
+	.
+
+ex:actor
+	a stonework:ThreatActorGroup ;
+	skos:prefLabel "Example ransomware crew"@en ;
+	.
+
+ex:addr-mixed
+	a stonework:CryptoAddress ;
+	skos:prefLabel "Post-mix BTC address"@en ;
+	stonework:walletAddress "bc1qexamplemixed000000000000000000000000" ;
+	.
+
+ex:addr-ransom
+	a stonework:CryptoAddress ;
+	skos:prefLabel "Ransom BTC address"@en ;
+	stonework:walletAddress "bc1qexampleransom000000000000000000000000" ;
+	.
+
+ex:addr-victim
+	a stonework:CryptoAddress ;
+	skos:prefLabel "Victim BTC address"@en ;
+	stonework:walletAddress "bc1qexamplevictim00000000000000000000000" ;
+	.
+
+ex:addr-xmr
+	a stonework:CryptoAddress ;
+	skos:prefLabel "Actor XMR address"@en ;
+	stonework:walletAddress "4Example00000000000000000000000000000000000000000000000000000000000000000000000000000000000000" ;
+	.
+
+ex:amt-cashout
+	a stonework:MonetaryAmount ;
+	skos:prefLabel "Cash-out amount (GBP)"@en ;
+	stonework:amount "588000.00"^^xsd:decimal ;
+	stonework:currency stonework:currencyGBP ;
+	.
+
+ex:amt-chain-hop-input
+	a stonework:MonetaryAmount ;
+	skos:prefLabel "Chain-hop input amount (BTC)"@en ;
+	stonework:amount "11.75"^^xsd:decimal ;
+	stonework:currency ex:btc ;
+	.
+
+ex:amt-chain-hop-output
+	a stonework:MonetaryAmount ;
+	skos:prefLabel "Chain-hop output amount (XMR)"@en ;
+	stonework:amount "155.20"^^xsd:decimal ;
+	stonework:currency ex:xmr ;
+	.
+
+ex:amt-ransom
+	a stonework:MonetaryAmount ;
+	skos:prefLabel "Ransom amount (BTC)"@en ;
+	stonework:amount "12.5"^^xsd:decimal ;
+	stonework:currency ex:btc ;
+	stonework:hasMetricObservation ex:obs-ransom-usd ;
+	.
+
+ex:btc
+	a stonework:CryptoAsset ;
+	skos:prefLabel "Bitcoin"@en ;
+	stonework:blockchainNetwork "Bitcoin" ;
+	.
+
+ex:cluster-launder
+	a stonework:CyberActivityCluster ;
+	skos:definition "The correlated set of transfers that moved the ransom proceeds from the collection wallet to a fiat cash-out."@en ;
+	skos:prefLabel "Ransom-proceeds laundering chain"@en ;
+	stonework:attributedTo ex:actor ;
+	stonework:hasBehavior
+		fatf:ChainHopping ,
+		fatf:CryptoMixing ,
+		fatf:Layering ,
+		fatf:MoneyMuleNetwork
+		;
+	stonework:hasMemberActivity
+		ex:txn-cashout ,
+		ex:txn-chain-hop ,
+		ex:txn-exchange-deposit ,
+		ex:txn-mix ,
+		ex:txn-ransom-payment
+		;
+	.
+
+ex:exchange
+	a stonework:FinancialInstitution ;
+	skos:prefLabel "Example non-compliant exchange"@en ;
+	stonework:categorizedBy stonework:financialInstitutionTypeVirtualAssetServiceProvider ;
+	.
+
+ex:iban-mule
+	a stonework:IBAN ;
+	skos:prefLabel "Mule account IBAN"@en ;
+	stonework:iban "GB29EXMP60161331926819" ;
+	.
+
+ex:incident-ransom
+	a stonework:Incident ;
+	skos:definition "A ransomware incident at the victim organization, resolved by paying the demanded ransom."@en ;
+	skos:prefLabel "Example ransomware incident"@en ;
+	stonework:attributedTo ex:actor ;
+	.
+
+ex:login-exchange
+	a stonework:UserAccount ;
+	skos:prefLabel "Exchange login (mule KYC)"@en ;
+	stonework:accountName "mule_kyc_01" ;
+	stonework:accountOf ex:mule ;
+	stonework:controls ex:acct-exchange ;
+	.
+
+ex:mule
+	a stonework:Person ;
+	skos:prefLabel "Example money mule"@en ;
+	.
+
+ex:mule-bank
+	a stonework:FinancialInstitution ;
+	skos:prefLabel "Example retail bank"@en ;
+	stonework:bic "EXMPGB2LXXX" ;
+	stonework:categorizedBy stonework:financialInstitutionTypeCommercialBank ;
+	stonework:lei "213800EXAMPLE0000073" ;
+	.
+
+ex:obs-ransom-usd
+	a stonework:MetricObservation ;
+	skos:definition "USD-equivalent value of the 12.5 BTC ransom amount at the time of payment, per the cited rate source. Held as a time-qualified observation on the otherwise timeless MonetaryAmount."@en ;
+	skos:prefLabel "Ransom value in USD at payment time"@en ;
+	stonework:hasProvenance ex:rate-source-btc-usd ;
+	stonework:metricFor ex:amt-ransom ;
+	stonework:metricType stonework:metricNormalizedValue ;
+	stonework:metricValue "812500"^^xsd:decimal ;
+	stonework:observedAt "2026-05-04T09:41:00Z"^^xsd:dateTime ;
+	stonework:valuationCurrency stonework:currencyUSD ;
+	.
+
+ex:rate-source-btc-usd
+	a stonework:Publication ;
+	dcterms:source <https://www.coindesk.com/indices/xbx/> ;
+	skos:definition "The concrete Bitcoin-to-US-dollar exchange-rate source cited for the example's payment-time normalized valuation."@en ;
+	skos:prefLabel "CoinDesk Bitcoin Price Index rate source"@en ;
+	.
+
+ex:txn-cashout
+	a stonework:FinancialTransaction ;
+	skos:prefLabel "Wire cash-out to mule account"@en ;
+	stonework:attributedTo ex:mule ;
+	stonework:beneficiaryAccount ex:acct-mule-bank ;
+	stonework:categorizedBy stonework:transactionTypeWithdrawal ;
+	stonework:endedAtTime "2026-05-08T15:00:00Z"^^xsd:dateTime ;
+	stonework:hasBehavior fatf:MoneyMuleNetwork ;
+	stonework:hasMonetaryValue ex:amt-cashout ;
+	stonework:originatorAccount ex:acct-exchange ;
+	stonework:startedAtTime "2026-05-08T14:30:00Z"^^xsd:dateTime ;
+	stonework:usesInstrument stonework:paymentInstrumentWireTransfer ;
+	.
+
+ex:txn-chain-hop
+	a stonework:FinancialTransaction ;
+	skos:prefLabel "Swap BTC to XMR"@en ;
+	stonework:attributedTo ex:actor ;
+	stonework:beneficiaryAccount ex:wallet-xmr ;
+	stonework:beneficiaryMonetaryValue ex:amt-chain-hop-output ;
+	stonework:categorizedBy stonework:transactionTypeCurrencyExchange ;
+	stonework:endedAtTime "2026-05-05T04:03:00Z"^^xsd:dateTime ;
+	stonework:hasBehavior fatf:ChainHopping ;
+	stonework:originatorAccount ex:wallet-mixed ;
+	stonework:originatorMonetaryValue ex:amt-chain-hop-input ;
+	stonework:startedAtTime "2026-05-05T03:55:00Z"^^xsd:dateTime ;
+	stonework:usesInstrument stonework:paymentInstrumentOnChainTransfer ;
+	.
+
+ex:txn-exchange-deposit
+	a stonework:FinancialTransaction ;
+	skos:prefLabel "Deposit XMR to exchange"@en ;
+	stonework:attributedTo ex:actor ;
+	stonework:beneficiaryAccount ex:acct-exchange ;
+	stonework:categorizedBy stonework:transactionTypeDeposit ;
+	stonework:endedAtTime "2026-05-06T11:20:00Z"^^xsd:dateTime ;
+	stonework:originatorAccount ex:wallet-xmr ;
+	stonework:startedAtTime "2026-05-06T11:12:00Z"^^xsd:dateTime ;
+	stonework:usesInstrument stonework:paymentInstrumentOnChainTransfer ;
+	.
+
+ex:txn-mix
+	a stonework:FinancialTransaction ;
+	skos:prefLabel "Send through mixer"@en ;
+	stonework:attributedTo ex:actor ;
+	stonework:beneficiaryAccount ex:wallet-mixed ;
+	stonework:categorizedBy stonework:transactionTypeTransfer ;
+	stonework:endedAtTime "2026-05-05T02:15:00Z"^^xsd:dateTime ;
+	stonework:hasBehavior fatf:CryptoMixing ;
+	stonework:originatorAccount ex:wallet-ransom ;
+	stonework:startedAtTime "2026-05-05T01:50:00Z"^^xsd:dateTime ;
+	stonework:usesInstrument stonework:paymentInstrumentOnChainTransfer ;
+	.
+
+ex:txn-ransom-payment
+	a stonework:FinancialTransaction ;
+	skos:prefLabel "Ransom payment"@en ;
+	stonework:attributedTo ex:victim ;
+	stonework:beneficiaryAccount ex:wallet-ransom ;
+	stonework:categorizedBy stonework:transactionTypePayment ;
+	stonework:endedAtTime "2026-05-04T09:41:00Z"^^xsd:dateTime ;
+	stonework:hasMonetaryValue ex:amt-ransom ;
+	stonework:originatorAccount ex:wallet-victim ;
+	stonework:respondsToActivity ex:incident-ransom ;
+	stonework:startedAtTime "2026-05-04T09:38:00Z"^^xsd:dateTime ;
+	stonework:transactionAmount "12.5"^^xsd:decimal ;
+	stonework:transactionCurrency ex:btc ;
+	stonework:transactionReference "0xexampletxhashransom" ;
+	stonework:usesInstrument stonework:paymentInstrumentOnChainTransfer ;
+	.
+
+ex:victim
+	a stonework:Organization ;
+	skos:prefLabel "Example victim company"@en ;
+	.
+
+ex:wallet-mixed
+	a stonework:FinancialAccount ;
+	skos:prefLabel "Actor post-mix BTC wallet"@en ;
+	stonework:accountCurrency ex:btc ;
+	stonework:accountOf ex:actor ;
+	stonework:categorizedBy stonework:financialAccountTypeSelfCustodyWallet ;
+	stonework:hasIdentifier ex:addr-mixed ;
+	.
+
+ex:wallet-ransom
+	a stonework:FinancialAccount ;
+	skos:prefLabel "Actor ransom-collection wallet"@en ;
+	stonework:accountCurrency ex:btc ;
+	stonework:accountOf ex:actor ;
+	stonework:categorizedBy stonework:financialAccountTypeSelfCustodyWallet ;
+	stonework:hasIdentifier ex:addr-ransom ;
+	.
+
+ex:wallet-victim
+	a stonework:FinancialAccount ;
+	skos:prefLabel "Victim BTC wallet"@en ;
+	stonework:accountCurrency ex:btc ;
+	stonework:accountOf ex:victim ;
+	stonework:categorizedBy stonework:financialAccountTypeSelfCustodyWallet ;
+	stonework:hasIdentifier ex:addr-victim ;
+	.
+
+ex:wallet-xmr
+	a stonework:FinancialAccount ;
+	skos:prefLabel "Actor XMR wallet"@en ;
+	stonework:accountCurrency ex:xmr ;
+	stonework:accountOf ex:actor ;
+	stonework:categorizedBy stonework:financialAccountTypeSelfCustodyWallet ;
+	stonework:hasIdentifier ex:addr-xmr ;
+	.
+
+ex:xmr
+	a stonework:CryptoAsset ;
+	skos:prefLabel "Monero"@en ;
+	stonework:blockchainNetwork "Monero" ;
+	.

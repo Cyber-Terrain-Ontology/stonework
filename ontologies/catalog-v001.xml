@@ -2,7 +2,7 @@
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
         <uri name="https://cyberterrain.org/ns/stonework#" uri="stonework.ttl"/>
-        <uri name="https://cyberterrain.org/ns/stonework/0.6.2" uri="stonework.ttl"/>
+        <uri name="https://cyberterrain.org/ns/stonework/0.7.0" uri="stonework.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/categories#" uri="categories.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/categories/0.1.0" uri="categories.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/full" uri="profiles/stonework-full.ttl"/>
@@ -29,6 +29,10 @@
         <uri name="https://cyberterrain.org/ns/frameworks/dns/0.1.0" uri="frameworks/dns.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/email" uri="frameworks/email.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/email/0.1.0" uri="frameworks/email.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/emb3d" uri="frameworks/emb3d.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/emb3d/0.1.0" uri="frameworks/emb3d.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/fatf" uri="frameworks/fatf.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/fatf/0.1.0" uri="frameworks/fatf.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/killchain" uri="frameworks/killchain.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/killchain/0.1.0" uri="frameworks/killchain.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/nist" uri="frameworks/nist.ttl"/>

@@ -1,6 +1,9 @@
 # Build tools (download with: bash tools/download-rdf-toolkit.sh)
 tools/rdf-toolkit.jar
 
+# Build output (bash tools/build-merged.sh)
+/build/
+
 # Protégé artifacts
 ontologies/catalog-backup-*.xml
 # catalog-v*.xml
