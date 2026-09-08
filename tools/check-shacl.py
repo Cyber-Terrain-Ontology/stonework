@@ -17,6 +17,8 @@ JAVA_COMMAND = [
 ]
 BASELINE_SHAPES = ROOT / "ontologies" / "shapes" / "stonework-shapes.ttl"
 STRICT_SHAPES = ROOT / "ontologies" / "shapes" / "stonework-strict-shapes.ttl"
+FIXTURES = ROOT / "tests" / "fixtures"
+FINANCIAL_EXAMPLE = ROOT / "examples" / "financial-follow-the-money.ttl"
 SCHEMAS = [
     str(ROOT / "ontologies" / "stonework.ttl"),
     str(ROOT / "ontologies" / "categories.ttl"),
@@ -24,14 +26,15 @@ SCHEMAS = [
 
 
 def validate(
-    fixture: str, shapes: Path = BASELINE_SHAPES
+    data: str | Path, shapes: Path = BASELINE_SHAPES
 ) -> subprocess.CompletedProcess[str]:
+    data_path = data if isinstance(data, Path) else FIXTURES / data
     return subprocess.run(
         [
             *JAVA_COMMAND,
             str(shapes),
             *SCHEMAS,
-            str(ROOT / "tests" / "fixtures" / fixture),
+            str(data_path),
         ],
         capture_output=True,
         text=True,
@@ -57,12 +60,27 @@ def main() -> int:
         )
         return 1
 
+    valid_financial = validate("shacl-valid-financial.ttl")
+    if valid_financial.returncode:
+        print("Conforming financial SHACL fixture was rejected:", file=sys.stderr)
+        print(valid_financial.stderr or valid_financial.stdout, file=sys.stderr)
+        return 1
+
+    financial_example = validate(FINANCIAL_EXAMPLE)
+    if financial_example.returncode:
+        print("Financial worked example failed baseline SHACL:", file=sys.stderr)
+        print(financial_example.stderr or financial_example.stdout, file=sys.stderr)
+        return 1
+
     invalid_fixtures = (
         "shacl-invalid.ttl",
         "shacl-invalid-ordering.ttl",
         "shacl-invalid-actuator.ttl",
         "shacl-invalid-actuation-target.ttl",
         "shacl-invalid-multiple-actuators.ttl",
+        "shacl-invalid-monetary-amount.ttl",
+        "shacl-invalid-normalized-valuation.ttl",
+        "shacl-invalid-currency-exchange.ttl",
     )
     for fixture in invalid_fixtures:
         invalid = validate(fixture)
@@ -79,6 +97,27 @@ def main() -> int:
     if strict_valid.returncode:
         print("Conforming fixture was rejected by the strict SHACL overlay:", file=sys.stderr)
         print(strict_valid.stderr or strict_valid.stdout, file=sys.stderr)
+        return 1
+
+    strict_financial = validate("shacl-valid-financial.ttl", STRICT_SHAPES)
+    if strict_financial.returncode:
+        print(
+            "Conforming financial fixture was rejected by the strict SHACL overlay:",
+            file=sys.stderr,
+        )
+        print(strict_financial.stderr or strict_financial.stdout, file=sys.stderr)
+        return 1
+
+    strict_financial_example = validate(FINANCIAL_EXAMPLE, STRICT_SHAPES)
+    if strict_financial_example.returncode:
+        print(
+            "Financial worked example failed the strict provenance profile:",
+            file=sys.stderr,
+        )
+        print(
+            strict_financial_example.stderr or strict_financial_example.stdout,
+            file=sys.stderr,
+        )
         return 1
 
     strict_external_relationship = validate(

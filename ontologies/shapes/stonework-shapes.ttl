@@ -59,6 +59,37 @@ stonework:ConfidenceShape
 	sh:targetSubjectsOf stonework:confidence ;
 	.
 
+stonework:CurrencyExchangeTransactionShape
+	a sh:NodeShape ;
+	sh:or (
+		[
+			sh:not [
+				sh:property [
+					sh:hasValue stonework:transactionTypeCurrencyExchange ;
+					sh:path stonework:categorizedBy ;
+				] ;
+			] ;
+		]
+		[
+			sh:property
+				[
+					sh:class stonework:MonetaryAmount ;
+					sh:message "A currency-exchange transaction must identify at least one beneficiary output monetary value."@en ;
+					sh:minCount "1"^^xsd:integer ;
+					sh:path stonework:beneficiaryMonetaryValue ;
+				] ,
+				[
+					sh:class stonework:MonetaryAmount ;
+					sh:message "A currency-exchange transaction must identify at least one originator input monetary value."@en ;
+					sh:minCount "1"^^xsd:integer ;
+					sh:path stonework:originatorMonetaryValue ;
+				]
+				;
+		]
+	) ;
+	sh:targetClass stonework:FinancialTransaction ;
+	.
+
 stonework:CvssBaseScoreShape
 	a sh:NodeShape ;
 	sh:property [
@@ -196,6 +227,60 @@ stonework:MetricObservationShape
 			sh:path stonework:metricValue ;
 		]
 		;
+	sh:targetClass stonework:MetricObservation ;
+	.
+
+stonework:MonetaryAmountShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:Currency ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A MonetaryAmount must identify exactly one Currency."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:currency ;
+		] ,
+		[
+			sh:datatype xsd:decimal ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A MonetaryAmount must identify exactly one decimal amount."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:amount ;
+		]
+		;
+	sh:targetClass stonework:MonetaryAmount ;
+	.
+
+stonework:NormalizedValuationShape
+	a sh:NodeShape ;
+	sh:or (
+		[
+			sh:not [
+				sh:property [
+					sh:hasValue stonework:metricNormalizedValue ;
+					sh:path stonework:metricType ;
+				] ;
+			] ;
+		]
+		[
+			sh:property
+				[
+					sh:class stonework:Currency ;
+					sh:maxCount "1"^^xsd:integer ;
+					sh:message "A normalized monetary valuation must identify exactly one valuationCurrency."@en ;
+					sh:minCount "1"^^xsd:integer ;
+					sh:path stonework:valuationCurrency ;
+				] ,
+				[
+					sh:datatype xsd:decimal ;
+					sh:maxCount "1"^^xsd:integer ;
+					sh:message "A normalized monetary valuation must record exactly one decimal metricValue."@en ;
+					sh:minCount "1"^^xsd:integer ;
+					sh:path stonework:metricValue ;
+				]
+				;
+		]
+	) ;
 	sh:targetClass stonework:MetricObservation ;
 	.
 

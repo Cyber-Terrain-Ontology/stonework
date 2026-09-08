@@ -148,7 +148,7 @@ d3f:Person
 	.
 
 d3f:PhysicalArtifact
-	rdfs:subClassOf stonework:CyberEntity ;
+	rdfs:subClassOf stonework:PhysicalArtifact ;
 	.
 
 d3f:Procedure
