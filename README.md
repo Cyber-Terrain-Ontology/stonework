@@ -2,7 +2,7 @@
 
 **STONEWORK** *(Semantic Threat Ontology for Next-generation Extensions, Workflows, Objects, Relationships, and Knowledge)* **is an OWL 2 cyber ontology for reasoning across threats, weaknesses, controls, assets, and evidence.**
 
-STONEWORK provides a shared semantic layer for threats, weaknesses, defenses, assets, events, observables, financial activity, and evidence-bearing relationships. It is designed to connect operational CTI, defensive engineering, cyber-physical systems, and risk/control evidence without making any single source framework the center of the model.
+The ontology provides a shared semantic layer for threats, weaknesses, defenses, assets, events, observables, financial activity, and evidence-bearing relationships. It is designed to connect operational CTI, defensive engineering, cyber-physical systems, and risk/control evidence without making any single source framework the center of the model.
 
 STONEWORK's goals are to:
 
@@ -10,6 +10,8 @@ STONEWORK's goals are to:
 - align source frameworks as composable peer graphs rather than copying or replacing them;
 - support cross-framework queries that connect vulnerabilities, weaknesses, attack patterns, actors, assets, events, and controls;
 - give AI-assisted analysis a typed, provenance-aware knowledge model that can be extended for local missions and data sources.
+
+> STONEWORK is a candidate ontology for the **[Cyber Ontology Foundry](https://ncor-network.org/docs/research/cyber-ontology-foundry)**, announced at STIDS 2026.
 
 ---
 
@@ -40,8 +42,6 @@ STONEWORK provides its own stable namespace and core model, then composes with c
 [STONES](https://github.com/Cyber-Terrain-Ontology/stones) can be used as STONEWORK's extensible STIX 2.1 framework adapter when faithful STIX interchange is required. STONEWORK is not defined as an extension of STONES; STONES, ATT&CK, D3FEND, EMB3D, CWE, NIST SP 800-53, CIS Critical Controls, OCSF, UCO, FATF, and other framework modules are peer vocabularies that can be loaded alongside STONEWORK.
 
 STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or CIS.
-
-> STONEWORK is a candidate ontology for the **[Cyber Ontology Foundry](https://ncor-network.org/docs/research/cyber-ontology-foundry)**, announced at STIDS 2026.
 
 ---
 
