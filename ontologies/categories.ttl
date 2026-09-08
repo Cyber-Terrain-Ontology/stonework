@@ -165,6 +165,34 @@ stonework:FalsePositiveRate
 	skos:prefLabel "False Positive Rate"@en ;
 	.
 
+stonework:FinancialAccountType
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:financialAccountTypeScheme ;
+		]
+		;
+	skos:definition "A classification of a financial account by the kind of value custody or service it represents."@en ;
+	skos:prefLabel "Financial Account Type"@en ;
+	.
+
+stonework:FinancialInstitutionType
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:financialInstitutionTypeScheme ;
+		]
+		;
+	skos:definition "A classification of a financial institution by its regulatory form and the service it provides."@en ;
+	skos:prefLabel "Financial Institution Type"@en ;
+	.
+
 stonework:HypothesisStatus
 	a owl:Class ;
 	rdfs:subClassOf
@@ -338,6 +366,20 @@ stonework:Motivation
 	skos:definition "The reason or driving force behind an adversary's decision to conduct an attack or operation."@en ;
 	skos:prefLabel "Motivation"@en ;
 	skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor, Campaign, or Operation individuals. Named individuals cover the STIX 2.1 attack-motivation open vocabulary. Custom motivations may be added as additional individuals."@en ;
+	.
+
+stonework:PaymentInstrument
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:paymentInstrumentScheme ;
+		]
+		;
+	skos:definition "A classification of the instrument or rail used to move value in a financial transaction."@en ;
+	skos:prefLabel "Payment Instrument"@en ;
 	.
 
 stonework:ProductType
@@ -548,6 +590,20 @@ stonework:ThreatActorType
 	skos:scopeNote "Applied via stonework:categorizedBy to ThreatActor individuals. A threat actor may have multiple types. Aligns with the STIX 2.1 threat-actor-type open vocabulary."@en ;
 	.
 
+stonework:TransactionType
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:transactionTypeScheme ;
+		]
+		;
+	skos:definition "A classification of a financial transaction by the kind of movement it represents."@en ;
+	skos:prefLabel "Transaction Type"@en ;
+	.
+
 stonework:Trojan
 	a
 		owl:NamedIndividual ,
@@ -706,6 +762,102 @@ stonework:accountTypeService
 	skos:prefLabel "Service"@en ;
 	.
 
+stonework:currencyAED
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:Currency
+		;
+	skos:inScheme stonework:fiatCurrencyScheme ;
+	skos:notation "AED" ;
+	skos:prefLabel "UAE Dirham"@en ;
+	stonework:minorUnitDigits "2"^^xsd:nonNegativeInteger ;
+	.
+
+stonework:currencyCHF
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:Currency
+		;
+	skos:inScheme stonework:fiatCurrencyScheme ;
+	skos:notation "CHF" ;
+	skos:prefLabel "Swiss Franc"@en ;
+	stonework:minorUnitDigits "2"^^xsd:nonNegativeInteger ;
+	.
+
+stonework:currencyCNY
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:Currency
+		;
+	skos:inScheme stonework:fiatCurrencyScheme ;
+	skos:notation "CNY" ;
+	skos:prefLabel "Chinese Yuan"@en ;
+	stonework:minorUnitDigits "2"^^xsd:nonNegativeInteger ;
+	.
+
+stonework:currencyEUR
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:Currency
+		;
+	skos:inScheme stonework:fiatCurrencyScheme ;
+	skos:notation "EUR" ;
+	skos:prefLabel "Euro"@en ;
+	stonework:minorUnitDigits "2"^^xsd:nonNegativeInteger ;
+	.
+
+stonework:currencyGBP
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:Currency
+		;
+	skos:inScheme stonework:fiatCurrencyScheme ;
+	skos:notation "GBP" ;
+	skos:prefLabel "Pound Sterling"@en ;
+	stonework:minorUnitDigits "2"^^xsd:nonNegativeInteger ;
+	.
+
+stonework:currencyJPY
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:Currency
+		;
+	skos:inScheme stonework:fiatCurrencyScheme ;
+	skos:notation "JPY" ;
+	skos:prefLabel "Japanese Yen"@en ;
+	stonework:minorUnitDigits "0"^^xsd:nonNegativeInteger ;
+	.
+
+stonework:currencyRUB
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:Currency
+		;
+	skos:inScheme stonework:fiatCurrencyScheme ;
+	skos:notation "RUB" ;
+	skos:prefLabel "Russian Ruble"@en ;
+	stonework:minorUnitDigits "2"^^xsd:nonNegativeInteger ;
+	.
+
+stonework:currencyUSD
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:Currency
+		;
+	skos:inScheme stonework:fiatCurrencyScheme ;
+	skos:notation "USD" ;
+	skos:prefLabel "US Dollar"@en ;
+	stonework:minorUnitDigits "2"^^xsd:nonNegativeInteger ;
+	.
+
 stonework:evidence
 	a
 		owl:NamedIndividual ,
@@ -769,6 +921,271 @@ stonework:falsePositiveRateScheme
 	dcterms:title "STONEWORK False Positive Rate Scheme"@en ;
 	skos:definition "The ordinal controlled vocabulary of expected detection-rule false-positive frequency."@en ;
 	skos:prefLabel "STONEWORK False Positive Rate Scheme"@en ;
+	.
+
+stonework:fiatCurrencyScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:source <https://www.iso.org/iso-4217-currency-codes.html> ;
+	dcterms:title "STONEWORK Fiat Currency Scheme"@en ;
+	skos:definition "The controlled vocabulary of fiat currencies, identified by their ISO 4217 alphabetic codes. Members are stonework:Currency individuals; only currencies in active use by consuming graphs need be materialized."@en ;
+	skos:prefLabel "STONEWORK Fiat Currency Scheme"@en ;
+	.
+
+stonework:financialAccountTypeBrokerage
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialAccountType
+		;
+	skos:definition "An account holding securities or other investment assets on behalf of the accountholder."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialAccountTypeScheme
+		;
+	skos:notation "brokerage" ;
+	skos:prefLabel "Brokerage Account"@en ;
+	.
+
+stonework:financialAccountTypeChecking
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialAccountType
+		;
+	skos:definition "A transactional deposit account at a bank or credit union, used for routine payments and withdrawals."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialAccountTypeScheme
+		;
+	skos:notation "checking" ;
+	skos:prefLabel "Checking Account"@en ;
+	.
+
+stonework:financialAccountTypeCorrespondent
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialAccountType
+		;
+	skos:definition "An account one financial institution holds at another to settle cross-border or cross-institution payments on behalf of its customers."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialAccountTypeScheme
+		;
+	skos:notation "correspondent" ;
+	skos:prefLabel "Correspondent Account"@en ;
+	.
+
+stonework:financialAccountTypeExchangeHostedWallet
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialAccountType
+		;
+	skos:definition "A custodial crypto-asset balance held for a customer by an exchange or virtual asset service provider, controlled through the provider rather than by an on-chain key the customer holds."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialAccountTypeScheme
+		;
+	skos:notation "exchange-hosted-wallet" ;
+	skos:prefLabel "Exchange-Hosted Wallet"@en ;
+	.
+
+stonework:financialAccountTypeMerchantStoredValue
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialAccountType
+		;
+	skos:definition "A stored-value balance held with a non-financial merchant or platform, such as gift-card credit, marketplace store credit, or in-platform currency redeemable for goods."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialAccountTypeScheme
+		;
+	skos:notation "merchant-stored-value" ;
+	skos:prefLabel "Merchant Stored Value"@en ;
+	.
+
+stonework:financialAccountTypePaymentServiceAccount
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialAccountType
+		;
+	skos:definition "An account with a payment service provider or e-money institution, such as a digital wallet or peer-to-peer payment balance."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialAccountTypeScheme
+		;
+	skos:notation "payment-service-account" ;
+	skos:prefLabel "Payment Service Account"@en ;
+	.
+
+stonework:financialAccountTypePrepaidCard
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialAccountType
+		;
+	skos:definition "A stored-value balance accessed through a prepaid or reloadable payment card, which may be issued without full identity verification."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialAccountTypeScheme
+		;
+	skos:notation "prepaid-card" ;
+	skos:prefLabel "Prepaid Card"@en ;
+	.
+
+stonework:financialAccountTypeSavings
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialAccountType
+		;
+	skos:definition "An interest-bearing deposit account with limited transactional use."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialAccountTypeScheme
+		;
+	skos:notation "savings" ;
+	skos:prefLabel "Savings Account"@en ;
+	.
+
+stonework:financialAccountTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Financial Account Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of financial account kinds."@en ;
+	skos:prefLabel "STONEWORK Financial Account Type Scheme"@en ;
+	.
+
+stonework:financialAccountTypeSelfCustodyWallet
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialAccountType
+		;
+	skos:definition "A crypto-asset wallet whose on-chain keys are held by the accountholder, with no custodian."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialAccountTypeScheme
+		;
+	skos:notation "self-custody-wallet" ;
+	skos:prefLabel "Self-Custody Wallet"@en ;
+	.
+
+stonework:financialInstitutionTypeBrokerDealer
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialInstitutionType
+		;
+	skos:definition "A firm that trades securities for its own account or on behalf of customers."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialInstitutionTypeScheme
+		;
+	skos:notation "broker-dealer" ;
+	skos:prefLabel "Broker-Dealer"@en ;
+	.
+
+stonework:financialInstitutionTypeCentralBank
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialInstitutionType
+		;
+	skos:definition "A national or supranational monetary authority."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialInstitutionTypeScheme
+		;
+	skos:notation "central-bank" ;
+	skos:prefLabel "Central Bank"@en ;
+	.
+
+stonework:financialInstitutionTypeCommercialBank
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialInstitutionType
+		;
+	skos:definition "A licensed deposit-taking bank serving retail or corporate customers."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialInstitutionTypeScheme
+		;
+	skos:notation "commercial-bank" ;
+	skos:prefLabel "Commercial Bank"@en ;
+	.
+
+stonework:financialInstitutionTypeCreditUnion
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialInstitutionType
+		;
+	skos:definition "A member-owned cooperative deposit-taking institution."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialInstitutionTypeScheme
+		;
+	skos:notation "credit-union" ;
+	skos:prefLabel "Credit Union"@en ;
+	.
+
+stonework:financialInstitutionTypeMoneyServicesBusiness
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialInstitutionType
+		;
+	skos:definition "A business that transmits or converts money, including money transmitters, currency exchangers, and check cashers."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialInstitutionTypeScheme
+		;
+	skos:notation "money-services-business" ;
+	skos:prefLabel "Money Services Business"@en ;
+	.
+
+stonework:financialInstitutionTypePaymentProcessor
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialInstitutionType
+		;
+	skos:definition "A company that processes payment card or account-to-account transactions between parties."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialInstitutionTypeScheme
+		;
+	skos:notation "payment-processor" ;
+	skos:prefLabel "Payment Processor"@en ;
+	.
+
+stonework:financialInstitutionTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Financial Institution Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of financial institution kinds."@en ;
+	skos:prefLabel "STONEWORK Financial Institution Type Scheme"@en ;
+	.
+
+stonework:financialInstitutionTypeVirtualAssetServiceProvider
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FinancialInstitutionType
+		;
+	skos:definition "A business that exchanges, transfers, or custodies virtual assets for others — a crypto exchange, custodial wallet provider, or similar (the FATF VASP category)."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:financialInstitutionTypeScheme
+		;
+	skos:notation "virtual-asset-service-provider" ;
+	skos:prefLabel "Virtual Asset Service Provider"@en ;
 	.
 
 stonework:hasAccountType
@@ -1539,6 +1956,21 @@ stonework:markingScheme
 	skos:prefLabel "STONEWORK Data Marking Scheme"@en ;
 	.
 
+stonework:metricAccountBalance
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:MetricType
+		;
+	skos:definition "The balance of a financial account at a point in time, in a stated currency."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:metricTypeScheme
+		;
+	skos:notation "account-balance" ;
+	skos:prefLabel "Account Balance"@en ;
+	.
+
 stonework:metricConfidence
 	a
 		owl:NamedIndividual ,
@@ -1612,6 +2044,21 @@ stonework:metricLikelihoodScore
 		;
 	skos:notation "likelihood-score" ;
 	skos:prefLabel "Likelihood Score"@en ;
+	.
+
+stonework:metricNormalizedValue
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:MetricType
+		;
+	skos:definition "A currency-normalized valuation of a monetary amount — for example the USD equivalent of a crypto transfer — at a stated observation time and exchange-rate source."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:metricTypeScheme
+		;
+	skos:notation "normalized-value" ;
+	skos:prefLabel "Normalized Value"@en ;
 	.
 
 stonework:metricRiskScore
@@ -1786,6 +2233,120 @@ stonework:motivationUnpredictable
 		;
 	skos:notation "unpredictable" ;
 	skos:prefLabel "Unpredictable"@en ;
+	.
+
+stonework:paymentInstrumentAchTransfer
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PaymentInstrument
+		;
+	skos:definition "A batched account-to-account credit or debit transfer over an automated clearing house."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:paymentInstrumentScheme
+		;
+	skos:notation "ach-transfer" ;
+	skos:prefLabel "ACH Transfer"@en ;
+	.
+
+stonework:paymentInstrumentCardPayment
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PaymentInstrument
+		;
+	skos:definition "A payment made with a credit, debit, or prepaid payment card."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:paymentInstrumentScheme
+		;
+	skos:notation "card-payment" ;
+	skos:prefLabel "Card Payment"@en ;
+	.
+
+stonework:paymentInstrumentCash
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PaymentInstrument
+		;
+	skos:definition "A physical currency deposit, withdrawal, or hand-to-hand payment."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:paymentInstrumentScheme
+		;
+	skos:notation "cash" ;
+	skos:prefLabel "Cash"@en ;
+	.
+
+stonework:paymentInstrumentMoneyOrder
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PaymentInstrument
+		;
+	skos:definition "A prepaid negotiable instrument issued by a bank or money services business."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:paymentInstrumentScheme
+		;
+	skos:notation "money-order" ;
+	skos:prefLabel "Money Order"@en ;
+	.
+
+stonework:paymentInstrumentOnChainTransfer
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PaymentInstrument
+		;
+	skos:definition "A transfer of a crypto asset recorded on a distributed ledger."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:paymentInstrumentScheme
+		;
+	skos:notation "on-chain-transfer" ;
+	skos:prefLabel "On-Chain Transfer"@en ;
+	.
+
+stonework:paymentInstrumentScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:source <https://www.iso20022.org/> ;
+	dcterms:title "STONEWORK Payment Instrument Scheme"@en ;
+	skos:definition "The controlled vocabulary of payment instruments and rails, informed by ISO 20022 payment-type semantics."@en ;
+	skos:prefLabel "STONEWORK Payment Instrument Scheme"@en ;
+	.
+
+stonework:paymentInstrumentSepaTransfer
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PaymentInstrument
+		;
+	skos:definition "A euro-denominated credit transfer within the Single Euro Payments Area."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:paymentInstrumentScheme
+		;
+	skos:notation "sepa-transfer" ;
+	skos:prefLabel "SEPA Transfer"@en ;
+	.
+
+stonework:paymentInstrumentWireTransfer
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PaymentInstrument
+		;
+	skos:definition "An interbank credit transfer settled individually, such as Fedwire, CHAPS, or a cross-border SWIFT payment."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:paymentInstrumentScheme
+		;
+	skos:notation "wire-transfer" ;
+	skos:prefLabel "Wire Transfer"@en ;
 	.
 
 stonework:productTypeAIModel
@@ -2581,4 +3142,102 @@ stonework:tlpRed
 		;
 	skos:notation "TLP:RED" ;
 	skos:prefLabel "TLP:RED"@en ;
+	.
+
+stonework:transactionTypeCurrencyExchange
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:TransactionType
+		;
+	skos:definition "A conversion of value from one currency to another, including fiat-to-crypto and crypto-to-crypto swaps."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:transactionTypeScheme
+		;
+	skos:notation "currency-exchange" ;
+	skos:prefLabel "Currency Exchange"@en ;
+	.
+
+stonework:transactionTypeDeposit
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:TransactionType
+		;
+	skos:definition "Value added to an account from an external source."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:transactionTypeScheme
+		;
+	skos:notation "deposit" ;
+	skos:prefLabel "Deposit"@en ;
+	.
+
+stonework:transactionTypeFee
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:TransactionType
+		;
+	skos:definition "A charge deducted by an institution, network, or ledger for processing a transaction."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:transactionTypeScheme
+		;
+	skos:notation "fee" ;
+	skos:prefLabel "Fee"@en ;
+	.
+
+stonework:transactionTypePayment
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:TransactionType
+		;
+	skos:definition "A transfer made in consideration for goods, services, or an obligation."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:transactionTypeScheme
+		;
+	skos:notation "payment" ;
+	skos:prefLabel "Payment"@en ;
+	.
+
+stonework:transactionTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Transaction Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of financial transaction kinds."@en ;
+	skos:prefLabel "STONEWORK Transaction Type Scheme"@en ;
+	.
+
+stonework:transactionTypeTransfer
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:TransactionType
+		;
+	skos:definition "A movement of value from one account to another."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:transactionTypeScheme
+		;
+	skos:notation "transfer" ;
+	skos:prefLabel "Transfer"@en ;
+	.
+
+stonework:transactionTypeWithdrawal
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:TransactionType
+		;
+	skos:definition "Value removed from an account to an external destination, including cash-out."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:transactionTypeScheme
+		;
+	skos:notation "withdrawal" ;
+	skos:prefLabel "Withdrawal"@en ;
 	.
