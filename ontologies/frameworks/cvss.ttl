@@ -16,13 +16,6 @@
 	owl:versionInfo "0.1.0" ;
 	.
 
-cvss:CvssMetric
-	a owl:Class ;
-	rdfs:subClassOf stonework:CvssMetric ;
-	rdfs:label "CVSS Metric"@en ;
-	rdfs:comment "A CVSS assessment with optional decomposed vector components and additional subscores. Common structured fields are inherited from stonework:CvssMetric."@en ;
-	.
-
 cvss:attackComplexity
 	a
 		owl:DatatypeProperty ,
@@ -30,7 +23,7 @@ cvss:attackComplexity
 		;
 	rdfs:label "attack complexity"@en ;
 	rdfs:comment "The CVSS attack-complexity metric value."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:string ;
 	.
 
@@ -41,7 +34,7 @@ cvss:attackVector
 		;
 	rdfs:label "attack vector"@en ;
 	rdfs:comment "The CVSS attack-vector metric value."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:string ;
 	.
 
@@ -52,31 +45,7 @@ cvss:availabilityImpact
 		;
 	rdfs:label "availability impact"@en ;
 	rdfs:comment "The CVSS availability-impact metric value."@en ;
-	rdfs:domain cvss:CvssMetric ;
-	rdfs:range xsd:string ;
-	.
-
-cvss:baseScore
-	a
-		owl:DatatypeProperty ,
-		owl:FunctionalProperty
-		;
-	rdfs:subPropertyOf stonework:cvssMetricBaseScore ;
-	rdfs:label "base score"@en ;
-	rdfs:comment "The CVSS base score on the 0.0-10.0 scale."@en ;
-	rdfs:domain cvss:CvssMetric ;
-	rdfs:range xsd:decimal ;
-	.
-
-cvss:baseSeverity
-	a
-		owl:DatatypeProperty ,
-		owl:FunctionalProperty
-		;
-	rdfs:subPropertyOf stonework:cvssMetricBaseSeverity ;
-	rdfs:label "base severity"@en ;
-	rdfs:comment "The qualitative severity corresponding to the CVSS base score."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:string ;
 	.
 
@@ -87,7 +56,7 @@ cvss:confidentialityImpact
 		;
 	rdfs:label "confidentiality impact"@en ;
 	rdfs:comment "The CVSS confidentiality-impact metric value."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:string ;
 	.
 
@@ -98,7 +67,7 @@ cvss:environmentalScore
 		;
 	rdfs:label "environmental score"@en ;
 	rdfs:comment "The CVSS environmental score."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:decimal ;
 	.
 
@@ -109,7 +78,7 @@ cvss:exploitabilityScore
 		;
 	rdfs:label "exploitability score"@en ;
 	rdfs:comment "The exploitability subscore calculated for the CVSS assessment."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:decimal ;
 	.
 
@@ -120,7 +89,7 @@ cvss:integrityImpact
 		;
 	rdfs:label "integrity impact"@en ;
 	rdfs:comment "The CVSS integrity-impact metric value."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:string ;
 	.
 
@@ -131,7 +100,7 @@ cvss:privilegesRequired
 		;
 	rdfs:label "privileges required"@en ;
 	rdfs:comment "The CVSS privileges-required metric value."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:string ;
 	.
 
@@ -142,7 +111,7 @@ cvss:scope
 		;
 	rdfs:label "scope"@en ;
 	rdfs:comment "The CVSS v3 scope metric value."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:string ;
 	.
 
@@ -153,7 +122,7 @@ cvss:temporalScore
 		;
 	rdfs:label "temporal score"@en ;
 	rdfs:comment "The CVSS temporal score."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:decimal ;
 	.
 
@@ -164,30 +133,6 @@ cvss:userInteraction
 		;
 	rdfs:label "user interaction"@en ;
 	rdfs:comment "The CVSS user-interaction metric value."@en ;
-	rdfs:domain cvss:CvssMetric ;
-	rdfs:range xsd:string ;
-	.
-
-cvss:vectorString
-	a
-		owl:DatatypeProperty ,
-		owl:FunctionalProperty
-		;
-	rdfs:subPropertyOf stonework:cvssMetricVector ;
-	rdfs:label "vector string"@en ;
-	rdfs:comment "The complete CVSS vector string."@en ;
-	rdfs:domain cvss:CvssMetric ;
-	rdfs:range xsd:string ;
-	.
-
-cvss:version
-	a
-		owl:DatatypeProperty ,
-		owl:FunctionalProperty
-		;
-	rdfs:subPropertyOf stonework:cvssMetricVersion ;
-	rdfs:label "version"@en ;
-	rdfs:comment "The CVSS specification version used by the assessment, such as 3.1 or 4.0."@en ;
-	rdfs:domain cvss:CvssMetric ;
+	rdfs:domain stonework:CvssMetric ;
 	rdfs:range xsd:string ;
 	.
