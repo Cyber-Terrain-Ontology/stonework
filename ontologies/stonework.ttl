@@ -1515,6 +1515,18 @@ stonework:assessmentOf
 	skos:prefLabel "assessmentOf"@en ;
 	.
 
+stonework:assignedBy
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range stonework:Agent ;
+	skos:definition "Relates a vulnerability to the numbering authority that assigned its primary vulnerability identifier."@en ;
+	skos:prefLabel "assignedBy"@en ;
+	skos:scopeNote "Resolve source-native names, UUIDs, or email addresses to an Agent individual. Like stonework:vulnerabilityId and stonework:dateAssigned, this property describes the vulnerability record's single primary identifier; represent independently assigned identifiers as distinct vulnerability records."@en ;
+	.
+
 stonework:assignedRole
 	a
 		owl:ObjectProperty ,
@@ -4557,7 +4569,7 @@ stonework:supersededBy
 	rdfs:range stonework:Vulnerability ;
 	skos:definition "Relates a vulnerability to the vulnerability record that supersedes it, e.g. when a CVE is split, merged, or formally replaced by another identifier."@en ;
 	skos:prefLabel "supersededBy"@en ;
-	skos:scopeNote "Corresponds to cve:replacedBy in CVE JSON 5.x, but as an object property linking to a stonework:Vulnerability individual rather than a string. The source-specific string form is preserved on cve:replacedBy."@en ;
+	skos:scopeNote "Resolve source-native replacement identifier strings, such as CVE JSON 5.x replacedBy values, to Vulnerability individuals during ingestion."@en ;
 	.
 
 stonework:supersedes

@@ -137,11 +137,6 @@ cve:CveRecord
 		stonework:Vulnerability ,
 		[
 			a owl:Restriction ;
-			owl:onProperty cve:assigner ;
-			owl:maxCardinality "1"^^xsd:integer ;
-		] ,
-		[
-			a owl:Restriction ;
 			owl:onProperty cve:dateRequested ;
 			owl:maxCardinality "1"^^xsd:integer ;
 		] ,
@@ -395,17 +390,6 @@ cve:affected
 	rdfs:comment "Links a CVE record to a source-native affected-product entry. When that entry identifies its normalized product with stonework:installationOf, the adapter's property-chain axiom infers the direct stonework:affected relationship."@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:AffectedProduct ;
-	.
-
-cve:assigner
-	a
-		owl:DatatypeProperty ,
-		owl:FunctionalProperty
-		;
-	rdfs:label "assigner"@en ;
-	rdfs:comment "Org name, UUID, or email of the assigner"@en ;
-	rdfs:domain cve:CveRecord ;
-	rdfs:range xsd:string ;
 	.
 
 cve:collectionUrl
@@ -763,14 +747,6 @@ cve:remediation
 		cve:CreditRole
 		;
 	rdfs:label "remediation"@en ;
-	.
-
-cve:replacedBy
-	a owl:DatatypeProperty ;
-	rdfs:label "replaced_by"@en ;
-	rdfs:comment "CVE IDs that supersede this one"@en ;
-	rdfs:domain cve:CveRecord ;
-	rdfs:range xsd:string ;
 	.
 
 cve:reporter
