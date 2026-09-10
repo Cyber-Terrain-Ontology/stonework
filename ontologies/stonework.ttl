@@ -264,9 +264,9 @@ stonework:Currency
 stonework:CvssMetric
 	a owl:Class ;
 	rdfs:subClassOf stonework:Assessment ;
-	skos:definition "A structured assessment of a vulnerability using the Common Vulnerability Scoring System, carrying a version, vector, base score, and qualitative severity."@en ;
+	skos:definition "A structured technical-severity assessment of a vulnerability using the Common Vulnerability Scoring System, carrying a version, vector, base score, and qualitative severity."@en ;
 	skos:prefLabel "CVSS Metric"@en ;
-	skos:scopeNote "Use stonework:hasCvssMetric to attach one or more source-specific assessments to a Vulnerability. Identify the scoring authority with stonework:createdBy and preserve the source record with stonework:hasProvenance. The direct stonework:cvssBaseScore, stonework:cvssSeverity, and stonework:cvssVector properties are query-friendly headline projections. A plan that calculates or consumes a CVSS assessment may bind a Variable to this assessment, but the Variable is an execution-time value and does not replace the vulnerability-to-metric relationship."@en ;
+	skos:scopeNote "Use stonework:hasCvssMetric to attach one or more source-specific assessments to a Vulnerability. Identify the scoring authority with stonework:createdBy and preserve the source record with stonework:hasProvenance. The direct stonework:cvssBaseScore, stonework:cvssSeverity, and stonework:cvssVector properties are query-friendly headline projections. CVSS base metrics are context-neutral; environmental metrics may adjust technical severity for a deployment context, but CVSS does not establish whether the vulnerable product is present or constitute a full enterprise risk assessment. Use stonework:VulnerabilityAssessment for that contextual judgment. A plan that calculates or consumes a CVSS assessment may bind a Variable to this assessment, but the Variable is an execution-time value and does not replace the vulnerability-to-metric relationship."@en ;
 	.
 
 stonework:CyberActivity
@@ -1206,7 +1206,7 @@ stonework:Variable
 	rdfs:seeAlso <http://purl.org/net/p-plan#Variable> ;
 	skos:definition "A named placeholder for a value declared by a Behavior or Step, bound to an actual value only once the corresponding execution occurs."@en ;
 	skos:prefLabel "Variable" ;
-	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. An input Variable is typically bound before its Step executes from an already-known fact; for example, a plan may copy a Vulnerability's headline stonework:cvssBaseScore into a literal-bound input or bind to an existing stonework:CvssMetric assessment. An output Variable is bound only after its Step executes, such as when an Investigation calculates a new CVSS assessment. Variables carry execution-time values and do not replace the persistent relationship between a Vulnerability and its score or assessment. Bound via stonework:boundTo (an individual) or stonework:boundToLiteral (a scalar). The bound value is what stonework:Transition guard properties test, and — in a future deviation-detection layer — what an actual result is compared against what the Step declared as expected."@en ;
+	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. An input Variable is typically bound before its Step executes from an already-known fact; for example, a plan may bind to an existing stonework:CvssMetric assessment. An output Variable is bound only after its Step executes, such as when an Investigation constructs a stonework:VulnerabilityAssessment. Variables carry execution-time values and do not replace persistent domain relationships. Bound via stonework:boundTo (an individual) or stonework:boundToLiteral (a scalar). The bound value is what stonework:Transition guard properties test, and — in a future deviation-detection layer — what an actual result is compared against what the Step declared as expected."@en ;
 	.
 
 stonework:VersionedProduct
@@ -1230,7 +1230,7 @@ stonework:VulnerabilityAssessment
 	rdfs:subClassOf stonework:Assessment ;
 	skos:definition "A structured evaluation of a specific vulnerability's applicability and risk in a particular product or deployment context."@en ;
 	skos:prefLabel "Vulnerability Assessment"@en ;
-	skos:scopeNote "Captures VEX-style assessments: whether a product is affected, not affected, fixed, or under investigation, together with the justification and any remediation statement. Distinct from stonework:Vulnerability (which describes the flaw itself) — a VulnerabilityAssessment is an opinion about that flaw in a specific context."@en ;
+	skos:scopeNote "Captures VEX-style assessments: whether a product is affected, not affected, fixed, or under investigation, together with the justification and any remediation statement. Distinct from stonework:Vulnerability (which describes the flaw itself) and stonework:CvssMetric (which gives context-neutral technical severity): a VulnerabilityAssessment is a judgment about applicability and risk in a specific product, deployment, or enterprise context. It may be constructed by an Investigation executing a Plan whose inputs include the vulnerability, its CVSS assessment, and current enterprise graph state."@en ;
 	.
 
 stonework:Weakness
@@ -2017,7 +2017,7 @@ stonework:cvssBaseScore
 		;
 	rdfs:domain stonework:Vulnerability ;
 	rdfs:range xsd:decimal ;
-	skos:definition "The headline CVSS base score for this vulnerability, on a 0.0–10.0 scale."@en ;
+	skos:definition "The headline context-neutral CVSS base score for this vulnerability, on a 0.0–10.0 scale."@en ;
 	skos:prefLabel "cvssBaseScore"@en ;
 	skos:scopeNote "When multiple CVSS versions are present, this SHOULD reflect the highest available version (CVSS 4.0 preferred over 3.1, 3.1 over 2.0). For full structured metric data across all CVSS versions use stonework:hasCvssMetric."@en ;
 	.
