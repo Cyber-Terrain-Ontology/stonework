@@ -488,7 +488,7 @@ v5  → affected[].versions[]  (structured {version, status, lessThan, …})"""@
 cve:affected
 	a owl:ObjectProperty ;
 	rdfs:label "affected"@en ;
-	rdfs:comment "Links a CVE record to a source-native affected-product entry. Use stonework:affected for the normalized link to the actual stonework:VersionedProduct individual."@en ;
+	rdfs:comment "Links a CVE record to a source-native affected-product entry. When that entry identifies its normalized product with stonework:installationOf, the adapter's property-chain axiom infers the direct stonework:affected relationship."@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:AffectedProduct ;
 	.
@@ -1243,4 +1243,11 @@ cve:workarounds
 	rdfs:label "workarounds"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:LocalizedText ;
+	.
+
+stonework:affected
+	owl:propertyChainAxiom (
+		cve:affected
+		stonework:installationOf
+	) ;
 	.
