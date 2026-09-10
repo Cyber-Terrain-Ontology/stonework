@@ -2071,7 +2071,7 @@ stonework:dateAssigned
 	rdfs:range xsd:dateTime ;
 	skos:definition "The date and time at which a vulnerability identifier was assigned by the relevant numbering authority."@en ;
 	skos:prefLabel "dateAssigned"@en ;
-	skos:scopeNote "Corresponds to cveMetadata.dateReserved in CVE JSON 5.x. cve:dateAssigned is declared owl:equivalentProperty of this property."@en ;
+	skos:scopeNote "Corresponds to cveMetadata.dateReserved in CVE JSON 5.x. The deprecated cve:dateAssigned source alias is a subproperty of this property."@en ;
 	.
 
 stonework:datePublic
@@ -2083,7 +2083,7 @@ stonework:datePublic
 	rdfs:range xsd:dateTime ;
 	skos:definition "The date and time at which this vulnerability was publicly disclosed."@en ;
 	skos:prefLabel "datePublic"@en ;
-	skos:scopeNote "Corresponds to cveMetadata.datePublished in CVE JSON 5.x. cve:datePublic is declared owl:equivalentProperty of this property."@en ;
+	skos:scopeNote "Corresponds to cveMetadata.datePublished in CVE JSON 5.x. The deprecated cve:datePublic source alias is a subproperty of this property."@en ;
 	.
 
 stonework:dateUpdated
@@ -2095,7 +2095,7 @@ stonework:dateUpdated
 	rdfs:range xsd:dateTime ;
 	skos:definition "The date and time at which the vulnerability record was last modified in its source database."@en ;
 	skos:prefLabel "dateUpdated"@en ;
-	skos:scopeNote "Corresponds to cveMetadata.dateUpdated in CVE JSON 5.x. cve:dateUpdated is declared owl:equivalentProperty of this property."@en ;
+	skos:scopeNote "Corresponds to cveMetadata.dateUpdated in CVE JSON 5.x. The deprecated cve:dateUpdated source alias is a subproperty of this property."@en ;
 	.
 
 stonework:deliveredVia
@@ -2556,7 +2556,7 @@ stonework:hasCvssMetric
 	rdfs:domain stonework:Vulnerability ;
 	skos:definition "Relates a vulnerability to a structured CVSS metric record carrying the version, vector string, and base/temporal/environmental scores."@en ;
 	skos:prefLabel "hasCvssMetric"@en ;
-	skos:scopeNote "A single vulnerability may carry metrics for multiple CVSS versions (2.0, 3.1, 4.0). For a single headline score and severity, use stonework:cvssBaseScore and stonework:cvssSeverity directly on the Vulnerability. This property links to the full per-version metric objects populated by CVE ingest."@en ;
+	skos:scopeNote "A single vulnerability may carry metrics for multiple CVSS versions (2.0, 3.1, 4.0) or scoring authorities. For a single headline score and severity, use stonework:cvssBaseScore and stonework:cvssSeverity directly on the Vulnerability. Load the CVSS framework module for the structured metric class and properties."@en ;
 	.
 
 stonework:hasDependency

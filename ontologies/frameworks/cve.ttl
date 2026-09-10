@@ -1,6 +1,8 @@
+# imports: https://cyberterrain.org/ns/frameworks/cvss
 # imports: https://cyberterrain.org/ns/stonework#
 
 @prefix cve: <https://cyberterrain.org/ns/frameworks/cve#> .
+@prefix cvss: <https://cyberterrain.org/ns/frameworks/cvss#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -12,9 +14,12 @@
 	a owl:Ontology ;
 	rdfs:label "CVE Unified Ontology"@en ;
 	rdfs:comment "Unified OWL ontology for CVE records. Derived from the framework_cve Pydantic model, supporting both CVE JSON 2.x and CVE JSON 5.x source schemas."@en ;
-	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/cve/0.1.0> ;
-	owl:versionInfo "0.1.0" ;
+	owl:imports
+		<https://cyberterrain.org/ns/frameworks/cvss> ,
+		<https://cyberterrain.org/ns/stonework#>
+		;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/cve/0.2.0> ;
+	owl:versionInfo "0.2.0" ;
 	.
 
 cve:2_0
@@ -52,7 +57,7 @@ cve:4_0
 cve:AffectedProduct
 	a owl:Class ;
 	rdfs:subClassOf
-		stonework:VersionedProduct ,
+		stonework:CyberEntity ,
 		[
 			a owl:Restriction ;
 			owl:onProperty cve:collectionUrl ;
@@ -279,10 +284,12 @@ cve:CvssMetric
 		]
 		;
 	rdfs:label "CVSS Metric"@en ;
-	rdfs:comment """A CVSS score in any supported version.
+	rdfs:comment """Deprecated compatibility class. Use cvss:CvssMetric for structured CVSS assessments.
 
 v2  → DWF.CVSSv2 / DWF.CVSSv3  (split into BM/TM/EM sub-objects)
 v5  → cnaContainer.metrics[].cvssV2_0 / cvssV3_0 / cvssV3_1 / cvssV4_0"""@en ;
+	owl:deprecated "true"^^xsd:boolean ;
+	owl:equivalentClass cvss:CvssMetric ;
 	.
 
 cve:CvssVersion
@@ -478,8 +485,8 @@ v5  → affected[].versions[]  (structured {version, status, lessThan, …})"""@
 
 cve:affected
 	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:affected ;
 	rdfs:label "affected"@en ;
+	rdfs:comment "Links a CVE record to a source-native affected-product entry. Use stonework:affected for the normalized link to the actual stonework:VersionedProduct individual."@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:AffectedProduct ;
 	.
@@ -491,6 +498,7 @@ cve:affectsProduct
 	rdfs:comment "Links a CVE record to a stonework:VersionedProduct individual identified by a normalized CPE IRI. The IRI is derived deterministically: colons→underscore, dots→hyphen, asterisks→X. The product version individual is fully populated when CPE data is ingested."@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range stonework:VersionedProduct ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 cve:assigner
@@ -512,6 +520,8 @@ cve:baseScore
 	rdfs:label "base_score"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:decimal ;
+	owl:deprecated "true"^^xsd:boolean ;
+	owl:equivalentProperty cvss:baseScore ;
 	.
 
 cve:baseSeverity
@@ -522,6 +532,8 @@ cve:baseSeverity
 	rdfs:label "base_severity"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:string ;
+	owl:deprecated "true"^^xsd:boolean ;
+	owl:equivalentProperty cvss:baseSeverity ;
 	.
 
 cve:collectionUrl
@@ -571,6 +583,7 @@ cve:cveId
 	rdfs:comment "CVE identifier, e.g. 'CVE-2021-44228'"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:string ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 cve:cweId
@@ -589,11 +602,12 @@ cve:dateAssigned
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:dateAssigned ;
 	rdfs:label "date_assigned"@en ;
 	rdfs:comment "Date CVE ID was assigned"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:dateTime ;
-	owl:equivalentProperty stonework:dateAssigned ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 cve:datePublic
@@ -601,11 +615,12 @@ cve:datePublic
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:datePublic ;
 	rdfs:label "date_public"@en ;
 	rdfs:comment "Date vulnerability was disclosed publicly"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:dateTime ;
-	owl:equivalentProperty stonework:datePublic ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 cve:dateRequested
@@ -624,11 +639,12 @@ cve:dateUpdated
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:dateUpdated ;
 	rdfs:label "date_updated"@en ;
 	rdfs:comment "Date record was last updated"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:dateTime ;
-	owl:equivalentProperty stonework:dateUpdated ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 cve:defaultStatus
@@ -685,6 +701,8 @@ cve:environmentalScore
 	rdfs:label "environmental_score"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:decimal ;
+	owl:deprecated "true"^^xsd:boolean ;
+	owl:equivalentProperty cvss:environmentalScore ;
 	.
 
 cve:exploits
@@ -702,6 +720,7 @@ cve:exploitsWeakness
 	rdfs:comment "Links a CVE record to a stonework:Weakness individual identified by a CWE-ID IRI (e.g. cti-enc:_Weakness_CWE-79). The weakness individual is fully populated when CWE data is ingested."@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range stonework:Weakness ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 cve:finder
@@ -793,9 +812,10 @@ cve:lessThan
 
 cve:metrics
 	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasCvssMetric ;
 	rdfs:label "metrics"@en ;
 	rdfs:domain cve:CveRecord ;
-	rdfs:range cve:CvssMetric ;
+	rdfs:range cvss:CvssMetric ;
 	.
 
 cve:name
@@ -891,9 +911,8 @@ cve:purl
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
-	rdfs:subPropertyOf stonework:purl ;
 	rdfs:label "purl"@en ;
-	rdfs:comment "Package URL (purl) — v5 5.2+"@en ;
+	rdfs:comment "Package URL (purl) on a CVE JSON affected-product entry — v5 5.2+. Use stonework:purl on the normalized stonework:VersionedProduct individual."@en ;
 	rdfs:domain cve:AffectedProduct ;
 	rdfs:range xsd:anyURI ;
 	.
@@ -1072,6 +1091,8 @@ cve:temporalScore
 	rdfs:label "temporal_score"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:decimal ;
+	owl:deprecated "true"^^xsd:boolean ;
+	owl:equivalentProperty cvss:temporalScore ;
 	.
 
 cve:tester
@@ -1109,6 +1130,7 @@ cve:title
 	rdfs:label "title"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:string ;
+	owl:deprecated "true"^^xsd:boolean ;
 	.
 
 cve:tool
@@ -1166,6 +1188,8 @@ cve:vectorString
 	rdfs:comment "Full CVSS vector string"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:string ;
+	owl:deprecated "true"^^xsd:boolean ;
+	owl:equivalentProperty cvss:vectorString ;
 	.
 
 cve:vendor
