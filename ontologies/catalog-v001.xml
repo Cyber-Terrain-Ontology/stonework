@@ -2,11 +2,11 @@
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
         <uri name="https://cyberterrain.org/ns/stonework#" uri="stonework.ttl"/>
-        <uri name="https://cyberterrain.org/ns/stonework/0.7.0" uri="stonework.ttl"/>
+        <uri name="https://cyberterrain.org/ns/stonework/0.8.0" uri="stonework.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/categories#" uri="categories.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/categories/0.1.0" uri="categories.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/full" uri="profiles/stonework-full.ttl"/>
-        <uri name="https://cyberterrain.org/ns/stonework/profiles/full/0.1.0" uri="profiles/stonework-full.ttl"/>
+        <uri name="https://cyberterrain.org/ns/stonework/profiles/full/0.2.0" uri="profiles/stonework-full.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/stix" uri="profiles/stonework-stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/stix/0.1.0" uri="profiles/stonework-stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/bfo" uri="frameworks/bfo.ttl"/>

@@ -57,7 +57,7 @@ cve:4_0
 cve:AffectedProduct
 	a owl:Class ;
 	rdfs:subClassOf
-		stonework:CyberEntity ,
+		stonework:ComponentContext ,
 		[
 			a owl:Restriction ;
 			owl:onProperty cve:collectionUrl ;
@@ -108,7 +108,9 @@ cve:AffectedProduct
 	rdfs:comment """A product/component affected by (or fixed for) the vulnerability.
 
 v2  → DWF.AFFECTS[]
-v5  → cnaContainer.affected[]"""@en ;
+v5  → cnaContainer.affected[]
+
+This is a source-native advisory context rather than the canonical product identity. Link it to the normalized stonework:VersionedProduct with stonework:installationOf."""@en ;
 	.
 
 cve:Credit
@@ -247,6 +249,7 @@ cve:CveState
 cve:CvssMetric
 	a owl:Class ;
 	rdfs:subClassOf
+		cvss:CvssMetric ,
 		[
 			a owl:Restriction ;
 			owl:onProperty cve:baseScore ;
@@ -289,7 +292,6 @@ cve:CvssMetric
 v2  → DWF.CVSSv2 / DWF.CVSSv3  (split into BM/TM/EM sub-objects)
 v5  → cnaContainer.metrics[].cvssV2_0 / cvssV3_0 / cvssV3_1 / cvssV4_0"""@en ;
 	owl:deprecated "true"^^xsd:boolean ;
-	owl:equivalentClass cvss:CvssMetric ;
 	.
 
 cve:CvssVersion
@@ -517,11 +519,11 @@ cve:baseScore
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf cvss:baseScore ;
 	rdfs:label "base_score"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:decimal ;
 	owl:deprecated "true"^^xsd:boolean ;
-	owl:equivalentProperty cvss:baseScore ;
 	.
 
 cve:baseSeverity
@@ -529,11 +531,11 @@ cve:baseSeverity
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf cvss:baseSeverity ;
 	rdfs:label "base_severity"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:string ;
 	owl:deprecated "true"^^xsd:boolean ;
-	owl:equivalentProperty cvss:baseSeverity ;
 	.
 
 cve:collectionUrl
@@ -698,11 +700,11 @@ cve:environmentalScore
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf cvss:environmentalScore ;
 	rdfs:label "environmental_score"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:decimal ;
 	owl:deprecated "true"^^xsd:boolean ;
-	owl:equivalentProperty cvss:environmentalScore ;
 	.
 
 cve:exploits
@@ -1088,11 +1090,11 @@ cve:temporalScore
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf cvss:temporalScore ;
 	rdfs:label "temporal_score"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:decimal ;
 	owl:deprecated "true"^^xsd:boolean ;
-	owl:equivalentProperty cvss:temporalScore ;
 	.
 
 cve:tester
@@ -1184,12 +1186,12 @@ cve:vectorString
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf cvss:vectorString ;
 	rdfs:label "vector_string"@en ;
 	rdfs:comment "Full CVSS vector string"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:string ;
 	owl:deprecated "true"^^xsd:boolean ;
-	owl:equivalentProperty cvss:vectorString ;
 	.
 
 cve:vendor

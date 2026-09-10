@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.7.0> ;
-	owl:versionInfo "0.7.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.8.0> ;
+	owl:versionInfo "0.8.0" ;
 	.
 
 stonework:AIAgent
@@ -259,6 +259,14 @@ stonework:Currency
 	skos:definition "A unit in which monetary value is denominated — a fiat currency or a crypto asset."@en ;
 	skos:prefLabel "Currency"@en ;
 	skos:scopeNote "The range of stonework:currency on stonework:MonetaryAmount. Fiat units are supplied as a closed controlled vocabulary in stonework:fiatCurrencyScheme (ISO 4217). Crypto units are stonework:CryptoAsset individuals, created as needed rather than pre-enumerated. Currency itself carries no instances directly."@en ;
+	.
+
+stonework:CvssMetric
+	a owl:Class ;
+	rdfs:subClassOf stonework:Assessment ;
+	skos:definition "A structured assessment of a vulnerability using the Common Vulnerability Scoring System, carrying a version, vector, base score, and qualitative severity."@en ;
+	skos:prefLabel "CVSS Metric"@en ;
+	skos:scopeNote "Use stonework:hasCvssMetric to attach one or more source-specific assessments to a Vulnerability. Identify the scoring authority with stonework:createdBy and preserve the source record with stonework:hasProvenance. The direct stonework:cvssBaseScore, stonework:cvssSeverity, and stonework:cvssVector properties are query-friendly headline projections. A plan that calculates or consumes a CVSS assessment may bind a Variable to this assessment, but the Variable is an execution-time value and does not replace the vulnerability-to-metric relationship."@en ;
 	.
 
 stonework:CyberActivity
@@ -1198,7 +1206,7 @@ stonework:Variable
 	rdfs:seeAlso <http://purl.org/net/p-plan#Variable> ;
 	skos:definition "A named placeholder for a value declared by a Behavior or Step, bound to an actual value only once the corresponding execution occurs."@en ;
 	skos:prefLabel "Variable" ;
-	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. An input Variable is typically bound before its Step executes, from an already-known fact (e.g. a Vulnerability's CVSS score); an output Variable is bound only after its Step executes, from a result the execution produced (e.g. a Technique attempt's outcome). Bound via stonework:boundTo (an individual) or stonework:boundToLiteral (a scalar). The bound value is what stonework:Transition guard properties test, and — in a future deviation-detection layer — what an actual result is compared against what the Step declared as expected."@en ;
+	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. An input Variable is typically bound before its Step executes from an already-known fact; for example, a plan may copy a Vulnerability's headline stonework:cvssBaseScore into a literal-bound input or bind to an existing stonework:CvssMetric assessment. An output Variable is bound only after its Step executes, such as when an Investigation calculates a new CVSS assessment. Variables carry execution-time values and do not replace the persistent relationship between a Vulnerability and its score or assessment. Bound via stonework:boundTo (an individual) or stonework:boundToLiteral (a scalar). The bound value is what stonework:Transition guard properties test, and — in a future deviation-detection layer — what an actual result is compared against what the Step declared as expected."@en ;
 	.
 
 stonework:VersionedProduct
@@ -2014,6 +2022,62 @@ stonework:cvssBaseScore
 	skos:scopeNote "When multiple CVSS versions are present, this SHOULD reflect the highest available version (CVSS 4.0 preferred over 3.1, 3.1 over 2.0). For full structured metric data across all CVSS versions use stonework:hasCvssMetric."@en ;
 	.
 
+stonework:cvssMetricBaseScore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:decimal ;
+	skos:definition "The base score calculated by a structured CVSS assessment, on a 0.0-10.0 scale."@en ;
+	skos:prefLabel "cvssMetricBaseScore"@en ;
+	.
+
+stonework:cvssMetricBaseSeverity
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	skos:definition "The qualitative severity corresponding to a structured CVSS assessment's base score."@en ;
+	skos:prefLabel "cvssMetricBaseSeverity"@en ;
+	.
+
+stonework:cvssMetricFor
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range stonework:Vulnerability ;
+	owl:inverseOf stonework:hasCvssMetric ;
+	skos:definition "The vulnerability evaluated by a structured CVSS assessment."@en ;
+	skos:prefLabel "cvssMetricFor"@en ;
+	.
+
+stonework:cvssMetricVector
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	skos:definition "The complete vector string used by a structured CVSS assessment."@en ;
+	skos:prefLabel "cvssMetricVector"@en ;
+	.
+
+stonework:cvssMetricVersion
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	skos:definition "The CVSS specification version used by a structured assessment, such as 3.1 or 4.0."@en ;
+	skos:prefLabel "cvssMetricVersion"@en ;
+	.
+
 stonework:cvssScore
 	a owl:DatatypeProperty ;
 	rdfs:subPropertyOf stonework:cvssBaseScore ;
@@ -2554,9 +2618,11 @@ stonework:hasBomEntry
 stonework:hasCvssMetric
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Vulnerability ;
+	rdfs:range stonework:CvssMetric ;
+	owl:inverseOf stonework:cvssMetricFor ;
 	skos:definition "Relates a vulnerability to a structured CVSS metric record carrying the version, vector string, and base/temporal/environmental scores."@en ;
 	skos:prefLabel "hasCvssMetric"@en ;
-	skos:scopeNote "A single vulnerability may carry metrics for multiple CVSS versions (2.0, 3.1, 4.0) or scoring authorities. For a single headline score and severity, use stonework:cvssBaseScore and stonework:cvssSeverity directly on the Vulnerability. Load the CVSS framework module for the structured metric class and properties."@en ;
+	skos:scopeNote "A single vulnerability may carry metrics for multiple CVSS versions (2.0, 3.1, 4.0) or scoring authorities. For a single headline score and severity, use stonework:cvssBaseScore and stonework:cvssSeverity directly on the Vulnerability. Core consumers can represent the common structured fields without an adapter; load the CVSS framework module for decomposed vector components and additional subscores."@en ;
 	.
 
 stonework:hasDependency
