@@ -39,6 +39,8 @@ Both NIST SP 800-53 and CIS Controls now carry real, materialized `stonework:mit
 
 STONEWORK provides its own stable namespace and core model, then composes with controlled vocabularies, source-framework alignments, and local extensions as needed. The core remains lightweight; import-only profiles add the framework mappings needed for a particular use case without forcing consumers to load every adapter.
 
+Bundled framework modules are STONEWORK extension and alignment ontologies, not semantically self-contained replacements for the core. Each module imports STONEWORK, owns only concepts and structures specific to its source standard, and aligns shared concepts to their canonical `stonework:` terms. A module can be loaded independently in the operational sense that its declared imports provide a complete closure; it is not independent of STONEWORK's semantics.
+
 [STONES](https://github.com/Cyber-Terrain-Ontology/stones) can be used as STONEWORK's extensible STIX 2.1 framework adapter when faithful STIX interchange is required. STONEWORK is not defined as an extension of STONES; STONES, ATT&CK, D3FEND, EMB3D, CWE, NIST SP 800-53, CIS Critical Controls, OCSF, UCO, FATF, and other framework modules are peer vocabularies that can be loaded alongside STONEWORK.
 
 STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or CIS.
@@ -190,6 +192,8 @@ This concatenates the two files under the core's single `owl:Ontology` header, c
 ### Framework interoperability
 
 - `ontologies/frameworks/stix.ttl` maps STONES classes and properties into STONEWORK. STIX relationship source, target, and open-vocabulary type values project through the generic qualified-assertion properties. STIX Bundle remains intentionally unmapped because it is a transport container rather than a STIX Core Object or cyber-domain assertion.
+- `ontologies/frameworks/cve.ttl` preserves only CVE JSON-specific record structures while using STONEWORK classes and properties directly for shared vulnerability and CVSS semantics. Source-native assigner and replacement identifiers are resolved to individuals linked with `stonework:assignedBy` and `stonework:supersededBy`. A CVE `affected` entry is a `stonework:ComponentContext` linked to its canonical `stonework:VersionedProduct` with `stonework:installationOf`; a property chain projects that two-step source path into the direct `stonework:affected` relationship used by cross-framework queries.
+- `ontologies/frameworks/cvss.ttl` adds decomposed vector components and additional subscores directly to the core `stonework:CvssMetric` assessment; it does not define a second metric class or duplicate the common core properties. CVSS assessments may come from NVD, CNAs, vendors, or analysts and may describe any vulnerability, not only a CVE record. Use `stonework:createdBy` for the scoring authority and `stonework:hasProvenance` for its source record.
 - `ontologies/frameworks/d3fend.ttl` maps compatible MITRE D3FEND 1.5.0 defensive and offensive techniques, tactics, events, artifacts, identifiers, and selected relationships into STONEWORK. It preserves D3FEND's source-native hierarchy and class/individual punning rather than asserting equivalence. `d3f:PhysicalArtifact` subclasses `stonework:PhysicalArtifact`.
 - `ontologies/frameworks/emb3d.ttl` maps MITRE EMB3D device properties, threats, and mitigations. `emb3d:DeviceProperty` subclasses `CyberEntity` as a quality of a `PhysicalArtifact`; `emb3d:hasDeviceProperty` / `emb3d:enablesThreat` / `emb3d:mitigatedBy` preserve the property → threat → mitigation graph. `mitigatedBy` is not a subproperty of `stonework:mitigates` (direction inverted).
 - `ontologies/frameworks/bfo.ttl` asserts one-way BFO 2020 alignments only. `Location` maps to generically dependent continuant / information content entity (`BFO_0000031`), not Site; `PhysicalArtifact` and `Actuator` map to material entity (`BFO_0000040`).
@@ -198,6 +202,12 @@ This concatenates the two files under the core's single `owl:Ontology` header, c
 - `ontologies/frameworks/fatf.ttl` supplies a starter set of money-laundering typology individuals drawn from FATF methods-and-trends guidance, mapped into the neutral `stonework:IllicitFinanceTechnique` and `stonework:LaunderingStage` slots that the core defines. It is an illustrative, non-exhaustive, non-normative convenience — not a reproduction of FATF guidance — and other bodies' typology sets can populate the same slots.
 
 These adapters are alignment modules rather than copies of their source standards. Load the official D3FEND ontology, EMB3D catalog, OCSF schema, UCO ontologies, or BFO 2020 alongside STONEWORK when source-native constraints and attributes are required. Type ICS assets as `PhysicalArtifact` (and `Host` when they also run processes); there is no ATT&CK ICS adapter because STONEWORK classes already cover technique, mitigation, and artifact.
+
+### CVSS assessments and plan variables
+
+Use `stonework:cvssBaseScore`, `stonework:cvssSeverity`, and `stonework:cvssVector` directly on a `stonework:Vulnerability` for one selected headline score. Use `stonework:CvssMetric` through `stonework:hasCvssMetric` when version, scoring authority, provenance, or multiple assessments must be retained. The CVSS framework module adds decomposed vector fields but is not required for the common structured fields. CVSS base metrics express context-neutral technical severity. Environmental metrics may adjust technical severity for a deployment context, but CVSS alone does not establish that the product is present or express full enterprise risk.
+
+A `stonework:Variable` is not another CVSS representation. It is an execution-time placeholder used when a Plan consumes an existing score or an Investigation calculates a new assessment. An enterprise assessment may consider a `stonework:Vulnerability`, its `stonework:CvssMetric`, and current infrastructure state; the executing `stonework:Investigation` constructs a contextual `stonework:VulnerabilityAssessment` and binds an output Variable to it.
 
 ### Financial observables
 

@@ -49,6 +49,7 @@ SHACL_NS = "http://www.w3.org/ns/shacl#"
 VALIDATION_RESULT = f"{SHACL_NS}ValidationResult"
 RESULT_SEVERITY = f"{SHACL_NS}resultSeverity"
 RESULT_MESSAGE = f"{SHACL_NS}resultMessage"
+RESULT_PATH = f"{SHACL_NS}resultPath"
 FOCUS_NODE = f"{SHACL_NS}focusNode"
 
 VIOLATION = "Violation"
@@ -64,6 +65,7 @@ class Finding:
     severity: str
     message: str
     focus: str
+    path: str = ""
 
     def __str__(self) -> str:
         return f"    [{self.severity}] {self.focus}\n      {self.message}"
@@ -131,11 +133,15 @@ def _parse_ntriples(report: str) -> list[Finding]:
         severity_raw = props.get(RESULT_SEVERITY, [""])[0]
         messages = props.get(RESULT_MESSAGE, [])
         focus_raw = props.get(FOCUS_NODE, ["?"])[0]
+        path_raw = props.get(RESULT_PATH, [""])[0]
         findings.append(
             Finding(
                 severity=_unquote_iri(severity_raw).rsplit("#", 1)[-1],
                 message=_literal_text(messages[-1]) if messages else "(no message)",
                 focus=_unquote_iri(focus_raw),
+                # sh:resultPath is only present for property-shape violations;
+                # node-shape-level results (e.g. sh:closed) leave it unset.
+                path=_unquote_iri(path_raw).rsplit("#", 1)[-1] if path_raw else "",
             )
         )
     return findings
@@ -275,6 +281,25 @@ def expect_violation(fixture: str, profile: str, why: str) -> int:
     return 1
 
 
+def expect_violation_paths(
+    fixture: str, profile: str, expected_paths: tuple[str, ...], why: str
+) -> int:
+    """Every expected property path must independently produce a violation.
+
+    Used where a fixture is built to exercise several unrelated shapes at
+    once (e.g. one per cardinality-restricted property) -- checking for
+    "any violation" would pass even if most of those shapes stopped firing.
+    """
+    findings = validate(_path(fixture), profile)
+    violated = {f.path for f in findings if f.severity == VIOLATION}
+    missing = [path for path in expected_paths if path not in violated]
+    if not missing:
+        return 0
+    print(f"{why} (profile '{profile}', {fixture}):", file=sys.stderr)
+    print(f"  no violation reported for path(s): {', '.join(missing)}", file=sys.stderr)
+    return 1
+
+
 def expect_warning(fixture: str, profile: str, why: str) -> int:
     """Fixture is incomplete, not malformed: warnings only, no violations."""
     findings = validate(_path(fixture), profile)
@@ -340,6 +365,36 @@ def main() -> int:
             "shacl-invalid-normalized-valuation.ttl",
             "financial",
             "Malformed fixture was accepted",
+        )
+
+        # This fixture exercises every property the FunctionalProperty ->
+        # SHACL cardinality migration touched at once; confirm each shape
+        # still fires independently rather than just "some" violation.
+        failures += expect_violation_paths(
+            "shacl-invalid-functional-records.ttl",
+            "core",
+            (
+                "assertionObject",
+                "assertionRelationType",
+                "assertionSubject",
+                "boundTo",
+                "boundToLiteral",
+                "fromStep",
+                "guardLiteralValue",
+                "guardOperator",
+                "guardType",
+                "guardVariable",
+                "installationOf",
+                "installedOn",
+                "predictedLiteral",
+                "predictedType",
+                "predictedValue",
+                "predictsVariable",
+                "sightedObject",
+                "toStep",
+                "versionOf",
+            ),
+            "Functional-record fixture did not violate every expected shape",
         )
 
         # Incomplete records: advisory, so they must not gate the build.

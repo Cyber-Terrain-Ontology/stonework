@@ -1,0 +1,146 @@
+@prefix example: <https://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:componentContext
+	a stonework:ProductInstallation ;
+	stonework:installationOf
+		example:firstProduct ,
+		example:secondProduct
+		;
+	stonework:installedOn
+		example:firstInfrastructure ,
+		example:secondInfrastructure
+		;
+	.
+
+example:firstInfrastructure
+	a stonework:Infrastructure ;
+	.
+
+example:firstProduct
+	a stonework:VersionedProduct ;
+	stonework:versionOf
+		example:firstProductFamily ,
+		example:secondProductFamily
+		;
+	.
+
+example:firstProductFamily
+	a stonework:Product ;
+	.
+
+example:firstStep
+	a stonework:Step ;
+	.
+
+example:firstVariable
+	a stonework:Variable ;
+	.
+
+example:hypothesis
+	a stonework:Hypothesis ;
+	stonework:predictedLiteral
+		"first" ,
+		"second"
+		;
+	stonework:predictedType
+		stonework:Impact ,
+		stonework:Risk
+		;
+	stonework:predictedValue
+		example:firstSubject ,
+		example:secondSubject
+		;
+	stonework:predictsVariable
+		example:firstVariable ,
+		example:secondVariable
+		;
+	.
+
+example:relationship
+	a stonework:QualifiedAssertion ;
+	stonework:assertionObject
+		example:firstSubject ,
+		example:secondSubject
+		;
+	stonework:assertionRelationType
+		"first" ,
+		"second"
+		;
+	stonework:assertionSubject
+		example:firstSubject ,
+		example:secondSubject
+		;
+	.
+
+example:secondInfrastructure
+	a stonework:Infrastructure ;
+	.
+
+example:secondProduct
+	a stonework:VersionedProduct ;
+	.
+
+example:secondProductFamily
+	a stonework:Product ;
+	.
+
+example:secondStep
+	a stonework:Step ;
+	.
+
+example:secondVariable
+	a stonework:Variable ;
+	.
+
+example:sighting
+	a stonework:Sighting ;
+	stonework:sightedObject
+		example:firstSubject ,
+		example:secondSubject
+		;
+	.
+
+example:transition
+	a stonework:Transition ;
+	stonework:fromStep
+		example:firstStep ,
+		example:secondStep
+		;
+	stonework:guardLiteralValue
+		"first" ,
+		"second"
+		;
+	stonework:guardOperator
+		stonework:Equals ,
+		stonework:NotEquals
+		;
+	stonework:guardType
+		stonework:Impact ,
+		stonework:Risk
+		;
+	stonework:guardVariable
+		example:firstVariable ,
+		example:secondVariable
+		;
+	stonework:toStep
+		example:firstStep ,
+		example:secondStep
+		;
+	.
+
+example:variable
+	a stonework:Variable ;
+	stonework:boundTo
+		example:firstSubject ,
+		example:secondSubject
+		;
+	stonework:boundToLiteral
+		"first" ,
+		"second"
+		;
+	.
