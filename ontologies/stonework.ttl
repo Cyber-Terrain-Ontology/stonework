@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.7.0> ;
-	owl:versionInfo "0.7.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.8.0> ;
+	owl:versionInfo "0.8.0" ;
 	.
 
 stonework:AIAgent
@@ -259,6 +259,14 @@ stonework:Currency
 	skos:definition "A unit in which monetary value is denominated — a fiat currency or a crypto asset."@en ;
 	skos:prefLabel "Currency"@en ;
 	skos:scopeNote "The range of stonework:currency on stonework:MonetaryAmount. Fiat units are supplied as a closed controlled vocabulary in stonework:fiatCurrencyScheme (ISO 4217). Crypto units are stonework:CryptoAsset individuals, created as needed rather than pre-enumerated. Currency itself carries no instances directly."@en ;
+	.
+
+stonework:CvssMetric
+	a owl:Class ;
+	rdfs:subClassOf stonework:Assessment ;
+	skos:definition "A structured technical-severity assessment of a vulnerability using the Common Vulnerability Scoring System, carrying a version, vector, base score, and qualitative severity."@en ;
+	skos:prefLabel "CVSS Metric"@en ;
+	skos:scopeNote "Use stonework:hasCvssMetric to attach one or more source-specific assessments to a Vulnerability. Identify the scoring authority with stonework:createdBy and preserve the source record with stonework:hasProvenance. The direct stonework:cvssBaseScore, stonework:cvssSeverity, and stonework:cvssVector properties are query-friendly headline projections. CVSS base metrics are context-neutral; environmental metrics may adjust technical severity for a deployment context, but CVSS does not establish whether the vulnerable product is present or constitute a full enterprise risk assessment. Use stonework:VulnerabilityAssessment for that contextual judgment. A plan that calculates or consumes a CVSS assessment may bind a Variable to this assessment, but the Variable is an execution-time value and does not replace the vulnerability-to-metric relationship."@en ;
 	.
 
 stonework:CyberActivity
@@ -1016,7 +1024,7 @@ stonework:SecurityActuation
 	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAActuation> ;
 	skos:definition "A specific cyber activity in which a deployed security mechanism changes the security state of one or more cyber entities."@en ;
 	skos:prefLabel "Security Actuation"@en ;
-	skos:scopeNote "Use stonework:madeByActuator for the deployed mechanism, stonework:appliesCountermeasure for the safeguard or procedure being carried out, and stonework:actsOn for each affected entity. Unlike a Countermeasure specification, a SecurityActuation is an occurrence and may carry execution times and produced results. Inspired by SOSA sosa:Actuation without formally importing SOSA."@en ;
+	skos:scopeNote "Use stonework:madeByActuator for the deployed mechanism, stonework:appliesCountermeasure for the safeguard or procedure being carried out, and stonework:actsOn for each affected entity. Unlike a Countermeasure specification, a SecurityActuation is an occurrence and may carry execution times and produced results. Inspired by SOSA sosa:Actuation without formally importing SOSA. The baseline SHACL profile requires madeByActuator at violation severity — the acting tool's own identity is always self-asserted and known at creation time — but only warns on a missing actsOn: the tooling that performed an actuation typically knows what it acted on in source-native terms (an IP, a hostname, a process ID) before that reference resolves to a canonical CyberEntity individual, the same resolution lag as stonework:RoleAssignment's roleContext or stonework:MetricObservation's metricFor. A SecurityActuation with no actsOn yet is incomplete, not malformed."@en ;
 	.
 
 stonework:SecurityActuator
@@ -1198,7 +1206,7 @@ stonework:Variable
 	rdfs:seeAlso <http://purl.org/net/p-plan#Variable> ;
 	skos:definition "A named placeholder for a value declared by a Behavior or Step, bound to an actual value only once the corresponding execution occurs."@en ;
 	skos:prefLabel "Variable" ;
-	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. An input Variable is typically bound before its Step executes, from an already-known fact (e.g. a Vulnerability's CVSS score); an output Variable is bound only after its Step executes, from a result the execution produced (e.g. a Technique attempt's outcome). Bound via stonework:boundTo (an individual) or stonework:boundToLiteral (a scalar). The bound value is what stonework:Transition guard properties test, and — in a future deviation-detection layer — what an actual result is compared against what the Step declared as expected."@en ;
+	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. An input Variable is typically bound before its Step executes from an already-known fact; for example, a plan may bind to an existing stonework:CvssMetric assessment. An output Variable is bound only after its Step executes, such as when an Investigation constructs a stonework:VulnerabilityAssessment. Variables carry execution-time values and do not replace persistent domain relationships. Bound via stonework:boundTo (an individual) or stonework:boundToLiteral (a scalar). The bound value is what stonework:Transition guard properties test, and — in a future deviation-detection layer — what an actual result is compared against what the Step declared as expected."@en ;
 	.
 
 stonework:VersionedProduct
@@ -1222,7 +1230,7 @@ stonework:VulnerabilityAssessment
 	rdfs:subClassOf stonework:Assessment ;
 	skos:definition "A structured evaluation of a specific vulnerability's applicability and risk in a particular product or deployment context."@en ;
 	skos:prefLabel "Vulnerability Assessment"@en ;
-	skos:scopeNote "Captures VEX-style assessments: whether a product is affected, not affected, fixed, or under investigation, together with the justification and any remediation statement. Distinct from stonework:Vulnerability (which describes the flaw itself) — a VulnerabilityAssessment is an opinion about that flaw in a specific context."@en ;
+	skos:scopeNote "Captures VEX-style assessments: whether a product is affected, not affected, fixed, or under investigation, together with the justification and any remediation statement. Distinct from stonework:Vulnerability (which describes the flaw itself) and stonework:CvssMetric (which gives context-neutral technical severity): a VulnerabilityAssessment is a judgment about applicability and risk in a specific product, deployment, or enterprise context. It may be constructed by an Investigation executing a Plan whose inputs include the vulnerability, its CVSS assessment, and current enterprise graph state."@en ;
 	.
 
 stonework:Weakness
@@ -1505,6 +1513,19 @@ stonework:assessmentOf
 	rdfs:domain stonework:Assessment ;
 	skos:definition "Relates an Assessment to the entity being assessed."@en ;
 	skos:prefLabel "assessmentOf"@en ;
+	skos:scopeNote "Scheme-specific linking properties, such as stonework:cvssMetricFor, are declared rdfs:subPropertyOf this property, so a query over assessmentOf reaches every Assessment subclass regardless of scheme."@en ;
+	.
+
+stonework:assignedBy
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range stonework:Agent ;
+	skos:definition "Relates a vulnerability to the numbering authority that assigned its primary vulnerability identifier."@en ;
+	skos:prefLabel "assignedBy"@en ;
+	skos:scopeNote "Resolve source-native names, UUIDs, or email addresses to an Agent individual. Like stonework:vulnerabilityId and stonework:dateAssigned, this property describes the vulnerability record's single primary identifier; represent independently assigned identifiers as distinct vulnerability records. The unresolved source string is preserved separately on cve:assigner regardless of whether resolution succeeds."@en ;
 	.
 
 stonework:assignedRole
@@ -1999,7 +2020,7 @@ stonework:cveId
 	rdfs:range xsd:string ;
 	skos:definition "The CVE identifier in the format CVE-YYYY-NNNNN."@en ;
 	skos:prefLabel "cveId"@en ;
-	skos:scopeNote "Retained as the STONEWORK-level CVE-specific identifier and declared as a subproperty of stonework:vulnerabilityId. Source-native CVE records use cve:cveId, which has the same canonical superproperty."@en ;
+	skos:scopeNote "Retained as the STONEWORK-level CVE-specific identifier. cve:cveId (declared rdfs:subPropertyOf this property) is the source-native alias always present on data ingested from CVE JSON; query this property for cross-source lookups."@en ;
 	.
 
 stonework:cvssBaseScore
@@ -2009,9 +2030,71 @@ stonework:cvssBaseScore
 		;
 	rdfs:domain stonework:Vulnerability ;
 	rdfs:range xsd:decimal ;
-	skos:definition "The headline CVSS base score for this vulnerability, on a 0.0–10.0 scale."@en ;
+	skos:definition "The headline context-neutral CVSS base score for this vulnerability, on a 0.0–10.0 scale."@en ;
 	skos:prefLabel "cvssBaseScore"@en ;
 	skos:scopeNote "When multiple CVSS versions are present, this SHOULD reflect the highest available version (CVSS 4.0 preferred over 3.1, 3.1 over 2.0). For full structured metric data across all CVSS versions use stonework:hasCvssMetric."@en ;
+	.
+
+stonework:cvssMetricBaseScore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:decimal ;
+	skos:definition "The base score calculated by a structured CVSS assessment, on a 0.0-10.0 scale."@en ;
+	skos:prefLabel "cvssMetricBaseScore"@en ;
+	skos:scopeNote "cve:baseScore (on cve:CvssMetric) is declared rdfs:subPropertyOf this property (one-way)."@en ;
+	.
+
+stonework:cvssMetricBaseSeverity
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	skos:definition "The qualitative severity corresponding to a structured CVSS assessment's base score."@en ;
+	skos:prefLabel "cvssMetricBaseSeverity"@en ;
+	skos:scopeNote "cve:baseSeverity (on cve:CvssMetric) is declared rdfs:subPropertyOf this property (one-way)."@en ;
+	.
+
+stonework:cvssMetricFor
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:assessmentOf ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range stonework:Vulnerability ;
+	owl:inverseOf stonework:hasCvssMetric ;
+	skos:definition "The vulnerability evaluated by a structured CVSS assessment."@en ;
+	skos:prefLabel "cvssMetricFor"@en ;
+	skos:scopeNote "Declared rdfs:subPropertyOf stonework:assessmentOf so a query over assessmentOf returns every Assessment of a Vulnerability — CVSS metrics included — without needing to know each scheme's specific property name."@en ;
+	.
+
+stonework:cvssMetricVector
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	skos:definition "The complete vector string used by a structured CVSS assessment."@en ;
+	skos:prefLabel "cvssMetricVector"@en ;
+	skos:scopeNote "cve:vectorString (on cve:CvssMetric) is declared rdfs:subPropertyOf this property (one-way)."@en ;
+	.
+
+stonework:cvssMetricVersion
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	skos:definition "The CVSS specification version used by a structured assessment, such as 3.1 or 4.0."@en ;
+	skos:prefLabel "cvssMetricVersion"@en ;
+	skos:scopeNote "cve:version carries this same value on cve:CvssMetric as a plain string, but is not declared a subproperty of this property because cve:version is shared with cve:VersionRange, a class this property's domain does not cover."@en ;
 	.
 
 stonework:cvssScore
@@ -2071,7 +2154,7 @@ stonework:dateAssigned
 	rdfs:range xsd:dateTime ;
 	skos:definition "The date and time at which a vulnerability identifier was assigned by the relevant numbering authority."@en ;
 	skos:prefLabel "dateAssigned"@en ;
-	skos:scopeNote "Corresponds to cveMetadata.dateReserved in CVE JSON 5.x. cve:dateAssigned is declared owl:equivalentProperty of this property."@en ;
+	skos:scopeNote "Corresponds to cveMetadata.dateReserved in CVE JSON 5.x and equivalent assignment timestamps from other vulnerability sources. cve:dateAssigned is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
 stonework:datePublic
@@ -2083,7 +2166,7 @@ stonework:datePublic
 	rdfs:range xsd:dateTime ;
 	skos:definition "The date and time at which this vulnerability was publicly disclosed."@en ;
 	skos:prefLabel "datePublic"@en ;
-	skos:scopeNote "Corresponds to cveMetadata.datePublished in CVE JSON 5.x. cve:datePublic is declared owl:equivalentProperty of this property."@en ;
+	skos:scopeNote "Corresponds to cveMetadata.datePublished in CVE JSON 5.x and equivalent disclosure timestamps from other vulnerability sources. cve:datePublic is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
 stonework:dateUpdated
@@ -2095,7 +2178,7 @@ stonework:dateUpdated
 	rdfs:range xsd:dateTime ;
 	skos:definition "The date and time at which the vulnerability record was last modified in its source database."@en ;
 	skos:prefLabel "dateUpdated"@en ;
-	skos:scopeNote "Corresponds to cveMetadata.dateUpdated in CVE JSON 5.x. cve:dateUpdated is declared owl:equivalentProperty of this property."@en ;
+	skos:scopeNote "Corresponds to cveMetadata.dateUpdated in CVE JSON 5.x and equivalent update timestamps from other vulnerability sources. cve:dateUpdated is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
 stonework:deliveredVia
@@ -2331,7 +2414,7 @@ stonework:exploitsWeakness
 	rdfs:range stonework:Weakness ;
 	skos:definition "Relates a vulnerability to the weakness class it instantiates or exploits. Subproperty of stonework:hasWeakness, using the directional 'exploits' semantics aligned with CVE and CWE mapping conventions."@en ;
 	skos:prefLabel "exploitsWeakness"@en ;
-	skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. Used by cve:exploitsWeakness (rdfs:subPropertyOf this property) when CVE data is loaded."@en ;
+	skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. Used by cve:exploitsWeakness (rdfs:subPropertyOf this property) when CVE data is loaded; query this property directly for cross-source lookups."@en ;
 	.
 
 stonework:exposesService
@@ -2554,9 +2637,11 @@ stonework:hasBomEntry
 stonework:hasCvssMetric
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Vulnerability ;
+	rdfs:range stonework:CvssMetric ;
+	owl:inverseOf stonework:cvssMetricFor ;
 	skos:definition "Relates a vulnerability to a structured CVSS metric record carrying the version, vector string, and base/temporal/environmental scores."@en ;
 	skos:prefLabel "hasCvssMetric"@en ;
-	skos:scopeNote "A single vulnerability may carry metrics for multiple CVSS versions (2.0, 3.1, 4.0). For a single headline score and severity, use stonework:cvssBaseScore and stonework:cvssSeverity directly on the Vulnerability. This property links to the full per-version metric objects populated by CVE ingest."@en ;
+	skos:scopeNote "A single vulnerability may carry metrics for multiple CVSS versions (2.0, 3.1, 4.0) or scoring authorities. For a single headline score and severity, use stonework:cvssBaseScore and stonework:cvssSeverity directly on the Vulnerability. Core consumers can represent the common structured fields without an adapter; load the CVSS framework module for decomposed vector components and additional subscores."@en ;
 	.
 
 stonework:hasDependency
@@ -4491,7 +4576,7 @@ stonework:supersededBy
 	rdfs:range stonework:Vulnerability ;
 	skos:definition "Relates a vulnerability to the vulnerability record that supersedes it, e.g. when a CVE is split, merged, or formally replaced by another identifier."@en ;
 	skos:prefLabel "supersededBy"@en ;
-	skos:scopeNote "Corresponds to cve:replacedBy in CVE JSON 5.x, but as an object property linking to a stonework:Vulnerability individual rather than a string. The source-specific string form is preserved on cve:replacedBy."@en ;
+	skos:scopeNote "Corresponds to cve:replacedBy in CVE JSON 5.x, but as an object property linking to a stonework:Vulnerability individual rather than a string. The source-specific string form is preserved on cve:replacedBy regardless of whether resolution to this property succeeds."@en ;
 	.
 
 stonework:supersedes
@@ -4841,7 +4926,7 @@ stonework:vulnerabilityId
 	rdfs:range xsd:string ;
 	skos:definition "The canonical identifier assigned to this vulnerability by its originating numbering authority, e.g. 'CVE-2021-44228', 'GHSA-jfh8-c2jp-hdp9', or 'OSV-2021-1'."@en ;
 	skos:prefLabel "vulnerabilityId"@en ;
-	skos:scopeNote "Source-specific ID properties (e.g. cve:cveId) are declared rdfs:subPropertyOf this property, enabling cross-source queries on a single predicate. Each vulnerability record SHOULD carry exactly one identifier from its primary numbering authority."@en ;
+	skos:scopeNote "Identifier-specific core properties such as stonework:cveId are declared as subproperties (and source-native framework aliases such as cve:cveId are declared subproperties of those), enabling cross-source queries on a single predicate. Each vulnerability record SHOULD carry exactly one identifier from its primary numbering authority."@en ;
 	.
 
 stonework:walletAddress

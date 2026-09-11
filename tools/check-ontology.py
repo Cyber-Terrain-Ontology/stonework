@@ -682,6 +682,17 @@ def main() -> int:
             f"duplicate skos:notation {notation!r} in {describe(scheme)}: {rendered}"
         )
 
+    bidirectional_replacements = {
+        OWL + "sameAs",
+        OWL + "equivalentClass",
+        OWL + "equivalentProperty",
+    }
+    equivalence_objects = {
+        obj[1]
+        for _, predicate, obj in triples
+        if predicate in bidirectional_replacements and obj[0] == "iri"
+    }
+
     for subject in sorted(sources):
         definitions = values[(subject, SKOS + "definition")]
         lexical_definitions = {obj[1:] for obj in definitions if obj[0] == "literal"}
@@ -693,10 +704,14 @@ def main() -> int:
             obj[0] == "literal" and obj[1].casefold() == "true"
             for obj in values[(subject, OWL + "deprecated")]
         )
-        if deprecated and values[(subject, OWL + "sameAs")]:
+        has_bidirectional_replacement = any(
+            values[(subject, predicate)] for predicate in bidirectional_replacements
+        )
+        if deprecated and (has_bidirectional_replacement or subject in equivalence_objects):
             errors.append(
-                f"{describe(subject)} is deprecated and declares owl:sameAs; use a replacement "
-                "link so deprecation is not inferred onto the canonical resource"
+                f"{describe(subject)} is deprecated and declares a bidirectional equivalence; "
+                "use a one-way subclass or subproperty link so deprecation is not inferred "
+                "onto the canonical resource"
             )
 
     malware_type = STONEWORK + "MalwareType"

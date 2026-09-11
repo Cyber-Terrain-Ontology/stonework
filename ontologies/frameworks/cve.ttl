@@ -1,6 +1,8 @@
+# imports: https://cyberterrain.org/ns/frameworks/cvss
 # imports: https://cyberterrain.org/ns/stonework#
 
 @prefix cve: <https://cyberterrain.org/ns/frameworks/cve#> .
+@prefix cvss: <https://cyberterrain.org/ns/frameworks/cvss#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -12,47 +14,18 @@
 	a owl:Ontology ;
 	rdfs:label "CVE Unified Ontology"@en ;
 	rdfs:comment "Unified OWL ontology for CVE records. Derived from the framework_cve Pydantic model, supporting both CVE JSON 2.x and CVE JSON 5.x source schemas."@en ;
-	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/cve/0.1.0> ;
-	owl:versionInfo "0.1.0" ;
-	.
-
-cve:2_0
-	a
-		owl:NamedIndividual ,
-		cve:CvssVersion
+	owl:imports
+		<https://cyberterrain.org/ns/frameworks/cvss> ,
+		<https://cyberterrain.org/ns/stonework#>
 		;
-	rdfs:label "2.0"@en ;
-	.
-
-cve:3_0
-	a
-		owl:NamedIndividual ,
-		cve:CvssVersion
-		;
-	rdfs:label "3.0"@en ;
-	.
-
-cve:3_1
-	a
-		owl:NamedIndividual ,
-		cve:CvssVersion
-		;
-	rdfs:label "3.1"@en ;
-	.
-
-cve:4_0
-	a
-		owl:NamedIndividual ,
-		cve:CvssVersion
-		;
-	rdfs:label "4.0"@en ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/cve/0.2.0> ;
+	owl:versionInfo "0.2.0" ;
 	.
 
 cve:AffectedProduct
 	a owl:Class ;
 	rdfs:subClassOf
-		stonework:VersionedProduct ,
+		stonework:ComponentContext ,
 		[
 			a owl:Restriction ;
 			owl:onProperty cve:collectionUrl ;
@@ -103,7 +76,9 @@ cve:AffectedProduct
 	rdfs:comment """A product/component affected by (or fixed for) the vulnerability.
 
 v2  → DWF.AFFECTS[]
-v5  → cnaContainer.affected[]"""@en ;
+v5  → cnaContainer.affected[]
+
+This is a source-native advisory context rather than the canonical product identity. Link it to the normalized stonework:VersionedProduct with stonework:installationOf."""@en ;
 	.
 
 cve:Credit
@@ -215,6 +190,31 @@ cve:CveRecord
 			a owl:Restriction ;
 			owl:onProperty cve:title ;
 			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty stonework:cveId ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty stonework:dateAssigned ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty stonework:datePublic ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty stonework:dateUpdated ;
+			owl:maxCardinality "1"^^xsd:integer ;
+		] ,
+		[
+			a owl:Restriction ;
+			owl:onProperty stonework:title ;
+			owl:maxCardinality "1"^^xsd:integer ;
 		]
 		;
 	rdfs:label "CVE Record"@en ;
@@ -242,6 +242,7 @@ cve:CveState
 cve:CvssMetric
 	a owl:Class ;
 	rdfs:subClassOf
+		stonework:CvssMetric ,
 		[
 			a owl:Restriction ;
 			owl:onProperty cve:baseScore ;
@@ -279,25 +280,13 @@ cve:CvssMetric
 		]
 		;
 	rdfs:label "CVSS Metric"@en ;
-	rdfs:comment """A CVSS score in any supported version.
+	rdfs:comment """The CVE JSON schema's own rendering of a CVSS assessment.
 
 v2  → DWF.CVSSv2 / DWF.CVSSv3  (split into BM/TM/EM sub-objects)
-v5  → cnaContainer.metrics[].cvssV2_0 / cvssV3_0 / cvssV3_1 / cvssV4_0"""@en ;
-	.
+v5  → cnaContainer.metrics[].cvssV2_0 / cvssV3_0 / cvssV3_1 / cvssV4_0
 
-cve:CvssVersion
-	a owl:Class ;
-	rdfs:label "CVSS Version"@en ;
-	rdfs:comment "Supported CVSS scoring version identifiers."@en ;
-	owl:equivalentClass [
-		a owl:Class ;
-		owl:oneOf (
-			cve:2_0
-			cve:3_0
-			cve:3_1
-			cve:4_0
-		) ;
-	] ;
+Faithful to the source schema's own metrics[] entry shape; aligned to the
+source-neutral stonework:CvssMetric for cross-source queries."""@en ;
 	.
 
 cve:LocalizedText
@@ -478,8 +467,8 @@ v5  → affected[].versions[]  (structured {version, status, lessThan, …})"""@
 
 cve:affected
 	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:affected ;
 	rdfs:label "affected"@en ;
+	rdfs:comment "Links a CVE record to a source-native affected-product entry. When that entry identifies its normalized product with stonework:installationOf, the adapter's property-chain axiom infers the direct stonework:affected relationship."@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:AffectedProduct ;
 	.
@@ -499,7 +488,7 @@ cve:assigner
 		owl:FunctionalProperty
 		;
 	rdfs:label "assigner"@en ;
-	rdfs:comment "Org name, UUID, or email of the assigner"@en ;
+	rdfs:comment "Org name, UUID, or email of the assigner, exactly as it appears in the source CVE JSON. stonework:assignedBy carries the resolved Agent individual; this property preserves the raw source value regardless of whether resolution succeeds."@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:string ;
 	.
@@ -509,6 +498,7 @@ cve:baseScore
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:cvssMetricBaseScore ;
 	rdfs:label "base_score"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:decimal ;
@@ -519,6 +509,7 @@ cve:baseSeverity
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:cvssMetricBaseSeverity ;
 	rdfs:label "base_severity"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:string ;
@@ -589,11 +580,11 @@ cve:dateAssigned
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:dateAssigned ;
 	rdfs:label "date_assigned"@en ;
 	rdfs:comment "Date CVE ID was assigned"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:dateTime ;
-	owl:equivalentProperty stonework:dateAssigned ;
 	.
 
 cve:datePublic
@@ -601,11 +592,11 @@ cve:datePublic
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:datePublic ;
 	rdfs:label "date_public"@en ;
 	rdfs:comment "Date vulnerability was disclosed publicly"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:dateTime ;
-	owl:equivalentProperty stonework:datePublic ;
 	.
 
 cve:dateRequested
@@ -624,11 +615,11 @@ cve:dateUpdated
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:dateUpdated ;
 	rdfs:label "date_updated"@en ;
 	rdfs:comment "Date record was last updated"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:dateTime ;
-	owl:equivalentProperty stonework:dateUpdated ;
 	.
 
 cve:defaultStatus
@@ -682,6 +673,7 @@ cve:environmentalScore
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf cvss:environmentalScore ;
 	rdfs:label "environmental_score"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:decimal ;
@@ -793,6 +785,7 @@ cve:lessThan
 
 cve:metrics
 	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasCvssMetric ;
 	rdfs:label "metrics"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:CvssMetric ;
@@ -891,9 +884,8 @@ cve:purl
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
-	rdfs:subPropertyOf stonework:purl ;
 	rdfs:label "purl"@en ;
-	rdfs:comment "Package URL (purl) — v5 5.2+"@en ;
+	rdfs:comment "Package URL (purl) on a CVE JSON affected-product entry — v5 5.2+. Use stonework:purl on the normalized stonework:VersionedProduct individual."@en ;
 	rdfs:domain cve:AffectedProduct ;
 	rdfs:range xsd:anyURI ;
 	.
@@ -907,8 +899,8 @@ cve:raw
 	rdfs:comment "Original metric object"@en ;
 	rdfs:domain [
 		owl:unionOf (
-			cve:CvssMetric
 			cve:CveRecord
+			cve:CvssMetric
 		) ;
 	] ;
 	rdfs:range xsd:string ;
@@ -951,7 +943,7 @@ cve:remediation
 cve:replacedBy
 	a owl:DatatypeProperty ;
 	rdfs:label "replaced_by"@en ;
-	rdfs:comment "CVE IDs that supersede this one"@en ;
+	rdfs:comment "CVE IDs that supersede this one, exactly as they appear in the source CVE JSON. stonework:supersededBy carries the resolved Vulnerability individual; this property preserves the raw source string(s) regardless of whether resolution succeeds."@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range xsd:string ;
 	.
@@ -1069,6 +1061,7 @@ cve:temporalScore
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf cvss:temporalScore ;
 	rdfs:label "temporal_score"@en ;
 	rdfs:domain cve:CvssMetric ;
 	rdfs:range xsd:decimal ;
@@ -1162,6 +1155,7 @@ cve:vectorString
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:cvssMetricVector ;
 	rdfs:label "vector_string"@en ;
 	rdfs:comment "Full CVSS vector string"@en ;
 	rdfs:domain cve:CvssMetric ;
@@ -1184,11 +1178,11 @@ cve:version
 		owl:FunctionalProperty
 		;
 	rdfs:label "version"@en ;
-	rdfs:comment "Exact version string"@en ;
+	rdfs:comment "Exact version string. On a VersionRange this is the affected/fixed version; on a CvssMetric this is the CVSS specification version (e.g. '3.1', '4.0') — see stonework:cvssMetricVersion for the aligned core property."@en ;
 	rdfs:domain [
 		owl:unionOf (
-			cve:VersionRange
 			cve:CvssMetric
+			cve:VersionRange
 		) ;
 	] ;
 	rdfs:range xsd:string ;
@@ -1217,4 +1211,11 @@ cve:workarounds
 	rdfs:label "workarounds"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:LocalizedText ;
+	.
+
+stonework:affected
+	owl:propertyChainAxiom (
+		cve:affected
+		stonework:installationOf
+	) ;
 	.
