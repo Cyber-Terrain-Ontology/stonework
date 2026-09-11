@@ -27,6 +27,18 @@ stonework:ActivityWindowShape
 		;
 	.
 
+stonework:BomEntryShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:VersionedProduct ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A BomEntry must identify exactly one versioned product."@en ;
+		sh:minCount "1"^^xsd:integer ;
+		sh:path stonework:installationOf ;
+	] ;
+	sh:targetClass stonework:BomEntry ;
+	.
+
 stonework:CertificateValidityShape
 	a sh:NodeShape ;
 	sh:property
@@ -133,6 +145,33 @@ stonework:HashShape
 		]
 		;
 	sh:targetClass stonework:Hash ;
+	.
+
+stonework:HypothesisShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:Variable ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Hypothesis must identify exactly one predicted Variable."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:predictsVariable ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:IRI ;
+			sh:path stonework:predictedType ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:predictedLiteral ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:predictedValue ;
+		]
+		;
+	sh:targetClass stonework:Hypothesis ;
 	.
 
 stonework:IpVersionShape
@@ -330,6 +369,27 @@ stonework:PortShape
 		;
 	.
 
+stonework:ProductInstallationShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:Infrastructure ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A ProductInstallation must identify exactly one Infrastructure target."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:installedOn ;
+		] ,
+		[
+			sh:class stonework:VersionedProduct ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A ProductInstallation must identify exactly one versioned product."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:installationOf ;
+		]
+		;
+	sh:targetClass stonework:ProductInstallation ;
+	.
+
 stonework:QualifiedAssertionShape
 	a sh:NodeShape ;
 	sh:property
@@ -349,6 +409,19 @@ stonework:QualifiedAssertionShape
 			sh:datatype xsd:dateTime ;
 			sh:maxCount "1"^^xsd:integer ;
 			sh:path stonework:validUntil ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:assertionRelationType ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:assertionObject ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:assertionSubject ;
 		]
 		;
 	sh:targetClass stonework:QualifiedAssertion ;
@@ -417,4 +490,81 @@ stonework:SecurityActuationShape
 		]
 		;
 	sh:targetClass stonework:SecurityActuation ;
+	.
+
+stonework:SightingShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Sighting must identify exactly one sighted object."@en ;
+		sh:minCount "1"^^xsd:integer ;
+		sh:path stonework:sightedObject ;
+	] ;
+	sh:targetClass stonework:Sighting ;
+	.
+
+stonework:TransitionShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:ComparisonOperator ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:guardOperator ;
+		] ,
+		[
+			sh:class stonework:Step ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Transition must identify exactly one destination Step."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:toStep ;
+		] ,
+		[
+			sh:class stonework:Step ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Transition must identify exactly one source Step."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:fromStep ;
+		] ,
+		[
+			sh:class stonework:Variable ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:guardVariable ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:IRI ;
+			sh:path stonework:guardType ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:guardLiteralValue ;
+		]
+		;
+	sh:targetClass stonework:Transition ;
+	.
+
+stonework:VariableShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:nodeKind sh:Literal ;
+			sh:path stonework:boundToLiteral ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:boundTo ;
+		]
+		;
+	sh:targetClass stonework:Variable ;
+	.
+
+stonework:VersionedProductShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Product ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:path stonework:versionOf ;
+	] ;
+	sh:targetClass stonework:VersionedProduct ;
 	.
