@@ -27,6 +27,18 @@ stonework:ActivityWindowShape
 		;
 	.
 
+stonework:BomEntryShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:VersionedProduct ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A BomEntry must identify exactly one versioned product."@en ;
+		sh:minCount "1"^^xsd:integer ;
+		sh:path stonework:installationOf ;
+	] ;
+	sh:targetClass stonework:BomEntry ;
+	.
+
 stonework:CertificateValidityShape
 	a sh:NodeShape ;
 	sh:property
@@ -44,18 +56,6 @@ stonework:CertificateValidityShape
 		]
 		;
 	sh:targetClass stonework:Certificate ;
-	.
-
-stonework:ComponentContextShape
-	a sh:NodeShape ;
-	sh:property [
-		sh:class stonework:VersionedProduct ;
-		sh:maxCount "1"^^xsd:integer ;
-		sh:message "A component context must identify exactly one versioned product."@en ;
-		sh:minCount "1"^^xsd:integer ;
-		sh:path stonework:installationOf ;
-	] ;
-	sh:targetClass stonework:ComponentContext ;
 	.
 
 stonework:ConfidenceShape
@@ -373,13 +373,22 @@ stonework:PortShape
 
 stonework:ProductInstallationShape
 	a sh:NodeShape ;
-	sh:property [
-		sh:class stonework:Infrastructure ;
-		sh:maxCount "1"^^xsd:integer ;
-		sh:message "A ProductInstallation must identify exactly one Infrastructure target."@en ;
-		sh:minCount "1"^^xsd:integer ;
-		sh:path stonework:installedOn ;
-	] ;
+	sh:property
+		[
+			sh:class stonework:Infrastructure ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A ProductInstallation must identify exactly one Infrastructure target."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:installedOn ;
+		] ,
+		[
+			sh:class stonework:VersionedProduct ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A ProductInstallation must identify exactly one versioned product."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:installationOf ;
+		]
+		;
 	sh:targetClass stonework:ProductInstallation ;
 	.
 

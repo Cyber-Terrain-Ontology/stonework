@@ -133,7 +133,15 @@ stonework:Behavior
 
 stonework:BomEntry
 	a owl:Class ;
-	rdfs:subClassOf stonework:ComponentContext ;
+	rdfs:subClassOf
+		stonework:ComponentContext ,
+		[
+			a owl:Restriction ;
+			owl:onProperty stonework:installationOf ;
+			owl:onClass stonework:VersionedProduct ;
+			owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+		]
+		;
 	rdfs:comment "BomEntry is the STONEWORK representation of a CycloneDX component element or SPDX package entry. It links a VersionedProduct into the context of a particular SBOM document via stonework:installationOf, and may carry component-specific metadata (PURL, license, hash, component type) that does not belong on the VersionedProduct itself."@en ;
 	skos:definition "A single component entry within a Software Bill of Materials, asserting that a specific VersionedProduct is included in the artifact or system described by the SBOM."@en ;
 	skos:prefLabel "BOM Entry" ;
@@ -190,7 +198,7 @@ stonework:ComponentContext
 	a owl:Class ;
 	skos:definition "An abstract class representing a context-specific reference to a VersionedProduct: the same product version appears differently depending on whether it is declared in a bill of materials or observed as a running installation on a specific system."@en ;
 	skos:prefLabel "Component Context" ;
-	skos:scopeNote "Subclassed by stonework:BomEntry (declarative — listed in an SBOM document) and stonework:ProductInstallation (observational — verified deployment via SWID tag or scan). Unifies these two evidence bases under a single superclass so that stonework:installationOf can span both without domain restrictions forcing incorrect inferences."@en ;
+	skos:scopeNote "Subclassed by stonework:BomEntry (declarative — listed in an SBOM document), stonework:ProductInstallation (observational — verified deployment via SWID tag or scan), and framework-specific subclasses such as cve:AffectedProduct (advisory — named in a source vulnerability record, possibly against several VersionedProduct individuals at once). Unifies these evidence bases under a single superclass so that stonework:installationOf can span all of them without domain restrictions forcing incorrect inferences. BomEntry and ProductInstallation are additionally restricted to at most one installationOf value each; ComponentContext itself imposes no such limit, since not every subclass shares that one-to-one shape."@en ;
 	.
 
 stonework:Control
@@ -904,7 +912,15 @@ stonework:Product
 
 stonework:ProductInstallation
 	a owl:Class ;
-	rdfs:subClassOf stonework:ComponentContext ;
+	rdfs:subClassOf
+		stonework:ComponentContext ,
+		[
+			a owl:Restriction ;
+			owl:onProperty stonework:installationOf ;
+			owl:onClass stonework:VersionedProduct ;
+			owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+		]
+		;
 	rdfs:comment "Represents the most granular product identity level: not what software exists, but where and how it is installed. Multiple ProductInstallation individuals may reference the same VersionedProduct."@en ;
 	skos:definition "A specific installed instance of a VersionedProduct on a particular system or environment, as identified by a SWID tag or equivalent installation record."@en ;
 	skos:prefLabel "Product Installation" ;
@@ -3086,14 +3102,11 @@ stonework:initiatedBy
 	.
 
 stonework:installationOf
-	a
-		owl:ObjectProperty ,
-		owl:FunctionalProperty
-		;
+	a owl:ObjectProperty ;
 	rdfs:range stonework:VersionedProduct ;
 	skos:definition "Relates a component context to the versioned product it references or instantiates."@en ;
 	skos:prefLabel "installation of" ;
-	skos:scopeNote "Used by both stonework:BomEntry (declarative — a component listed in an SBOM) and stonework:ProductInstallation (observational — a verified deployment on a specific system). Domain is intentionally left unset to avoid restricting future component-context subclasses; intended subjects are subclasses of stonework:ComponentContext."@en ;
+	skos:scopeNote "Used by stonework:BomEntry (declarative — a component listed in an SBOM), stonework:ProductInstallation (observational — a verified deployment on a specific system), and other stonework:ComponentContext subclasses. Domain is intentionally left unset to avoid restricting future component-context subclasses. Not declared owl:FunctionalProperty at the property level, because not every ComponentContext subclass is one-to-one with a product — a source-native advisory entry may legitimately name several. BomEntry and ProductInstallation instead carry a local owl:maxQualifiedCardinality 1 restriction on this property (onClass stonework:VersionedProduct), which gives those two classes the same at-most-one guarantee without constraining subclasses that don't share it."@en ;
 	.
 
 stonework:installedOn

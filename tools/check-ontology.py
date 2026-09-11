@@ -227,7 +227,6 @@ def main() -> int:
         STONEWORK + "guardOperator",
         STONEWORK + "guardType",
         STONEWORK + "guardVariable",
-        STONEWORK + "installationOf",
         STONEWORK + "installedOn",
         STONEWORK + "predictedLiteral",
         STONEWORK + "predictedType",
@@ -257,6 +256,50 @@ def main() -> int:
     for prop in sorted(non_transitive_properties):
         if transitive_property in types[prop]:
             errors.append(f"{describe(prop)} must not be an owl:TransitiveProperty")
+
+    # stonework:installationOf is deliberately not owl:FunctionalProperty at the
+    # property level, because not every stonework:ComponentContext subclass is
+    # one-to-one with a product (e.g. a source-native advisory entry may name
+    # several). BomEntry and ProductInstallation are the two subclasses that
+    # ARE one-to-one, so they each carry a local qualified-cardinality
+    # restriction instead, giving those two classes the same at-most-one
+    # guarantee without constraining the others.
+    max_qualified_cardinality = OWL + "maxQualifiedCardinality"
+    on_property_predicate = OWL + "onProperty"
+    on_class_predicate = OWL + "onClass"
+    required_qualified_cardinality_restrictions = {
+        (STONEWORK + "BomEntry", STONEWORK + "installationOf", STONEWORK + "VersionedProduct"),
+        (STONEWORK + "ProductInstallation", STONEWORK + "installationOf", STONEWORK + "VersionedProduct"),
+    }
+    for cls, prop, target_class in sorted(required_qualified_cardinality_restrictions):
+        restrictions = [
+            obj[1] for obj in values[(cls, RDFS + "subClassOf")] if obj[0] == "bnode"
+        ]
+        satisfied = False
+        for restriction in restrictions:
+            restriction_properties = {
+                obj[1] for obj in values[(restriction, on_property_predicate)] if obj[0] == "iri"
+            }
+            restriction_classes = {
+                obj[1] for obj in values[(restriction, on_class_predicate)] if obj[0] == "iri"
+            }
+            restriction_cardinalities = {
+                obj[1]
+                for obj in values[(restriction, max_qualified_cardinality)]
+                if obj[0] == "literal"
+            }
+            if (
+                prop in restriction_properties
+                and target_class in restriction_classes
+                and "1" in restriction_cardinalities
+            ):
+                satisfied = True
+                break
+        if not satisfied:
+            errors.append(
+                f"{describe(cls)} must declare an owl:maxQualifiedCardinality 1 restriction "
+                f"on {describe(prop)} (owl:onClass {describe(target_class)})"
+            )
 
     d3fend_file = "ontologies/frameworks/d3fend.ttl"
     d3fend_ontology = "https://cyberterrain.org/ns/frameworks/d3fend"
