@@ -205,13 +205,11 @@ stonework:MetricObservationShape
 		[
 			sh:class stonework:CyberEntity ;
 			sh:maxCount "1"^^xsd:integer ;
-			sh:minCount "1"^^xsd:integer ;
 			sh:path stonework:metricFor ;
 		] ,
 		[
 			sh:class stonework:MetricType ;
 			sh:maxCount "1"^^xsd:integer ;
-			sh:minCount "1"^^xsd:integer ;
 			sh:path stonework:metricType ;
 		] ,
 		[
@@ -383,7 +381,6 @@ stonework:RoleAssignmentShape
 		] ,
 		[
 			sh:maxCount "1"^^xsd:integer ;
-			sh:minCount "1"^^xsd:integer ;
 			sh:or (
 				[
 					sh:class stonework:CyberActivity ;

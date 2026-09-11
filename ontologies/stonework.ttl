@@ -1024,7 +1024,7 @@ stonework:SecurityActuation
 	rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/#SOSAActuation> ;
 	skos:definition "A specific cyber activity in which a deployed security mechanism changes the security state of one or more cyber entities."@en ;
 	skos:prefLabel "Security Actuation"@en ;
-	skos:scopeNote "Use stonework:madeByActuator for the deployed mechanism, stonework:appliesCountermeasure for the safeguard or procedure being carried out, and stonework:actsOn for each affected entity. Unlike a Countermeasure specification, a SecurityActuation is an occurrence and may carry execution times and produced results. Inspired by SOSA sosa:Actuation without formally importing SOSA."@en ;
+	skos:scopeNote "Use stonework:madeByActuator for the deployed mechanism, stonework:appliesCountermeasure for the safeguard or procedure being carried out, and stonework:actsOn for each affected entity. Unlike a Countermeasure specification, a SecurityActuation is an occurrence and may carry execution times and produced results. Inspired by SOSA sosa:Actuation without formally importing SOSA. The baseline SHACL profile requires actsOn and madeByActuator: unlike stonework:QualifiedAssertion — the generic, framework-mapping-facing reification, deliberately left lenient so partial cross-source data can be staged — a SecurityActuation is normally authored whole, in one step, by the security tooling that performed it, so both fields are always known at creation time."@en ;
 	.
 
 stonework:SecurityActuator
