@@ -106,7 +106,16 @@ def main() -> int:
         print("Run once: bash tools/download-rdf-toolkit.sh", file=sys.stderr)
         return 1
 
-    ttl_files = sorted(ROOT.glob("**/*.ttl"))
+    # Tracked Turtle only. A glob of the working tree would also scan vendor
+    # trees such as the unpacked Apache Jena examples under tools/.
+    ttl_files = sorted(
+        ROOT / relative
+        for relative in subprocess.check_output(
+            ["git", "-C", str(ROOT), "ls-files", "--", "*.ttl"],
+            text=True,
+        ).splitlines()
+        if relative
+    )
     triples = []
     sources = defaultdict(set)
     errors = []

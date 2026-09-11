@@ -1,0 +1,72 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+stonework:CurrencyExchangeTransactionShape
+	a sh:NodeShape ;
+	sh:message "A currency-exchange transaction should identify both its originator input and beneficiary output monetary values; a partially mapped transaction is incomplete, not malformed."@en ;
+	sh:or (
+		[
+			sh:not [
+				sh:property [
+					sh:hasValue stonework:transactionTypeCurrencyExchange ;
+					sh:path stonework:categorizedBy ;
+				] ;
+			] ;
+		]
+		[
+			sh:property
+				[
+					sh:class stonework:MonetaryAmount ;
+					sh:message "A currency-exchange transaction should identify at least one beneficiary output monetary value."@en ;
+					sh:minCount "1"^^xsd:integer ;
+					sh:path stonework:beneficiaryMonetaryValue ;
+				] ,
+				[
+					sh:class stonework:MonetaryAmount ;
+					sh:message "A currency-exchange transaction should identify at least one originator input monetary value."@en ;
+					sh:minCount "1"^^xsd:integer ;
+					sh:path stonework:originatorMonetaryValue ;
+				]
+				;
+		]
+	) ;
+	sh:severity sh:Warning ;
+	sh:targetClass stonework:FinancialTransaction ;
+	.
+
+stonework:NormalizedValuationShape
+	a sh:NodeShape ;
+	sh:or (
+		[
+			sh:not [
+				sh:property [
+					sh:hasValue stonework:metricNormalizedValue ;
+					sh:path stonework:metricType ;
+				] ;
+			] ;
+		]
+		[
+			sh:property
+				[
+					sh:class stonework:Currency ;
+					sh:maxCount "1"^^xsd:integer ;
+					sh:message "A normalized monetary valuation must identify exactly one valuationCurrency."@en ;
+					sh:minCount "1"^^xsd:integer ;
+					sh:path stonework:valuationCurrency ;
+				] ,
+				[
+					sh:datatype xsd:decimal ;
+					sh:maxCount "1"^^xsd:integer ;
+					sh:message "A normalized monetary valuation must record exactly one decimal metricValue."@en ;
+					sh:minCount "1"^^xsd:integer ;
+					sh:path stonework:metricValue ;
+				]
+				;
+		]
+	) ;
+	sh:targetClass stonework:MetricObservation ;
+	.
