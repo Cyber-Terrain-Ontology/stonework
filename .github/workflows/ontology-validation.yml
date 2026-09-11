@@ -31,19 +31,14 @@ jobs:
       - name: Download RDF toolkit
         run: bash tools/download-rdf-toolkit.sh
 
-      - name: Cache SHACL engine
+      - name: Cache Apache Jena
         uses: actions/cache@v4
         with:
-          path: |
-            tools/bin
-            tools/.crates.toml
-            tools/.crates2.json
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: shacl-validator-${{ runner.os }}-${{ hashFiles('tools/install-shacl-validator.sh') }}
+          path: tools/apache-jena-6.2.0
+          key: apache-jena-${{ runner.os }}-${{ hashFiles('tools/download-jena.sh') }}
 
-      - name: Build SHACL engine
-        run: bash tools/install-shacl-validator.sh
+      - name: Download Apache Jena
+        run: bash tools/download-jena.sh
 
       - name: Check Turtle formatting
         run: bash .githooks/format-ttl.sh --check

@@ -144,12 +144,13 @@ the shape graph rather than as a shipped constraint.
 
 ## The engine
 
-`tools/check-shacl.py` shells out to
-[`shacl-cli`](https://crates.io/crates/shacl-cli), pinned in
-`tools/install-shacl-validator.sh` and built into `tools/bin/` (gitignored).
+`tools/check-shacl.py` shells out to [Apache Jena](https://jena.apache.org)
+`shacl`, pinned in `tools/download-jena.sh` and unpacked into
+`tools/apache-jena-6.2.0/` (gitignored). Jena 6 requires Java 21; rdf-toolkit
+still runs on Java 11, so the combined local toolchain is Java 21.
 
 ```bash
-bash tools/install-shacl-validator.sh
+bash tools/download-jena.sh
 python3 tools/check-shacl.py
 ```
 
@@ -157,10 +158,11 @@ It replaced a hand-rolled RDF4J harness whose SHACL engine did not implement
 `sh:severity`, `sh:message`, `sh:closed`, or `sh:lessThanOrEquals`. That engine
 silently rewrote `sh:Warning` to `sh:Violation`, discarded authored messages in
 favour of generic ones, and needed a bespoke SPARQL workaround to enforce
-ordering — which is why severity tiers were not expressible before. `shacl-cli`
-passes the W3C SHACL Core test suite and emits a JSON report, which keeps the
-Python tooling dependency-free.
+ordering — which is why severity tiers were not expressible before. Jena's SHACL
+implementation covers the W3C Core constraints this repo uses, including
+`sh:lessThanOrEquals` natively, and reports authored `sh:message` values.
 
-Note that the engine exits non-zero on warnings as well as violations, so the
-harness parses the JSON report and applies the severity gate itself rather than
-relying on the exit code.
+Jena always exits 0 when it can produce a ValidationReport, including for
+non-conforming data, so the harness canonicalizes the Turtle report to N-Triples
+with `riot` and applies the severity gate itself rather than relying on the
+exit code. The Python tooling stays dependency-free.

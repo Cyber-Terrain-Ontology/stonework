@@ -148,10 +148,10 @@ Run these two commands once after cloning:
 ```bash
 git config core.hooksPath .githooks
 bash tools/download-rdf-toolkit.sh
-bash tools/install-shacl-validator.sh
+bash tools/download-jena.sh
 ```
 
-The first command activates the hooks tracked in `.githooks/`. The second downloads the [edmcouncil rdf-toolkit](https://github.com/edmcouncil/rdf-toolkit) jar (~33 MB, gitignored) used to canonicalize Turtle files on every commit. The third builds the pinned [`shacl-cli`](https://crates.io/crates/shacl-cli) SHACL engine into `tools/bin/` (gitignored, ~30 s, requires `cargo`).
+The first command activates the hooks tracked in `.githooks/`. The second downloads the [edmcouncil rdf-toolkit](https://github.com/edmcouncil/rdf-toolkit) jar (~33 MB, gitignored) used to canonicalize Turtle files on every commit. The third downloads the pinned [Apache Jena](https://jena.apache.org) 6.2.0 distribution (~24 MB, gitignored) used as the SHACL engine.
 
 Run the ontology checks directly at any time with:
 
@@ -161,7 +161,7 @@ python3 tools/check-ontology.py
 python3 tools/check-shacl.py
 ```
 
-The first command verifies canonical Turtle formatting without modifying files. The second parses every Turtle file and checks high-value OWL integrity rules. The third composes the SHACL shape graphs in `ontologies/shapes/` into named validation profiles and runs them against the repository's test fixtures with the pinned [`shacl-cli`](https://crates.io/crates/shacl-cli) engine. CI runs all three checks for every pull request.
+The first command verifies canonical Turtle formatting without modifying files. The second parses every Turtle file and checks high-value OWL integrity rules. The third composes the SHACL shape graphs in `ontologies/shapes/` into named validation profiles and runs them against the repository's test fixtures with the pinned [Apache Jena](https://jena.apache.org) SHACL engine. CI runs all three checks for every pull request.
 
 The SHACL files are optional application-level data-quality profiles; they do not change STONEWORK's open-world OWL semantics and are not part of the core, STIX, or full-profile import closure. **The shapes are a validation profile, not the interoperability contract** — the contract is the ontology, and a record can be a legitimate instance of STONEWORK while still failing a shape a particular consumer cares about. Shape graphs compose: `stonework-shapes.ttl` carries source-independent value-domain rules, `frameworks/financial-shapes.ttl` carries the financial adapter contract, and `stonework-strict-shapes.ttl` adds the normalized-provenance demand on top of the core profile. Findings are tiered by `sh:severity`: `sh:Violation` means the data is malformed and gates the build, while `sh:Warning` means the data is merely incomplete (an unresolved cross-reference, a partial mapping) and is reported without failing. Shape graphs never use `sh:closed`, which the checker enforces. Existing ingest pipelines are unaffected unless they deliberately load the shapes into a SHACL-aware engine and invoke validation. See [`docs/shacl.md`](docs/shacl.md).
 
@@ -171,7 +171,7 @@ The SHACL files are optional application-level data-quality profiles; they do no
 - Parses every Turtle file and rejects common OWL integrity errors, including accidental domain/range intersections, incompatible inverse-property endpoints, property-kind collisions, class/individual punning, conflicting definitions, duplicate controlled-vocabulary labels, unresolved imports, inconsistent version metadata, and incomplete category-scheme declarations
 - Sets `ontologies/catalog-v001.xml` read-only so Protégé cannot overwrite it
 
-**Requirements:** Java 11+ and Python 3 on `PATH`. The SHACL checks additionally need `cargo` ([rustup](https://rustup.rs)) to build the engine once.
+**Requirements:** Java 21+ and Python 3 on `PATH`. rdf-toolkit itself still runs on Java 11, but Jena 6 (the SHACL engine) requires 21.
 
 ### Ontology imports and versions
 

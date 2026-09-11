@@ -1,10 +1,8 @@
 # Build tools (download with: bash tools/download-rdf-toolkit.sh)
 tools/rdf-toolkit.jar
 
-# SHACL engine (build with: bash tools/install-shacl-validator.sh)
-tools/bin/
-tools/.crates.toml
-tools/.crates2.json
+# SHACL engine (download with: bash tools/download-jena.sh)
+tools/apache-jena-*/
 
 # Build output (bash tools/build-merged.sh)
 /build/

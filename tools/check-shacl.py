@@ -10,7 +10,8 @@ graphs into named profiles and gates only on ``sh:Violation`` results --
 
 from __future__ import annotations
 
-import json
+import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -19,7 +20,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VALIDATOR = ROOT / "tools" / "bin" / "shacl-validator"
+JENA_HOME = ROOT / "tools" / "apache-jena-6.2.0"
+SHACL = JENA_HOME / "bin" / "shacl"
+RIOT = JENA_HOME / "bin" / "riot"
 SHAPES_DIR = ROOT / "ontologies" / "shapes"
 FIXTURES = ROOT / "tests" / "fixtures"
 
@@ -41,8 +44,19 @@ PROFILES: dict[str, list[Path]] = {
     "financial-strict": [CORE_SHAPES, FINANCIAL_SHAPES, STRICT_SHAPES],
 }
 
+RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+SHACL_NS = "http://www.w3.org/ns/shacl#"
+VALIDATION_RESULT = f"{SHACL_NS}ValidationResult"
+RESULT_SEVERITY = f"{SHACL_NS}resultSeverity"
+RESULT_MESSAGE = f"{SHACL_NS}resultMessage"
+FOCUS_NODE = f"{SHACL_NS}focusNode"
+
 VIOLATION = "Violation"
 WARNING = "Warning"
+
+# Jena's shacl command always exits 0 when it can produce a report, including
+# non-conforming data. Non-zero means the engine itself failed.
+_NT_TRIPLE = re.compile(r"^(\S+)\s+(\S+)\s+(.*)\s+\.\s*$")
 
 
 @dataclass
@@ -59,22 +73,69 @@ class ValidatorError(RuntimeError):
     """The engine could not produce a report (bad shapes, bad data, crash)."""
 
 
-def _severity(raw: str) -> str:
-    """``<http://www.w3.org/ns/shacl#Warning>`` -> ``Warning``."""
-    return raw.rstrip(">").rsplit("#", 1)[-1]
+def _jena_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env["JENA_HOME"] = str(JENA_HOME)
+    return env
 
 
-def _flatten(results: list[dict]) -> list[Finding]:
-    findings = []
-    for result in results:
-        messages = result.get("messages") or ["(no message)"]
+def _unquote_iri(term: str) -> str:
+    return term[1:-1] if term.startswith("<") and term.endswith(">") else term
+
+
+def _literal_text(term: str) -> str:
+    """Pull the lexical form out of an N-Triples literal."""
+    if not term.startswith('"'):
+        return term
+    out: list[str] = []
+    i = 1
+    while i < len(term):
+        ch = term[i]
+        if ch == "\\":
+            if i + 1 >= len(term):
+                break
+            nxt = term[i + 1]
+            escapes = {"t": "\t", "n": "\n", "r": "\r", '"': '"', "\\": "\\"}
+            out.append(escapes.get(nxt, nxt))
+            i += 2
+            continue
+        if ch == '"':
+            break
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+def _parse_ntriples(report: str) -> list[Finding]:
+    """Collect sh:ValidationResult rows from a Jena N-Triples report."""
+    triples: dict[str, dict[str, list[str]]] = {}
+    for raw in report.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        match = _NT_TRIPLE.match(line)
+        if match is None:
+            raise ValidatorError(f"unreadable N-Triples line: {line}")
+        subject, predicate, obj = (
+            _unquote_iri(match.group(1)),
+            _unquote_iri(match.group(2)),
+            match.group(3),
+        )
+        triples.setdefault(subject, {}).setdefault(predicate, []).append(obj)
+
+    findings: list[Finding] = []
+    for props in triples.values():
+        types = [_unquote_iri(value) for value in props.get(RDF_TYPE, [])]
+        if VALIDATION_RESULT not in types:
+            continue
+        severity_raw = props.get(RESULT_SEVERITY, [""])[0]
+        messages = props.get(RESULT_MESSAGE, [])
+        focus_raw = props.get(FOCUS_NODE, ["?"])[0]
         findings.append(
             Finding(
-                severity=_severity(result.get("severity", "")),
-                # The engine's generic message comes first and any authored
-                # sh:message last, so the last entry is the most specific.
-                message=messages[-1],
-                focus=result.get("focusNode", "?").strip("<>"),
+                severity=_unquote_iri(severity_raw).rsplit("#", 1)[-1],
+                message=_literal_text(messages[-1]) if messages else "(no message)",
+                focus=_unquote_iri(focus_raw),
             )
         )
     return findings
@@ -85,41 +146,51 @@ def validate(data: Path, profile: str) -> list[Finding]:
     with tempfile.NamedTemporaryFile(
         "w", suffix=".ttl", delete=False, encoding="utf-8"
     ) as union:
-        # The engine accepts a single shapes graph, so profiles are composed by
-        # concatenation. Repeating @prefix directives is valid Turtle.
+        # Profiles are composed by concatenating Turtle. Repeating @prefix
+        # directives is valid, and a single --shapes argument keeps the
+        # union graph explicit in the report's sourceShape.
         for shape_file in shapes:
             union.write(shape_file.read_text(encoding="utf-8"))
             union.write("\n")
         union_path = Path(union.name)
 
     try:
+        env = _jena_env()
+        command = [
+            str(SHACL),
+            "validate",
+            "--shapes",
+            str(union_path),
+        ]
+        for schema in SCHEMAS:
+            command.extend(["--data", str(schema)])
+        command.extend(["--data", str(data)])
         proc = subprocess.run(
-            [
-                str(VALIDATOR),
-                "validate",
-                str(union_path),
-                *(str(schema) for schema in SCHEMAS),
-                str(data),
-                "--output-format",
-                "json",
-                "--diagnostics",
-                "none",
-            ],
+            command,
             capture_output=True,
             text=True,
+            env=env,
         )
+        if proc.returncode != 0:
+            raise ValidatorError(
+                f"{data.name} under profile '{profile}': engine failed "
+                f"(exit {proc.returncode})\n{proc.stderr.strip() or proc.stdout.strip()}"
+            )
+        riot = subprocess.run(
+            [str(RIOT), "--syntax=ttl", "--output=ntriples"],
+            input=proc.stdout,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+        if riot.returncode != 0:
+            raise ValidatorError(
+                f"{data.name} under profile '{profile}': riot could not "
+                f"canonicalize the report\n{riot.stderr.strip()}"
+            )
+        return _parse_ntriples(riot.stdout)
     finally:
         union_path.unlink(missing_ok=True)
-
-    try:
-        report = json.loads(proc.stdout)
-    except json.JSONDecodeError as exc:
-        raise ValidatorError(
-            f"{data.name} under profile '{profile}': engine produced no report "
-            f"(exit {proc.returncode})\n{proc.stderr.strip()}"
-        ) from exc
-
-    return _flatten(report.get("results", []))
 
 
 def _report(label: str, findings: list[Finding]) -> None:
@@ -138,11 +209,11 @@ def _advise(fixture: str, profile: str, warnings: list[Finding]) -> None:
 
 
 def check_engine() -> int:
-    if VALIDATOR.exists():
+    if SHACL.is_file() and RIOT.is_file():
         return 0
     print(
-        f"SHACL engine not found at {VALIDATOR.relative_to(ROOT)}.\n"
-        "Run once to build it: bash tools/install-shacl-validator.sh",
+        f"Apache Jena not found at {JENA_HOME.relative_to(ROOT)}.\n"
+        "Run once to download it: bash tools/download-jena.sh",
         file=sys.stderr,
     )
     return 1
