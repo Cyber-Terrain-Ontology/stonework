@@ -1524,7 +1524,7 @@ stonework:assignedBy
 	rdfs:range stonework:Agent ;
 	skos:definition "Relates a vulnerability to the numbering authority that assigned its primary vulnerability identifier."@en ;
 	skos:prefLabel "assignedBy"@en ;
-	skos:scopeNote "Resolve source-native names, UUIDs, or email addresses to an Agent individual. Like stonework:vulnerabilityId and stonework:dateAssigned, this property describes the vulnerability record's single primary identifier; represent independently assigned identifiers as distinct vulnerability records."@en ;
+	skos:scopeNote "Resolve source-native names, UUIDs, or email addresses to an Agent individual. Like stonework:vulnerabilityId and stonework:dateAssigned, this property describes the vulnerability record's single primary identifier; represent independently assigned identifiers as distinct vulnerability records. The unresolved source string is preserved separately on cve:assigner regardless of whether resolution succeeds."@en ;
 	.
 
 stonework:assignedRole
@@ -2019,7 +2019,7 @@ stonework:cveId
 	rdfs:range xsd:string ;
 	skos:definition "The CVE identifier in the format CVE-YYYY-NNNNN."@en ;
 	skos:prefLabel "cveId"@en ;
-	skos:scopeNote "Use this canonical property on both stonework:Vulnerability and cve:CveRecord individuals."@en ;
+	skos:scopeNote "Retained as the STONEWORK-level CVE-specific identifier. cve:cveId (declared rdfs:subPropertyOf this property) is the source-native alias always present on data ingested from CVE JSON; query this property for cross-source lookups."@en ;
 	.
 
 stonework:cvssBaseScore
@@ -2043,6 +2043,7 @@ stonework:cvssMetricBaseScore
 	rdfs:range xsd:decimal ;
 	skos:definition "The base score calculated by a structured CVSS assessment, on a 0.0-10.0 scale."@en ;
 	skos:prefLabel "cvssMetricBaseScore"@en ;
+	skos:scopeNote "cve:baseScore (on cve:CvssMetric) is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
 stonework:cvssMetricBaseSeverity
@@ -2054,6 +2055,7 @@ stonework:cvssMetricBaseSeverity
 	rdfs:range xsd:string ;
 	skos:definition "The qualitative severity corresponding to a structured CVSS assessment's base score."@en ;
 	skos:prefLabel "cvssMetricBaseSeverity"@en ;
+	skos:scopeNote "cve:baseSeverity (on cve:CvssMetric) is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
 stonework:cvssMetricFor
@@ -2077,6 +2079,7 @@ stonework:cvssMetricVector
 	rdfs:range xsd:string ;
 	skos:definition "The complete vector string used by a structured CVSS assessment."@en ;
 	skos:prefLabel "cvssMetricVector"@en ;
+	skos:scopeNote "cve:vectorString (on cve:CvssMetric) is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
 stonework:cvssMetricVersion
@@ -2088,6 +2091,7 @@ stonework:cvssMetricVersion
 	rdfs:range xsd:string ;
 	skos:definition "The CVSS specification version used by a structured assessment, such as 3.1 or 4.0."@en ;
 	skos:prefLabel "cvssMetricVersion"@en ;
+	skos:scopeNote "cve:version carries this same value on cve:CvssMetric as a plain string, but is not declared a subproperty of this property because cve:version is shared with cve:VersionRange, a class this property's domain does not cover."@en ;
 	.
 
 stonework:cvssScore
@@ -2147,7 +2151,7 @@ stonework:dateAssigned
 	rdfs:range xsd:dateTime ;
 	skos:definition "The date and time at which a vulnerability identifier was assigned by the relevant numbering authority."@en ;
 	skos:prefLabel "dateAssigned"@en ;
-	skos:scopeNote "Corresponds to cveMetadata.dateReserved in CVE JSON 5.x and equivalent assignment timestamps from other vulnerability sources."@en ;
+	skos:scopeNote "Corresponds to cveMetadata.dateReserved in CVE JSON 5.x and equivalent assignment timestamps from other vulnerability sources. cve:dateAssigned is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
 stonework:datePublic
@@ -2159,7 +2163,7 @@ stonework:datePublic
 	rdfs:range xsd:dateTime ;
 	skos:definition "The date and time at which this vulnerability was publicly disclosed."@en ;
 	skos:prefLabel "datePublic"@en ;
-	skos:scopeNote "Corresponds to cveMetadata.datePublished in CVE JSON 5.x and equivalent disclosure timestamps from other vulnerability sources."@en ;
+	skos:scopeNote "Corresponds to cveMetadata.datePublished in CVE JSON 5.x and equivalent disclosure timestamps from other vulnerability sources. cve:datePublic is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
 stonework:dateUpdated
@@ -2171,7 +2175,7 @@ stonework:dateUpdated
 	rdfs:range xsd:dateTime ;
 	skos:definition "The date and time at which the vulnerability record was last modified in its source database."@en ;
 	skos:prefLabel "dateUpdated"@en ;
-	skos:scopeNote "Corresponds to cveMetadata.dateUpdated in CVE JSON 5.x and equivalent update timestamps from other vulnerability sources."@en ;
+	skos:scopeNote "Corresponds to cveMetadata.dateUpdated in CVE JSON 5.x and equivalent update timestamps from other vulnerability sources. cve:dateUpdated is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
 stonework:deliveredVia
@@ -2407,7 +2411,7 @@ stonework:exploitsWeakness
 	rdfs:range stonework:Weakness ;
 	skos:definition "Relates a vulnerability to the weakness class it instantiates or exploits. Subproperty of stonework:hasWeakness, using the directional 'exploits' semantics aligned with CVE and CWE mapping conventions."@en ;
 	skos:prefLabel "exploitsWeakness"@en ;
-	skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. Use this canonical relationship for both generic vulnerabilities and cve:CveRecord individuals."@en ;
+	skos:scopeNote "The range is a stonework:Weakness individual whose IRI is derived from the CWE identifier. Used by cve:exploitsWeakness (rdfs:subPropertyOf this property) when CVE data is loaded; query this property directly for cross-source lookups."@en ;
 	.
 
 stonework:exposesService
@@ -4569,7 +4573,7 @@ stonework:supersededBy
 	rdfs:range stonework:Vulnerability ;
 	skos:definition "Relates a vulnerability to the vulnerability record that supersedes it, e.g. when a CVE is split, merged, or formally replaced by another identifier."@en ;
 	skos:prefLabel "supersededBy"@en ;
-	skos:scopeNote "Resolve source-native replacement identifier strings, such as CVE JSON 5.x replacedBy values, to Vulnerability individuals during ingestion."@en ;
+	skos:scopeNote "Corresponds to cve:replacedBy in CVE JSON 5.x, but as an object property linking to a stonework:Vulnerability individual rather than a string. The source-specific string form is preserved on cve:replacedBy regardless of whether resolution to this property succeeds."@en ;
 	.
 
 stonework:supersedes
@@ -4919,7 +4923,7 @@ stonework:vulnerabilityId
 	rdfs:range xsd:string ;
 	skos:definition "The canonical identifier assigned to this vulnerability by its originating numbering authority, e.g. 'CVE-2021-44228', 'GHSA-jfh8-c2jp-hdp9', or 'OSV-2021-1'."@en ;
 	skos:prefLabel "vulnerabilityId"@en ;
-	skos:scopeNote "Identifier-specific core properties such as stonework:cveId are declared as subproperties, enabling cross-source queries on a single predicate. Each vulnerability record SHOULD carry exactly one identifier from its primary numbering authority."@en ;
+	skos:scopeNote "Identifier-specific core properties such as stonework:cveId are declared as subproperties (and source-native framework aliases such as cve:cveId are declared subproperties of those), enabling cross-source queries on a single predicate. Each vulnerability record SHOULD carry exactly one identifier from its primary numbering authority."@en ;
 	.
 
 stonework:walletAddress
