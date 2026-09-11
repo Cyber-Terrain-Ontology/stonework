@@ -1513,6 +1513,7 @@ stonework:assessmentOf
 	rdfs:domain stonework:Assessment ;
 	skos:definition "Relates an Assessment to the entity being assessed."@en ;
 	skos:prefLabel "assessmentOf"@en ;
+	skos:scopeNote "Scheme-specific linking properties, such as stonework:cvssMetricFor, are declared rdfs:subPropertyOf this property, so a query over assessmentOf reaches every Assessment subclass regardless of scheme."@en ;
 	.
 
 stonework:assignedBy
@@ -2063,11 +2064,13 @@ stonework:cvssMetricFor
 		owl:ObjectProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:assessmentOf ;
 	rdfs:domain stonework:CvssMetric ;
 	rdfs:range stonework:Vulnerability ;
 	owl:inverseOf stonework:hasCvssMetric ;
 	skos:definition "The vulnerability evaluated by a structured CVSS assessment."@en ;
 	skos:prefLabel "cvssMetricFor"@en ;
+	skos:scopeNote "Declared rdfs:subPropertyOf stonework:assessmentOf so a query over assessmentOf returns every Assessment of a Vulnerability — CVSS metrics included — without needing to know each scheme's specific property name."@en ;
 	.
 
 stonework:cvssMetricVector
