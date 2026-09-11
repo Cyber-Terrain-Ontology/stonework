@@ -31,6 +31,20 @@ jobs:
       - name: Download RDF toolkit
         run: bash tools/download-rdf-toolkit.sh
 
+      - name: Cache SHACL engine
+        uses: actions/cache@v4
+        with:
+          path: |
+            tools/bin
+            tools/.crates.toml
+            tools/.crates2.json
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: shacl-validator-${{ runner.os }}-${{ hashFiles('tools/install-shacl-validator.sh') }}
+
+      - name: Build SHACL engine
+        run: bash tools/install-shacl-validator.sh
+
       - name: Check Turtle formatting
         run: bash .githooks/format-ttl.sh --check
 
