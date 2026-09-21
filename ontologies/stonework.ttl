@@ -3710,8 +3710,8 @@ stonework:observedIn
 			stonework:SecurityCondition
 		) ;
 	] ;
-	rdfs:range stonework:Campaign ;
-	skos:definition "Relates a DigitalArtifact or Infrastructure entity to the Campaign context in which it was observed or collected."@en ;
+	rdfs:range stonework:CyberActivity ;
+	skos:definition "Relates a DigitalArtifact or Infrastructure entity to the CyberActivity context in which it was observed or collected."@en ;
 	skos:prefLabel "observedIn" ;
 	.
 
