@@ -1358,6 +1358,18 @@ stonework:addressesAttack
 	skos:prefLabel "addressesAttack"@en ;
 	.
 
+stonework:adjacentTo
+	a
+		owl:ObjectProperty ,
+		owl:SymmetricProperty
+		;
+	rdfs:domain stonework:Location ;
+	rdfs:range stonework:Location ;
+	skos:definition "Relates a Location to another Location with which it shares a border or boundary, e.g. two neighboring Countries or Regions."@en ;
+	skos:prefLabel "adjacentTo"@en ;
+	skos:scopeNote "Symmetric and not transitive. Use stonework:locatedWithin for containment rather than adjacency."@en ;
+	.
+
 stonework:affected
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Vulnerability ;
@@ -1845,6 +1857,19 @@ stonework:containsFile
 	rdfs:range stonework:File ;
 	skos:definition "Relates a Directory to the Files it contains."@en ;
 	skos:prefLabel "containsFile"@en ;
+	.
+
+stonework:containsLocation
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain stonework:Location ;
+	rdfs:range stonework:Location ;
+	owl:inverseOf stonework:locatedWithin ;
+	skos:definition "Relates a Location to a narrower Location that lies within it, e.g. a Country to one of its Regions or Cities."@en ;
+	skos:prefLabel "containsLocation"@en ;
+	skos:scopeNote "Inverse of stonework:locatedWithin; enables downward traversal of the geographic hierarchy."@en ;
 	.
 
 stonework:content
@@ -3295,6 +3320,18 @@ stonework:locatedAt
 	rdfs:range stonework:Location ;
 	skos:definition "Relates an entity to its physical or logical location."@en ;
 	skos:prefLabel "locatedAt"@en ;
+	.
+
+stonework:locatedWithin
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain stonework:Location ;
+	rdfs:range stonework:Location ;
+	skos:definition "Relates a Location to a broader Location that wholly contains it, e.g. a City to its Region or Country, or a Region to its Country."@en ;
+	skos:prefLabel "locatedWithin"@en ;
+	skos:scopeNote "Transitive: a City locatedWithin a Region that is locatedWithin a Country is also locatedWithin that Country. Assert only the most direct containment and let reasoning supply the rest. Use stonework:locatedAt to place non-Location entities such as Hosts or Organizations at a Location."@en ;
 	.
 
 stonework:logSource
