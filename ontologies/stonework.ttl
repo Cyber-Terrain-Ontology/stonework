@@ -1229,7 +1229,7 @@ stonework:VersionedProduct
 	a owl:Class ;
 	rdfs:comment "Instances of stonework:VersionedProduct may include operating systems, applications, libraries, devices, or embedded components at a specific release. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
 	skos:definition "A specific versioned release or build of a Product, identified by a CPE name or equivalent product identifier. Represents the unit of software actually deployed and potentially affected by vulnerabilities."@en ;
-	skos:prefLabel "VersionedProduct" ;
+	skos:prefLabel "Versioned Product" ;
 	skos:scopeNote "Each CPE 2.3 entry with a concrete version component maps to a stonework:VersionedProduct individual. Wildcard-version CPEs map to stonework:Product. Related to its abstract product line via stonework:versionOf."@en ;
 	.
 
