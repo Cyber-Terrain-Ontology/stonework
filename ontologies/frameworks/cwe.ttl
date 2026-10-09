@@ -18,8 +18,8 @@
 		<https://cyberterrain.org/ns/frameworks/capec> ,
 		<https://cyberterrain.org/ns/stonework#>
 		;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/cwe/0.1.0> ;
-	owl:versionInfo "0.1.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/cwe/0.2.0> ;
+	owl:versionInfo "0.2.0" ;
 	.
 
 cwe:Weakness
