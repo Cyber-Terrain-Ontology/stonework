@@ -53,6 +53,7 @@ cwe:description
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:description ;
 	rdfs:label "description"@en ;
 	rdfs:domain cwe:Weakness ;
 	rdfs:range xsd:string ;

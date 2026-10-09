@@ -295,6 +295,11 @@ stones:attributed_to
 	rdfs:subPropertyOf stonework:attributedTo ;
 	.
 
+stones:description
+	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf stonework:description ;
+	.
+
 stones:detects
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:detects ;

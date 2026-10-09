@@ -69,6 +69,7 @@ capec:description
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:description ;
 	rdfs:label "description"@en ;
 	rdfs:domain capec:AttackPattern ;
 	rdfs:range xsd:string ;
