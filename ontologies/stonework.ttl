@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.8.0> ;
-	owl:versionInfo "0.8.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.9.0> ;
+	owl:versionInfo "0.9.0" ;
 	.
 
 stonework:AIAgent
@@ -2249,6 +2249,15 @@ stonework:describesInfrastructure
 	skos:definition "Links a Software Bill of Materials to the enterprise infrastructure, system, or application whose component composition it inventories." ;
 	skos:prefLabel "describes infrastructure" ;
 	skos:scopeNote "Domain intentionally left unset. The primary subject is stonework:SoftwareBillOfMaterials, but other provenance-bearing artifacts may describe infrastructure without being SBOMs. Multiple SBOMs may describe the same Infrastructure over time, enabling historical component inventory."@en ;
+	.
+
+stonework:description
+	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf dcterms:description ;
+	rdfs:range rdfs:Literal ;
+	skos:definition "A human-readable description of the described resource."@en ;
+	skos:prefLabel "description"@en ;
+	skos:scopeNote "Domain is intentionally unset so framework-specific descriptions for vulnerabilities, weaknesses, attack patterns, and threat objects can share this canonical property. Prefer stonework:description in newly authored data."@en ;
 	.
 
 stonework:detectedBy
