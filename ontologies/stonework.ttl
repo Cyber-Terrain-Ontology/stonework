@@ -1229,7 +1229,7 @@ stonework:VersionedProduct
 	a owl:Class ;
 	rdfs:comment "Instances of stonework:VersionedProduct may include operating systems, applications, libraries, devices, or embedded components at a specific release. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
 	skos:definition "A specific versioned release or build of a Product, identified by a CPE name or equivalent product identifier. Represents the unit of software actually deployed and potentially affected by vulnerabilities."@en ;
-	skos:prefLabel "VersionedProduct" ;
+	skos:prefLabel "Versioned Product" ;
 	skos:scopeNote "Each CPE 2.3 entry with a concrete version component maps to a stonework:VersionedProduct individual. Wildcard-version CPEs map to stonework:Product. Related to its abstract product line via stonework:versionOf."@en ;
 	.
 
@@ -1380,6 +1380,18 @@ stonework:addressesAttack
 	rdfs:range stonework:AttackPattern ;
 	skos:definition "A CourseOfAction prescribes a defensive response to this AttackPattern."@en ;
 	skos:prefLabel "addressesAttack"@en ;
+	.
+
+stonework:adjacentTo
+	a
+		owl:ObjectProperty ,
+		owl:SymmetricProperty
+		;
+	rdfs:domain stonework:Location ;
+	rdfs:range stonework:Location ;
+	skos:definition "Relates a Location to another Location with which it shares a border or boundary, e.g. two neighboring Countries or Regions."@en ;
+	skos:prefLabel "adjacentTo"@en ;
+	skos:scopeNote "Symmetric and not transitive. Use stonework:locatedWithin for containment rather than adjacency."@en ;
 	.
 
 stonework:affected
@@ -1913,6 +1925,19 @@ stonework:containsFile
 	rdfs:range stonework:File ;
 	skos:definition "Relates a Directory to the Files it contains."@en ;
 	skos:prefLabel "containsFile"@en ;
+	.
+
+stonework:containsLocation
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain stonework:Location ;
+	rdfs:range stonework:Location ;
+	owl:inverseOf stonework:locatedWithin ;
+	skos:definition "Relates a Location to a narrower Location that lies within it, e.g. a Country to one of its Regions or Cities."@en ;
+	skos:prefLabel "containsLocation"@en ;
+	skos:scopeNote "Inverse of stonework:locatedWithin; enables downward traversal of the geographic hierarchy."@en ;
 	.
 
 stonework:content
@@ -3455,6 +3480,30 @@ stonework:locatedAt
 	skos:prefLabel "locatedAt"@en ;
 	.
 
+stonework:locatedWithin
+	a
+		owl:ObjectProperty ,
+		owl:TransitiveProperty
+		;
+	rdfs:domain stonework:Location ;
+	rdfs:range stonework:Location ;
+	skos:definition "Relates a Location to a broader Location that wholly contains it, e.g. a City to its Region or Country, or a Region to its Country."@en ;
+	skos:prefLabel "locatedWithin"@en ;
+	skos:scopeNote "Transitive: a City locatedWithin a Region that is locatedWithin a Country is also locatedWithin that Country. Assert only the most direct containment and let reasoning supply the rest. Use stonework:locatedAt to place non-Location entities such as Hosts or Organizations at a Location."@en ;
+	.
+
+stonework:locationPrecision
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Location ;
+	rdfs:range xsd:decimal ;
+	skos:definition "The radius, in meters, of uncertainty around this Location's stonework:latitude and stonework:longitude."@en ;
+	skos:prefLabel "locationPrecision"@en ;
+	skos:scopeNote "Corresponds to the STIX 2.1 Location precision property. Use it to distinguish an exact facility coordinate from a city- or region-level centroid, such as a geolocated IP address or an event geotagged from a news report. Omit it when the precision is unknown."@en ;
+	.
+
 stonework:logSource
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Log ;
@@ -3740,9 +3789,10 @@ stonework:observedIn
 			stonework:SecurityCondition
 		) ;
 	] ;
-	rdfs:range stonework:Campaign ;
-	skos:definition "Relates a DigitalArtifact or Infrastructure entity to the Campaign context in which it was observed or collected."@en ;
-	skos:prefLabel "observedIn" ;
+	rdfs:range stonework:CyberActivity ;
+	skos:definition "Relates an observed entity, such as a DigitalArtifact, Infrastructure, Malware, Product, Behavior, Identifier, or SecurityCondition, to the CyberActivity (for example a Campaign, Incident, or Event) in which it was observed or collected."@en ;
+	skos:prefLabel "observedIn"@en ;
+	skos:scopeNote "A general-purpose shortcut: the kind of context is conveyed by typing the CyberActivity, so narrower subproperties per activity type are unnecessary. Asserting this property does not imply that the object is a Campaign; type it explicitly when that matters. When an observation needs its own metadata, such as observer, time, location, count, or confidence, model it as a stonework:Sighting instead. Not an inverse of stonework:uses, which records that an actor, campaign, or malware employs a technique or tool rather than that an entity was seen in an activity."@en ;
 	.
 
 stonework:occursOn
@@ -4628,6 +4678,15 @@ stonework:storedOn
 	rdfs:range stonework:Host ;
 	skos:definition "Relates a DigitalArtifact to the Host on which it is stored."@en ;
 	skos:prefLabel "storedOn"@en ;
+	.
+
+stonework:streetAddress
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Location ;
+	rdfs:range xsd:string ;
+	skos:definition "The street address of the location, such as a building number and street name."@en ;
+	skos:prefLabel "streetAddress"@en ;
+	skos:scopeNote "Corresponds to the STIX 2.1 Location street_address property. Record the postal code with stonework:postalCode and the enclosing City, Region, or Country with stonework:locatedWithin rather than repeating them in this string."@en ;
 	.
 
 stonework:subdomainOf
