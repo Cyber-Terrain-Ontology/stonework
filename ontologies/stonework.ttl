@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.9.0> ;
-	owl:versionInfo "0.9.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.10.0> ;
+	owl:versionInfo "0.10.0" ;
 	.
 
 stonework:AIAgent
@@ -1582,6 +1582,15 @@ stonework:associatedWith
 	skos:prefLabel "associatedWith" ;
 	.
 
+stonework:attackId
+	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf skos:notation ;
+	rdfs:range xsd:string ;
+	skos:definition "The MITRE ATT&CK identifier of an ATT&CK object, as ATT&CK displays it: Txxxx or Txxxx.yyy (technique, sub-technique), TAxxxx (tactic), Gxxxx (group), Sxxxx (software), Mxxxx (mitigation), Cxxxx (campaign), DETxxxx (detection strategy), ANxxxx (analytic), DCxxxx (data component)."@en ;
+	skos:prefLabel "attackId"@en ;
+	skos:scopeNote "Domain deliberately unset: every kind of ATT&CK object has an ATT&CK ID. The canonical and source forms are the same, so attack:attackId specializes both this property and stonework:externalId. Not unique across object types (ATT&CK's deprecated mitigations reuse technique T-numbers): look an object up by its ID together with its class. Distinct from stonework:relatedTechniqueIdentifier, which carries an ATT&CK technique ID on another framework's entity (e.g. a CAPEC pattern) as a join key; attackId is the ATT&CK object's own identifier."@en ;
+	.
+
 stonework:attributedTo
 	a owl:ObjectProperty ;
 	skos:definition "Links a CyberActivity to the Agent responsible for, or associated with, performing it." ;
@@ -1680,6 +1689,16 @@ stonework:byteCount
 	rdfs:range xsd:nonNegativeInteger ;
 	skos:definition "The total number of bytes transmitted in the traffic flow."@en ;
 	skos:prefLabel "byteCount"@en ;
+	.
+
+stonework:capecId
+	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf skos:notation ;
+	rdfs:domain stonework:AttackPattern ;
+	rdfs:range xsd:string ;
+	skos:definition "The CAPEC identifier in the format CAPEC-NNN."@en ;
+	skos:prefLabel "capecId"@en ;
+	skos:scopeNote "The canonical form a person types and searches for. The source-native number (e.g. '66') is capec:capecId, which specializes stonework:externalId."@en ;
 	.
 
 stonework:categorizedBy
@@ -2192,10 +2211,12 @@ stonework:cweAbstractionLevel
 
 stonework:cweId
 	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf skos:notation ;
 	rdfs:domain stonework:Weakness ;
 	rdfs:range xsd:string ;
 	skos:definition "The CWE identifier in the format CWE-NNN."@en ;
 	skos:prefLabel "cweId"@en ;
+	skos:scopeNote "The canonical form a person types and searches for. The source-native number (e.g. '79') is cwe:cweId, which specializes stonework:externalId."@en ;
 	.
 
 stonework:dateAssigned

@@ -13,8 +13,8 @@
 	rdfs:label "NIST SP 800-53 Framework Ontology"@en ;
 	rdfs:comment "OWL vocabulary for NIST SP 800-53 Rev 5 security controls as represented in the CTI Encyclopedia. Base controls and control enhancements are both modeled as nist:Control individuals. Enhancements carry a nist:enhancementOf link to their parent control. Withdrawn controls are excluded from the data graph."@en ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/nist/0.1.0> ;
-	owl:versionInfo "0.1.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/nist/0.2.0> ;
+	owl:versionInfo "0.2.0" ;
 	.
 
 nist:Control
@@ -48,8 +48,9 @@ nist:label
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:controlId ;
 	rdfs:label "label"@en ;
-	rdfs:comment "Human-readable control identifier, e.g. 'AC-1' or 'AC-2(1)'."@en ;
+	rdfs:comment "Human-readable control identifier, e.g. 'AC-1' or 'AC-2(1)': the canonical form, so it specializes stonework:controlId."@en ;
 	rdfs:domain nist:Control ;
 	rdfs:range xsd:string ;
 	.
@@ -77,8 +78,9 @@ nist:nistId
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:externalId ;
 	rdfs:label "NIST ID"@en ;
-	rdfs:comment "OSCAL identifier string in lowercase, e.g. 'ac-1' for AC-1 or 'ac-2.1' for AC-2(1)."@en ;
+	rdfs:comment "OSCAL identifier string in lowercase, e.g. 'ac-1' for AC-1 or 'ac-2.1' for AC-2(1): the source form, so it specializes stonework:externalId."@en ;
 	rdfs:domain nist:Control ;
 	rdfs:range xsd:string ;
 	.
