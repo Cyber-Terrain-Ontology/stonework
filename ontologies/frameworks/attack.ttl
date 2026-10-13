@@ -12,13 +12,13 @@
 <https://cyberterrain.org/ns/frameworks/attack>
 	a owl:Ontology ;
 	rdfs:label "MITRE ATT&CK Framework Ontology"@en ;
-	rdfs:comment "OWL rendering of the MITRE ATT&CK Data Model Specification v3.3.0: one class per ATT&CK concept and one property per ATT&CK relationship type, named as MITRE names them, each placed under the STONEWORK concept it specializes. ATT&CK is published as STIX 2.1 JSON; the STIX objects are kept faithfully in STONES, and this vocabulary records what each object means in ATT&CK. Instances keep MITRE's STIX IDs as IRIs (ctienc:attack-pattern--{uuid})."@en ;
+	rdfs:comment "OWL rendering of the MITRE ATT&CK Data Model Specification v3.3.0: one class per ATT&CK concept, named as MITRE names it and placed under the STONEWORK concept it specializes, plus the ATT&CK-specific properties. ATT&CK relationships that mean the same as a STONEWORK property (uses, mitigates, detects, attributed-to, targets, revoked-by) have no attack: property: the interpretation step writes the STONEWORK property directly. ATT&CK is published as STIX 2.1 JSON; the STIX objects are kept faithfully in STONES, and this vocabulary records what each object means in ATT&CK. Instances keep MITRE's STIX IDs as IRIs (ctienc:attack-pattern--{uuid})."@en ;
 	dcterms:source <https://mitre-attack.github.io/attack-data-model/schemas/> ;
 	rdfs:seeAlso <https://attack.mitre.org/> ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
 	owl:versionIRI <https://cyberterrain.org/ns/frameworks/attack/0.1.0> ;
 	owl:versionInfo "0.1.0" ;
-	skos:scopeNote "DRAFT 2026-10-12 for review. Parents marked OPEN in rdfs:comment are still to be decided."@en ;
+	skos:scopeNote "DRAFT 2026-10-13 for review. Parents marked OPEN in rdfs:comment are still to be decided. Consumers such as the CTI Encyclopedia gateway query without inference, so data written with an attack: property that specializes a STONEWORK property should also carry the STONEWORK property."@en ;
 	.
 
 attack:Analytic
@@ -54,7 +54,7 @@ attack:Collection
 attack:DataComponent
 	a owl:Class ;
 	rdfs:label "ATT&CK Data Component"@en ;
-	rdfs:comment "A kind of telemetry useful for detection (e.g. Process Creation), with the log sources and channels that provide it. STIX type x-mitre-data-component; ATT&CK ID DCxxxx. OPEN: no STONEWORK parent fits (stonework:Log is an actual record, not a kind of telemetry); a new STONEWORK concept may be needed."@en ;
+	rdfs:comment "A kind of telemetry useful for detection (e.g. Process Creation), with the log sources and channels that provide it. STIX type x-mitre-data-component; ATT&CK ID DCxxxx. OPEN: a Data Component is a kind of stonework:Event rather than an event, so it has no STONEWORK parent class. STONEWORK already models kinds of telemetry as classes: frameworks/ocsf.ttl places the OCSF event classes under stonework:Event. A Data Component can therefore be matched to the OCSF class(es) for the same telemetry (e.g. Process Creation to ocsf:ProcessActivity), which is the likely anchor; stonework:Log is an actual record."@en ;
 	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/sdo/data-component.schema> ;
 	.
 
@@ -79,9 +79,9 @@ attack:Group
 	a owl:Class ;
 	rdfs:subClassOf stonework:ThreatActorGroup ;
 	rdfs:label "ATT&CK Group"@en ;
-	rdfs:comment "A threat actor group tracked by a common name in the security community. ATT&CK ID Gxxxx. MITRE publishes each group as a STIX intrusion-set, conflating the actor with the cluster of activity attributed to it. STONEWORK keeps them apart: the STIX intrusion-set stays a stonework:CyberActivityCluster (the activity, a process), and the ATT&CK interpretation step mints a separate attack:Group (the actor, an agent) that the cluster is stonework:attributedTo. The two cannot be one individual: BFO holds processes and material entities disjoint."@en ;
+	rdfs:comment "A threat actor group tracked by a common name in the security community. ATT&CK ID Gxxxx. MITRE publishes each group as a STIX intrusion-set, conflating the actor with the cluster of activity attributed to it. STONEWORK keeps them apart: the STIX intrusion-set stays a stonework:CyberActivityCluster (the activity, a process), and the ATT&CK interpretation step mints a separate attack:Group (the actor, an agent) that the cluster is stonework:attributedTo. The two cannot be one individual: stonework:CyberActivity aligns to BFO process and stonework:Agent to BFO material entity, which BFO holds disjoint (asserted directly in frameworks/bfo.ttl)."@en ;
 	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/sdo/group.schema> ;
-	skos:scopeNote "The group's techniques and software are the intrusion-set's attack:uses links, written onto the group as well so that 'which groups use T1059' is one hop."@en ;
+	skos:scopeNote "The group's techniques and software are the intrusion-set's stonework:uses links, written onto the group as well so that 'which groups use T1059' is one hop."@en ;
 	.
 
 attack:Malware
@@ -184,16 +184,6 @@ attack:attackId
 	rdfs:range xsd:string ;
 	.
 
-attack:attributedTo
-	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:attributedTo ;
-	rdfs:label "attributed to"@en ;
-	rdfs:comment "ATT&CK relationship type attributed-to: a Campaign is attributed to a Group. Also links each STIX intrusion-set (the activity cluster) to the attack:Group minted for it (the actor)."@en ;
-	rdfs:domain stonework:CyberActivity ;
-	rdfs:range attack:Group ;
-	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/relationship-types> ;
-	.
-
 attack:dataComponent
 	a owl:ObjectProperty ;
 	rdfs:label "data component"@en ;
@@ -213,16 +203,6 @@ attack:deprecated
 	rdfs:range xsd:boolean ;
 	.
 
-attack:detects
-	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:detects ;
-	rdfs:label "detects"@en ;
-	rdfs:comment "ATT&CK relationship type detects: a Detection Strategy detects a Technique. (Data Component detects Technique is deprecated as of spec v3.3.0.)"@en ;
-	rdfs:domain attack:DetectionStrategy ;
-	rdfs:range attack:Technique ;
-	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/relationship-types> ;
-	.
-
 attack:domain
 	a owl:DatatypeProperty ;
 	rdfs:label "ATT&CK domain"@en ;
@@ -230,29 +210,11 @@ attack:domain
 	rdfs:range xsd:string ;
 	.
 
-attack:mitigates
-	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:mitigatesAttackPattern ;
-	rdfs:label "mitigates"@en ;
-	rdfs:comment "ATT&CK relationship type mitigates: a Mitigation mitigates a Technique."@en ;
-	rdfs:domain attack:Mitigation ;
-	rdfs:range attack:Technique ;
-	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/relationship-types> ;
-	.
-
 attack:platform
 	a owl:DatatypeProperty ;
 	rdfs:label "platform"@en ;
 	rdfs:comment "x_mitre_platforms: a platform the object applies to (e.g. Windows, Linux, IaaS, Containers)."@en ;
 	rdfs:range xsd:string ;
-	.
-
-attack:revokedBy
-	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:revokedBy ;
-	rdfs:label "revoked by"@en ;
-	rdfs:comment "ATT&CK relationship type revoked-by: an object replaced by another of the same type."@en ;
-	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/relationship-types> ;
 	.
 
 attack:shortname
@@ -296,16 +258,6 @@ attack:tactic
 	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/sdo/technique.schema> ;
 	.
 
-attack:targets
-	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:targets ;
-	rdfs:label "targets"@en ;
-	rdfs:comment "ATT&CK relationship type targets: a Technique targets an Asset (ICS)."@en ;
-	rdfs:domain attack:Technique ;
-	rdfs:range attack:Asset ;
-	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/relationship-types> ;
-	.
-
 attack:url
 	a
 		owl:DatatypeProperty ,
@@ -314,29 +266,6 @@ attack:url
 	rdfs:label "ATT&CK page"@en ;
 	rdfs:comment "The object's page on attack.mitre.org (the url of its mitre-attack external reference), e.g. https://attack.mitre.org/techniques/T1059/. The de facto public identifier for ATT&CK objects; a web page, not the object itself, so kept as a value rather than an owl:sameAs."@en ;
 	rdfs:range xsd:anyURI ;
-	.
-
-attack:uses
-	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:uses ;
-	rdfs:label "uses"@en ;
-	rdfs:comment "ATT&CK relationship type uses: a Group, Software or Campaign uses a Technique (a procedure), or a Group or Campaign uses Software."@en ;
-	rdfs:domain [
-		a owl:Class ;
-		owl:unionOf (
-			attack:Group
-			attack:Software
-			attack:Campaign
-		) ;
-	] ;
-	rdfs:range [
-		a owl:Class ;
-		owl:unionOf (
-			attack:Technique
-			attack:Software
-		) ;
-	] ;
-	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/relationship-types> ;
 	.
 
 attack:version

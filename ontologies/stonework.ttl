@@ -1590,10 +1590,11 @@ stonework:associatedWith
 
 stonework:attackId
 	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf skos:notation ;
 	rdfs:range xsd:string ;
 	skos:definition "The MITRE ATT&CK identifier of an ATT&CK object, as ATT&CK displays it: Txxxx or Txxxx.yyy (technique, sub-technique), TAxxxx (tactic), Gxxxx (group), Sxxxx (software), Mxxxx (mitigation), Cxxxx (campaign), DETxxxx (detection strategy), ANxxxx (analytic), DCxxxx (data component)."@en ;
 	skos:prefLabel "attackId"@en ;
-	skos:scopeNote "Domain deliberately unset: every kind of ATT&CK object has an ATT&CK ID. The canonical and source forms are the same, so attack:attackId specializes both this property and stonework:externalId. Not unique across object types (ATT&CK's deprecated mitigations reuse technique T-numbers): look an object up by its ID together with its class."@en ;
+	skos:scopeNote "Domain deliberately unset: every kind of ATT&CK object has an ATT&CK ID. The canonical and source forms are the same, so attack:attackId specializes both this property and stonework:externalId. Not unique across object types (ATT&CK's deprecated mitigations reuse technique T-numbers): look an object up by its ID together with its class. Distinct from stonework:relatedTechniqueIdentifier, which carries an ATT&CK technique ID on another framework's entity (e.g. a CAPEC pattern) as a join key; attackId is the ATT&CK object's own identifier."@en ;
 	.
 
 stonework:attributedTo
@@ -1698,6 +1699,7 @@ stonework:byteCount
 
 stonework:capecId
 	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf skos:notation ;
 	rdfs:domain stonework:AttackPattern ;
 	rdfs:range xsd:string ;
 	skos:definition "The CAPEC identifier in the format CAPEC-NNN."@en ;
@@ -2202,6 +2204,7 @@ stonework:cweAbstractionLevel
 
 stonework:cweId
 	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf skos:notation ;
 	rdfs:domain stonework:Weakness ;
 	rdfs:range xsd:string ;
 	skos:definition "The CWE identifier in the format CWE-NNN."@en ;

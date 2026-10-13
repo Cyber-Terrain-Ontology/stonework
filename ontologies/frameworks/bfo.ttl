@@ -16,8 +16,8 @@ frameworks:bfo
 	dcterms:description "Declares subclass mappings from STONEWORK classes to Basic Formal Ontology (BFO) 2020. This file carries no dependency on BFO imports — it asserts alignment axioms only. Load alongside BFO 2020 when formal BFO reasoning is required."@en ;
 	rdfs:seeAlso <http://purl.obolibrary.org/obo/bfo/2020/bfo.owl> ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/bfo/0.1.0> ;
-	owl:versionInfo "0.1.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/bfo/0.2.0> ;
+	owl:versionInfo "0.2.0" ;
 	.
 
 stonework:Actuator
@@ -41,6 +41,8 @@ stonework:CyberActivity
 		bfo:0000003 ,
 		bfo:0000015
 		;
+	owl:disjointWith stonework:Agent ;
+	skos:scopeNote "Disjoint with stonework:Agent: BFO holds occurrents (processes) and continuants (material entities) disjoint, and STONEWORK aligns CyberActivity with the first and Agent with the second. Asserted here so the consequence holds without loading BFO itself. An actor and the activity attributed to it are therefore separate individuals, linked with stonework:attributedTo."@en ;
 	.
 
 stonework:CyberEntity
