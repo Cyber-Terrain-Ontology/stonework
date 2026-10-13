@@ -23,9 +23,9 @@
 
 attack:Analytic
 	a owl:Class ;
-	rdfs:subClassOf stonework:AnalyticTechnique ;
+	rdfs:subClassOf stonework:DefendTechnique ;
 	rdfs:label "ATT&CK Analytic"@en ;
-	rdfs:comment "Platform-specific detection logic implementing a detection strategy, with the log sources it needs and the elements a defender may tune. STIX type x-mitre-analytic; ATT&CK ID ANxxxx. A prescribed analytical method, so a stonework:AnalyticTechnique; query stonework:AttackTechnique, not stonework:Technique, for ATT&CK's T-numbered techniques."@en ;
+	rdfs:comment "Platform-specific detection logic implementing a detection strategy, with the log sources it needs and the elements a defender may tune. STIX type x-mitre-analytic; ATT&CK ID ANxxxx. A defensive technique, as D3FEND models detection: a more specific technique within its detection strategy (attack:analytic, under stonework:hasTechnique). Not a stonework:AnalyticTechnique, which covers analytic methods such as analysis of competing hypotheses or clustering. Query stonework:AttackTechnique, not stonework:Technique, for ATT&CK's T-numbered techniques."@en ;
 	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/sdo/analytic.schema> ;
 	.
 
@@ -68,11 +68,11 @@ attack:DataSource
 
 attack:DetectionStrategy
 	a owl:Class ;
-	rdfs:subClassOf stonework:DetectionPlan ;
+	rdfs:subClassOf stonework:DefendTechnique ;
 	rdfs:label "ATT&CK Detection Strategy"@en ;
 	rdfs:comment "A high-level approach for detecting a technique, organizing platform-specific analytics. STIX type x-mitre-detection-strategy; ATT&CK ID DETxxxx."@en ;
 	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/sdo/detection-strategy.schema> ;
-	skos:scopeNote "Unlike the Step-decomposed plans stonework:DetectionPlan usually describes, an ATT&CK detection strategy has no steps: it is the set of analytics (attack:analytic) that together detect the technique, one or more per platform."@en ;
+	skos:scopeNote "A defensive technique, as D3FEND models detection, not a stonework:DetectionPlan: it has no Steps. It contains its platform-specific analytics as more specific techniques (attack:analytic, under stonework:hasTechnique) and stonework:detects the ATT&CK technique."@en ;
 	.
 
 attack:Group
@@ -162,9 +162,9 @@ attack:alias
 
 attack:analytic
 	a owl:ObjectProperty ;
-	rdfs:subPropertyOf stonework:appliesTechnique ;
+	rdfs:subPropertyOf stonework:hasTechnique ;
 	rdfs:label "analytic"@en ;
-	rdfs:comment "An Analytic that implements a Detection Strategy, from the strategy's x_mitre_analytic_refs. In STONEWORK terms the strategy (a DetectionPlan) applies the analytic (an AnalyticTechnique)."@en ;
+	rdfs:comment "An Analytic that implements a Detection Strategy, from the strategy's x_mitre_analytic_refs. In STONEWORK terms the strategy, a defensive technique, has the analytic as a more specific technique (stonework:hasTechnique)."@en ;
 	rdfs:domain attack:DetectionStrategy ;
 	rdfs:range attack:Analytic ;
 	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/sdo/detection-strategy.schema> ;

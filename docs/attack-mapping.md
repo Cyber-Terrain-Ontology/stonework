@@ -40,16 +40,17 @@ which are stable across ATT&CK releases.
 | Software: tool (`tool`) | 95 | `attack:Tool` ⊑ `attack:Software` | `stonework:Tool` | Settled |
 | Campaign (`campaign`) | 56 | `attack:Campaign` | `stonework:Campaign` | Settled |
 | Mitigation (`course-of-action`) | 44 current + 224 deprecated | `attack:Mitigation` | `stonework:Mitigation` | Decided. Their STIX typing also makes them `stonework:CourseOfAction`, a kind of `Mitigation`, so consistent |
-| Detection Strategy (`x-mitre-detection-strategy`) | 699 | `attack:DetectionStrategy` | `stonework:DetectionPlan` | Decided. Scope note: no steps, unlike most `DetectionPlan`s; it is the set of analytics that detect the technique |
-| Analytic (`x-mitre-analytic`) | 1,758 | `attack:Analytic` | `stonework:AnalyticTechnique` | Decided. Puts analytics under `stonework:Technique`, so users query `stonework:AttackTechnique` for T-numbers |
+| Detection Strategy (`x-mitre-detection-strategy`) | 699 | `attack:DetectionStrategy` | `stonework:DefendTechnique` | Decided in review, following D3FEND, which models detection as defensive techniques. Not `DetectionPlan`: that is Step-decomposed, and a strategy has no steps. It contains its analytics via `stonework:hasTechnique` |
+| Analytic (`x-mitre-analytic`) | 1,758 | `attack:Analytic` | `stonework:DefendTechnique` | Decided in review, as above. Not `AnalyticTechnique`, which covers analytic methods (ACH, clustering), not detection logic. Users query `stonework:AttackTechnique` for T-numbers |
 | Data Component (`x-mitre-data-component`) | 109 | `attack:DataComponent` | none yet | **OPEN, likely anchor found**: a *kind* of event ("Process Creation"), not an event, so no parent class. `frameworks/ocsf.ttl` already models kinds of telemetry as classes under `stonework:Event`, so match each Data Component to its OCSF class (Process Creation → `ocsf:ProcessActivity`). `stonework:Log` is an actual record |
 | Data Source (`x-mitre-data-source`) | 38 | `attack:DataSource` (deprecated) | none | Superseded in spec 3.3.0; keep for history |
 | Asset (`x-mitre-asset`) | 0 (ICS only) | `attack:Asset` | none yet | **OPEN, a STONEWORK gap**; only matters when ICS is loaded |
 | Matrix, Collection | 1, 1 | `attack:Matrix`, `attack:Collection` | none | Release metadata, not domain concepts |
 
-Today's typing these replace: detection strategies and analytics as `stonework:DefendTechnique`
-(which put 2,457 detections under `stonework:Technique`), and data sources and components
-as `stonework:Threat`.
+Today's skotarch typing already puts detection strategies and analytics under
+`stonework:DefendTechnique`, which this keeps; what changes is the `attack:` class and the
+strategy → analytic link. Data sources and components are typed `stonework:Threat` today,
+which is wrong and goes away.
 
 ## Relationships
 
@@ -71,7 +72,7 @@ narrow a STONEWORK property with several meanings, or that STONEWORK lacks.
 | `revoked-by` | 157 | `stonework:revokedBy` |
 | `subtechnique-of`: Sub-technique → Technique | 477 | `attack:subtechniqueOf` ⊑ `stonework:techniqueOf` (inverse of `hasTechnique`: "a Technique to a more specific Technique it contains") |
 | Technique → Tactic (`kill_chain_phases`) | per technique | `attack:tactic` ⊑ `stonework:techniqueOf` (inverse of `hasTechnique`: "a Tactic to a Technique that serves its goal") |
-| Detection Strategy → Analytic (`x_mitre_analytic_refs`) | per strategy | `attack:analytic` ⊑ `stonework:appliesTechnique` (**new in STONEWORK 0.10.0**): a plan, or one of its steps, applies a technique |
+| Detection Strategy → Analytic (`x_mitre_analytic_refs`) | per strategy | `attack:analytic` ⊑ `stonework:hasTechnique` ("a Technique to a more specific Technique it contains") |
 | Analytic → Data Component (`x_mitre_log_source_references`) | per analytic | `attack:dataComponent`; no STONEWORK parent yet (follows the Data Component decision) |
 
 Where an `attack:` property specializes a STONEWORK one, the interpretation step writes both.
@@ -105,7 +106,8 @@ ATT&CK-specific and move to `attack:`.
 1. Done in 0.10.0: **`stonework:attackId`** (no domain: every ATT&CK object has an ID) and
    **`stonework:capecId`** ("CAPEC-66"). Both, and `stonework:cweId`, specialize `skos:notation`. `capec:capecId` and `cwe:cweId`, the source-native
    numbers, now specialize `stonework:externalId` (CAPEC and CWE modules 0.3.0).
-2. Done in 0.10.0: `stonework:appliesTechnique` for the strategy → analytic link.
+2. None for the strategy → analytic link: with both under `DefendTechnique`, the existing
+   `hasTechnique` fits. (The first draft added `stonework:appliesTechnique`; dropped in review.)
 3. Data Components: likely matched to OCSF event classes rather than a new concept (see above). A general asset class (ICS) is still open.
 4. Possibly `stonework:alias`.
 

@@ -1461,24 +1461,6 @@ stonework:appliesCountermeasure
 	skos:prefLabel "appliesCountermeasure"@en ;
 	.
 
-stonework:appliesTechnique
-	a owl:ObjectProperty ;
-	rdfs:domain [
-		a owl:Class ;
-		owl:unionOf (
-			stonework:Playbook
-			stonework:ControlPlan
-			stonework:InvestigationPlan
-			stonework:ThreatScenario
-			stonework:Step
-		) ;
-	] ;
-	rdfs:range stonework:Technique ;
-	skos:definition "Relates a plan, or one of its Steps, to a Technique it applies: on a plan, shorthand for 'one of its Steps applies the Technique'."@en ;
-	skos:prefLabel "appliesTechnique"@en ;
-	skos:scopeNote "The plan-to-technique counterpart of usesDetectionRule (plan or Step to DetectionRule). Distinct from stonework:uses, which records adversary employment (STIX 'uses'), and from implements/implementedBy, which link a Behavior to its realization: a plan applies Techniques; it does not realize them. Example: an ATT&CK detection strategy (a DetectionPlan) applies its analytics (AnalyticTechniques)."@en ;
-	.
-
 stonework:appliesTo
 	a owl:ObjectProperty ;
 	rdfs:domain [
