@@ -3711,8 +3711,9 @@ stonework:observedIn
 		) ;
 	] ;
 	rdfs:range stonework:CyberActivity ;
-	skos:definition "Relates a DigitalArtifact or Infrastructure entity to the CyberActivity context in which it was observed or collected."@en ;
-	skos:prefLabel "observedIn" ;
+	skos:definition "Relates an observed entity, such as a DigitalArtifact, Infrastructure, Malware, Product, Behavior, Identifier, or SecurityCondition, to the CyberActivity (for example a Campaign, Incident, or Event) in which it was observed or collected."@en ;
+	skos:prefLabel "observedIn"@en ;
+	skos:scopeNote "A general-purpose shortcut: the kind of context is conveyed by typing the CyberActivity, so narrower subproperties per activity type are unnecessary. Asserting this property does not imply that the object is a Campaign; type it explicitly when that matters. When an observation needs its own metadata, such as observer, time, location, count, or confidence, model it as a stonework:Sighting instead. Not an inverse of stonework:uses, which records that an actor, campaign, or malware employs a technique or tool rather than that an entity was seen in an activity."@en ;
 	.
 
 stonework:occursOn
