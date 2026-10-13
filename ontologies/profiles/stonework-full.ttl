@@ -11,6 +11,7 @@
 # imports: https://cyberterrain.org/ns/frameworks/email
 # imports: https://cyberterrain.org/ns/frameworks/emb3d
 # imports: https://cyberterrain.org/ns/frameworks/fatf
+# imports: https://cyberterrain.org/ns/frameworks/geo
 # imports: https://cyberterrain.org/ns/frameworks/killchain
 # imports: https://cyberterrain.org/ns/frameworks/nist
 # imports: https://cyberterrain.org/ns/frameworks/ocsf
@@ -45,6 +46,7 @@
 		<https://cyberterrain.org/ns/frameworks/email> ,
 		<https://cyberterrain.org/ns/frameworks/emb3d> ,
 		<https://cyberterrain.org/ns/frameworks/fatf> ,
+		<https://cyberterrain.org/ns/frameworks/geo> ,
 		<https://cyberterrain.org/ns/frameworks/killchain> ,
 		<https://cyberterrain.org/ns/frameworks/nist> ,
 		<https://cyberterrain.org/ns/frameworks/ocsf> ,

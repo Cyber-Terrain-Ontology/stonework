@@ -1,0 +1,131 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix frameworks: <https://cyberterrain.org/ns/frameworks/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pos: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix wdt: <http://www.wikidata.org/prop/direct/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+frameworks:geo
+	a owl:Ontology ;
+	rdfs:label "STONEWORK: Geospatial Relation Mapping"@en ;
+	dcterms:description "Aligns stonework:Location, its Location-to-Location relations (stonework:locatedWithin, stonework:containsLocation, stonework:adjacentTo), and its coordinate and address properties with OGC GeoSPARQL 1.1, schema.org, the GeoNames ontology 3.3, and Wikidata. Load this adapter alongside source data from those vocabularies when cross-model reasoning is required; it deliberately does not import them."@en ;
+	dcterms:source
+		<http://www.geonames.org/ontology/ontology_v3.3.rdf> ,
+		<http://www.opengis.net/ont/geosparql> ,
+		<https://schema.org/version/latest/> ,
+		<https://www.w3.org/2003/01/geo/>
+		;
+	rdfs:seeAlso
+		<https://docs.ogc.org/is/22-047r1/22-047r1.html> ,
+		<https://www.wikidata.org/wiki/Property:P131>
+		;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/geo/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
+	skos:scopeNote "External properties are declared rdfs:subPropertyOf a STONEWORK relation only when both their subject and object are always places or geographic features, so that domain and range inference types them as stonework:Location without side effects. Properties that also relate geometries (GeoSPARQL Simple Features, schema.org geoWithin/geoTouches) or that are routinely used on non-place subjects such as events and organizations (Wikidata P131) are recorded as skos:closeMatch on the STONEWORK property instead. GeoNames childrenFeatures and neighbouringFeatures are intentionally unmapped because they link to RDF documents rather than to features. Coordinate and address properties are recorded as skos:closeMatch only, because the external properties accept untyped or textual literals that would conflict with the xsd:decimal ranges of stonework:latitude and stonework:longitude. To attach a polygon or other shape, use geo:hasGeometry directly on a stonework:Location; GeoSPARQL then infers that Location to be a geo:Feature."@en ;
+	.
+
+gn:neighbour
+	rdfs:subPropertyOf stonework:adjacentTo ;
+	.
+
+gn:parentADM1
+	rdfs:subPropertyOf stonework:locatedWithin ;
+	.
+
+gn:parentADM2
+	rdfs:subPropertyOf stonework:locatedWithin ;
+	.
+
+gn:parentADM3
+	rdfs:subPropertyOf stonework:locatedWithin ;
+	.
+
+gn:parentADM4
+	rdfs:subPropertyOf stonework:locatedWithin ;
+	.
+
+gn:parentCountry
+	rdfs:subPropertyOf stonework:locatedWithin ;
+	.
+
+gn:parentFeature
+	rdfs:subPropertyOf stonework:locatedWithin ;
+	.
+
+wdt:P150
+	rdfs:subPropertyOf stonework:containsLocation ;
+	.
+
+wdt:P47
+	rdfs:subPropertyOf stonework:adjacentTo ;
+	.
+
+stonework:Location
+	skos:closeMatch
+		gn:Feature ,
+		geo:Feature ,
+		schema:Place
+		;
+	.
+
+stonework:adjacentTo
+	skos:closeMatch
+		geo:sfTouches ,
+		schema:geoTouches
+		;
+	.
+
+stonework:containsLocation
+	skos:closeMatch
+		geo:sfContains ,
+		schema:geoContains
+		;
+	.
+
+stonework:latitude
+	skos:closeMatch
+		pos:lat ,
+		schema:latitude
+		;
+	.
+
+stonework:locatedWithin
+	skos:closeMatch
+		geo:sfWithin ,
+		wdt:P131 ,
+		schema:geoWithin
+		;
+	.
+
+stonework:longitude
+	skos:closeMatch
+		pos:long ,
+		schema:longitude
+		;
+	.
+
+stonework:postalCode
+	skos:closeMatch schema:postalCode ;
+	.
+
+stonework:streetAddress
+	skos:closeMatch schema:streetAddress ;
+	.
+
+schema:containedInPlace
+	rdfs:subPropertyOf stonework:locatedWithin ;
+	.
+
+schema:containsPlace
+	rdfs:subPropertyOf stonework:containsLocation ;
+	.
