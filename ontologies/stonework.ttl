@@ -3334,6 +3334,18 @@ stonework:locatedWithin
 	skos:scopeNote "Transitive: a City locatedWithin a Region that is locatedWithin a Country is also locatedWithin that Country. Assert only the most direct containment and let reasoning supply the rest. Use stonework:locatedAt to place non-Location entities such as Hosts or Organizations at a Location."@en ;
 	.
 
+stonework:locationPrecision
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Location ;
+	rdfs:range xsd:decimal ;
+	skos:definition "The radius, in meters, of uncertainty around this Location's stonework:latitude and stonework:longitude."@en ;
+	skos:prefLabel "locationPrecision"@en ;
+	skos:scopeNote "Corresponds to the STIX 2.1 Location precision property. Use it to distinguish an exact facility coordinate from a city- or region-level centroid, such as a geolocated IP address or an event geotagged from a news report. Omit it when the precision is unknown."@en ;
+	.
+
 stonework:logSource
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Log ;
@@ -4492,6 +4504,15 @@ stonework:storedOn
 	rdfs:range stonework:Host ;
 	skos:definition "Relates a DigitalArtifact to the Host on which it is stored."@en ;
 	skos:prefLabel "storedOn"@en ;
+	.
+
+stonework:streetAddress
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Location ;
+	rdfs:range xsd:string ;
+	skos:definition "The street address of the location, such as a building number and street name."@en ;
+	skos:prefLabel "streetAddress"@en ;
+	skos:scopeNote "Corresponds to the STIX 2.1 Location street_address property. Record the postal code with stonework:postalCode and the enclosing City, Region, or Country with stonework:locatedWithin rather than repeating them in this string."@en ;
 	.
 
 stonework:subdomainOf
