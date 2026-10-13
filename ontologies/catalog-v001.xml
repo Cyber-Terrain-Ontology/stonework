@@ -25,12 +25,12 @@
         <uri name="https://cyberterrain.org/ns/frameworks/cwe/0.2.0" uri="frameworks/cwe.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/d3fend" uri="frameworks/d3fend.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/d3fend/0.2.0" uri="frameworks/d3fend.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/dhcp" uri="frameworks/dhcp.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/dhcp/0.1.0" uri="frameworks/dhcp.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/dns" uri="frameworks/dns.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/dns/0.1.0" uri="frameworks/dns.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/email" uri="frameworks/email.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/email/0.1.0" uri="frameworks/email.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/dhcp" uri="extensions/dhcp.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/dhcp/0.1.0" uri="extensions/dhcp.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/dns" uri="extensions/dns.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/dns/0.1.0" uri="extensions/dns.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/email" uri="extensions/email.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/email/0.1.0" uri="extensions/email.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/emb3d" uri="frameworks/emb3d.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/emb3d/0.1.0" uri="frameworks/emb3d.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/fatf" uri="frameworks/fatf.ttl"/>
@@ -43,14 +43,14 @@
         <uri name="https://cyberterrain.org/ns/frameworks/nist/0.1.0" uri="frameworks/nist.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/ocsf" uri="frameworks/ocsf.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/ocsf/0.1.0" uri="frameworks/ocsf.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/registry" uri="frameworks/registry.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/registry/0.1.0" uri="frameworks/registry.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/registry" uri="extensions/registry.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/registry/0.1.0" uri="extensions/registry.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/stix" uri="frameworks/stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/stix/0.2.0" uri="frameworks/stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uco" uri="frameworks/uco.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uco/0.1.0" uri="frameworks/uco.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/uri" uri="frameworks/uri.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/uri/0.1.0" uri="frameworks/uri.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/uri" uri="extensions/uri.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/uri/0.1.0" uri="extensions/uri.ttl"/>
         <!-- stix.ttl is STONEWORK's self-contained local crosswalk for the STONES/STIX 2.1 vocabulary; resolve stones# to that mapping rather than fetching it over the network -->
         <uri name="https://cyberterrain.org/ns/stones#" uri="frameworks/stix.ttl"/>
     </group>
