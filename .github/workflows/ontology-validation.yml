@@ -31,6 +31,15 @@ jobs:
       - name: Download RDF toolkit
         run: bash tools/download-rdf-toolkit.sh
 
+      - name: Cache Apache Jena
+        uses: actions/cache@v4
+        with:
+          path: tools/apache-jena-6.2.0
+          key: apache-jena-${{ runner.os }}-${{ hashFiles('tools/download-jena.sh') }}
+
+      - name: Download Apache Jena
+        run: bash tools/download-jena.sh
+
       - name: Check Turtle formatting
         run: bash .githooks/format-ttl.sh --check
 

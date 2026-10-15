@@ -3,6 +3,7 @@
 # imports: https://cyberterrain.org/ns/frameworks/cis
 # imports: https://cyberterrain.org/ns/frameworks/cpe
 # imports: https://cyberterrain.org/ns/frameworks/cve
+# imports: https://cyberterrain.org/ns/frameworks/cvss
 # imports: https://cyberterrain.org/ns/frameworks/cwe
 # imports: https://cyberterrain.org/ns/frameworks/d3fend
 # imports: https://cyberterrain.org/ns/frameworks/dhcp
@@ -10,6 +11,7 @@
 # imports: https://cyberterrain.org/ns/frameworks/email
 # imports: https://cyberterrain.org/ns/frameworks/emb3d
 # imports: https://cyberterrain.org/ns/frameworks/fatf
+# imports: https://cyberterrain.org/ns/frameworks/geo
 # imports: https://cyberterrain.org/ns/frameworks/killchain
 # imports: https://cyberterrain.org/ns/frameworks/nist
 # imports: https://cyberterrain.org/ns/frameworks/ocsf
@@ -36,6 +38,7 @@
 		<https://cyberterrain.org/ns/frameworks/cis> ,
 		<https://cyberterrain.org/ns/frameworks/cpe> ,
 		<https://cyberterrain.org/ns/frameworks/cve> ,
+		<https://cyberterrain.org/ns/frameworks/cvss> ,
 		<https://cyberterrain.org/ns/frameworks/cwe> ,
 		<https://cyberterrain.org/ns/frameworks/d3fend> ,
 		<https://cyberterrain.org/ns/frameworks/dhcp> ,
@@ -43,6 +46,7 @@
 		<https://cyberterrain.org/ns/frameworks/email> ,
 		<https://cyberterrain.org/ns/frameworks/emb3d> ,
 		<https://cyberterrain.org/ns/frameworks/fatf> ,
+		<https://cyberterrain.org/ns/frameworks/geo> ,
 		<https://cyberterrain.org/ns/frameworks/killchain> ,
 		<https://cyberterrain.org/ns/frameworks/nist> ,
 		<https://cyberterrain.org/ns/frameworks/ocsf> ,
@@ -53,6 +57,6 @@
 		<https://cyberterrain.org/ns/stonework#> ,
 		<https://cyberterrain.org/ns/stonework/categories#>
 		;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/profiles/full/0.1.0> ;
-	owl:versionInfo "0.1.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/profiles/full/0.2.0> ;
+	owl:versionInfo "0.2.0" ;
 	.

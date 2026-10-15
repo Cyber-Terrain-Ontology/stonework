@@ -117,8 +117,10 @@ a `stonework:MetricObservation` (`metricType stonework:metricNormalizedValue`,
 `CyberEntity`, and the observation carries the time the valuation applies to.
 `stonework:valuationCurrency` makes the value's output unit machine-readable;
 `stonework:hasProvenance` cites the concrete exchange-rate source. The strict
-SHACL profile requires that provenance, while the baseline profile requires a
-normalized valuation to have exactly one decimal value and one currency.
+SHACL profile requires that provenance, while the opt-in financial profile
+(`ontologies/shapes/frameworks/financial-shapes.ttl`) requires a normalized
+valuation to have exactly one decimal value and one currency. See
+[`docs/shacl.md`](shacl.md) for how the profiles compose.
 
 ## CryptoAsset, re-grounded
 

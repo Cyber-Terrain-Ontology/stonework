@@ -19,8 +19,8 @@ frameworks:stix
 		<https://cyberterrain.org/ns/stonework#> ,
 		<https://cyberterrain.org/ns/stonework/categories#>
 		;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/stix/0.1.0> ;
-	owl:versionInfo "0.1.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/stix/0.2.0> ;
+	owl:versionInfo "0.2.0" ;
 	skos:scopeNote "STIX Bundle is intentionally not mapped to a STONEWORK domain class. A bundle is a transport container rather than a STIX Core Object or an assertion about the cyber domain; consumers may retain it as packaging metadata without treating it as a CyberEntity."@en ;
 	.
 
@@ -293,6 +293,11 @@ stones:X509CertificateObject
 stones:attributed_to
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:attributedTo ;
+	.
+
+stones:description
+	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf stonework:description ;
 	.
 
 stones:detects

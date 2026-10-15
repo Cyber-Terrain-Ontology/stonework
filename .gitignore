@@ -1,6 +1,9 @@
 # Build tools (download with: bash tools/download-rdf-toolkit.sh)
 tools/rdf-toolkit.jar
 
+# SHACL engine (download with: bash tools/download-jena.sh)
+tools/apache-jena-*/
+
 # Build output (bash tools/build-merged.sh)
 /build/
 

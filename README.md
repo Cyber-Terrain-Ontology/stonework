@@ -39,6 +39,8 @@ Both NIST SP 800-53 and CIS Controls now carry real, materialized `stonework:mit
 
 STONEWORK provides its own stable namespace and core model, then composes with controlled vocabularies, source-framework alignments, and local extensions as needed. The core remains lightweight; import-only profiles add the framework mappings needed for a particular use case without forcing consumers to load every adapter.
 
+Bundled framework modules are STONEWORK extension and alignment ontologies, not semantically self-contained replacements for the core. Each module imports STONEWORK, owns only concepts and structures specific to its source standard, and aligns shared concepts to their canonical `stonework:` terms. A module can be loaded independently in the operational sense that its declared imports provide a complete closure; it is not independent of STONEWORK's semantics.
+
 [STONES](https://github.com/Cyber-Terrain-Ontology/stones) can be used as STONEWORK's extensible STIX 2.1 framework adapter when faithful STIX interchange is required. STONEWORK is not defined as an extension of STONES; STONES, ATT&CK, D3FEND, EMB3D, CWE, NIST SP 800-53, CIS Critical Controls, OCSF, UCO, FATF, and other framework modules are peer vocabularies that can be loaded alongside STONEWORK.
 
 STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or CIS.
@@ -148,9 +150,10 @@ Run these two commands once after cloning:
 ```bash
 git config core.hooksPath .githooks
 bash tools/download-rdf-toolkit.sh
+bash tools/download-jena.sh
 ```
 
-The first command activates the hooks tracked in `.githooks/`. The second downloads the [edmcouncil rdf-toolkit](https://github.com/edmcouncil/rdf-toolkit) jar (~33 MB, gitignored) used to canonicalize Turtle files on every commit.
+The first command activates the hooks tracked in `.githooks/`. The second downloads the [edmcouncil rdf-toolkit](https://github.com/edmcouncil/rdf-toolkit) jar (~33 MB, gitignored) used to canonicalize Turtle files on every commit. The third downloads the pinned [Apache Jena](https://jena.apache.org) 6.2.0 distribution (~24 MB, gitignored) used as the SHACL engine.
 
 Run the ontology checks directly at any time with:
 
@@ -160,9 +163,9 @@ python3 tools/check-ontology.py
 python3 tools/check-shacl.py
 ```
 
-The first command verifies canonical Turtle formatting without modifying files. The second parses every Turtle file and checks high-value OWL integrity rules. The third exercises both the baseline SHACL profile in `ontologies/shapes/stonework-shapes.ttl` and the additive strict overlay in `ontologies/shapes/stonework-strict-shapes.ttl` with the repository's bundled RDF4J runtime. CI runs all three checks for every pull request.
+The first command verifies canonical Turtle formatting without modifying files. The second parses every Turtle file and checks high-value OWL integrity rules. The third composes the SHACL shape graphs in `ontologies/shapes/` into named validation profiles and runs them against the repository's test fixtures with the pinned [Apache Jena](https://jena.apache.org) SHACL engine. CI runs all three checks for every pull request.
 
-The SHACL files are optional application-level data-quality profiles; they do not change STONEWORK's open-world OWL semantics and are not part of the core, STIX, or full-profile import closure. The baseline profile accepts externally mapped qualified assertions without normalized provenance while still validating provenance values when present. Consumers that require complete, normalized STONEWORK records can load the strict overlay alongside the baseline profile to require provenance on every `stonework:QualifiedAssertion`. `tools/check-shacl.py` explicitly registers each profile and validates only the repository's test fixtures. Existing ingest pipelines are unaffected unless they deliberately load the shapes into a SHACL-aware engine and invoke validation.
+The SHACL files are optional application-level data-quality profiles; they do not change STONEWORK's open-world OWL semantics and are not part of the core, STIX, or full-profile import closure. **The shapes are a validation profile, not the interoperability contract** — the contract is the ontology, and a record can be a legitimate instance of STONEWORK while still failing a shape a particular consumer cares about. Shape graphs compose: `stonework-shapes.ttl` carries source-independent value-domain rules, `frameworks/financial-shapes.ttl` carries the financial adapter contract, and `stonework-strict-shapes.ttl` adds the normalized-provenance demand on top of the core profile. Findings are tiered by `sh:severity`: `sh:Violation` means the data is malformed and gates the build, while `sh:Warning` means the data is merely incomplete (an unresolved cross-reference, a partial mapping) and is reported without failing. Shape graphs never use `sh:closed`, which the checker enforces. Existing ingest pipelines are unaffected unless they deliberately load the shapes into a SHACL-aware engine and invoke validation. See [`docs/shacl.md`](docs/shacl.md).
 
 **What the hook does on each commit:**
 - Canonicalizes all staged `.ttl` files via rdf-toolkit (alphabetical prefixes, tab indentation, consistent triple ordering) so diffs reflect content changes, not style noise
@@ -170,7 +173,7 @@ The SHACL files are optional application-level data-quality profiles; they do no
 - Parses every Turtle file and rejects common OWL integrity errors, including accidental domain/range intersections, incompatible inverse-property endpoints, property-kind collisions, class/individual punning, conflicting definitions, duplicate controlled-vocabulary labels, unresolved imports, inconsistent version metadata, and incomplete category-scheme declarations
 - Sets `ontologies/catalog-v001.xml` read-only so Protégé cannot overwrite it
 
-**Requirements:** Java 11+ and Python 3 on `PATH`.
+**Requirements:** Java 21+ and Python 3 on `PATH`. rdf-toolkit itself still runs on Java 11, but Jena 6 (the SHACL engine) requires 21.
 
 ### Ontology imports and versions
 
@@ -189,14 +192,23 @@ This concatenates the two files under the core's single `owl:Ontology` header, c
 ### Framework interoperability
 
 - `ontologies/frameworks/stix.ttl` maps STONES classes and properties into STONEWORK. STIX relationship source, target, and open-vocabulary type values project through the generic qualified-assertion properties. STIX Bundle remains intentionally unmapped because it is a transport container rather than a STIX Core Object or cyber-domain assertion.
+- `ontologies/frameworks/cve.ttl` preserves only CVE JSON-specific record structures while using STONEWORK classes and properties directly for shared vulnerability and CVSS semantics. Source-native assigner and replacement identifiers are resolved to individuals linked with `stonework:assignedBy` and `stonework:supersededBy`. A CVE `affected` entry is a `stonework:ComponentContext` linked to its canonical `stonework:VersionedProduct` with `stonework:installationOf`; a property chain projects that two-step source path into the direct `stonework:affected` relationship used by cross-framework queries.
+- `ontologies/frameworks/cvss.ttl` adds decomposed vector components and additional subscores directly to the core `stonework:CvssMetric` assessment; it does not define a second metric class or duplicate the common core properties. CVSS assessments may come from NVD, CNAs, vendors, or analysts and may describe any vulnerability, not only a CVE record. Use `stonework:createdBy` for the scoring authority and `stonework:hasProvenance` for its source record.
 - `ontologies/frameworks/d3fend.ttl` maps compatible MITRE D3FEND 1.5.0 defensive and offensive techniques, tactics, events, artifacts, identifiers, and selected relationships into STONEWORK. It preserves D3FEND's source-native hierarchy and class/individual punning rather than asserting equivalence. `d3f:PhysicalArtifact` subclasses `stonework:PhysicalArtifact`.
 - `ontologies/frameworks/emb3d.ttl` maps MITRE EMB3D device properties, threats, and mitigations. `emb3d:DeviceProperty` subclasses `CyberEntity` as a quality of a `PhysicalArtifact`; `emb3d:hasDeviceProperty` / `emb3d:enablesThreat` / `emb3d:mitigatedBy` preserve the property → threat → mitigation graph. `mitigatedBy` is not a subproperty of `stonework:mitigates` (direction inverted).
 - `ontologies/frameworks/bfo.ttl` asserts one-way BFO 2020 alignments only. `Location` maps to generically dependent continuant / information content entity (`BFO_0000031`), not Site; `PhysicalArtifact` and `Actuator` map to material entity (`BFO_0000040`).
+- `ontologies/frameworks/geo.ttl` aligns `Location`, its containment and adjacency relations (`locatedWithin`, `containsLocation`, `adjacentTo`), and its coordinate and address properties with OGC GeoSPARQL 1.1, schema.org, GeoNames 3.3, and Wikidata. GeoNames parent/neighbour, schema.org `containedInPlace`/`containsPlace`, and Wikidata P150/P47 are subproperties of the STONEWORK relations; GeoSPARQL Simple Features relations, schema.org `geoWithin`/`geoTouches`, and Wikidata P131 are `skos:closeMatch` only, because they also relate geometries or non-place subjects. GeoNames, Wikidata, or schema.org place IRIs can be typed `stonework:Location` directly, and GeoSPARQL `geo:hasGeometry` can attach shapes to a `Location`.
 - `ontologies/frameworks/ocsf.ttl` maps the complete OCSF 1.9.0 core event taxonomy into `stonework:Event`, retaining OCSF category and class identifiers for round-tripping.
 - `ontologies/frameworks/uco.ttl` maps compatible UCO 1.5.0 action, identity, location, and observable classes into STONEWORK. It remains class-only because UCO places observable values on facet nodes while STONEWORK commonly projects them directly onto domain entities.
 - `ontologies/frameworks/fatf.ttl` supplies a starter set of money-laundering typology individuals drawn from FATF methods-and-trends guidance, mapped into the neutral `stonework:IllicitFinanceTechnique` and `stonework:LaunderingStage` slots that the core defines. It is an illustrative, non-exhaustive, non-normative convenience — not a reproduction of FATF guidance — and other bodies' typology sets can populate the same slots.
 
-These adapters are alignment modules rather than copies of their source standards. Load the official D3FEND ontology, EMB3D catalog, OCSF schema, UCO ontologies, or BFO 2020 alongside STONEWORK when source-native constraints and attributes are required. Type ICS assets as `PhysicalArtifact` (and `Host` when they also run processes); there is no ATT&CK ICS adapter because STONEWORK classes already cover technique, mitigation, and artifact.
+These adapters are alignment modules rather than copies of their source standards. Load the official D3FEND ontology, EMB3D catalog, OCSF schema, UCO ontologies, GeoSPARQL, GeoNames, or BFO 2020 alongside STONEWORK when source-native constraints and attributes are required. Type ICS assets as `PhysicalArtifact` (and `Host` when they also run processes); there is no ATT&CK ICS adapter because STONEWORK classes already cover technique, mitigation, and artifact.
+
+### CVSS assessments and plan variables
+
+Use `stonework:cvssBaseScore`, `stonework:cvssSeverity`, and `stonework:cvssVector` directly on a `stonework:Vulnerability` for one selected headline score. Use `stonework:CvssMetric` through `stonework:hasCvssMetric` when version, scoring authority, provenance, or multiple assessments must be retained. The CVSS framework module adds decomposed vector fields but is not required for the common structured fields. CVSS base metrics express context-neutral technical severity. Environmental metrics may adjust technical severity for a deployment context, but CVSS alone does not establish that the product is present or express full enterprise risk.
+
+A `stonework:Variable` is not another CVSS representation. It is an execution-time placeholder used when a Plan consumes an existing score or an Investigation calculates a new assessment. An enterprise assessment may consider a `stonework:Vulnerability`, its `stonework:CvssMetric`, and current infrastructure state; the executing `stonework:Investigation` constructs a contextual `stonework:VulnerabilityAssessment` and binds an output Variable to it.
 
 ### Financial observables
 

@@ -1,0 +1,138 @@
+# imports: https://cyberterrain.org/ns/stonework#
+
+@prefix cvss: <https://cyberterrain.org/ns/frameworks/cvss#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://cyberterrain.org/ns/frameworks/cvss>
+	a owl:Ontology ;
+	rdfs:label "Common Vulnerability Scoring System Ontology"@en ;
+	rdfs:comment "Source-independent structured representation of CVSS assessments. CVSS metrics may describe CVE records or any other stonework:Vulnerability and may originate from NVD, a CNA, a vendor, or an analyst."@en ;
+	owl:imports <https://cyberterrain.org/ns/stonework#> ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/cvss/0.1.0> ;
+	owl:versionInfo "0.1.0" ;
+	.
+
+cvss:attackComplexity
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "attack complexity"@en ;
+	rdfs:comment "The CVSS attack-complexity metric value."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
+
+cvss:attackVector
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "attack vector"@en ;
+	rdfs:comment "The CVSS attack-vector metric value."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
+
+cvss:availabilityImpact
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "availability impact"@en ;
+	rdfs:comment "The CVSS availability-impact metric value."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
+
+cvss:confidentialityImpact
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "confidentiality impact"@en ;
+	rdfs:comment "The CVSS confidentiality-impact metric value."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
+
+cvss:environmentalScore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "environmental score"@en ;
+	rdfs:comment "The CVSS environmental score."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:decimal ;
+	.
+
+cvss:exploitabilityScore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "exploitability score"@en ;
+	rdfs:comment "The exploitability subscore calculated for the CVSS assessment."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:decimal ;
+	.
+
+cvss:integrityImpact
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "integrity impact"@en ;
+	rdfs:comment "The CVSS integrity-impact metric value."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
+
+cvss:privilegesRequired
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "privileges required"@en ;
+	rdfs:comment "The CVSS privileges-required metric value."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
+
+cvss:scope
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "scope"@en ;
+	rdfs:comment "The CVSS v3 scope metric value."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
+
+cvss:temporalScore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "temporal score"@en ;
+	rdfs:comment "The CVSS temporal score."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:decimal ;
+	.
+
+cvss:userInteraction
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:label "user interaction"@en ;
+	rdfs:comment "The CVSS user-interaction metric value."@en ;
+	rdfs:domain stonework:CvssMetric ;
+	rdfs:range xsd:string ;
+	.
