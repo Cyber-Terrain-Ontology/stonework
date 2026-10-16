@@ -384,8 +384,13 @@ def main() -> int:
                 "guardOperator",
                 "guardType",
                 "guardVariable",
+                "hasInvestigationOutcome",
+                "hasInvestigationStatus",
+                "hasPriority",
                 "installationOf",
                 "installedOn",
+                "leadInvestigator",
+                "mergedInto",
                 "predictedLiteral",
                 "predictedType",
                 "predictedValue",
@@ -402,6 +407,11 @@ def main() -> int:
             "shacl-warning-actuation-target.ttl",
             "core",
             "An actuation with no resolved target should warn, not fail",
+        )
+        failures += expect_warning(
+            "shacl-warning-investigation-outcome.ttl",
+            "core",
+            "An outcome on an Investigation that isn't closed should warn, not fail",
         )
         failures += expect_warning(
             "shacl-warning-currency-exchange.ttl",

@@ -17,8 +17,16 @@ example:componentContext
 		;
 	.
 
+example:firstAnalyst
+	a stonework:Person ;
+	.
+
 example:firstInfrastructure
 	a stonework:Infrastructure ;
+	.
+
+example:firstInvestigation
+	a stonework:Investigation ;
 	.
 
 example:firstProduct
@@ -61,6 +69,30 @@ example:hypothesis
 		;
 	.
 
+example:investigation
+	a stonework:Investigation ;
+	stonework:hasInvestigationOutcome
+		stonework:investigationOutcomeBenign ,
+		stonework:investigationOutcomeConfirmed
+		;
+	stonework:hasInvestigationStatus
+		stonework:investigationStatusActive ,
+		stonework:investigationStatusClosed
+		;
+	stonework:hasPriority
+		stonework:priorityHigh ,
+		stonework:priorityLow
+		;
+	stonework:leadInvestigator
+		example:firstAnalyst ,
+		example:secondAnalyst
+		;
+	stonework:mergedInto
+		example:firstInvestigation ,
+		example:secondInvestigation
+		;
+	.
+
 example:relationship
 	a stonework:QualifiedAssertion ;
 	stonework:assertionObject
@@ -77,8 +109,16 @@ example:relationship
 		;
 	.
 
+example:secondAnalyst
+	a stonework:Person ;
+	.
+
 example:secondInfrastructure
 	a stonework:Infrastructure ;
+	.
+
+example:secondInvestigation
+	a stonework:Investigation ;
 	.
 
 example:secondProduct
