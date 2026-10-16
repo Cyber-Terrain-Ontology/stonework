@@ -25,6 +25,11 @@ example:analyst
 	a stonework:Person ;
 	.
 
+example:analystOpinion
+	a stonework:Opinion ;
+	stonework:opinionOf example:proposedLink ;
+	.
+
 example:boundEntity
 	a stonework:CyberEntity ;
 	.
@@ -111,7 +116,10 @@ example:investigation
 		example:secondAnalyst
 		;
 	stonework:startedAtTime "2026-08-20T09:00:00Z"^^xsd:dateTime ;
-	stonework:testsHypothesis example:hypothesis ;
+	stonework:testsHypothesis
+		example:hypothesis ,
+		example:openHypothesis
+		;
 	.
 
 example:isolationActuation
@@ -128,6 +136,11 @@ example:isolationControl
 example:likelihood
 	a stonework:Likelihood ;
 	stonework:likelihoodScore "0.6"^^xsd:decimal ;
+	.
+
+example:linkingRun
+	a stonework:Provenance ;
+	stonework:description "Matched by the technique ID in the bulletin object's name."@en ;
 	.
 
 example:location
@@ -148,6 +161,13 @@ example:observation
 	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
 	.
 
+example:openHypothesis
+	a stonework:Hypothesis ;
+	stonework:confidence "60"^^xsd:integer ;
+	stonework:description "The intrusion set behind the campaign is APT28."@en ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
+	.
+
 example:product
 	a stonework:Product ;
 	.
@@ -156,6 +176,15 @@ example:productInstallation
 	a stonework:ProductInstallation ;
 	stonework:installationOf example:versionedProduct ;
 	stonework:installedOn example:protectedHost ;
+	.
+
+example:proposedLink
+	a stonework:QualifiedAssertion ;
+	stonework:assertionObject example:canonicalTechnique ;
+	stonework:assertionRelationType "refers-to" ;
+	stonework:assertionSubject example:bulletinTechnique ;
+	stonework:confidence "60"^^xsd:integer ;
+	stonework:hasProvenance example:linkingRun ;
 	.
 
 example:protectedHost

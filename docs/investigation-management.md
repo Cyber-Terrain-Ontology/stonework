@@ -41,6 +41,8 @@ ex:inv-2026-114
 | `mergedInto` | Functional | When two investigations turn out to be the same matter, the merged one keeps its record and points to the survivor. |
 | `refersTo` | Object property | An intelligence object to the canonical entity it refers to (a vendor's T1059 to ATT&CK's), without `owl:sameAs`. See below. |
 
+**Changed for analysts' judgments:** `opinionOf` may now target a `QualifiedAssertion`, so an analyst can confirm or reject one proposed link (an `Opinion` with `stones:opinion` agree or disagree). `HypothesisShape` no longer requires a predicted `Variable`: a hypothesis an investigation tests directly need not belong to a plan; at most one Variable is still enforced.
+
 **Changed:** `investigates` / `investigatedBy` no longer restrict the subject to Campaign,
 Incident, MalwareSample or ThreatActor. The union range rejected nothing; it only made OWL
 infer that any other subject (a vulnerability, a product's exposure, an activity cluster)

@@ -17,5 +17,7 @@ Investigations as first-class records; see [docs/investigation-management.md](do
 
 - `stonework:investigates` / `stonework:investigatedBy`: the subject is no longer restricted to Campaign, Incident, MalwareSample or ThreatActor.
 - `stonework:Investigation`'s scope note lists the properties that describe one.
+- `stonework:opinionOf` may target a `stonework:QualifiedAssertion` as well as an `IntelligenceProduct`: an analyst's confirmation or rejection of one asserted link.
+- `HypothesisShape`: a Hypothesis predicts at most one Variable, and need not predict one (a hypothesis tested directly by an Investigation).
 
 Earlier releases are described in their pull requests and tags.

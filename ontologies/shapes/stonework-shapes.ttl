@@ -122,8 +122,7 @@ stonework:HypothesisShape
 		[
 			sh:class stonework:Variable ;
 			sh:maxCount "1"^^xsd:integer ;
-			sh:message "A Hypothesis must identify exactly one predicted Variable."@en ;
-			sh:minCount "1"^^xsd:integer ;
+			sh:message "A Hypothesis predicts at most one Variable. One tested directly by an Investigation (stonework:testsHypothesis) need not predict a plan Variable at all."@en ;
 			sh:path stonework:predictsVariable ;
 		] ,
 		[

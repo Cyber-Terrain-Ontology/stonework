@@ -3844,9 +3844,16 @@ stonework:operatesIn
 stonework:opinionOf
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Opinion ;
-	rdfs:range stonework:IntelligenceProduct ;
-	skos:definition "Relates an Opinion to the IntelligenceProduct whose correctness or credibility it evaluates."@en ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:IntelligenceProduct
+			stonework:QualifiedAssertion
+		) ;
+	] ;
+	skos:definition "Relates an Opinion to the IntelligenceProduct or QualifiedAssertion whose correctness or credibility it evaluates."@en ;
 	skos:prefLabel "opinionOf"@en ;
+	skos:scopeNote "An analyst's confirmation or rejection of a single qualified assertion, such as a proposed stonework:refersTo link found by a heuristic, is an Opinion of that QualifiedAssertion: agreement (stones:opinion) with the explanation and author recorded on the Opinion."@en ;
 	.
 
 stonework:originatesFrom
