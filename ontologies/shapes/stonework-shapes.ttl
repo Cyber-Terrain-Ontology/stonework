@@ -143,6 +143,56 @@ stonework:HypothesisShape
 	sh:targetClass stonework:Hypothesis ;
 	.
 
+stonework:InvestigationOutcomeShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:hasValue stonework:investigationStatusClosed ;
+			sh:message "An Investigation with an outcome should have the status Closed."@en ;
+			sh:path stonework:hasInvestigationStatus ;
+			sh:severity sh:Warning ;
+		] ,
+		[
+			sh:message "An Investigation with an outcome should record when it ended (stonework:endedAtTime)."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:endedAtTime ;
+			sh:severity sh:Warning ;
+		]
+		;
+	sh:targetSubjectsOf stonework:hasInvestigationOutcome ;
+	.
+
+stonework:InvestigationShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:Agent ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An Investigation has at most one lead investigator."@en ;
+			sh:path stonework:leadInvestigator ;
+		] ,
+		[
+			sh:class stonework:Investigation ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An Investigation is merged into at most one other Investigation."@en ;
+			sh:path stonework:mergedInto ;
+		] ,
+		[
+			sh:class stonework:InvestigationOutcome ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An Investigation has at most one outcome."@en ;
+			sh:path stonework:hasInvestigationOutcome ;
+		] ,
+		[
+			sh:class stonework:InvestigationStatus ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An Investigation has at most one current status."@en ;
+			sh:path stonework:hasInvestigationStatus ;
+		]
+		;
+	sh:targetClass stonework:Investigation ;
+	.
+
 stonework:IpVersionShape
 	a sh:NodeShape ;
 	sh:property [
@@ -303,6 +353,17 @@ stonework:PortShape
 		stonework:port ,
 		stonework:srcPort
 		;
+	.
+
+stonework:PriorityShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:PriorityLevel ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "At most one current priority."@en ;
+		sh:path stonework:hasPriority ;
+	] ;
+	sh:targetSubjectsOf stonework:hasPriority ;
 	.
 
 stonework:ProductInstallationShape
