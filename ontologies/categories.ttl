@@ -13,8 +13,8 @@
 	rdfs:label "STONEWORK Categories and Roles"@en ;
 	dcterms:description "Category and Role subclasses, associated vocabulary named individuals, and category-specific object properties for the STONEWORK ontology. Kept separate to allow the core ontology to load without the full vocabulary set."@en ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.1.0> ;
-	owl:versionInfo "0.1.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.2.0> ;
+	owl:versionInfo "0.2.0" ;
 	.
 
 stonework:AccountType
@@ -280,6 +280,34 @@ stonework:InfrastructureType
 	skos:scopeNote "Applied via stonework:categorizedBy to Infrastructure individuals. Covers both adversary-controlled infrastructure (C2, staging, phishing) and defender infrastructure (firewall, workstation). Aligns with the STIX 2.1 infrastructure-type open vocabulary."@en ;
 	.
 
+stonework:InvestigationOutcome
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:investigationOutcomeScheme ;
+		]
+		;
+	skos:definition "A classification of how a closed investigation ended."@en ;
+	skos:prefLabel "Investigation Outcome"@en ;
+	.
+
+stonework:InvestigationStatus
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:investigationStatusScheme ;
+		]
+		;
+	skos:definition "A classification of an investigation's position in its lifecycle."@en ;
+	skos:prefLabel "Investigation Status"@en ;
+	.
+
 stonework:Keylogger
 	a
 		owl:NamedIndividual ,
@@ -380,6 +408,20 @@ stonework:PaymentInstrument
 		;
 	skos:definition "A classification of the instrument or rail used to move value in a financial transaction."@en ;
 	skos:prefLabel "Payment Instrument"@en ;
+	.
+
+stonework:PriorityLevel
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:priorityLevelScheme ;
+		]
+		;
+	skos:definition "A classification of how urgently something should be worked, relative to other work."@en ;
+	skos:prefLabel "Priority Level"@en ;
 	.
 
 stonework:ProductType
@@ -1253,6 +1295,32 @@ stonework:hasInfrastructureType
 	skos:scopeNote "A piece of infrastructure may serve multiple roles (e.g. both C2 and staging). Aligns with the STIX 2.1 infrastructure-type open vocabulary."@en ;
 	.
 
+stonework:hasInvestigationOutcome
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Investigation ;
+	rdfs:range stonework:InvestigationOutcome ;
+	skos:definition "Relates an Investigation to how it ended."@en ;
+	skos:prefLabel "hasInvestigationOutcome"@en ;
+	skos:scopeNote "Set when the Investigation is closed (stonework:hasInvestigationStatus Closed). Distinct from a Hypothesis's status: an Investigation can confirm some hypotheses and refute others and still have one outcome."@en ;
+	.
+
+stonework:hasInvestigationStatus
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Investigation ;
+	rdfs:range stonework:InvestigationStatus ;
+	skos:definition "Relates an Investigation to its current lifecycle status."@en ;
+	skos:prefLabel "hasInvestigationStatus"@en ;
+	skos:scopeNote "At most one current status. Closing an Investigation is the status Closed together with stonework:endedAtTime; how it ended is stonework:hasInvestigationOutcome."@en ;
+	.
+
 stonework:hasLikelihoodLevel
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:categorizedBy ;
@@ -1286,6 +1354,25 @@ stonework:hasMotivation
 	skos:definition "Relates a threat actor to one or more motivations that drive their actions and operations."@en ;
 	skos:prefLabel "hasMotivation"@en ;
 	skos:scopeNote "A threat actor may have multiple motivations. Corresponds to the STIX 2.1 primary_motivation and secondary_motivations properties on ThreatActor."@en ;
+	.
+
+stonework:hasPriority
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:Incident
+			stonework:Investigation
+		) ;
+	] ;
+	rdfs:range stonework:PriorityLevel ;
+	skos:definition "Relates an Investigation or Incident to how urgently it should be worked."@en ;
+	skos:prefLabel "hasPriority"@en ;
+	skos:scopeNote "Priority is a decision about ordering work, distinct from stonework:ImpactLevel and stonework:RiskLevel, which assess consequence and likelihood; a high-impact matter may still be a lower priority than another. At most one current priority."@en ;
 	.
 
 stonework:hasProductType
@@ -1846,6 +1933,142 @@ stonework:infrastructureTypeScheme
 	skos:prefLabel "STONEWORK Infrastructure Type Scheme"@en ;
 	.
 
+stonework:investigationOutcomeBenign
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:InvestigationOutcome
+		;
+	skos:definition "The activity was real but legitimate or authorized, not adverse."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:investigationOutcomeScheme
+		;
+	skos:notation "benign" ;
+	skos:prefLabel "Benign"@en ;
+	.
+
+stonework:investigationOutcomeConfirmed
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:InvestigationOutcome
+		;
+	skos:definition "The matter investigated was confirmed: malicious or adverse activity took place, or the threat is real."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:investigationOutcomeScheme
+		;
+	skos:notation "confirmed" ;
+	skos:prefLabel "Confirmed"@en ;
+	.
+
+stonework:investigationOutcomeFalsePositive
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:InvestigationOutcome
+		;
+	skos:definition "What prompted the investigation was an error: the alert, indicator, or report did not reflect what it seemed to."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:investigationOutcomeScheme
+		;
+	skos:notation "false-positive" ;
+	skos:prefLabel "False Positive"@en ;
+	.
+
+stonework:investigationOutcomeInconclusive
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:InvestigationOutcome
+		;
+	skos:definition "The evidence was not sufficient to reach a conclusion."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:investigationOutcomeScheme
+		;
+	skos:notation "inconclusive" ;
+	skos:prefLabel "Inconclusive"@en ;
+	.
+
+stonework:investigationOutcomeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Investigation Outcome Scheme"@en ;
+	skos:definition "The controlled vocabulary of investigation outcomes."@en ;
+	skos:prefLabel "STONEWORK Investigation Outcome Scheme"@en ;
+	.
+
+stonework:investigationStatusActive
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:InvestigationStatus
+		;
+	skos:definition "Analysts are working the investigation."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:investigationStatusScheme
+		;
+	skos:notation "active" ;
+	skos:prefLabel "Active"@en ;
+	.
+
+stonework:investigationStatusClosed
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:InvestigationStatus
+		;
+	skos:definition "Work is complete and the investigation has been formally closed; its outcome records how it ended."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:investigationStatusScheme
+		;
+	skos:notation "closed" ;
+	skos:prefLabel "Closed"@en ;
+	.
+
+stonework:investigationStatusOnHold
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:InvestigationStatus
+		;
+	skos:definition "Work is paused, for example while waiting on evidence, a third party, or a decision."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:investigationStatusScheme
+		;
+	skos:notation "on-hold" ;
+	skos:prefLabel "On Hold"@en ;
+	.
+
+stonework:investigationStatusOpen
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:InvestigationStatus
+		;
+	skos:definition "The investigation has been opened and work has not yet started in earnest."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:investigationStatusScheme
+		;
+	skos:notation "open" ;
+	skos:prefLabel "Open"@en ;
+	.
+
+stonework:investigationStatusScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Investigation Status Scheme"@en ;
+	skos:definition "The controlled vocabulary of investigation lifecycle states."@en ;
+	skos:prefLabel "STONEWORK Investigation Status Scheme"@en ;
+	.
+
 stonework:killChainPhaseScheme
 	a skos:ConceptScheme ;
 	dcterms:isPartOf stonework:categoryScheme ;
@@ -2347,6 +2570,74 @@ stonework:paymentInstrumentWireTransfer
 		;
 	skos:notation "wire-transfer" ;
 	skos:prefLabel "Wire Transfer"@en ;
+	.
+
+stonework:priorityCritical
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PriorityLevel
+		;
+	skos:definition "Work immediately, ahead of everything else."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:priorityLevelScheme
+		;
+	skos:notation "critical" ;
+	skos:prefLabel "Critical"@en ;
+	.
+
+stonework:priorityHigh
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PriorityLevel
+		;
+	skos:definition "Work as soon as possible."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:priorityLevelScheme
+		;
+	skos:notation "high" ;
+	skos:prefLabel "High"@en ;
+	.
+
+stonework:priorityLevelScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Priority Level Scheme"@en ;
+	skos:definition "The controlled vocabulary of work priority levels."@en ;
+	skos:prefLabel "STONEWORK Priority Level Scheme"@en ;
+	.
+
+stonework:priorityLow
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PriorityLevel
+		;
+	skos:definition "Work when higher-priority matters allow."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:priorityLevelScheme
+		;
+	skos:notation "low" ;
+	skos:prefLabel "Low"@en ;
+	.
+
+stonework:priorityMedium
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PriorityLevel
+		;
+	skos:definition "Work in the normal course."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:priorityLevelScheme
+		;
+	skos:notation "medium" ;
+	skos:prefLabel "Medium"@en ;
 	.
 
 stonework:productTypeAIModel

@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.10.0> ;
-	owl:versionInfo "0.10.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.11.0> ;
+	owl:versionInfo "0.11.0" ;
 	.
 
 stonework:AIAgent
@@ -606,7 +606,7 @@ stonework:Investigation
 	rdfs:subClassOf stonework:Process ;
 	skos:definition "A systematic Process of inquiry, evidence collection, analysis, hypothesis testing, and conclusion to understand, attribute, or resolve security incidents, threats, anomalies, or other matters of interest." ;
 	skos:prefLabel "Investigation" ;
-	skos:scopeNote "Includes digital forensics, threat hunting, root cause analysis, and incident investigations. Links to Sightings, Evidence (via categorizedBy), Sensors, and produces Findings or updated Assessments."@en ;
+	skos:scopeNote "Includes digital forensics, threat hunting, root cause analysis, and incident investigations, and the cases an analyst works. Its subject is stonework:investigates; its sources are stonework:examines (intelligence products) and stonework:collects (digital artifacts as evidence); its hypotheses are stonework:testsHypothesis; its output is stonework:producesReport. Who works it is stonework:performedBy and stonework:leadInvestigator; when, stonework:startedAtTime and stonework:endedAtTime. Its lifecycle is stonework:hasInvestigationStatus, how it ended is stonework:hasInvestigationOutcome, and its urgency is stonework:hasPriority (all in categories.ttl). An Investigation merged into another keeps its record, linked by stonework:mergedInto."@en ;
 	.
 
 stonework:InvestigationPlan
@@ -2445,6 +2445,15 @@ stonework:evidencedBy
 	skos:prefLabel "evidencedBy"@en ;
 	.
 
+stonework:examines
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Investigation ;
+	rdfs:range stonework:IntelligenceProduct ;
+	skos:definition "Relates an Investigation to an intelligence product it considers as a source, such as a Report, a vendor's threat bulletin, or an imported STIX bundle."@en ;
+	skos:prefLabel "examines"@en ;
+	skos:scopeNote "The intelligence-side counterpart of stonework:collects, which is for the DigitalArtifacts an Investigation collects as forensic evidence. What an Investigation produces is stonework:producesReport."@en ;
+	.
+
 stonework:executablePath
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:RuntimeProcess ;
@@ -3272,36 +3281,20 @@ stonework:intermediaryAccount
 
 stonework:investigatedBy
 	a owl:ObjectProperty ;
-	rdfs:domain [
-		a owl:Class ;
-		owl:unionOf (
-			stonework:Campaign
-			stonework:Incident
-			stonework:MalwareSample
-			stonework:ThreatActor
-		) ;
-	] ;
 	rdfs:range stonework:Investigation ;
 	owl:inverseOf stonework:investigates ;
-	skos:definition "Relates an Incident, Campaign, MalwareSample, or ThreatActor to an Investigation examining it."@en ;
+	skos:definition "Relates the subject of an Investigation to the Investigation examining it."@en ;
 	skos:prefLabel "investigatedBy"@en ;
+	skos:scopeNote "Domain intentionally unset; see stonework:investigates."@en ;
 	.
 
 stonework:investigates
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Investigation ;
-	rdfs:range [
-		a owl:Class ;
-		owl:unionOf (
-			stonework:Campaign
-			stonework:Incident
-			stonework:MalwareSample
-			stonework:ThreatActor
-		) ;
-	] ;
 	owl:inverseOf stonework:investigatedBy ;
 	skos:definition "Relates an Investigation to the subject being investigated."@en ;
 	skos:prefLabel "investigates"@en ;
+	skos:scopeNote "Range intentionally unset: an Investigation may examine any matter of interest, among them an Incident, Campaign, ThreatActor or MalwareSample, a CyberActivityCluster, a Vulnerability or a Product's exposure to it, an Indicator, or an Infrastructure. The earlier union range (Campaign, Incident, MalwareSample, ThreatActor) rejected nothing: OWL only inferred that any other subject belonged to the union, which misclassified it."@en ;
 	.
 
 stonework:involvesCampaign
@@ -3436,6 +3429,19 @@ stonework:launchedBy
 	rdfs:range stonework:UserAccount ;
 	skos:definition "Relates a RuntimeProcess to the UserAccount under whose context it was launched."@en ;
 	skos:prefLabel "launchedBy"@en ;
+	.
+
+stonework:leadInvestigator
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:performedBy ;
+	rdfs:domain stonework:Investigation ;
+	rdfs:range stonework:Agent ;
+	skos:definition "Relates an Investigation to the Agent who leads it and is accountable for its conclusion."@en ;
+	skos:prefLabel "leadInvestigator"@en ;
+	skos:scopeNote "At most one lead at a time; others who work the Investigation are related by stonework:performedBy, which this specializes. For a lead in a particular period, or a role other than lead, use a stonework:RoleAssignment."@en ;
 	.
 
 stonework:lei
@@ -3618,6 +3624,18 @@ stonework:mentions
 	rdfs:domain stonework:Provenance ;
 	skos:definition "An entity referenced or cited within this Provenance record."@en ;
 	skos:prefLabel "mentions" ;
+	.
+
+stonework:mergedInto
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Investigation ;
+	rdfs:range stonework:Investigation ;
+	skos:definition "Relates an Investigation to the Investigation it was merged into, once analysts concluded the two examine the same matter."@en ;
+	skos:prefLabel "mergedInto"@en ;
+	skos:scopeNote "Keeps the merged Investigation as a record rather than deleting it, so its identity, findings and history stay traceable. A merge is an analyst's decision; when and by whom are recorded through stonework:hasProvenance or a stonework:QualifiedAssertion."@en ;
 	.
 
 stonework:metricFor
@@ -3826,9 +3844,16 @@ stonework:operatesIn
 stonework:opinionOf
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Opinion ;
-	rdfs:range stonework:IntelligenceProduct ;
-	skos:definition "Relates an Opinion to the IntelligenceProduct whose correctness or credibility it evaluates."@en ;
+	rdfs:range [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:IntelligenceProduct
+			stonework:QualifiedAssertion
+		) ;
+	] ;
+	skos:definition "Relates an Opinion to the IntelligenceProduct or QualifiedAssertion whose correctness or credibility it evaluates."@en ;
 	skos:prefLabel "opinionOf"@en ;
+	skos:scopeNote "An analyst's confirmation or rejection of a single qualified assertion, such as a proposed stonework:refersTo link found by a heuristic, is an Opinion of that QualifiedAssertion: agreement (stones:opinion) with the explanation and author recorded on the Opinion."@en ;
 	.
 
 stonework:originatesFrom
@@ -4197,6 +4222,13 @@ stonework:references
 	a owl:ObjectProperty ;
 	skos:definition "Generic reference from one entity to another. Use a more specific property where one exists."@en ;
 	skos:prefLabel "references" ;
+	.
+
+stonework:refersTo
+	a owl:ObjectProperty ;
+	skos:definition "Relates an object, typically from an intelligence source, to the canonical entity it refers to, such as an ATT&CK technique, a CVE, or a malware family, when the two are distinct individuals."@en ;
+	skos:prefLabel "refersTo"@en ;
+	skos:scopeNote "Unlike owl:sameAs, it does not merge the two individuals' properties. Two STIX objects with different STIX IDs are different objects even when both describe T1059: stones:stixId is functional, so owl:sameAs between them is inconsistent. Unlike skos:exactMatch, it does not make either end a skos:Concept. Domain and range intentionally unset: any intelligence object can refer to any canonical entity. A link found by a heuristic, such as an identifier parsed from a name, should carry its method and confidence through a stonework:QualifiedAssertion or stonework:hasProvenance."@en ;
 	.
 
 stonework:refines
@@ -4778,6 +4810,15 @@ stonework:techniqueOf
 	skos:definition "Relates a Technique to a Tactic it supports or to a broader Technique of which it is a specialization."@en ;
 	skos:prefLabel "techniqueOf"@en ;
 	skos:scopeNote "This is the inverse of hasTechnique. A Technique may support multiple Tactics, and a sub-technique may identify its broader parent Technique through the same hierarchy."@en ;
+	.
+
+stonework:testsHypothesis
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Investigation ;
+	rdfs:range stonework:Hypothesis ;
+	skos:definition "Relates an Investigation to a Hypothesis it tests."@en ;
+	skos:prefLabel "testsHypothesis"@en ;
+	skos:scopeNote "The direct link from an Investigation to its Hypotheses. When the Investigation executes an InvestigationPlan, the Hypothesis also predicts a Variable of a Step in that plan (stonework:predictsVariable); its outcome is stonework:hasHypothesisStatus."@en ;
 	.
 
 stonework:timestamp

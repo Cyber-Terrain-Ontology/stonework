@@ -21,12 +21,30 @@ example:address
 	stonework:ipVersion "4"^^xsd:integer ;
 	.
 
+example:analyst
+	a stonework:Person ;
+	.
+
+example:analystOpinion
+	a stonework:Opinion ;
+	stonework:opinionOf example:proposedLink ;
+	.
+
 example:boundEntity
 	a stonework:CyberEntity ;
 	.
 
+example:bulletinTechnique
+	a stonework:AttackPattern ;
+	stonework:refersTo example:canonicalTechnique ;
+	.
+
 example:campaign
 	a stonework:Campaign ;
+	.
+
+example:canonicalTechnique
+	a stonework:AttackTechnique ;
 	.
 
 example:certificate
@@ -84,6 +102,26 @@ example:indicator
 	stonework:confidence "85"^^xsd:integer ;
 	.
 
+example:investigation
+	a stonework:Investigation ;
+	stonework:endedAtTime "2026-08-22T17:00:00Z"^^xsd:dateTime ;
+	stonework:examines example:threatBulletin ;
+	stonework:hasInvestigationOutcome stonework:investigationOutcomeConfirmed ;
+	stonework:hasInvestigationStatus stonework:investigationStatusClosed ;
+	stonework:hasPriority stonework:priorityHigh ;
+	stonework:investigates example:campaign ;
+	stonework:leadInvestigator example:analyst ;
+	stonework:performedBy
+		example:analyst ,
+		example:secondAnalyst
+		;
+	stonework:startedAtTime "2026-08-20T09:00:00Z"^^xsd:dateTime ;
+	stonework:testsHypothesis
+		example:hypothesis ,
+		example:openHypothesis
+		;
+	.
+
 example:isolationActuation
 	a stonework:SecurityActuation ;
 	stonework:actsOn example:protectedHost ;
@@ -100,16 +138,34 @@ example:likelihood
 	stonework:likelihoodScore "0.6"^^xsd:decimal ;
 	.
 
+example:linkingRun
+	a stonework:Provenance ;
+	stonework:description "Matched by the technique ID in the bulletin object's name."@en ;
+	.
+
 example:location
 	a stonework:Location ;
 	stonework:latitude "40.7128"^^xsd:decimal ;
 	stonework:longitude "-74.0060"^^xsd:decimal ;
 	.
 
+example:mergedInvestigation
+	a stonework:Investigation ;
+	stonework:hasInvestigationStatus stonework:investigationStatusClosed ;
+	stonework:mergedInto example:investigation ;
+	.
+
 example:observation
 	a stonework:SecurityObservation ;
 	stonework:firstSeen "2026-08-20T10:00:00Z"^^xsd:dateTime ;
 	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
+	.
+
+example:openHypothesis
+	a stonework:Hypothesis ;
+	stonework:confidence "60"^^xsd:integer ;
+	stonework:description "The intrusion set behind the campaign is APT28."@en ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
 	.
 
 example:product
@@ -122,12 +178,25 @@ example:productInstallation
 	stonework:installedOn example:protectedHost ;
 	.
 
+example:proposedLink
+	a stonework:QualifiedAssertion ;
+	stonework:assertionObject example:canonicalTechnique ;
+	stonework:assertionRelationType "refers-to" ;
+	stonework:assertionSubject example:bulletinTechnique ;
+	stonework:confidence "60"^^xsd:integer ;
+	stonework:hasProvenance example:linkingRun ;
+	.
+
 example:protectedHost
 	a stonework:Host ;
 	.
 
 example:roleSource
 	a stonework:Publication ;
+	.
+
+example:secondAnalyst
+	a stonework:Person ;
 	.
 
 example:secondVersionedProduct
@@ -161,6 +230,10 @@ example:sponsorAssignment
 
 example:targetStep
 	a stonework:Step ;
+	.
+
+example:threatBulletin
+	a stonework:Report ;
 	.
 
 example:transition
