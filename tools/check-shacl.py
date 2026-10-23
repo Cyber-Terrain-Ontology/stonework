@@ -30,6 +30,7 @@ CORE_SHAPES = SHAPES_DIR / "stonework-shapes.ttl"
 FINANCIAL_SHAPES = SHAPES_DIR / "frameworks" / "financial-shapes.ttl"
 STRICT_SHAPES = SHAPES_DIR / "stonework-strict-shapes.ttl"
 FINANCIAL_EXAMPLE = ROOT / "examples" / "financial-follow-the-money.ttl"
+BEC_EXAMPLE = ROOT / "examples" / "bec-t1114-003.ttl"
 
 # The ontology schemas are loaded as data so that sh:targetClass resolves
 # through rdfs:subClassOf.
@@ -348,6 +349,11 @@ def main() -> int:
             str(FINANCIAL_EXAMPLE.relative_to(ROOT)),
             "financial",
             "Financial worked example failed the financial profile",
+        )
+        failures += expect_clean(
+            str(BEC_EXAMPLE.relative_to(ROOT)),
+            "financial",
+            "BEC worked example failed the financial profile",
         )
 
         # Malformed records: the value is wrong, not merely absent.

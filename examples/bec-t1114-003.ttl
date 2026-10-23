@@ -1,0 +1,579 @@
+@prefix cti-enc: <https://cyberterrain.org/cti-encyclopedia/resource/> .
+@prefix ex: <https://cyberterrain.org/ns/stonework/examples/bec-t1114-003#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:acct-ap-clerk-mailbox
+	a stonework:UserAccount ;
+	skos:prefLabel "Accounts-payable clerk's mailbox account"@en ;
+	stonework:accountName "ap@manufacturer.example" ;
+	stonework:accountOf ex:ap-clerk ;
+	stonework:hasAccountType stonework:accountTypeCloud ;
+	.
+
+ex:acct-controller-mailbox
+	a stonework:UserAccount ;
+	skos:prefLabel "Controller's mailbox account"@en ;
+	stonework:accountName "controller@manufacturer.example" ;
+	stonework:accountOf ex:controller ;
+	stonework:hasAccountType stonework:accountTypeCloud ;
+	.
+
+ex:acct-mule
+	a stonework:FinancialAccount ;
+	skos:prefLabel "Mule checking account"@en ;
+	stonework:accountOf ex:mule ;
+	stonework:categorizedBy stonework:financialAccountTypeChecking ;
+	stonework:heldAt ex:bank-mule ;
+	.
+
+ex:acct-operating
+	a stonework:FinancialAccount ;
+	skos:prefLabel "Manufacturer's operating account"@en ;
+	stonework:accountOf ex:org ;
+	stonework:categorizedBy stonework:financialAccountTypeChecking ;
+	stonework:heldAt ex:bank-org ;
+	.
+
+ex:act-create-rule
+	a stonework:Process ;
+	skos:definition "Using the controller's stolen credentials, the actor created an inbox rule that forwards every message mentioning an invoice, a payment or a wire to an external address, and moves the original to the RSS Feeds folder, where the controller wouldn't look."@en ;
+	skos:prefLabel "Execution: create a hidden forwarding rule on the controller's mailbox"@en ;
+	stonework:actsOn ex:acct-controller-mailbox ;
+	stonework:attributedTo ex:actor ;
+	stonework:executionOf cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ;
+	stonework:produces ex:rule-forward ;
+	stonework:startedAtTime "2026-09-02T03:14:07Z"^^xsd:dateTime ;
+	.
+
+ex:actor
+	a stonework:ThreatActor ;
+	skos:definition "The unidentified actor behind this business email compromise."@en ;
+	skos:prefLabel "Unidentified BEC actor"@en ;
+	.
+
+ex:addr-forward-target
+	a stonework:EmailAddress ;
+	skos:prefLabel "External address the forwarding rule sends to"@en ;
+	stonework:emailOf ex:actor ;
+	stonework:emailValue "archive.mailbox@freemail.example" ;
+	.
+
+ex:addr-lookalike
+	a stonework:EmailAddress ;
+	skos:definition "A lookalike of the supplier's accounts address, with a digit 1 in place of the letter l."@en ;
+	skos:prefLabel "Lookalike supplier address"@en ;
+	stonework:emailOf ex:actor ;
+	stonework:emailValue "accounts@supp1ier.example" ;
+	.
+
+ex:amt-wire
+	a stonework:MonetaryAmount ;
+	skos:prefLabel "Wire amount (USD)"@en ;
+	stonework:amount "186400.00"^^xsd:decimal ;
+	stonework:currency stonework:currencyUSD ;
+	.
+
+ex:analyst
+	a stonework:Person ;
+	skos:prefLabel "Example security analyst"@en ;
+	.
+
+ex:ap-clerk
+	a stonework:Person ;
+	skos:prefLabel "Example accounts-payable clerk"@en ;
+	stonework:hasRoleAssignment ex:ra-ap-clerk ;
+	.
+
+ex:bank-mule
+	a stonework:FinancialInstitution ;
+	skos:prefLabel "Mule's bank"@en ;
+	stonework:categorizedBy stonework:financialInstitutionTypeCommercialBank ;
+	.
+
+ex:bank-org
+	a stonework:FinancialInstitution ;
+	skos:prefLabel "Manufacturer's bank"@en ;
+	stonework:categorizedBy stonework:financialInstitutionTypeCommercialBank ;
+	.
+
+ex:bp-supplier-wire
+	a stonework:Playbook ;
+	skos:definition "The organization's process for paying a supplier invoice by wire."@en ;
+	skos:prefLabel "Supplier payment by wire"@en ;
+	stonework:hasStep
+		ex:wstep-approve ,
+		ex:wstep-enter ,
+		ex:wstep-release ,
+		ex:wstep-verify
+		;
+	stonework:performedBy ex:org ;
+	stonework:playbookVersion "3.2" ;
+	.
+
+ex:control-callback
+	a stonework:Control ;
+	skos:definition "Before any payment, a change to a payee's bank details is verified by telephone, at a number already on file and not one given in the request."@en ;
+	skos:prefLabel "Out-of-band verification of payee bank-detail changes"@en ;
+	stonework:controlId "FIN-07" ;
+	.
+
+ex:controller
+	a stonework:Person ;
+	skos:prefLabel "Example controller"@en ;
+	stonework:hasRoleAssignment ex:ra-controller ;
+	.
+
+ex:cstep-block-external
+	a stonework:Step ;
+	skos:prefLabel "Block automatic forwarding to external domains at the transport layer"@en ;
+	stonework:isStepOf ex:ctlplan-forwarding ;
+	stonework:stepOrder "3"^^xsd:integer ;
+	.
+
+ex:cstep-remove-rule
+	a stonework:Step ;
+	skos:prefLabel "Disable and remove the forwarding rule, keeping a copy as evidence"@en ;
+	stonework:isStepOf ex:ctlplan-forwarding ;
+	stonework:stepOrder "1"^^xsd:integer ;
+	.
+
+ex:cstep-reset
+	a stonework:Step ;
+	skos:prefLabel "Revoke the account's sessions and reset its credentials"@en ;
+	stonework:isStepOf ex:ctlplan-forwarding ;
+	stonework:stepOrder "2"^^xsd:integer ;
+	.
+
+ex:cstep-review
+	a stonework:Step ;
+	skos:prefLabel "Review what was forwarded, and warn the suppliers and customers it exposed"@en ;
+	stonework:isStepOf ex:ctlplan-forwarding ;
+	stonework:stepOrder "4"^^xsd:integer ;
+	.
+
+ex:ctlplan-forwarding
+	a stonework:ControlPlan ;
+	skos:definition "The organization's containment plan for a malicious email forwarding rule. It implements NIST SP 800-53 AC-4 (information flow enforcement), which the CTI Encyclopedia links to T1114.003."@en ;
+	skos:prefLabel "Contain a malicious forwarding rule"@en ;
+	stonework:hasStep
+		ex:cstep-block-external ,
+		ex:cstep-remove-rule ,
+		ex:cstep-reset ,
+		ex:cstep-review
+		;
+	stonework:implements cti-enc:_Control_nist-ac-4 ;
+	.
+
+ex:detplan-forwarding
+	a stonework:DetectionPlan ;
+	skos:definition "Looks for email forwarding rules on the finance team's mailboxes, following ATT&CK's detection strategy DET0576, and hands a confirmed rule to the containment plan."@en ;
+	skos:prefLabel "Detect forwarding rules on finance mailboxes"@en ;
+	stonework:hasStep
+		ex:dstep-contain ,
+		ex:dstep-search-clerk ,
+		ex:dstep-search-controller
+		;
+	stonework:implements cti-enc:x-mitre-detection-strategy--f66a9e86-49fb-4de6-963d-0e357a77f679 ;
+	.
+
+ex:dstep-contain
+	a stonework:Step ;
+	skos:definition "Run the containment plan for the mailbox where a rule was found."@en ;
+	skos:prefLabel "Contain the mailbox"@en ;
+	stonework:implements ex:ctlplan-forwarding ;
+	stonework:isStepOf ex:detplan-forwarding ;
+	stonework:stepOrder "3"^^xsd:integer ;
+	.
+
+ex:dstep-search-clerk
+	a stonework:Step ;
+	skos:definition "The same search on the accounts-payable clerk's mailbox."@en ;
+	skos:prefLabel "Search the audit log: clerk's mailbox"@en ;
+	stonework:hasOutputVariable ex:var-clerk-rule ;
+	stonework:implements cti-enc:x-mitre-analytic--710aa303-3e9f-4170-95a4-b2caf5f827fd ;
+	stonework:isStepOf ex:detplan-forwarding ;
+	stonework:stepOrder "2"^^xsd:integer ;
+	.
+
+ex:dstep-search-controller
+	a stonework:Step ;
+	skos:definition "Search the audit log for New-InboxRule and Set-InboxRule operations on the controller's mailbox that set ForwardTo, ForwardAsAttachmentTo or RedirectTo, over the last 90 days (ATT&CK analytic AN1591)."@en ;
+	skos:prefLabel "Search the audit log: controller's mailbox"@en ;
+	stonework:hasOutputVariable ex:var-controller-rule ;
+	stonework:implements cti-enc:x-mitre-analytic--710aa303-3e9f-4170-95a4-b2caf5f827fd ;
+	stonework:isStepOf ex:detplan-forwarding ;
+	stonework:stepOrder "1"^^xsd:integer ;
+	.
+
+ex:dt-clerk-to-contain
+	a stonework:Transition ;
+	stonework:fromStep ex:dstep-search-clerk ;
+	stonework:guardType stonework:Sighting ;
+	stonework:guardVariable ex:var-clerk-rule ;
+	stonework:toStep ex:dstep-contain ;
+	.
+
+ex:dt-controller-to-contain
+	a stonework:Transition ;
+	stonework:fromStep ex:dstep-search-controller ;
+	stonework:guardType stonework:Sighting ;
+	stonework:guardVariable ex:var-controller-rule ;
+	stonework:toStep ex:dstep-contain ;
+	.
+
+ex:email-bank-change
+	a stonework:EmailMessage ;
+	skos:definition "Sent from the lookalike supplier address in reply to a genuine invoice thread the actor had read through the forwarding rule. It says the supplier has changed banks and gives new account details for the outstanding invoice."@en ;
+	skos:prefLabel 'Email: "Updated remittance details"'@en ;
+	.
+
+ex:exe-contain
+	a stonework:Process ;
+	skos:prefLabel "Execution: contain the controller's mailbox"@en ;
+	stonework:correspondsToStep ex:dstep-contain ;
+	stonework:endedAtTime "2026-10-01T12:00:00Z"^^xsd:dateTime ;
+	stonework:executionOf ex:ctlplan-forwarding ;
+	stonework:performedBy
+		ex:analyst ,
+		ex:svc-automation
+		;
+	stonework:startedAtTime "2026-09-30T15:45:00Z"^^xsd:dateTime ;
+	.
+
+ex:exe-cstep-block-external
+	a stonework:Process ;
+	skos:prefLabel "Execution: apply the transport rule blocking external auto-forwarding"@en ;
+	stonework:actsOn ex:mail-tenant ;
+	stonework:correspondsToStep ex:cstep-block-external ;
+	stonework:endedAtTime "2026-09-30T16:06:04Z"^^xsd:dateTime ;
+	stonework:performedBy ex:svc-automation ;
+	stonework:startedAtTime "2026-09-30T16:06:00Z"^^xsd:dateTime ;
+	.
+
+ex:exe-cstep-remove-rule
+	a stonework:Process ;
+	skos:prefLabel 'Execution: remove the rule "Sync"'@en ;
+	stonework:actsOn ex:rule-forward ;
+	stonework:correspondsToStep ex:cstep-remove-rule ;
+	stonework:endedAtTime "2026-09-30T15:50:00Z"^^xsd:dateTime ;
+	stonework:performedBy ex:analyst ;
+	stonework:startedAtTime "2026-09-30T15:45:00Z"^^xsd:dateTime ;
+	.
+
+ex:exe-cstep-reset
+	a stonework:Process ;
+	skos:prefLabel "Execution: revoke sessions and reset the controller's credentials"@en ;
+	stonework:actsOn ex:acct-controller-mailbox ;
+	stonework:correspondsToStep ex:cstep-reset ;
+	stonework:endedAtTime "2026-09-30T16:05:00Z"^^xsd:dateTime ;
+	stonework:performedBy ex:analyst ;
+	stonework:startedAtTime "2026-09-30T15:51:00Z"^^xsd:dateTime ;
+	.
+
+ex:exe-cstep-review
+	a stonework:Process ;
+	skos:prefLabel "Execution: review the forwarded mail and warn those exposed"@en ;
+	stonework:correspondsToStep ex:cstep-review ;
+	stonework:endedAtTime "2026-10-01T12:00:00Z"^^xsd:dateTime ;
+	stonework:performedBy
+		ex:analyst ,
+		ex:controller
+		;
+	stonework:startedAtTime "2026-09-30T16:30:00Z"^^xsd:dateTime ;
+	.
+
+ex:exe-supplier-wire
+	a stonework:Process ;
+	skos:prefLabel "Execution: pay the supplier's September invoice by wire"@en ;
+	stonework:endedAtTime "2026-09-16T16:31:00Z"^^xsd:dateTime ;
+	stonework:executionOf ex:bp-supplier-wire ;
+	stonework:performedBy
+		ex:ap-clerk ,
+		ex:controller
+		;
+	stonework:startedAtTime "2026-09-16T09:12:00Z"^^xsd:dateTime ;
+	.
+
+ex:exe-wstep-approve
+	a stonework:Process ;
+	skos:prefLabel "Execution: approve the payment"@en ;
+	stonework:correspondsToStep ex:wstep-approve ;
+	stonework:endedAtTime "2026-09-16T15:04:00Z"^^xsd:dateTime ;
+	stonework:performedBy ex:controller ;
+	stonework:startedAtTime "2026-09-16T15:02:00Z"^^xsd:dateTime ;
+	.
+
+ex:exe-wstep-enter
+	a stonework:Process ;
+	skos:prefLabel "Execution: enter the invoice with the new bank details"@en ;
+	stonework:correspondsToStep ex:wstep-enter ;
+	stonework:endedAtTime "2026-09-16T09:20:00Z"^^xsd:dateTime ;
+	stonework:hasInput ex:email-bank-change ;
+	stonework:performedBy ex:ap-clerk ;
+	stonework:startedAtTime "2026-09-16T09:12:00Z"^^xsd:dateTime ;
+	.
+
+ex:exe-wstep-release
+	a stonework:Process ;
+	skos:prefLabel "Execution: release the wire"@en ;
+	stonework:correspondsToStep ex:wstep-release ;
+	stonework:endedAtTime "2026-09-16T16:31:00Z"^^xsd:dateTime ;
+	stonework:performedBy ex:controller ;
+	stonework:produces ex:txn-wire ;
+	stonework:startedAtTime "2026-09-16T16:29:00Z"^^xsd:dateTime ;
+	.
+
+ex:hyp-clerk-rule
+	a stonework:Hypothesis ;
+	skos:definition "T1114.003 is also in use on the accounts-payable clerk's mailbox."@en ;
+	skos:prefLabel "Hypothesis: a forwarding rule on the clerk's mailbox"@en ;
+	stonework:confidence "30"^^xsd:integer ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusRefuted ;
+	stonework:predictedType stonework:Sighting ;
+	stonework:predictsVariable ex:var-clerk-rule ;
+	.
+
+ex:hyp-controller-rule
+	a stonework:Hypothesis ;
+	skos:definition "T1114.003, Email Forwarding Rule, is in use on the controller's mailbox: the actor learned of the invoice from the controller's mail."@en ;
+	skos:prefLabel "Hypothesis: a forwarding rule on the controller's mailbox"@en ;
+	stonework:confidence "70"^^xsd:integer ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusConfirmed ;
+	stonework:predictedType stonework:Sighting ;
+	stonework:predictsVariable ex:var-controller-rule ;
+	.
+
+ex:incident-bec
+	a stonework:Incident ;
+	skos:definition "Declared on 30 September, when the supplier asked why its September invoice was unpaid."@en ;
+	skos:prefLabel "Supplier payment diverted by business email compromise"@en ;
+	stonework:attributedTo ex:actor ;
+	stonework:hasIncidentStatus stonework:incidentStatusContained ;
+	.
+
+ex:inv-bec
+	a stonework:Investigation ;
+	skos:prefLabel "Investigation: diverted supplier payment"@en ;
+	stonework:collects
+		ex:log-clerk-search ,
+		ex:log-new-inboxrule
+		;
+	stonework:endedAtTime "2026-10-03T17:00:00Z"^^xsd:dateTime ;
+	stonework:executionOf ex:detplan-forwarding ;
+	stonework:hasInvestigationOutcome stonework:investigationOutcomeConfirmed ;
+	stonework:hasInvestigationStatus stonework:investigationStatusClosed ;
+	stonework:hasPriority stonework:priorityHigh ;
+	stonework:investigates ex:incident-bec ;
+	stonework:leadInvestigator ex:analyst ;
+	stonework:performedBy ex:analyst ;
+	stonework:startedAtTime "2026-09-30T14:00:00Z"^^xsd:dateTime ;
+	stonework:testsHypothesis
+		ex:hyp-clerk-rule ,
+		ex:hyp-controller-rule
+		;
+	.
+
+ex:inv-search-clerk
+	a stonework:Investigation ;
+	skos:definition "Searched 90 days of the audit log for the clerk's mailbox and found no forwarding or redirect rule. The empty result is kept: it is the evidence against the hypothesis."@en ;
+	skos:prefLabel "Execution: search the audit log, clerk's mailbox"@en ;
+	stonework:actsOn ex:acct-ap-clerk-mailbox ;
+	stonework:correspondsToStep ex:dstep-search-clerk ;
+	stonework:endedAtTime "2026-09-30T15:41:00Z"^^xsd:dateTime ;
+	stonework:hasOutput ex:log-clerk-search ;
+	stonework:performedBy ex:analyst ;
+	stonework:startedAtTime "2026-09-30T15:30:00Z"^^xsd:dateTime ;
+	.
+
+ex:inv-search-controller
+	a stonework:Investigation ;
+	skos:prefLabel "Execution: search the audit log, controller's mailbox"@en ;
+	stonework:actsOn ex:acct-controller-mailbox ;
+	stonework:correspondsToStep ex:dstep-search-controller ;
+	stonework:endedAtTime "2026-09-30T15:25:00Z"^^xsd:dateTime ;
+	stonework:hasOutput ex:log-new-inboxrule ;
+	stonework:performedBy ex:analyst ;
+	stonework:produces ex:sighting-controller-rule ;
+	stonework:startedAtTime "2026-09-30T15:10:00Z"^^xsd:dateTime ;
+	.
+
+ex:log-clerk-search
+	a stonework:Log ;
+	skos:definition "The saved audit-log search for the clerk's mailbox, 2026-07-02 to 2026-09-30: the query and its empty result."@en ;
+	skos:prefLabel "Audit log search: clerk's mailbox (no results)"@en ;
+	stonework:logSource "Microsoft 365 unified audit log" ;
+	.
+
+ex:log-new-inboxrule
+	a stonework:Log ;
+	skos:definition "The audit-log record of the New-InboxRule operation that created the rule \"Sync\" on the controller's mailbox, from an IP address the controller has never used."@en ;
+	skos:prefLabel "Audit log: New-InboxRule on the controller's mailbox"@en ;
+	stonework:logSource "Microsoft 365 unified audit log" ;
+	.
+
+ex:mail-tenant
+	a stonework:Infrastructure ;
+	skos:definition "The organization's hosted email service (Exchange Online in this example)."@en ;
+	skos:prefLabel "Organization's email tenant"@en ;
+	.
+
+ex:mule
+	a stonework:Person ;
+	skos:prefLabel "Example money mule"@en ;
+	.
+
+ex:org
+	a stonework:Organization ;
+	skos:definition "The victim of this worked example: a small manufacturer that pays its suppliers by wire."@en ;
+	skos:prefLabel "Example manufacturer"@en ;
+	.
+
+ex:ra-ap-clerk
+	a stonework:RoleAssignment ;
+	stonework:assignedRole ex:role-ap-clerk ;
+	stonework:roleContext ex:org ;
+	stonework:rolePlayer ex:ap-clerk ;
+	.
+
+ex:ra-controller
+	a stonework:RoleAssignment ;
+	stonework:assignedRole ex:role-controller ;
+	stonework:roleContext ex:org ;
+	stonework:rolePlayer ex:controller ;
+	.
+
+ex:role-ap-clerk
+	a stonework:Role ;
+	skos:definition "Enters supplier invoices and payment requests, and verifies changes to suppliers' payment details."@en ;
+	skos:prefLabel "Accounts-payable clerk"@en ;
+	.
+
+ex:role-controller
+	a stonework:Role ;
+	skos:definition "Approves and releases payments."@en ;
+	skos:prefLabel "Controller"@en ;
+	.
+
+ex:rule-forward
+	a stonework:DigitalArtifact ;
+	skos:definition "The inbox rule \"Sync\" on the controller's mailbox: messages containing \"invoice\", \"payment\" or \"wire\" are forwarded to archive.mailbox@freemail.example and moved to RSS Feeds."@en ;
+	skos:prefLabel 'Forwarding inbox rule "Sync"'@en ;
+	.
+
+ex:sighting-controller-rule
+	a stonework:Sighting ;
+	skos:prefLabel "Sighting: T1114.003 on the controller's mailbox"@en ;
+	stonework:evidencedBy ex:log-new-inboxrule ;
+	stonework:sightedAt ex:mail-tenant ;
+	stonework:sightedBy ex:analyst ;
+	stonework:sightedObject cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ;
+	.
+
+ex:svc-automation
+	a stonework:DigitalIdentity ;
+	skos:definition "The service account the organization's security automation runs as. Used here as the performer of an automated Step, for want of a STONEWORK class for a non-AI software agent."@en ;
+	skos:prefLabel "Security automation service account"@en ;
+	.
+
+ex:txn-wire
+	a stonework:FinancialTransaction ;
+	skos:prefLabel "Wire to the actor's mule account"@en ;
+	stonework:attributedTo ex:org ;
+	stonework:beneficiaryAccount ex:acct-mule ;
+	stonework:categorizedBy stonework:transactionTypePayment ;
+	stonework:hasMonetaryValue ex:amt-wire ;
+	stonework:originatorAccount ex:acct-operating ;
+	stonework:startedAtTime "2026-09-16T16:31:00Z"^^xsd:dateTime ;
+	stonework:usesInstrument stonework:paymentInstrumentWireTransfer ;
+	.
+
+ex:var-bank-details-changed
+	a stonework:Variable ;
+	skos:definition "Whether the payee's bank details in this request differ from those on file."@en ;
+	stonework:boundToLiteral "true"^^xsd:boolean ;
+	stonework:variableName "bankDetailsChanged" ;
+	.
+
+ex:var-callback-verified
+	a stonework:Variable ;
+	skos:definition "Whether the callback confirmed the new bank details. Left unbound here: the callback Step was never executed."@en ;
+	stonework:variableName "callbackVerified" ;
+	.
+
+ex:var-clerk-rule
+	a stonework:Variable ;
+	skos:definition "What the search of the clerk's mailbox found: a Sighting of T1114.003, or false."@en ;
+	stonework:boundToLiteral "false"^^xsd:boolean ;
+	stonework:variableName "clerkForwardingRule" ;
+	.
+
+ex:var-controller-rule
+	a stonework:Variable ;
+	skos:definition "What the search of the controller's mailbox found: a Sighting of T1114.003, or false."@en ;
+	stonework:boundTo ex:sighting-controller-rule ;
+	stonework:variableName "controllerForwardingRule" ;
+	.
+
+ex:wstep-approve
+	a stonework:Step ;
+	skos:definition "The controller approves the payment."@en ;
+	skos:prefLabel "Approve the payment"@en ;
+	stonework:isStepOf ex:bp-supplier-wire ;
+	stonework:stepOrder "3"^^xsd:integer ;
+	.
+
+ex:wstep-enter
+	a stonework:Step ;
+	skos:definition "The accounts-payable clerk enters the invoice and the payment request, noting whether the payee's bank details differ from those on file."@en ;
+	skos:prefLabel "Enter the invoice and payment request"@en ;
+	stonework:hasOutputVariable ex:var-bank-details-changed ;
+	stonework:isStepOf ex:bp-supplier-wire ;
+	stonework:stepOrder "1"^^xsd:integer ;
+	.
+
+ex:wstep-release
+	a stonework:Step ;
+	skos:definition "The controller releases the wire in the bank's portal."@en ;
+	skos:prefLabel "Release the wire"@en ;
+	stonework:isStepOf ex:bp-supplier-wire ;
+	stonework:stepOrder "4"^^xsd:integer ;
+	.
+
+ex:wstep-verify
+	a stonework:Step ;
+	skos:definition "The accounts-payable clerk calls the supplier at the number on file and confirms the new bank details."@en ;
+	skos:prefLabel "Verify changed bank details by callback"@en ;
+	stonework:hasOutputVariable ex:var-callback-verified ;
+	stonework:implements ex:control-callback ;
+	stonework:isStepOf ex:bp-supplier-wire ;
+	stonework:stepOrder "2"^^xsd:integer ;
+	.
+
+ex:wt-changed-to-verify
+	a stonework:Transition ;
+	stonework:fromStep ex:wstep-enter ;
+	stonework:guardLiteralValue "true"^^xsd:boolean ;
+	stonework:guardVariable ex:var-bank-details-changed ;
+	stonework:toStep ex:wstep-verify ;
+	.
+
+ex:wt-unchanged-to-approve
+	a stonework:Transition ;
+	stonework:fromStep ex:wstep-enter ;
+	stonework:guardLiteralValue "false"^^xsd:boolean ;
+	stonework:guardVariable ex:var-bank-details-changed ;
+	stonework:toStep ex:wstep-approve ;
+	.
+
+ex:wt-verified-to-approve
+	a stonework:Transition ;
+	stonework:fromStep ex:wstep-verify ;
+	stonework:guardLiteralValue "true"^^xsd:boolean ;
+	stonework:guardVariable ex:var-callback-verified ;
+	stonework:toStep ex:wstep-approve ;
+	.
