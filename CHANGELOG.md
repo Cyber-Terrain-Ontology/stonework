@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.12.0 (core), categories 0.3.0
+
+Vocabulary for vulnerability exploit evidence that does not fit the EPSS probability alone, without naming a catalog vendor in the identifier.
+
+### Added
+
+- `stonework:epssPercentile` and `stonework:metricEpssPercentile`. The percentile is the rank of an EPSS probability, not a second probability.
+- `stonework:ExploitMaturity` (`poc`, `weaponized`) and `stonework:hasExploitMaturity`. One maturity per subject: the vulnerability's highest known maturity, or one exploit reference's own maturity.
+- `stonework:AffectedStatus` (`affected`, `unaffected`, `unknown`, `fixed`, `under-investigation`) and functional `stonework:hasAffectedStatus` on `stonework:VulnerabilityAssessment`.
+- SHACL: `EpssPercentileShape`, the same 0.0–1.0 bound as `epssScore`.
+
+### Changed
+
+- `stonework:metricKevMembership` and `stonework:isKnownExploited` are no longer defined as CISA-only. The catalog is the observation's `stonework:hasProvenance`.
+
 ## 0.11.0 (core), categories 0.2.0
 
 Investigations as first-class records; see [docs/investigation-management.md](docs/investigation-management.md).

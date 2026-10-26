@@ -84,6 +84,19 @@ stonework:CvssBaseScoreShape
 	sh:targetSubjectsOf stonework:cvssBaseScore ;
 	.
 
+stonework:EpssPercentileShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:datatype xsd:decimal ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:maxInclusive "1.0"^^xsd:decimal ;
+		sh:message "epssPercentile must be one decimal from 0.0 through 1.0."@en ;
+		sh:minInclusive "0.0"^^xsd:decimal ;
+		sh:path stonework:epssPercentile ;
+	] ;
+	sh:targetSubjectsOf stonework:epssPercentile ;
+	.
+
 stonework:EpssScoreShape
 	a sh:NodeShape ;
 	sh:property [

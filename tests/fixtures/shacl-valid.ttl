@@ -255,6 +255,8 @@ example:versionedProduct
 example:vulnerability
 	a stonework:Vulnerability ;
 	stonework:cvssBaseScore "9.8"^^xsd:decimal ;
+	stonework:epssPercentile "0.97"^^xsd:decimal ;
 	stonework:epssScore "0.42"^^xsd:decimal ;
+	stonework:hasExploitMaturity stonework:exploitMaturityWeaponized ;
 	stonework:isKnownExploited "true"^^xsd:boolean ;
 	.

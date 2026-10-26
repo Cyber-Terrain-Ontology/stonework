@@ -13,8 +13,8 @@
 	rdfs:label "STONEWORK Categories and Roles"@en ;
 	dcterms:description "Category and Role subclasses, associated vocabulary named individuals, and category-specific object properties for the STONEWORK ontology. Kept separate to allow the core ontology to load without the full vocabulary set."@en ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.2.0> ;
-	owl:versionInfo "0.2.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.3.0> ;
+	owl:versionInfo "0.3.0" ;
 	.
 
 stonework:AccountType
@@ -44,6 +44,21 @@ stonework:Adware
 		;
 	skos:notation "adware" ;
 	skos:prefLabel "Adware"@en ;
+	.
+
+stonework:AffectedStatus
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:affectedStatusScheme ;
+		]
+		;
+	skos:definition "A judgment of whether a product or version is affected by a vulnerability."@en ;
+	skos:prefLabel "Affected Status"@en ;
+	skos:scopeNote "Applied with stonework:hasAffectedStatus on a stonework:VulnerabilityAssessment. Covers the CVE record statuses affected, unaffected, and unknown, and the VEX statuses fixed and under investigation."@en ;
 	.
 
 stonework:Backdoor
@@ -149,6 +164,21 @@ stonework:ExploitKit
 		;
 	skos:notation "exploit-kit" ;
 	skos:prefLabel "Exploit Kit"@en ;
+	.
+
+stonework:ExploitMaturity
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:exploitMaturityScheme ;
+		]
+		;
+	skos:definition "How mature a known exploit for a vulnerability is."@en ;
+	skos:prefLabel "Exploit Maturity"@en ;
+	skos:scopeNote "Applied with stonework:hasExploitMaturity. poc means a proof of concept exists. weaponized means the exploit is reliable against most targets or is built into an attack tool or malware. Reported exploitation in the wild is stonework:metricKevMembership, with the catalog named by the observation's provenance."@en ;
 	.
 
 stonework:FalsePositiveRate
@@ -804,6 +834,90 @@ stonework:accountTypeService
 	skos:prefLabel "Service"@en ;
 	.
 
+stonework:affectedStatusAffected
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AffectedStatus
+		;
+	skos:definition "The product or version is affected by the vulnerability."@en ;
+	skos:inScheme
+		stonework:affectedStatusScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "affected" ;
+	skos:prefLabel "Affected"@en ;
+	.
+
+stonework:affectedStatusFixed
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AffectedStatus
+		;
+	skos:definition "A fix for the vulnerability is available in the stated product or version."@en ;
+	skos:inScheme
+		stonework:affectedStatusScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "fixed" ;
+	skos:prefLabel "Fixed"@en ;
+	.
+
+stonework:affectedStatusScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:source <https://docs.oasis-open.org/csaf/csaf/v2.0/os/csaf-v2.0-os.html> ;
+	dcterms:title "STONEWORK Affected Status Scheme"@en ;
+	skos:definition "The controlled vocabulary of vulnerability applicability judgments."@en ;
+	skos:prefLabel "STONEWORK Affected Status Scheme"@en ;
+	.
+
+stonework:affectedStatusUnaffected
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AffectedStatus
+		;
+	skos:definition "The product or version is not affected by the vulnerability."@en ;
+	skos:inScheme
+		stonework:affectedStatusScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "unaffected" ;
+	skos:prefLabel "Unaffected"@en ;
+	.
+
+stonework:affectedStatusUnderInvestigation
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AffectedStatus
+		;
+	skos:definition "Applicability of the vulnerability to the product or version is still being determined."@en ;
+	skos:inScheme
+		stonework:affectedStatusScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "under-investigation" ;
+	skos:prefLabel "Under Investigation"@en ;
+	.
+
+stonework:affectedStatusUnknown
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AffectedStatus
+		;
+	skos:definition "It is not known whether the product or version is affected."@en ;
+	skos:inScheme
+		stonework:affectedStatusScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "unknown" ;
+	skos:prefLabel "Unknown"@en ;
+	.
+
 stonework:currencyAED
 	a
 		owl:NamedIndividual ,
@@ -910,6 +1024,44 @@ stonework:evidence
 	skos:inScheme stonework:categoryScheme ;
 	skos:prefLabel "Evidence"@en ;
 	skos:scopeNote "This is a reusable category instance. It is *not* a class. Use stonework:categorizedBy to assert that something is evidence in a given context."@en ;
+	.
+
+stonework:exploitMaturityPoc
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ExploitMaturity
+		;
+	skos:definition "A proof-of-concept exploit exists. It may be unreliable or require a specific target."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:exploitMaturityScheme
+		;
+	skos:notation "poc" ;
+	skos:prefLabel "Proof of Concept"@en ;
+	.
+
+stonework:exploitMaturityScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Exploit Maturity Scheme"@en ;
+	skos:definition "The controlled vocabulary of how mature a known exploit is."@en ;
+	skos:prefLabel "STONEWORK Exploit Maturity Scheme"@en ;
+	.
+
+stonework:exploitMaturityWeaponized
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ExploitMaturity
+		;
+	skos:definition "The exploit is reliable against most targets, or it is built into an attack tool or malware."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:exploitMaturityScheme
+		;
+	skos:notation "weaponized" ;
+	skos:prefLabel "Weaponized"@en ;
 	.
 
 stonework:falsePositiveRateHigh
@@ -1237,6 +1389,30 @@ stonework:hasAccountType
 	rdfs:range stonework:AccountType ;
 	skos:definition "Relates a user account to one or more classifications describing its authentication or deployment context."@en ;
 	skos:prefLabel "hasAccountType"@en ;
+	.
+
+stonework:hasAffectedStatus
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:VulnerabilityAssessment ;
+	rdfs:range stonework:AffectedStatus ;
+	skos:definition "Relates a vulnerability assessment to the applicability judgment it records."@en ;
+	skos:prefLabel "hasAffectedStatus"@en ;
+	.
+
+stonework:hasExploitMaturity
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:range stonework:ExploitMaturity ;
+	skos:definition "Relates a vulnerability or an individual exploit to its exploit maturity."@en ;
+	skos:prefLabel "hasExploitMaturity"@en ;
+	skos:scopeNote "Functional per subject. A vulnerability carries the highest maturity known for it. An exploit reference, such as a stonework:OnlineReference or stonework:Tool, carries that exploit's own maturity. Domain is unset so either subject is valid."@en ;
 	.
 
 stonework:hasFalsePositiveRate
@@ -2224,6 +2400,21 @@ stonework:metricCvssBaseScore
 	skos:prefLabel "CVSS Base Score"@en ;
 	.
 
+stonework:metricEpssPercentile
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:MetricType
+		;
+	skos:definition "An EPSS percentile on the 0.0–1.0 scale: the proportion of scored vulnerabilities with an equal or lower EPSS probability."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:metricTypeScheme
+		;
+	skos:notation "epss-percentile" ;
+	skos:prefLabel "EPSS Percentile"@en ;
+	.
+
 stonework:metricEpssScore
 	a
 		owl:NamedIndividual ,
@@ -2245,13 +2436,14 @@ stonework:metricKevMembership
 		skos:Concept ,
 		stonework:MetricType
 		;
-	skos:definition "A dated boolean observation of whether a vulnerability appears in the CISA Known Exploited Vulnerabilities catalog."@en ;
+	skos:definition "A dated boolean observation of whether a vulnerability appears in a known-exploited-vulnerabilities catalog."@en ;
 	skos:inScheme
 		stonework:categoryScheme ,
 		stonework:metricTypeScheme
 		;
 	skos:notation "kev-membership" ;
 	skos:prefLabel "KEV Membership"@en ;
+	skos:scopeNote "The catalog is the observation's stonework:hasProvenance. Two catalogs are two observations of this same metric type. stonework:isKnownExploited is one current snapshot and does not record which catalog."@en ;
 	.
 
 stonework:metricLikelihoodScore

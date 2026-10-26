@@ -67,5 +67,6 @@ example:service
 example:vulnerability
 	a stonework:Vulnerability ;
 	stonework:cvssBaseScore "-1.0"^^xsd:decimal ;
+	stonework:epssPercentile "1.2"^^xsd:decimal ;
 	stonework:epssScore "1.2"^^xsd:decimal ;
 	.
