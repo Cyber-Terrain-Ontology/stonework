@@ -178,7 +178,7 @@ stonework:ExploitMaturity
 		;
 	skos:definition "How mature a known exploit for a vulnerability is."@en ;
 	skos:prefLabel "Exploit Maturity"@en ;
-	skos:scopeNote "Applied with stonework:hasExploitMaturity. poc means a proof of concept exists. weaponized means the exploit is reliable against most targets or is built into an attack tool or malware. Reported exploitation in the wild is stonework:metricKevMembership, with the catalog named by the observation's provenance."@en ;
+	skos:scopeNote "Applied with stonework:hasExploitMaturity. poc means a proof of concept exists. weaponized means the exploit is reliable against most targets or is built into an attack tool or malware. A source report that exploitation was observed is stonework:metricReportedExploited. Membership in a known-exploited catalog is stonework:metricKevMembership, with the catalog named by the observation's provenance."@en ;
 	.
 
 stonework:FalsePositiveRate
@@ -2474,6 +2474,22 @@ stonework:metricNormalizedValue
 		;
 	skos:notation "normalized-value" ;
 	skos:prefLabel "Normalized Value"@en ;
+	.
+
+stonework:metricReportedExploited
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:MetricType
+		;
+	skos:definition "A dated boolean observation that a source reported a vulnerability as exploited."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:metricTypeScheme
+		;
+	skos:notation "reported-exploited" ;
+	skos:prefLabel "Reported Exploited"@en ;
+	skos:scopeNote "Distinct from stonework:metricKevMembership, which records catalog membership. A source that separately reports exploitation in general, by a threat actor, by ransomware, or by a botnet records each report as its own observation of this metric type. The report kind is the observation's name."@en ;
 	.
 
 stonework:metricRiskScore

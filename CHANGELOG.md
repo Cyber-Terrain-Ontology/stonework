@@ -7,6 +7,7 @@ Vocabulary for vulnerability exploit evidence that does not fit the EPSS probabi
 ### Added
 
 - `stonework:epssPercentile` and `stonework:metricEpssPercentile`. The percentile is the rank of an EPSS probability, not a second probability.
+- `stonework:metricReportedExploited`. A source report that a vulnerability was exploited, including reports that name a threat actor, ransomware, or a botnet. Catalog membership stays `stonework:metricKevMembership`.
 - `stonework:ExploitMaturity` (`poc`, `weaponized`) and `stonework:hasExploitMaturity`. One maturity per subject: the vulnerability's highest known maturity, or one exploit reference's own maturity.
 - `stonework:AffectedStatus` (`affected`, `unaffected`, `unknown`, `fixed`, `under-investigation`) and functional `stonework:hasAffectedStatus` on `stonework:VulnerabilityAssessment`.
 - SHACL: `EpssPercentileShape`, the same 0.0–1.0 bound as `epssScore`.
