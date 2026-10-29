@@ -17,6 +17,18 @@ Vocabulary for vulnerability exploit evidence that does not fit the EPSS probabi
 
 - `stonework:VersionedProduct` is a `stonework:CyberEntity`, the same root as `stonework:Product`. A release stays disjoint from its product line.
 - `stonework:metricKevMembership` and `stonework:isKnownExploited` are no longer defined as CISA-only. The catalog is the observation's `stonework:hasProvenance`.
+- `stonework:url` has no domain, so a framework entity's page (an ATT&CK technique's, for one) doesn't make the entity a `stonework:OnlineReference`.
+- `stonework:controlFamily` allows a family code ("AC") as well as a name.
+
+### Framework alignment
+
+Framework properties that already had a STONEWORK term are now tied to it (from the framework-vs-STONEWORK gap audit):
+
+- `nist:family` ⊑ `stonework:controlFamily`
+- `attack:alias` ⊑ `stones:aliases`
+- `attack:url` ⊑ `stonework:url`
+- `cpe:lastModified` ⊑ `stonework:modified`
+- `cve:references` ⊑ `stonework:references`
 
 ## 0.11.0 (core), categories 0.2.0
 
