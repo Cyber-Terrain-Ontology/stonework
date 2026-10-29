@@ -6,6 +6,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix stones: <https://cyberterrain.org/ns/stones#> .
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -155,6 +156,7 @@ attack:Tool
 
 attack:alias
 	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf stones:aliases ;
 	rdfs:label "alias"@en ;
 	rdfs:comment "Another name for a Group, Campaign or Software (aliases, x_mitre_aliases)."@en ;
 	rdfs:range xsd:string ;
@@ -263,6 +265,7 @@ attack:url
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:url ;
 	rdfs:label "ATT&CK page"@en ;
 	rdfs:comment "The object's page on attack.mitre.org (the url of its mitre-attack external reference), e.g. https://attack.mitre.org/techniques/T1059/. The de facto public identifier for ATT&CK objects; a web page, not the object itself, so kept as a value rather than an owl:sameAs."@en ;
 	rdfs:range xsd:anyURI ;
