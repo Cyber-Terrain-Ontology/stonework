@@ -8,9 +8,10 @@ Vocabulary for vulnerability exploit evidence that does not fit the EPSS probabi
 
 - `stonework:epssPercentile` and `stonework:metricEpssPercentile`. The percentile is the rank of an EPSS probability, not a second probability.
 - `stonework:metricReportedExploited`. A source report that a vulnerability was exploited, including reports that name a threat actor, ransomware, or a botnet. Catalog membership stays `stonework:metricKevMembership`.
-- `stonework:ExploitMaturity` (`poc`, `weaponized`) and `stonework:hasExploitMaturity`. One maturity per subject: the vulnerability's highest known maturity, or one exploit reference's own maturity.
+- `stonework:ExploitationReportKind` (`exploited`, `threat-actor`, `ransomware`, `botnet`) and `stonework:hasExploitationReportKind` on the observation. A named actor, malware, or botnet is the observation's `stonework:assertionObject`.
+- `stonework:ExploitMaturity` (`poc`, `weaponized`, in that order) and `stonework:hasExploitMaturity`. One maturity per subject: the vulnerability's highest known maturity (a convenience projection), or one exploit reference's own maturity. Dated, sourced maturity is a `stonework:MetricObservation` with the new `stonework:metricExploitMaturity`.
 - `stonework:AffectedStatus` (`affected`, `unaffected`, `unknown`, `fixed`, `under-investigation`) and functional `stonework:hasAffectedStatus` on `stonework:VulnerabilityAssessment`.
-- SHACL: `EpssPercentileShape`, the same 0.0–1.0 bound as `epssScore`.
+- SHACL: `EpssPercentileShape`, the same 0.0–1.0 bound as `epssScore`; `ExploitMaturityShape` and `ExploitationReportKindShape`, at most one value per subject. These are SHACL limits rather than `owl:FunctionalProperty`, so two sources that disagree are reported, not merged by a reasoner.
 
 ### Changed
 

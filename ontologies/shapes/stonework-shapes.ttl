@@ -110,6 +110,28 @@ stonework:EpssScoreShape
 	sh:targetSubjectsOf stonework:epssScore ;
 	.
 
+stonework:ExploitMaturityShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:ExploitMaturity ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "At most one exploit maturity per subject: a vulnerability's highest known, or one exploit's own."@en ;
+		sh:path stonework:hasExploitMaturity ;
+	] ;
+	sh:targetSubjectsOf stonework:hasExploitMaturity ;
+	.
+
+stonework:ExploitationReportKindShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:ExploitationReportKind ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "At most one report kind per exploitation-report observation."@en ;
+		sh:path stonework:hasExploitationReportKind ;
+	] ;
+	sh:targetSubjectsOf stonework:hasExploitationReportKind ;
+	.
+
 stonework:HashShape
 	a sh:NodeShape ;
 	sh:property

@@ -384,6 +384,8 @@ def main() -> int:
                 "guardOperator",
                 "guardType",
                 "guardVariable",
+                "hasExploitMaturity",
+                "hasExploitationReportKind",
                 "hasInvestigationOutcome",
                 "hasInvestigationStatus",
                 "hasPriority",
