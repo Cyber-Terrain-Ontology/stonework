@@ -14,6 +14,7 @@ Vocabulary for vulnerability exploit evidence that does not fit the EPSS probabi
 
 ### Changed
 
+- `stonework:VersionedProduct` is a `stonework:CyberEntity`, the same root as `stonework:Product`. A release stays disjoint from its product line.
 - `stonework:metricKevMembership` and `stonework:isKnownExploited` are no longer defined as CISA-only. The catalog is the observation's `stonework:hasProvenance`.
 
 ## 0.11.0 (core), categories 0.2.0
