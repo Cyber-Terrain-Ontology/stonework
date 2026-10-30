@@ -133,6 +133,12 @@ example:isolationControl
 	a stonework:DetectionRule ;
 	.
 
+example:laterStepExecution
+	a stonework:Process ;
+	stonework:partOfExecution example:investigation ;
+	stonework:usedBinding example:variableBinding ;
+	.
+
 example:likelihood
 	a stonework:Likelihood ;
 	stonework:likelihoodScore "0.6"^^xsd:decimal ;
@@ -228,6 +234,11 @@ example:sponsorAssignment
 	stonework:validUntil "2026-12-31T23:59:59Z"^^xsd:dateTime ;
 	.
 
+example:stepExecution
+	a stonework:Process ;
+	stonework:partOfExecution example:investigation ;
+	.
+
 example:targetStep
 	a stonework:Step ;
 	.
@@ -244,6 +255,12 @@ example:transition
 
 example:variable
 	a stonework:Variable ;
+	.
+
+example:variableBinding
+	a stonework:VariableBinding ;
+	stonework:bindingOf example:variable ;
+	stonework:boundIn example:stepExecution ;
 	stonework:boundTo example:boundEntity ;
 	.
 

@@ -17,37 +17,36 @@ lightweight `Process executionOf Technique` path is enough — see
 The organizing idea, reduced to its essentials:
 
 ```
-  PLAN side (Behavior)                            EXECUTION side (CyberActivity)
-  "what is intended"            realizes           "what actually happened"
-  ┌─────────────────────┐    ─────────────▶     ┌─────────────────────┐
-  │ Playbook / Plan        │                     │ Process /             │
-  │   └─ Step               │ ◀─correspondsToStep─│ Investigation         │
-  └─────────────────────┘                       └─────────────────────┘
-              │                                              │
-        hasOutputVariable                          boundTo / boundToLiteral
-              ▼                                              │
-         ┌──────────┐                                        │
-         │ Variable  │ ◀──────────────────────────────────────┘
-         └──────────┘
-              ▲
-        predictsVariable
-              │
-         ┌────────────┐    hasHypothesisStatus     Pending
-         │ Hypothesis  │ ─────────────────────▶    Confirmed
-         └────────────┘                            Refuted
+  PLAN side (Plan, a Behavior)                  EXECUTION side (CyberActivity)
+  "what is intended"                             "what actually happened"
+
+  Plan ◀──────────────────executionOf──────────────── run (Process / Investigation)
+   └─ Step ◀────────────correspondsToStep──────┐         ▲
+       │                                       │   partOfExecution
+  hasInputVariable /                           └──── step execution
+  hasOutputVariable                                  ▲          ▲
+       ▼                                          boundIn   usedBinding (a later
+   Variable ◀──bindingOf── VariableBinding ───────┘          step's execution)
+       ▲                   boundTo / boundToLiteral
+  predictsVariable
+       │
+   Hypothesis ──hasHypothesisStatus──▶ Pending / Confirmed / Refuted
 ```
 
 Two independent splits, layered on top of each other:
 
-- **Plan vs. Execution.** A `Behavior` is a specification (a `Playbook`,
-  `OperationPlan`, `ControlPlan`, or the newer `InvestigationPlan`/
-  `DetectionPlan`); a `CyberActivity` (`Process` or `Investigation`) is the
-  concrete occurrence of carrying it out, linked back via `correspondsToStep`.
+- **Plan vs. Execution.** A `Plan` is a specification (a `Playbook`,
+  `OperationPlan`, `ControlPlan`, `InvestigationPlan`/`DetectionPlan`,
+  `BusinessProcess`, `Procedure` or `ThreatScenario`); a `CyberActivity`
+  (`Process` or `Investigation`) is one run of it (`executionOf`), and each
+  Step's execution is linked back via `correspondsToStep` and grouped under
+  its run with `partOfExecution`. A Plan can be run any number of times; the
+  values its Variables take in each run are `VariableBinding`s (section 2a).
   Since `stonework:Step` is itself declared `a stonework:Behavior`, this same
   pattern applies at any depth of a Plan's decomposition — not just the top level.
 - **Predicted vs. Actual.** A `Hypothesis` names, in advance, what a `Variable`
-  is expected to resolve to; execution later binds that same `Variable` to what
-  actually happened. Comparing the two is what a `Transition`'s guard properties
+  is expected to resolve to; an execution later binds that `Variable` to what
+  actually happened, in a `VariableBinding` for that run. Comparing the two is what a `Transition`'s guard properties
   test, and what `hasHypothesisStatus` records explicitly.
 
 **Production vs. assessment**, the other axis this session added: executing a
@@ -63,10 +62,14 @@ Three candidate procedures are tried in order until one succeeds. In this
 trace, comsvcs.dll was blocked by EDR; procdump.exe succeeded on retry;
 Mimikatz was never needed.
 
+The run is `ex:run-opplan-t1003-001` (an `Operation`, `executionOf` the
+OperationPlan); each attempt's execution is `partOfExecution` it, and each
+sub-step's execution is `partOfExecution` its attempt.
+
 ```
 step-attempt-comsvcs ──[false]──▶ step-attempt-procdump ──[SecurityCondition]──▶ step-credential-access-achieved
   var-comsvcs-outcome                var-procdump-outcome
-  = false (blocked by EDR)           = cond-procdump-credential-material (success)
+  binding: false (blocked by EDR)    binding: cond-procdump-credential-material (success)
   hyp-comsvcs-outcome: REFUTED       hyp-procdump-outcome: CONFIRMED
 ```
 
@@ -80,9 +83,47 @@ The full branch structure — five `Transition`s, only two taken in this trace:
 | `t-procdump-to-mimikatz` | `step-attempt-procdump` | `guardLiteralValue false` on `var-procdump-outcome` | `step-attempt-mimikatz` | No — procdump succeeded first |
 | `t-mimikatz-success` | `step-attempt-mimikatz` | `guardType SecurityCondition` on `var-mimikatz-outcome` | `step-credential-access-achieved` | No — never reached |
 
-`var-mimikatz-outcome` is declared but deliberately left unbound (no
-`boundTo`/`boundToLiteral`) — the absence of a binding *is* the forensic
-record that this branch was never attempted.
+`var-mimikatz-outcome` is declared but has no `VariableBinding` in this run:
+the absence of a binding *is* the forensic record that this branch was never
+attempted.
+
+---
+
+## 2a. Runs, bindings and data flow (0.12.0)
+
+Before 0.12.0, `boundTo` and `boundToLiteral` were said of the Variable
+itself, and were functional, so a plan could be executed only once. A
+Variable now belongs to the plan, and each value it takes is a
+`VariableBinding`:
+
+```turtle
+ex:binding-procdump-outcome a stonework:VariableBinding ;
+    stonework:bindingOf ex:var-procdump-outcome ;   # the plan's Variable
+    stonework:boundIn   ex:act-attempt-procdump ;   # the execution that bound it
+    stonework:boundTo   ex:cond-procdump-credential-material .
+```
+
+- **One binding per producing execution.** `boundIn` names the execution of
+  the Step that outputs the Variable (or the run itself, for an input supplied
+  when it starts). A Step executed three times in a retry loop binds its
+  outputs three times in the same run.
+- **Data flow between Steps** goes through a shared Variable, as in P-Plan:
+  one Step declares it with `hasOutputVariable`, a later Step with
+  `hasInputVariable`. In a run, the later Step's execution names the binding
+  it received with `usedBinding` (mirroring `prov:used`); after a loop there
+  are several candidates, so this is recorded rather than inferred from times.
+- **Guards** are tested against the binding the from-Step's execution
+  produced. **Hypotheses** are judged against the binding in the Investigation
+  that tests them; when one run binds the Variable more than once, the Step's
+  own execution tests the Hypothesis.
+- **Why a binding node rather than P-Plan's pattern alone.** In P-Plan the
+  run's own entity carries `p-plan:correspondsToVariable`. That works for an
+  individual but not for a literal (`callbackVerified = false`), which can't
+  carry properties; a binding treats both the same way.
+
+The BEC worked example ([`bec-worked-example.md`](bec-worked-example.md))
+runs one business process three times and one search Step twice, and shows
+the queries this makes possible.
 
 ---
 
@@ -105,10 +146,12 @@ ex:opplan-t1003-001 (OperationPlan)
 
 ```
 ex:step-attempt-procdump ◀─correspondsToStep─ ex:act-attempt-procdump (Process)
-        │
-        ├─hasOutputVariable─▶ ex:var-procdump-outcome (Variable)
-        │                            │
-        │                            ├─boundTo─▶ ex:cond-procdump-credential-material (SecurityCondition)
+        │                                                ▲
+        │                                             boundIn
+        │                                                │
+        ├─hasOutputVariable─▶ ex:var-procdump-outcome ◀─bindingOf─ ex:binding-procdump-outcome (VariableBinding)
+        │                            │                                        │
+        │                            │       ex:cond-procdump-credential-material ◀─boundTo─┘ (SecurityCondition)
         │                            │                    ▲
         │                            │                    │ produces
         │                            │           ex:act-procdump-run (Process)
@@ -123,8 +166,8 @@ ex:step-attempt-procdump ◀─correspondsToStep─ ex:act-attempt-procdump (Pro
                                                                 hasHypothesisStatus: Confirmed
 ```
 
-The comsvcs thread has the identical shape, except `var-comsvcs-outcome` ends
-in `boundToLiteral false` instead of `boundTo` a `SecurityCondition`, and
+The comsvcs thread has the identical shape, except its binding ends in
+`boundToLiteral false` instead of `boundTo` a `SecurityCondition`, and
 `hyp-comsvcs-outcome`'s `hasHypothesisStatus` is `Refuted`.
 
 ---
@@ -219,12 +262,31 @@ vulnerability assessment, ...).
 |---|---|---|---|
 | `stonework:attributedTo` | `CyberActivity` → `ThreatActor` | domain/range unset; `Agent` documented in scopeNote as the typical (not enforced) object type | Initially widened to `Agent` on this branch, since `CyberActivity` covers defensive/neutral activities too, not just adversarial ones. Reconciled against `develop` (merge commit `8a2be47`, pulling in `510915c`), which had independently removed domain/range from `attributedTo` and five other STIX relationship-type shortcut properties entirely — closed domain/range on a direct STIX lift caused confirmed RDFS++ entailment corruption in AllegroGraph and can't be accurate for arbitrary STIX 2.1 input regardless. The Agent-not-ThreatActor guidance survives as scopeNote prose instead of an enforced range. |
 
+### Added in 0.12.0: a common Plan, and runs
+
+| Term | Kind | Purpose |
+|---|---|---|
+| `stonework:Plan` | class, under `Behavior` | Common parent of every executable plan; aligned with `prov:Plan` and `p-plan:Plan`. |
+| `stonework:BusinessProcess` | class, under `Plan` | An organization's routine work (paying a supplier), where attacks such as BEC succeed or fail. |
+| `stonework:VariableBinding` | class | The value a Variable took in one execution. |
+| `stonework:bindingOf` | `VariableBinding` → `Variable` (functional) | Which Variable. |
+| `stonework:boundIn` | `VariableBinding` → `CyberActivity` (functional) | The execution that bound it. Mirrors `prov:wasGeneratedBy`. |
+| `stonework:usedBinding` | `CyberActivity` → `VariableBinding` | A binding an execution received as input. Mirrors `prov:used`. |
+| `stonework:partOfExecution` | `CyberActivity` → `CyberActivity` (functional) | A Step's execution to the run (or parent Step's execution) it belongs to. |
+| `stonework:planVersion`, `stonework:planFormat` | `Plan` → string | Replace the deprecated `playbookVersion` and `playbookFormat`. |
+
+`Playbook`, `ControlPlan`, `InvestigationPlan`, `Procedure` and
+`ThreatScenario` moved from `Behavior` to `Plan`. `performedBy`,
+`triggeredBy` and `triggersPlaybook` now take any Plan. `boundTo` and
+`boundToLiteral` moved from `Variable` to `VariableBinding` (a breaking
+change).
+
 ### Pre-existing machinery this pattern relies on
 
 `Behavior`, `Step` (`hasStep`, `isStepOf`, `stepOrder`), `Transition`
 (`fromStep`, `toStep`, `guardVariable`, `guardType`, `guardLiteralValue`,
-`guardOperator`), `Variable` (`hasInputVariable`, `hasOutputVariable`,
-`boundTo`, `boundToLiteral`), `Procedure`/`Playbook`/`OperationPlan`,
+`guardOperator`), `Variable` (`hasInputVariable`, `hasOutputVariable`),
+`Procedure`/`Playbook`/`OperationPlan`,
 `Process`/`Investigation`, `SecurityCondition`, `implements`.
 
 **Deliberately not built yet:** Hypothesis revision/genealogy (a
@@ -244,28 +306,30 @@ a home for complex output artifacts (plots, time series) — neither
    `implements` the relevant `AttackTechnique`/CAPEC pattern from the CTI
    Encyclopedia; decompose it into its own Steps via `hasStep` if you want
    sub-step forensic depth.
-3. **Declare an output Variable per Step you want to trace independently.**
-   Each attempt-level Step (and each sub-Step, for full depth) gets its own
-   `Variable` via `hasOutputVariable` — never share one Variable across
-   multiple Steps' Transitions, or later executions overwrite earlier
-   forensic history.
+3. **Declare the Variables.** Each Step you want to trace gets its outputs via
+   `hasOutputVariable`; a Step that needs an earlier Step's result declares
+   the same Variable with `hasInputVariable`. Values never go on the Variable
+   itself, so a plan can be run again without overwriting earlier history.
 4. **Wire Transitions.** `fromStep`/`toStep`, with `guardVariable` pointing
    at the *from*-Step's own Variable — `guardType` for "any successful
    outcome," `guardLiteralValue` for a specific scalar flag.
 5. **(Optional) Model Hypotheses.** One `Hypothesis` per attempt-Step,
    `predictsVariable`-ing that Step's Variable, with `predictedType` (usual
    case) or `predictedValue`/`predictedLiteral`, plus a `confidence`.
-6. **Encode the actual execution trace.** One `CyberActivity` (`Process` for
-   production plans, `Investigation` for assessment plans) per executed Step
-   via `correspondsToStep`. Bind each attempted Step's Variable to its real
-   result via `boundTo`/`boundToLiteral`. Set each tested Hypothesis's
+6. **Encode the actual execution trace.** One `CyberActivity` for the run,
+   `executionOf` the Plan. One more (`Process` for production plans,
+   `Investigation` for assessment plans) per executed Step, via
+   `correspondsToStep`, each `partOfExecution` the run or its parent Step's
+   execution. For each value a Step's execution bound, a `VariableBinding`
+   (`bindingOf`, `boundIn` that execution, `boundTo`/`boundToLiteral`); where a
+   later execution received it, `usedBinding`. Set each tested Hypothesis's
    `hasHypothesisStatus` to `Confirmed`/`Refuted`. Link the Activity that
    built a result to it via `produces`. For forensic completeness, also set
    `attributedTo` (who), `startedAtTime`/`endedAtTime` (when), and `actsOn`
    (the concrete asset acted upon) on each executed Activity.
-7. **Leave untaken branches alone.** A Step that was never attempted keeps
-   an unbound Variable and a `Pending` (or absent) Hypothesis status — that
-   absence is itself part of the forensic record.
+7. **Leave untaken branches alone.** A Step that was never attempted has no
+   execution and no binding in that run, and a `Pending` (or absent)
+   Hypothesis status: that absence is itself part of the forensic record.
 
 ---
 
@@ -283,7 +347,7 @@ informative.
 | CACAO concept | STONEWORK equivalent |
 |---|---|
 | `workflow` step, `on_success`/`on_failure`/`on_true`/`on_false` | `Step` + `Transition` (`fromStep`/`toStep`/`guardType`/`guardLiteralValue`) |
-| `variables` (playbook- or step-scoped, typed) | `Variable` (`hasInputVariable`/`hasOutputVariable`, `boundTo`/`boundToLiteral`) |
+| `variables` (playbook- or step-scoped, typed) | `Variable` (`hasInputVariable`/`hasOutputVariable`), with each run's values as `VariableBinding`s |
 | `agent` on a `command` (what executes it) | `stonework:attributedTo` |
 | `target` on a `command` (what it acts against) | `stonework:actsOn` |
 | `playbook_types` open vocabulary (`attack`, `investigation`, `detection`, `mitigation`, `prevention`, ...) | The production/assessment split — `OperationPlan` ≈ `attack`; `InvestigationPlan`/`DetectionPlan` ≈ `investigation`/`detection`; `ControlPlan` ≈ `mitigation`/`prevention` |

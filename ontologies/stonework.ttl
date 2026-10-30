@@ -128,7 +128,7 @@ stonework:Behavior
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "A pattern of actions or methods characteristic of an entity, particularly adversaries."@en ;
 	skos:prefLabel "Behavior" ;
-	skos:scopeNote "Groups TTP-related classes: Tactic, Technique (and subclasses), and Procedure. In BFO terms, Behaviors are GenericallyDependentContinuants — specifications or patterns describing how actions are carried out. The execution of a Technique is a CyberActivity; the Technique itself is a Behavior. Aligns with IAO PlanSpecification."@en ;
+	skos:scopeNote "Groups TTP-related classes (Tactic, Technique and its subclasses), Controls, Steps, and stonework:Plan, the step-structured specifications that are executed. Methods such as Techniques and Controls are not Plans; Plans implement them. In BFO terms, Behaviors are GenericallyDependentContinuants — specifications or patterns describing how actions are carried out. The execution of a Technique is a CyberActivity; the Technique itself is a Behavior. Aligns with IAO PlanSpecification."@en ;
 	.
 
 stonework:BomEntry
@@ -146,6 +146,14 @@ stonework:BomEntry
 	skos:definition "A single component entry within a Software Bill of Materials, asserting that a specific VersionedProduct is included in the artifact or system described by the SBOM."@en ;
 	skos:prefLabel "BOM Entry" ;
 	skos:scopeNote "An SBOM import creates one BomEntry per declared component. The BomEntry IRI is scoped to the SBOM (e.g. <sbom-iri/entry/<component-ref>>). Multiple BomEntry instances across different SBOMs may reference the same VersionedProduct via stonework:installationOf."@en ;
+	.
+
+stonework:BusinessProcess
+	a owl:Class ;
+	rdfs:subClassOf stonework:Plan ;
+	skos:definition "A Plan by which an organization carries out a routine part of its business, such as paying a supplier, onboarding an employee or granting access, whose Steps may be performed by people or by systems."@en ;
+	skos:prefLabel "Business Process" ;
+	skos:scopeNote "Part of STONEWORK because attacks such as business email compromise succeed or fail inside business processes: whether a Step that implements a stonework:Control (a callback, a second approval) was carried out. The process is the plan; each run of it is a stonework:Process that is stonework:executionOf it, so the name does not make the plan an execution. Process models kept in a notation such as BPMN can be recorded with stonework:planFormat. Distinct from stonework:Playbook, which responds to an event, incident or operational need rather than carrying out the organization's ordinary work."@en ;
 	.
 
 stonework:Campaign
@@ -215,7 +223,7 @@ stonework:Control
 
 stonework:ControlPlan
 	a owl:Class ;
-	rdfs:subClassOf stonework:Behavior ;
+	rdfs:subClassOf stonework:Plan ;
 	skos:definition "A concrete, Step-decomposed sequence of actions that implements a Control in a specific operational context."@en ;
 	skos:prefLabel "Control Plan" ;
 	skos:scopeNote "Mirrors the Technique/Procedure split on the defensive side: stonework:Control is the abstract prescribed safeguard (a catalog entry, e.g. NIST AC-2 or a CIS control); ControlPlan is its concrete implementation as a Step sequence, linked back via stonework:implements. A ControlPlan is typically invoked from within a Playbook or DetectionPlan by a Step that stonework:implements it."@en ;
@@ -520,7 +528,7 @@ stonework:Hypothesis
 	rdfs:subClassOf stonework:IntelligenceProduct ;
 	skos:definition "A structured, falsifiable prediction about the value a Variable will resolve to once the Behavior or Step declaring that Variable executes."@en ;
 	skos:prefLabel "Hypothesis" ;
-	skos:scopeNote "Formalizes the anticipated side of the Variable lifecycle described in stonework:Variable's scopeNote: a Hypothesis names, in advance, the value an output Variable is predicted to be bound to. Linked to the Variable it predicts via stonework:predictsVariable, and to the prediction itself via stonework:predictedType (a class, the common case — mirrors stonework:guardType), stonework:predictedValue (a specific individual), or stonework:predictedLiteral (a scalar) — mirroring stonework:boundTo/stonework:boundToLiteral on the actual-result side. A Transition's guard properties, which test a Variable's actual bound value, implicitly test agreement with whichever Hypothesis predicted that Variable — confirming it if they match, refuting it otherwise. May attach at any level of a Step/Plan decomposition, since stonework:Step is itself a stonework:Behavior."@en ;
+	skos:scopeNote "Formalizes the anticipated side of the Variable lifecycle described in stonework:Variable's scopeNote: a Hypothesis names, in advance, the value an output Variable is predicted to be bound to. Linked to the Variable it predicts via stonework:predictsVariable, and to the prediction itself via stonework:predictedType (a class, the common case — mirrors stonework:guardType), stonework:predictedValue (a specific individual), or stonework:predictedLiteral (a scalar) — mirroring stonework:boundTo/stonework:boundToLiteral on the actual-result side. A Hypothesis is judged against the stonework:VariableBinding of its Variable in the Investigation that tests it (stonework:testsHypothesis): the binding stonework:boundIn that Investigation or in an execution stonework:partOfExecution it. When a run binds the Variable more than once, as when one search Step is run for each of several mailboxes, the Step's own execution (itself an Investigation) tests the Hypothesis, so that one binding judges it. A Transition's guard properties, which test a Variable's actual bound value, implicitly test agreement with whichever Hypothesis predicted that Variable — confirming it if they match, refuting it otherwise. May attach at any level of a Step/Plan decomposition, since stonework:Step is itself a stonework:Behavior."@en ;
 	.
 
 stonework:IBAN
@@ -611,7 +619,7 @@ stonework:Investigation
 
 stonework:InvestigationPlan
 	a owl:Class ;
-	rdfs:subClassOf stonework:Behavior ;
+	rdfs:subClassOf stonework:Plan ;
 	rdfs:comment "An InvestigationPlan is a plan specification; executing one produces an instance of stonework:Investigation."@en ;
 	skos:definition "A Step-decomposed sequence of actions for systematically examining a cyber entity, artifact, or event to determine its nature, extent, or significance."@en ;
 	skos:prefLabel "Investigation Plan" ;
@@ -877,23 +885,35 @@ stonework:PhysicalArtifact
 	skos:scopeNote "Sibling of stonework:DigitalArtifact. Covers ICS and OT assets such as PLCs, RTUs, safety systems, and HMIs, as well as other tangible devices in a cyber-physical environment. An ICS device that runs processes and participates in networks may also be typed as stonework:Host. Distinct from stonework:Infrastructure, which groups resources used to conduct cyber operations."@en ;
 	.
 
-stonework:Playbook
+stonework:Plan
 	a owl:Class ;
 	rdfs:subClassOf stonework:Behavior ;
+	rdfs:seeAlso
+		<http://purl.org/net/p-plan#Plan> ,
+		prov:Plan
+		;
+	skos:definition "A specification of actions, usually decomposed into Steps, that an agent intends to carry out, and that can be executed any number of times."@en ;
+	skos:prefLabel "Plan" ;
+	skos:scopeNote "The common parent of the executable Behaviors: stonework:Playbook (and stonework:OperationPlan), stonework:ControlPlan, stonework:InvestigationPlan (and stonework:DetectionPlan), stonework:BusinessProcess, stonework:Procedure and stonework:ThreatScenario. They differ in scope and stance (whose plan it is, and whether it is believed or hypothesized), not in kind. A Plan decomposes into Steps via stonework:hasStep and declares Variables via stonework:hasInputVariable and stonework:hasOutputVariable; a Plan given only as prose has no Steps. Each execution, or run, is a stonework:CyberActivity (usually a stonework:Process) that is stonework:executionOf the Plan; the executions of its Steps are stonework:partOfExecution that run, and the values its Variables take in that run are stonework:VariableBinding individuals. Distinct from the methods a Plan implements (stonework:Technique, stonework:Control): a method is not executed step by step, and one method has many Plans that realize it. Aligns with prov:Plan and p-plan:Plan; a stonework:Step is part of a Plan rather than a Plan of its own, as p-plan:Step is distinct from p-plan:Plan."@en ;
+	.
+
+stonework:Playbook
+	a owl:Class ;
+	rdfs:subClassOf stonework:Plan ;
 	rdfs:comment "A Playbook is a plan specification; executing one produces instances of stonework:Process. Playbooks are often versioned and tested before use."@en ;
 	rdfs:seeAlso prov:Plan ;
 	skos:definition "A documented, structured Behavior that defines a sequenced set of steps, decisions, and actions to be executed in response to a specific type of event, incident, or operational need."@en ;
 	skos:prefLabel "Playbook" ;
-	skos:scopeNote "A Playbook may be offensive (an adversary's operational playbook — see stonework:OperationPlan) or defensive (an incident response, threat hunting, or recovery playbook) — both are action plans carried out by an interested party, as distinct from stonework:DetectionPlan, which plays a neutral, evaluative role. A Playbook decomposes into Steps via stonework:hasStep; its actual execution is recorded as a stonework:Process."@en ;
+	skos:scopeNote "A Playbook may be offensive (an adversary's operational playbook — see stonework:OperationPlan) or defensive (an incident response, threat hunting, or recovery playbook) — both are action plans carried out by an interested party, as distinct from stonework:DetectionPlan, which plays a neutral, evaluative role. A Playbook decomposes into Steps via stonework:hasStep; each execution is recorded as a stonework:Process. An organization's routine work is a stonework:BusinessProcess, a sibling under stonework:Plan."@en ;
 	.
 
 stonework:Procedure
 	a owl:Class ;
-	rdfs:subClassOf stonework:Behavior ;
+	rdfs:subClassOf stonework:Plan ;
 	rdfs:comment "Procedures are instances or patterns of execution that realize a technique. They may include command lines, API calls, malware behaviors, or operator playbook steps. Procedures are distinct from techniques, which describe generalized methods." ;
 	skos:definition "A concrete, observable sequence of actions, commands, or behaviors that implements a technique in a specific operational context." ;
 	skos:prefLabel "Procedure" ;
-	skos:scopeNote "One realization path for a single Technique — the specific commands, scripts, tools, or configuration that carry it out (e.g. the comsvcs.dll MiniDump way of doing OS Credential Dumping: LSASS Memory). Technique-scoped and typically linear. A Procedure may be only a prose description — the common case when ingesting MITRE ATT&CK procedure examples — or decomposed into stonework:Step individuals via stonework:hasStep for sub-step depth. Links to the Technique it operationalizes via stonework:implements or its specialization stonework:procedureFor. Distinct from stonework:Playbook / stonework:OperationPlan / stonework:ControlPlan, which are objective-scoped plans that orchestrate several Procedures or Techniques with branching, retry, and control flow; a Plan's Step commonly stonework:implements a Procedure." ;
+	skos:scopeNote "One realization path for a single Technique — the specific commands, scripts, tools, or configuration that carry it out (e.g. the comsvcs.dll MiniDump way of doing OS Credential Dumping: LSASS Memory). Technique-scoped and typically linear. A Procedure may be only a prose description — the common case when ingesting MITRE ATT&CK procedure examples — or decomposed into stonework:Step individuals via stonework:hasStep for sub-step depth. Links to the Technique it operationalizes via stonework:implements or its specialization stonework:procedureFor. A Procedure is a stonework:Plan at the realization layer, so its runs can be recorded like any other Plan's. Distinct from stonework:Playbook / stonework:OperationPlan / stonework:ControlPlan, which are objective-scoped plans that orchestrate several Procedures or Techniques with branching, retry, and control flow; a Plan's Step commonly stonework:implements a Procedure." ;
 	.
 
 stonework:Process
@@ -905,7 +925,7 @@ stonework:Process
 		;
 	skos:definition "An identifiable activity or sequence of activities performed over time by one or more agents to achieve an operational, security, or business objective. It transforms inputs (artifacts, data, configurations) into outputs and may be governed by plans, controls, or policies." ;
 	skos:prefLabel "Process"@en ;
-	skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is the execution-side counterpart to Behavior-side plan specifications such as Playbook, ControlPlan, and ThreatScenario — e.g. executing a Playbook produces a Process instance."@en ;
+	skos:scopeNote "This class operates at the enterprise/operational level and is distinct from low-level runtime Process objects (e.g., STIX SCO Process). It is the execution-side counterpart to stonework:Plan: each run of a Playbook, ControlPlan, BusinessProcess or other Plan is a Process that is stonework:executionOf it, and the executions of its Steps are stonework:partOfExecution that run."@en ;
 	.
 
 stonework:Product
@@ -1105,7 +1125,7 @@ stonework:Step
 	a owl:Class ;
 	rdfs:subClassOf stonework:Behavior ;
 	rdfs:seeAlso <http://purl.org/net/p-plan#Step> ;
-	skos:definition "A single, individually addressable unit of action within a Behavior that models a multi-step process, such as a Procedure, Playbook, ThreatScenario, or Control."@en ;
+	skos:definition "A single, individually addressable unit of action within a Behavior that models a multi-step process, such as a Plan or a Control."@en ;
 	skos:prefLabel "Step" ;
 	skos:scopeNote "A Step is itself a Behavior — a plan specification for a sub-action, not its execution — consistent with p-plan:Step subclassing prov:Plan rather than prov:Activity. Because Step is a Behavior, a Step MAY itself decompose into further Steps via stonework:hasStep, supporting nested sub-procedures (e.g. a Kill Chain phase decomposing into candidate technique attempts) without a separate composite class. The activity that executes a Step is a stonework:CyberActivity; it links back to the Step it realizes via stonework:correspondsToStep."@en ;
 	.
@@ -1164,11 +1184,11 @@ stonework:ThreatActorIndividual
 
 stonework:ThreatScenario
 	a owl:Class ;
-	rdfs:subClassOf stonework:Behavior ;
+	rdfs:subClassOf stonework:Plan ;
 	rdfs:seeAlso prov:Plan ;
 	skos:definition "A plan specification describing how a threat could materialize against specific assets or missions — incorporating adversary intent, capability, opportunity, preconditions, attack path, and expected consequences."@en ;
 	skos:prefLabel "Threat Scenario"@en ;
-	skos:scopeNote "A ThreatScenario is prescriptive and forward-looking: it specifies a potential sequence of adversary behaviors and environmental conditions rather than recording observed events. Used to guide defensive planning, risk assessment, and Playbook development. Distinct from stonework:Incident (an observed occurrence) and stonework:Threat (an abstract source of harm). Aligns with prov:Plan and P-Plan scenario specifications."@en ;
+	skos:scopeNote "A ThreatScenario is prescriptive and forward-looking: it specifies a potential sequence of adversary behaviors and environmental conditions rather than recording observed events. Used to guide defensive planning, risk assessment, and Playbook development. A ThreatScenario is a stonework:Plan held as a hypothesis: an adversary plan that may or may not exist, where a stonework:OperationPlan is one believed to exist. It can be executed, as in a red-team exercise or tabletop, and an observed Incident can be compared against it. Distinct from stonework:Incident (an observed occurrence) and stonework:Threat (an abstract source of harm). Aligns with prov:Plan and P-Plan scenario specifications."@en ;
 	.
 
 stonework:Tool
@@ -1183,7 +1203,7 @@ stonework:Transition
 	a owl:Class ;
 	skos:definition "A directed edge between two Steps within the same parent Behavior's Step graph, representing progression from one Step to the next."@en ;
 	skos:prefLabel "Transition" ;
-	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Conditional branching is expressed with the guard properties stonework:guardVariable (the Variable tested), stonework:guardType (a class the bound value must be an instance of) or stonework:guardLiteralValue (a scalar it must equal), and stonework:guardOperator (the comparison; omitting it defaults to equality). The Transition fires when its guard holds against the from-Step's bound Variable."@en ;
+	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Conditional branching is expressed with the guard properties stonework:guardVariable (the Variable tested), stonework:guardType (a class the bound value must be an instance of) or stonework:guardLiteralValue (a scalar it must equal), and stonework:guardOperator (the comparison; omitting it defaults to equality). The Transition fires when its guard holds against the value the from-Step's execution bound: the stonework:VariableBinding of the guard Variable that is stonework:boundIn that execution."@en ;
 	.
 
 stonework:URI
@@ -1220,9 +1240,21 @@ stonework:Variable
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
 	rdfs:seeAlso <http://purl.org/net/p-plan#Variable> ;
-	skos:definition "A named placeholder for a value declared by a Behavior or Step, bound to an actual value only once the corresponding execution occurs."@en ;
+	skos:definition "A named placeholder for a value declared by a Plan or Step, which takes a value in each execution of it."@en ;
 	skos:prefLabel "Variable" ;
-	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. An input Variable is typically bound before its Step executes from an already-known fact; for example, a plan may bind to an existing stonework:CvssMetric assessment. An output Variable is bound only after its Step executes, such as when an Investigation constructs a stonework:VulnerabilityAssessment. Variables carry execution-time values and do not replace persistent domain relationships. Bound via stonework:boundTo (an individual) or stonework:boundToLiteral (a scalar). The bound value is what stonework:Transition guard properties test, and — in a future deviation-detection layer — what an actual result is compared against what the Step declared as expected."@en ;
+	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. A Variable belongs to the plan, not to a run: the value it takes in one execution is a stonework:VariableBinding (stonework:bindingOf the Variable, stonework:boundIn the execution that bound it), so a plan run many times keeps every run's values. Data flows between Steps through a shared Variable, as in P-Plan: one Step declares it as an output, a later Step as an input, and in a run the later Step's execution records the binding it received with stonework:usedBinding. An input supplied when a run starts, for example an existing stonework:CvssMetric assessment, is bound in the run itself. Variables carry execution-time values and do not replace persistent domain relationships. A binding's value is what stonework:Transition guard properties test, and what a stonework:Hypothesis that predicts the Variable is judged against."@en ;
+	.
+
+stonework:VariableBinding
+	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
+	rdfs:seeAlso
+		<http://purl.org/net/p-plan#correspondsToVariable> ,
+		prov:Entity
+		;
+	skos:definition "The value a Variable took in one execution of the Plan or Step that declares it."@en ;
+	skos:prefLabel "Variable Binding" ;
+	skos:scopeNote "Names the Variable with stonework:bindingOf, the execution that bound it with stonework:boundIn (a Step's execution for an output, the run itself for an input supplied when it starts), and the value with stonework:boundTo (an individual) or stonework:boundToLiteral (a scalar). An execution that received the value records it with stonework:usedBinding. A Step executed several times in one run, as in a retry loop, binds its output Variables once per execution. In P-Plan the run's own entity carries p-plan:correspondsToVariable; a binding does the same for literal values, which cannot carry properties, and treats individuals the same way. In PROV terms a binding is an Entity generated by the execution it is boundIn and used by those that record it with usedBinding."@en ;
 	.
 
 stonework:VersionedProduct
@@ -1643,6 +1675,17 @@ stonework:bic
 	skos:prefLabel "bic"@en ;
 	.
 
+stonework:bindingOf
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:VariableBinding ;
+	rdfs:range stonework:Variable ;
+	skos:definition "The Variable whose value in one execution a VariableBinding records."@en ;
+	skos:prefLabel "bindingOf" ;
+	.
+
 stonework:blockchainNetwork
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:CryptoAsset ;
@@ -1659,16 +1702,29 @@ stonework:bomFormat
 	skos:scopeNote "Domain intentionally left unset. Serves as provenance metadata on stonework:SoftwareBillOfMaterials instances, distinguishing the source format from the STONEWORK representation." ;
 	.
 
+stonework:boundIn
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:VariableBinding ;
+	rdfs:range stonework:CyberActivity ;
+	rdfs:seeAlso prov:wasGeneratedBy ;
+	skos:definition "The execution in which a VariableBinding's value was bound: the execution of the Step that outputs the Variable, or the run itself for an input supplied when it starts."@en ;
+	skos:prefLabel "boundIn" ;
+	skos:scopeNote "Mirrors prov:wasGeneratedBy. The run a binding belongs to is the execution it is boundIn, or the one that execution is stonework:partOfExecution, at any depth."@en ;
+	.
+
 stonework:boundTo
 	a
 		owl:ObjectProperty ,
 		owl:FunctionalProperty
 		;
-	rdfs:domain stonework:Variable ;
+	rdfs:domain stonework:VariableBinding ;
 	rdfs:range owl:Thing ;
-	skos:definition "Binds a Variable, at execution time, to the individual it actually resolved to — e.g. the specific SecurityCondition instance a successful attempt produced."@en ;
+	skos:definition "The individual a Variable resolved to in one execution, e.g. the specific SecurityCondition a successful attempt produced."@en ;
 	skos:prefLabel "boundTo" ;
-	skos:scopeNote "Used when the bound value is an instance of a class rather than a scalar; see stonework:boundToLiteral for scalar bindings. Tested by stonework:guardType on a Transition."@en ;
+	skos:scopeNote "Used when the bound value is an instance of a class rather than a scalar; see stonework:boundToLiteral for scalar bindings. Tested by stonework:guardType on a Transition. Since 0.12.0 the subject is a stonework:VariableBinding, not the Variable, so each execution has its own value."@en ;
 	.
 
 stonework:boundToLiteral
@@ -1676,11 +1732,11 @@ stonework:boundToLiteral
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
-	rdfs:domain stonework:Variable ;
+	rdfs:domain stonework:VariableBinding ;
 	rdfs:range rdfs:Literal ;
-	skos:definition "Binds a Variable, at execution time or at plan instantiation, to a scalar result value such as a boolean, count, or numeric score."@en ;
+	skos:definition "The scalar value, such as a boolean, count or numeric score, a Variable took in one execution."@en ;
 	skos:prefLabel "boundToLiteral" ;
-	skos:scopeNote "Tested by stonework:guardLiteralValue and stonework:guardOperator on a Transition. When the guard uses an ordering operator (LessThan, GreaterThanOrEqual, etc.), this value MUST carry a numeric datatype (xsd:decimal, xsd:double, or xsd:integer) — untyped or string literals do not compare numerically under SPARQL."@en ;
+	skos:scopeNote "Tested by stonework:guardLiteralValue and stonework:guardOperator on a Transition. When the guard uses an ordering operator (LessThan, GreaterThanOrEqual, etc.), this value MUST carry a numeric datatype (xsd:decimal, xsd:double, or xsd:integer) — untyped or string literals do not compare numerically under SPARQL. Since 0.12.0 the subject is a stonework:VariableBinding, not the Variable."@en ;
 	.
 
 stonework:byteCount
@@ -2478,7 +2534,7 @@ stonework:executionOf
 	owl:inverseOf stonework:hasExecution ;
 	skos:definition "Relates a CyberActivity to the Behavior plan whose execution it represents."@en ;
 	skos:prefLabel "executionOf"@en ;
-	skos:scopeNote "Links an overall execution to the Behavior it carries out. This may be a full plan — an Investigation to an InvestigationPlan, an Operation to an OperationPlan, a Process to a Playbook or ControlPlan — or, in the lightweight case, a bare method: a CyberActivity may point directly at the stonework:Technique (or stonework:AttackTechnique) it performs, with no intervening Procedure, Plan, or Step. The lightweight form is the common one for sightings and incident timelines ('actor performed T1003.001 against this host at this time'); it can be elaborated into a Step-decomposed Plan later without changing the executionOf assertion. Use stonework:correspondsToStep for the finer-grained link between an executing CyberActivity and an individual Step when a Plan is present."@en ;
+	skos:scopeNote "Links an overall execution to the Behavior it carries out. This may be a full plan — an Investigation to an InvestigationPlan, an Operation to an OperationPlan, a Process to a Playbook or ControlPlan — or, in the lightweight case, a bare method: a CyberActivity may point directly at the stonework:Technique (or stonework:AttackTechnique) it performs, with no intervening Procedure, Plan, or Step. The lightweight form is the common one for sightings and incident timelines ('actor performed T1003.001 against this host at this time'); it can be elaborated into a Step-decomposed Plan later without changing the executionOf assertion. Each run of a Plan is its own CyberActivity, executionOf the same Plan; the executions of its Steps are stonework:partOfExecution the run. Use stonework:correspondsToStep for the finer-grained link between an executing CyberActivity and an individual Step when a Plan is present."@en ;
 	.
 
 stonework:expirationDate
@@ -3951,17 +4007,29 @@ stonework:parentPid
 	skos:prefLabel "parentPid"@en ;
 	.
 
+stonework:partOfExecution
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range stonework:CyberActivity ;
+	skos:definition "Relates the execution of a Step to the execution of the Plan or Step it is part of."@en ;
+	skos:prefLabel "partOfExecution" ;
+	skos:scopeNote "Groups a run's step executions, as a P-Plan bundle groups a plan's execution trace, so that queries over a plan run many times (which steps ran, which were skipped, which values were bound) are asked of one run at a time. Links to the immediate parent only; nested Steps form a chain to the run, which is the execution that is stonework:executionOf the Plan. An execution may be both a Step's execution in one plan and a run of another, as when an investigation's containment Step is carried out by running a ControlPlan: it is then stonework:partOfExecution the investigation, stonework:correspondsToStep the Step, and stonework:executionOf the ControlPlan. Not transitive, so that each execution's parent stays unambiguous; use a SPARQL property path (stonework:partOfExecution+) for every ancestor."@en ;
+	.
+
 stonework:performedBy
 	a owl:ObjectProperty ;
 	rdfs:domain [
 		a owl:Class ;
 		owl:unionOf (
-			stonework:Playbook
+			stonework:Plan
 			stonework:Process
 		) ;
 	] ;
 	rdfs:range stonework:Agent ;
-	skos:definition "Relates a Process to the Agent that performs it, or a Playbook to the Agent responsible for carrying it out."@en ;
+	skos:definition "Relates a Process to the Agent that performs it, or a Plan to the Agent responsible for carrying it out."@en ;
 	skos:prefLabel "performedBy"@en ;
 	.
 
@@ -3990,20 +4058,43 @@ stonework:pid
 	skos:prefLabel "pid"@en ;
 	.
 
+stonework:planFormat
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Plan ;
+	rdfs:range xsd:string ;
+	skos:definition "The machine-readable format a Plan is also kept in, e.g. CACAO JSON for a playbook or BPMN for a business process."@en ;
+	skos:prefLabel "planFormat"@en ;
+	.
+
+stonework:planVersion
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Plan ;
+	rdfs:range xsd:string ;
+	skos:definition "The version string of a Plan."@en ;
+	skos:prefLabel "planVersion"@en ;
+	skos:scopeNote "A run follows the version of the Plan individual it is stonework:executionOf."@en ;
+	.
+
 stonework:playbookFormat
 	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf stonework:planFormat ;
 	rdfs:domain stonework:Playbook ;
 	rdfs:range xsd:string ;
+	owl:deprecated "true"^^xsd:boolean ;
 	skos:definition "The machine-readable format of the playbook (e.g. CACAO JSON, BPMN, YAML)."@en ;
 	skos:prefLabel "playbookFormat"@en ;
+	skos:scopeNote "Deprecated: use stonework:planFormat, which applies to every stonework:Plan."@en ;
 	.
 
 stonework:playbookVersion
 	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf stonework:planVersion ;
 	rdfs:domain stonework:Playbook ;
 	rdfs:range xsd:string ;
+	owl:deprecated "true"^^xsd:boolean ;
 	skos:definition "The version string of the playbook."@en ;
 	skos:prefLabel "playbookVersion"@en ;
+	skos:scopeNote "Deprecated: use stonework:planVersion, which applies to every stonework:Plan."@en ;
 	.
 
 stonework:playsRole
@@ -4892,7 +4983,7 @@ stonework:transfersFile
 
 stonework:triggeredBy
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:Playbook ;
+	rdfs:domain stonework:Plan ;
 	rdfs:range [
 		a owl:Class ;
 		owl:unionOf (
@@ -4901,7 +4992,7 @@ stonework:triggeredBy
 		) ;
 	] ;
 	owl:inverseOf stonework:triggersPlaybook ;
-	skos:definition "Relates a Playbook to the Event or Incident that initiates its execution."@en ;
+	skos:definition "Relates a Plan to the Event or Incident that initiates its execution."@en ;
 	skos:prefLabel "triggeredBy"@en ;
 	.
 
@@ -4914,10 +5005,11 @@ stonework:triggersPlaybook
 			stonework:Incident
 		) ;
 	] ;
-	rdfs:range stonework:Playbook ;
+	rdfs:range stonework:Plan ;
 	owl:inverseOf stonework:triggeredBy ;
-	skos:definition "Relates an Event or Incident to a Playbook invoked in response."@en ;
+	skos:definition "Relates an Event or Incident to a Plan invoked in response."@en ;
 	skos:prefLabel "triggersPlaybook"@en ;
+	skos:scopeNote "Named when only Playbooks could be triggered; since 0.12.0 its range is any stonework:Plan."@en ;
 	.
 
 stonework:updateFrequency
@@ -4956,6 +5048,16 @@ stonework:urlOf
 	rdfs:domain stonework:URI ;
 	skos:definition "The entity this URI serves as a locator or persistent identifier for."@en ;
 	skos:prefLabel "urlOf" ;
+	.
+
+stonework:usedBinding
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range stonework:VariableBinding ;
+	rdfs:seeAlso prov:used ;
+	skos:definition "Relates an execution to a VariableBinding whose value it received as input."@en ;
+	skos:prefLabel "usedBinding" ;
+	skos:scopeNote "Mirrors prov:used. Records data flow in a run: the binding a Step's execution received for one of its input Variables, usually bound by an earlier Step's execution. Recorded rather than inferred from times, because after a loop an output Variable has several bindings in the same run."@en ;
 	.
 
 stonework:userAgentString

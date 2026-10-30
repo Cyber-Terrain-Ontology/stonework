@@ -328,6 +328,17 @@ stonework:ObservationWindowShape
 		;
 	.
 
+stonework:PartOfExecutionShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:CyberActivity ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "An execution is part of at most one parent execution; use stonework:partOfExecution+ for every ancestor."@en ;
+		sh:path stonework:partOfExecution ;
+	] ;
+	sh:targetSubjectsOf stonework:partOfExecution ;
+	.
+
 stonework:PortShape
 	a sh:NodeShape ;
 	sh:property
@@ -544,9 +555,32 @@ stonework:TransitionShape
 	sh:targetClass stonework:Transition ;
 	.
 
-stonework:VariableShape
+stonework:UsedBindingShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:VariableBinding ;
+		sh:path stonework:usedBinding ;
+	] ;
+	sh:targetSubjectsOf stonework:usedBinding ;
+	.
+
+stonework:VariableBindingShape
 	a sh:NodeShape ;
 	sh:property
+		[
+			sh:class stonework:CyberActivity ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A VariableBinding names exactly one execution it was bound in."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:boundIn ;
+		] ,
+		[
+			sh:class stonework:Variable ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A VariableBinding records the value of exactly one Variable."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:bindingOf ;
+		] ,
 		[
 			sh:maxCount "1"^^xsd:integer ;
 			sh:nodeKind sh:Literal ;
@@ -555,6 +589,37 @@ stonework:VariableShape
 		[
 			sh:maxCount "1"^^xsd:integer ;
 			sh:path stonework:boundTo ;
+		]
+		;
+	sh:targetClass stonework:VariableBinding ;
+	sh:xone (
+		[
+			sh:property [
+				sh:minCount "1"^^xsd:integer ;
+				sh:path stonework:boundTo ;
+			] ;
+		]
+		[
+			sh:property [
+				sh:minCount "1"^^xsd:integer ;
+				sh:path stonework:boundToLiteral ;
+			] ;
+		]
+	) ;
+	.
+
+stonework:VariableShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:maxCount "0"^^xsd:integer ;
+			sh:message "Since 0.12.0 a Variable's value in one execution is a stonework:VariableBinding; boundTo is no longer said of the Variable."@en ;
+			sh:path stonework:boundTo ;
+		] ,
+		[
+			sh:maxCount "0"^^xsd:integer ;
+			sh:message "Since 0.12.0 a Variable's value in one execution is a stonework:VariableBinding; boundToLiteral is no longer said of the Variable."@en ;
+			sh:path stonework:boundToLiteral ;
 		]
 		;
 	sh:targetClass stonework:Variable ;

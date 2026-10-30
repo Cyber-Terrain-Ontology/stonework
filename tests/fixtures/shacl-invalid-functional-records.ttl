@@ -145,6 +145,14 @@ example:sighting
 		;
 	.
 
+example:stepExecution
+	a stonework:Process ;
+	stonework:partOfExecution
+		example:firstInvestigation ,
+		example:secondInvestigation
+		;
+	.
+
 example:transition
 	a stonework:Transition ;
 	stonework:fromStep
@@ -173,8 +181,16 @@ example:transition
 		;
 	.
 
-example:variable
-	a stonework:Variable ;
+example:variableBinding
+	a stonework:VariableBinding ;
+	stonework:bindingOf
+		example:firstVariable ,
+		example:secondVariable
+		;
+	stonework:boundIn
+		example:firstInvestigation ,
+		example:secondInvestigation
+		;
 	stonework:boundTo
 		example:firstSubject ,
 		example:secondSubject
