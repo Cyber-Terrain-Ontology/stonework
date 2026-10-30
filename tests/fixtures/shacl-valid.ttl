@@ -61,6 +61,16 @@ example:componentContext
 		;
 	.
 
+example:deviation
+	a stonework:Deviation ;
+	stonework:deviationExecution example:stepExecution ;
+	stonework:deviationKind stonework:deviationKindWrongRole ;
+	stonework:deviationRun example:investigation ;
+	stonework:deviationStep example:targetStep ;
+	stonework:evidencedBy example:statement ;
+	stonework:hasProvenance example:roleSource ;
+	.
+
 example:domain
 	a stonework:Domain ;
 	stonework:registrationDate "2026-08-20T10:00:00Z"^^xsd:dateTime ;
@@ -222,6 +232,7 @@ example:sighting
 
 example:sourceStep
 	a stonework:Step ;
+	stonework:separatedFrom example:targetStep ;
 	.
 
 example:sponsorAssignment
@@ -234,13 +245,22 @@ example:sponsorAssignment
 	stonework:validUntil "2026-12-31T23:59:59Z"^^xsd:dateTime ;
 	.
 
+example:statement
+	a stonework:File ;
+	.
+
 example:stepExecution
 	a stonework:Process ;
 	stonework:partOfExecution example:investigation ;
 	.
 
+example:stepRole
+	a stonework:Role ;
+	.
+
 example:targetStep
 	a stonework:Step ;
+	stonework:performerRole example:stepRole ;
 	.
 
 example:threatBulletin

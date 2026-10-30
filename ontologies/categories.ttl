@@ -106,6 +106,21 @@ stonework:DDoS
 	skos:prefLabel "DDoS Malware"@en ;
 	.
 
+stonework:DeviationKind
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:deviationKindScheme ;
+		]
+		;
+	skos:definition "A classification of how a run departed from its Plan."@en ;
+	skos:prefLabel "Deviation Kind"@en ;
+	skos:scopeNote "Applied via stonework:deviationKind to Deviation individuals. Named individuals: skipped, wrong role, same agent, out of order, misused identity."@en ;
+	.
+
 stonework:Downloader
 	a
 		owl:NamedIndividual ,
@@ -898,6 +913,102 @@ stonework:currencyUSD
 	skos:notation "USD" ;
 	skos:prefLabel "US Dollar"@en ;
 	stonework:minorUnitDigits "2"^^xsd:nonNegativeInteger ;
+	.
+
+stonework:deviationKind
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Deviation ;
+	rdfs:range stonework:DeviationKind ;
+	skos:definition "Relates a Deviation to the kind of departure from the Plan it records."@en ;
+	skos:prefLabel "deviationKind"@en ;
+	.
+
+stonework:deviationKindMisusedIdentity
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "The Step was performed through the identity of someone who holds its Role, but not by that holder: for example, by an actor using the holder's stolen credentials."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "misused-identity" ;
+	skos:prefLabel "Misused identity"@en ;
+	skos:scopeNote "Logs alone can't show this, since the role and separation checks see the right identity; an analyst establishes it from evidence such as sign-ins from an unfamiliar address."@en ;
+	.
+
+stonework:deviationKindOutOfOrder
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "Two Steps were performed in an order the Plan doesn't allow."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "out-of-order" ;
+	skos:prefLabel "Out of order"@en ;
+	.
+
+stonework:deviationKindSameAgent
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "Two Steps that are stonework:separatedFrom each other were performed by the same Agent in one run."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "same-agent" ;
+	skos:prefLabel "Same agent"@en ;
+	.
+
+stonework:deviationKindScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Deviation Kind Scheme"@en ;
+	skos:definition "The controlled vocabulary of the ways a run can depart from its Plan."@en ;
+	skos:prefLabel "STONEWORK Deviation Kind Scheme"@en ;
+	.
+
+stonework:deviationKindSkipped
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "A Step the Plan required in this run was not performed."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "skipped" ;
+	skos:prefLabel "Skipped"@en ;
+	.
+
+stonework:deviationKindWrongRole
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "A Step was performed by an Agent who doesn't hold any of its stonework:performerRole Roles."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "wrong-role" ;
+	skos:prefLabel "Wrong role"@en ;
 	.
 
 stonework:evidence

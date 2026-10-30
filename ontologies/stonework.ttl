@@ -355,6 +355,14 @@ stonework:DetectionRule
 	skos:scopeNote "Encompasses pattern-matching signatures (YARA, Snort, Suricata), behavioral rules (Sigma), SIEM correlation logic, and analytic detections. Signature is a subclass for content-centric, indicator-matching rules."@en ;
 	.
 
+stonework:Deviation
+	a owl:Class ;
+	rdfs:subClassOf stonework:QualifiedAssertion ;
+	skos:definition "An established finding that one run of a Plan departed from that Plan: a required Step was not performed, or was performed by the wrong Role, by the same Agent as a Step it must be separated from, out of order, or through an identity used by someone other than its holder."@en ;
+	skos:prefLabel "Deviation"@en ;
+	skos:scopeNote "The finding of conformance checking, in process mining's terms. The run is stonework:deviationRun, the Steps concerned stonework:deviationStep, the executions concerned (if any) stonework:deviationExecution, the kind stonework:deviationKind, and the evidence stonework:evidencedBy; the Investigation that establishes it stonework:produces it. A query over runs can propose candidates, such as a Step the Plan's guards required that has no execution in the run, or an execution whose performer doesn't hold the Step's stonework:performerRole. But a missing execution doesn't show that the Step wasn't done, only that it wasn't recorded: the Deviation is the analyst's finding, with evidence, that it wasn't. Checks that can't resolve a performer to an Agent, or whose performer may be a misused identity, report the case as undetermined, not as conforming. A Control that failed is reached through the Step (stonework:deviationStep / stonework:implements)."@en ;
+	.
+
 stonework:DigitalArtifact
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
@@ -1636,6 +1644,7 @@ stonework:attributedToAgent
 	rdfs:range stonework:Agent ;
 	skos:definition "Links a digital identity to the real-world Agent it is believed to belong to." ;
 	skos:prefLabel "attributedToAgent" ;
+	skos:scopeNote "Names the identity's holder, not whoever used it on a given occasion. When an identity is used by someone else, such as an actor holding a victim's stolen credentials, the activity keeps the identity as its stonework:performedBy and names the Agent responsible with stonework:attributedTo."@en ;
 	.
 
 stonework:authoredBy
@@ -2383,6 +2392,35 @@ stonework:detects
 	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'detects' shortcut. STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure, and a closed domain/range here would misrepresent real STIX 2.1 data and mislead reasoner-based consumers."@en ;
 	.
 
+stonework:deviationExecution
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Deviation ;
+	rdfs:range stonework:Process ;
+	skos:definition "An execution in the run that a Deviation concerns, such as the execution performed by the wrong Role."@en ;
+	skos:prefLabel "deviationExecution"@en ;
+	skos:scopeNote "Absent for a skipped Step, which has no execution. Needed when a Step runs more than once in a run, to say which execution deviated."@en ;
+	.
+
+stonework:deviationRun
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Deviation ;
+	rdfs:range stonework:Process ;
+	skos:definition "The run, the Process that is stonework:executionOf a Plan, in which a Deviation was found."@en ;
+	skos:prefLabel "deviationRun"@en ;
+	.
+
+stonework:deviationStep
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Deviation ;
+	rdfs:range stonework:Step ;
+	skos:definition "A Step of the run's Plan that a Deviation concerns."@en ;
+	skos:prefLabel "deviationStep"@en ;
+	skos:scopeNote "One Step for a skipped, wrong-role or misused-identity deviation; both Steps for a same-agent or out-of-order one."@en ;
+	.
+
 stonework:displayName
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:EmailAddress ;
@@ -2495,9 +2533,15 @@ stonework:epssScore
 
 stonework:evidencedBy
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:Sighting ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:Deviation
+			stonework:Sighting
+		) ;
+	] ;
 	rdfs:range stonework:DigitalArtifact ;
-	skos:definition "A Sighting is substantiated by this DigitalArtifact (memory dump, PCAP, log excerpt, sample). Connects analytical observation to forensic evidence."@en ;
+	skos:definition "A Sighting or Deviation is substantiated by this DigitalArtifact (memory dump, PCAP, log excerpt, sample, call record, recorded statement). Connects analytical observation to forensic evidence."@en ;
 	skos:prefLabel "evidencedBy"@en ;
 	.
 
@@ -4031,6 +4075,17 @@ stonework:performedBy
 	rdfs:range stonework:Agent ;
 	skos:definition "Relates a Process to the Agent that performs it, or a Plan to the Agent responsible for carrying it out."@en ;
 	skos:prefLabel "performedBy"@en ;
+	skos:scopeNote "On an execution, name the performer as observed. When the evidence shows only an identity, such as an account in an audit log, the performer is that DigitalIdentity, and the Agent behind it is reached through stonework:accountOf or stonework:attributedToAgent. When an identity may have been used by someone other than its holder, keep the identity as the performer and record the Agent believed responsible with stonework:attributedTo; an analyst who establishes the misuse records a stonework:Deviation. Who is expected to perform a Plan's Steps is given per Step, as Roles (stonework:performerRole)."@en ;
+	.
+
+stonework:performerRole
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:Role ;
+	rdfs:seeAlso prov:hadRole ;
+	skos:definition "A Role whose holder is expected to perform this Step: the plan-side assignment of work, as in a BPMN lane."@en ;
+	skos:prefLabel "performerRole"@en ;
+	skos:scopeNote "If several Roles are given, a holder of any one of them may perform the Step; a requirement that two people act (dual control) is two Steps, linked by stonework:separatedFrom. An execution conforms when its performer, or the Agent its performer identity belongs to (stonework:accountOf, stonework:attributedToAgent), holds the Role through a stonework:RoleAssignment whose stonework:roleContext is the Plan's performer and which is in force (stonework:validFrom, stonework:validUntil) when the execution starts. Someone acting through a role holder's misused identity passes this check, which is why a misused identity is recorded as a stonework:Deviation."@en ;
 	.
 
 stonework:phoneNumberOf
@@ -4623,6 +4678,18 @@ stonework:scenarioTechnique
 	rdfs:range stonework:AttackTechnique ;
 	skos:definition "Relates a ThreatScenario to the AttackTechniques in the attack path."@en ;
 	skos:prefLabel "scenarioTechnique"@en ;
+	.
+
+stonework:separatedFrom
+	a
+		owl:ObjectProperty ,
+		owl:SymmetricProperty
+		;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:Step ;
+	skos:definition "Relates two Steps of a Plan that, in any one run, must be performed by different Agents (segregation of duties)."@en ;
+	skos:prefLabel "separatedFrom"@en ;
+	skos:scopeNote "Checked per run: a violation when the executions of the two Steps resolve to the same Agent, through stonework:accountOf or stonework:attributedToAgent where the performer is an identity. Roles alone can't enforce separation, since one Agent can hold both Roles. The check is undetermined when either performer is unknown or doesn't resolve to an Agent. Nor can it see one Agent acting through two people's identities: that is a misused identity, established as a stonework:Deviation."@en ;
 	.
 
 stonework:serialNumber

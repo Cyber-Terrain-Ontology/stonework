@@ -364,6 +364,7 @@ def main() -> int:
             "shacl-invalid-multiple-actuators.ttl",
             "shacl-invalid-monetary-amount.ttl",
             "shacl-invalid-variable-binding.ttl",
+            "shacl-invalid-deviation.ttl",
         ):
             failures += expect_violation(
                 fixture, "core", "Malformed fixture was accepted"
@@ -388,6 +389,8 @@ def main() -> int:
                 "boundIn",
                 "boundTo",
                 "boundToLiteral",
+                "deviationKind",
+                "deviationRun",
                 "fromStep",
                 "guardLiteralValue",
                 "guardOperator",

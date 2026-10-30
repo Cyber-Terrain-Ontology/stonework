@@ -125,6 +125,32 @@ The BEC worked example ([`bec-worked-example.md`](bec-worked-example.md))
 runs one business process three times and one search Step twice, and shows
 the queries this makes possible.
 
+## 2b. Who performs a Step, and deviations (0.12.0)
+
+- **Expected performers** are on the plan: a Step's `performerRole` names the
+  Role whose holder should do it (BPMN's lane; PROV's `prov:hadRole`). Any one
+  of several Roles will do; dual control is two Steps. `separatedFrom`
+  (symmetric) says two Steps must be done by different Agents in any one run.
+- **Actual performers** are on the execution, as observed. When the evidence
+  shows only an identity (an account in a log), `performedBy` is that
+  `DigitalIdentity`; its holder is reached through `accountOf` or
+  `attributedToAgent`. When someone else used the identity, the execution
+  keeps it as performer and names the Agent believed responsible with
+  `attributedTo`.
+- **Checks have three answers**: conforms, a deviation, or undetermined (no
+  performer, an identity with no known holder, or an identity whose use is
+  attributed to someone else). Someone using a role holder's own account passes
+  the role and separation checks, so checks over logs never prove a run
+  conformed.
+- **A Deviation is a finding, not an absence.** A query can show that a
+  required Step has no execution in a run; a `Deviation` (⊑
+  `QualifiedAssertion`) records the analyst's finding that it wasn't done, or
+  was done by the wrong Role, by the same Agent as a separated Step, out of
+  order, or through a misused identity, with `evidencedBy` its evidence. The
+  Investigation that establishes it `produces` it. Executions carry no
+  status: there's no execution of a skipped Step, and a failed one has an
+  outcome in its output Variable.
+
 ---
 
 ## 3. Entity-relationship diagram — one full vertical slice
@@ -275,6 +301,15 @@ vulnerability assessment, ...).
 | `stonework:partOfExecution` | `CyberActivity` → `CyberActivity` (functional) | A Step's execution to the run (or parent Step's execution) it belongs to. |
 | `stonework:planVersion`, `stonework:planFormat` | `Plan` → string | Replace the deprecated `playbookVersion` and `playbookFormat`. |
 
+| `stonework:performerRole` | `Step` → `Role` | The Role whose holder is expected to do the Step. |
+| `stonework:separatedFrom` | `Step` ↔ `Step` (symmetric) | In any one run, the two Steps are done by different Agents. |
+| `stonework:Deviation` | class, under `QualifiedAssertion` | An established finding that a run departed from its Plan. |
+| `stonework:deviationRun` | `Deviation` → `Process` (functional) | The run. |
+| `stonework:deviationStep` | `Deviation` → `Step` | The Step or Steps concerned. |
+| `stonework:deviationExecution` | `Deviation` → `Process` | The executions concerned, if any. |
+| `stonework:deviationKind` | `Deviation` → `DeviationKind` (functional; in `categories.ttl`) | Skipped, wrong role, same agent, out of order, misused identity. |
+
+`evidencedBy` takes a `Deviation` as well as a `Sighting`.
 `Playbook`, `ControlPlan`, `InvestigationPlan`, `Procedure` and
 `ThreatScenario` moved from `Behavior` to `Plan`. `performedBy`,
 `triggeredBy` and `triggersPlaybook` now take any Plan. `boundTo` and

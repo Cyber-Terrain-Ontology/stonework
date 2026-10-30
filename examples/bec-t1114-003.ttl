@@ -15,6 +15,15 @@ ex:acct-ap-clerk-mailbox
 	stonework:hasAccountType stonework:accountTypeCloud ;
 	.
 
+ex:acct-controller-bank
+	a stonework:UserAccount ;
+	skos:definition "The controller's login to the bank's portal, from which wires are released. The bank's portal log records this login, not the person, as the releaser."@en ;
+	skos:prefLabel "Controller's bank-portal login"@en ;
+	stonework:accountName "controller (bank portal)" ;
+	stonework:accountOf ex:controller ;
+	stonework:controls ex:acct-operating ;
+	.
+
 ex:acct-controller-mailbox
 	a stonework:UserAccount ;
 	skos:prefLabel "Controller's mailbox account"@en ;
@@ -52,6 +61,7 @@ ex:act-create-rule
 	stonework:actsOn ex:acct-controller-mailbox ;
 	stonework:attributedTo ex:actor ;
 	stonework:executionOf cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ;
+	stonework:performedBy ex:acct-controller-mailbox ;
 	stonework:produces ex:rule-forward ;
 	stonework:startedAtTime "2026-09-02T03:14:07Z"^^xsd:dateTime ;
 	.
@@ -268,6 +278,19 @@ ex:detplan-forwarding
 	stonework:implements cti-enc:x-mitre-detection-strategy--f66a9e86-49fb-4de6-963d-0e357a77f679 ;
 	.
 
+ex:dev-0916-callback
+	a stonework:Deviation ;
+	skos:definition "In the 16 September run, the callback the plan required was not made. The run has no execution of the Step; the clerk's statement and the call records establish that it wasn't done, not merely that it wasn't recorded."@en ;
+	skos:prefLabel "Deviation: the callback was skipped (16 September)"@en ;
+	stonework:deviationKind stonework:deviationKindSkipped ;
+	stonework:deviationRun ex:run-wire-0916 ;
+	stonework:deviationStep ex:wstep-verify ;
+	stonework:evidencedBy
+		ex:file-clerk-statement ,
+		ex:log-calls-0916
+		;
+	.
+
 ex:dstep-contain
 	a stonework:Step ;
 	skos:definition "Run the containment plan for the mailbox where a rule was found."@en ;
@@ -386,7 +409,7 @@ ex:exe0909-release
 	skos:prefLabel "Execution: release the wire (9 September)"@en ;
 	stonework:correspondsToStep ex:wstep-release ;
 	stonework:partOfExecution ex:run-wire-0909 ;
-	stonework:performedBy ex:controller ;
+	stonework:performedBy ex:acct-controller-bank ;
 	stonework:startedAtTime "2026-09-09T15:30:00Z"^^xsd:dateTime ;
 	.
 
@@ -418,7 +441,7 @@ ex:exe0916-release
 	stonework:endedAtTime "2026-09-16T16:31:00Z"^^xsd:dateTime ;
 	stonework:hasOutput ex:txn-wire ;
 	stonework:partOfExecution ex:run-wire-0916 ;
-	stonework:performedBy ex:controller ;
+	stonework:performedBy ex:acct-controller-bank ;
 	stonework:startedAtTime "2026-09-16T16:29:00Z"^^xsd:dateTime ;
 	.
 
@@ -440,6 +463,12 @@ ex:exe0930-verify
 	stonework:performedBy ex:ap-clerk ;
 	stonework:startedAtTime "2026-09-30T09:40:00Z"^^xsd:dateTime ;
 	stonework:usedBinding ex:b0930-details ;
+	.
+
+ex:file-clerk-statement
+	a stonework:File ;
+	skos:definition "The clerk's signed statement of 1 October: the request came in the supplier's usual invoice thread, the payment was due that day, and the callback was not made."@en ;
+	skos:prefLabel "Accounts-payable clerk's statement (1 October)"@en ;
 	.
 
 ex:hyp-clerk-rule
@@ -474,6 +503,8 @@ ex:inv-bec
 	a stonework:Investigation ;
 	skos:prefLabel "Investigation: diverted supplier payment"@en ;
 	stonework:collects
+		ex:file-clerk-statement ,
+		ex:log-calls-0916 ,
 		ex:log-clerk-search ,
 		ex:log-new-inboxrule
 		;
@@ -485,6 +516,7 @@ ex:inv-bec
 	stonework:investigates ex:incident-bec ;
 	stonework:leadInvestigator ex:analyst ;
 	stonework:performedBy ex:analyst ;
+	stonework:produces ex:dev-0916-callback ;
 	stonework:startedAtTime "2026-09-30T14:00:00Z"^^xsd:dateTime ;
 	stonework:testsHypothesis
 		ex:hyp-clerk-rule ,
@@ -520,6 +552,13 @@ ex:inv-search-controller
 	stonework:startedAtTime "2026-09-30T15:10:00Z"^^xsd:dateTime ;
 	stonework:testsHypothesis ex:hyp-controller-rule ;
 	stonework:usedBinding ex:b-mailbox-controller ;
+	.
+
+ex:log-calls-0916
+	a stonework:Log ;
+	skos:definition "Call detail records for the accounts-payable extensions on 16 September: no call to the supplier's number on file."@en ;
+	skos:prefLabel "Call records: accounts payable, 16 September"@en ;
+	stonework:logSource "Telephone system call detail records" ;
 	.
 
 ex:log-clerk-search
@@ -683,6 +722,7 @@ ex:wstep-approve
 	skos:definition "The controller approves the payment."@en ;
 	skos:prefLabel "Approve the payment"@en ;
 	stonework:isStepOf ex:bp-supplier-wire ;
+	stonework:performerRole ex:role-controller ;
 	stonework:stepOrder "3"^^xsd:integer ;
 	.
 
@@ -695,6 +735,8 @@ ex:wstep-enter
 		ex:var-payee-bank-details
 		;
 	stonework:isStepOf ex:bp-supplier-wire ;
+	stonework:performerRole ex:role-ap-clerk ;
+	stonework:separatedFrom ex:wstep-approve ;
 	stonework:stepOrder "1"^^xsd:integer ;
 	.
 
@@ -703,6 +745,7 @@ ex:wstep-release
 	skos:definition "The controller releases the wire in the bank's portal."@en ;
 	skos:prefLabel "Release the wire"@en ;
 	stonework:isStepOf ex:bp-supplier-wire ;
+	stonework:performerRole ex:role-controller ;
 	stonework:stepOrder "4"^^xsd:integer ;
 	.
 
@@ -714,6 +757,7 @@ ex:wstep-verify
 	stonework:hasOutputVariable ex:var-callback-verified ;
 	stonework:implements ex:control-callback ;
 	stonework:isStepOf ex:bp-supplier-wire ;
+	stonework:performerRole ex:role-ap-clerk ;
 	stonework:stepOrder "2"^^xsd:integer ;
 	.
 

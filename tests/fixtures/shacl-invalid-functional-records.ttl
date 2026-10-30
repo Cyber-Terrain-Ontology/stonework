@@ -17,6 +17,19 @@ example:componentContext
 		;
 	.
 
+example:deviation
+	a stonework:Deviation ;
+	stonework:deviationKind
+		stonework:deviationKindSameAgent ,
+		stonework:deviationKindSkipped
+		;
+	stonework:deviationRun
+		example:firstInvestigation ,
+		example:secondInvestigation
+		;
+	stonework:deviationStep example:firstStep ;
+	.
+
 example:firstAnalyst
 	a stonework:Person ;
 	.

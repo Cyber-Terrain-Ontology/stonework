@@ -233,6 +233,8 @@ def main() -> int:
         STONEWORK + "boundIn",
         STONEWORK + "boundTo",
         STONEWORK + "boundToLiteral",
+        STONEWORK + "deviationKind",
+        STONEWORK + "deviationRun",
         STONEWORK + "fromStep",
         STONEWORK + "guardLiteralValue",
         STONEWORK + "guardOperator",

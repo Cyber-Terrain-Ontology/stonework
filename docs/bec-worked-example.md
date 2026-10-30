@@ -1,8 +1,9 @@
 # Worked Example: a Business Email Compromise, as Plans
 
 *First cut 2026-10-22, from a conversation between Ryan Hohimer and Claude; revised
-2026-10-30 for STONEWORK 0.12.0, which adds `stonework:Plan`, `BusinessProcess` and
-per-run Variable bindings (proposals 4, 5 and 7 below). The gaps it still runs into are
+2026-10-30 for STONEWORK 0.12.0, which adds `stonework:Plan`, `BusinessProcess`, per-run
+Variable bindings, the Roles that perform Steps, and deviations as findings (proposals 2, 4,
+5, 6 and 7 below). The gaps it still runs into are
 listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
@@ -31,10 +32,11 @@ A small manufacturer pays its suppliers by wire. All names are illustrative.
 
 | When | What happened | Modelled as |
 |---|---|---|
-| 2 Sep, 03:14 | With the controller's stolen credentials, the actor creates a hidden inbox rule: mail mentioning an invoice, a payment or a wire is forwarded to an outside address and moved to RSS Feeds. | `Process` `executionOf` T1114.003, `produces` the rule |
+| 2 Sep, 03:14 | With the controller's stolen credentials, the actor creates a hidden inbox rule: mail mentioning an invoice, a payment or a wire is forwarded to an outside address and moved to RSS Feeds. | `Process` `executionOf` T1114.003, `performedBy` the controller's mailbox account, `attributedTo` the actor, `produces` the rule |
 | 9 Sep | An ordinary payment: the supplier's August invoice, to the account on file. | A run of the business process |
 | 15 Sep | From a lookalike of the supplier's address, the actor replies to a real invoice thread: "we've changed banks". | `EmailMessage`, `EmailAddress` |
 | 16 Sep | The AP clerk enters the September payment with the new bank details. The callback the process requires is never made. The controller approves, and releases a $186,400 wire to a mule account. | A second run, with no execution of the callback Step |
+| 1 Oct | The clerk's statement and the phone system's call records show that the callback wasn't made, rather than made and not recorded. | A `Deviation` of kind *skipped*, with its evidence |
 | 30 Sep, morning | The actor asks for another invoice to be paid to the same account. This time the clerk calls the supplier at the number on file: it hasn't changed banks, and hasn't been paid for September. | A third run, stopped at the callback |
 | 30 Sep | An incident is declared and an analyst opens an investigation. | `Incident`, `Investigation` |
 | 30 Sep | Two hypotheses: a forwarding rule on the controller's mailbox, and one on the clerk's. The analyst runs a detection plan built from ATT&CK's DET0576, whose search Step runs once for each mailbox. The first is confirmed, the second refuted. | `Hypothesis` ×2, `DetectionPlan`, `Sighting` |
@@ -47,7 +49,7 @@ A small manufacturer pays its suppliers by wire. All names are illustrative.
 `ex:bp-supplier-wire` is a `stonework:BusinessProcess`, `performedBy` the organization (the
 Agent responsible for it), `planVersion` 3.2. Four Steps:
 
-1. **Enter the invoice and payment request** (AP clerk). Output Variables `bankDetailsChanged`
+1. **Enter the invoice and payment request** (`performerRole` AP clerk). Output Variables `bankDetailsChanged`
    and `payeeBankDetails` (the account the request names).
 2. **Verify changed bank details by callback** (AP clerk). Input `payeeBankDetails`: the
    account Step 1 recorded is what the callback checks. Output `callbackVerified`. The Step
@@ -56,6 +58,9 @@ Agent responsible for it), `planVersion` 3.2. Four Steps:
    file").
 3. **Approve the payment** (controller).
 4. **Release the wire** (controller).
+
+Each Step's `performerRole` names the Role whose holder is expected to do it, as a BPMN lane
+does. Step 1 is `separatedFrom` Step 3: whoever enters a payment may not approve it.
 
 Transitions: from Step 1 to Step 2 when `bankDetailsChanged` is true, straight to Step 3 when
 it's false, and from Step 2 to Step 3 when `callbackVerified` is true.
@@ -101,9 +106,82 @@ wire". The 9 September run isn't reported, because its guard sent it straight to
 nor is the 30 September run, because its callback was made. Before 0.12.0 the plan could
 hold only one run's values, so the query couldn't tell the runs apart.
 
-**Who.** `Role`s for the controller and the AP clerk, with `RoleAssignment`s in the context of
-the organization. Executions name their performers with `performedBy`. What the plan can't
-say yet is which role each Step belongs to (proposal 2).
+**From an absence to a finding.** The query finds that the run has no execution of the
+callback, which shows only that none was recorded. The finding that it wasn't done is
+`ex:dev-0916-callback`, a `stonework:Deviation` (a `QualifiedAssertion`) that the
+Investigation `produces`: `deviationKind` *skipped*, `deviationRun` the 16 September run,
+`deviationStep` the callback, and `evidencedBy` the clerk's statement and the call records.
+The control that failed is reached through the Step, and the role whose step it was through
+`performerRole`:
+
+```sparql
+SELECT ?run ?kind ?step ?role ?control ?evidence WHERE {
+  ?d a stonework:Deviation ; stonework:deviationRun ?run ;
+     stonework:deviationKind/skos:prefLabel ?kind ;
+     stonework:deviationStep ?s ; stonework:evidencedBy ?e .
+  ?s skos:prefLabel ?step .
+  OPTIONAL { ?s stonework:performerRole/skos:prefLabel ?role }
+  OPTIONAL { ?s stonework:implements/skos:prefLabel ?control }
+  ?e skos:prefLabel ?evidence .
+}
+```
+
+→ the 16 September run, *Skipped*, the callback, the AP clerk's, FIN-07, on the statement
+and on the call records. The other kinds are *wrong role*, *same agent*, *out of order* and
+*misused identity*. A Deviation names the executions it concerns with `deviationExecution`,
+except for a skipped Step, which has none.
+
+**Who, and through which identity.** `Role`s for the controller and the AP clerk, with
+`RoleAssignment`s in the context of the organization. Executions name their performers with
+`performedBy`, as observed. When the evidence shows only an identity, the performer is that
+identity: the bank's portal records that the controller's bank-portal login
+(`ex:acct-controller-bank`) released the wire, and the audit log that the controller's
+mailbox account created the forwarding rule. The person behind an identity is reached
+through `accountOf` (or `attributedToAgent`). When someone else used the identity, the
+activity keeps the identity as its performer and names who is believed responsible with
+`attributedTo`: the rule's creation is `performedBy` the controller's mailbox account and
+`attributedTo` the actor.
+
+This matters because the checks see identities. Each execution is checked against its Step's
+`performerRole`, and each run against `separatedFrom`, with three possible answers:
+
+```sparql
+# Was each step execution done by a holder of the Step's role?
+SELECT ?run ?step ?performer ?result WHERE {
+  ?run stonework:executionOf ?plan .
+  ?plan stonework:hasStep ?s .
+  ?s stonework:performerRole ?role ; skos:prefLabel ?step .
+  ?exe stonework:correspondsToStep ?s ; stonework:partOfExecution ?run .
+  OPTIONAL { ?plan stonework:performedBy ?ctx }
+  OPTIONAL { ?exe stonework:performedBy ?performer }
+  OPTIONAL { ?performer stonework:accountOf|stonework:attributedToAgent ?holder }
+  BIND(COALESCE(?holder, ?performer) AS ?agent)
+  BIND(
+    IF(!BOUND(?performer), "undetermined: no performer",
+    IF(!BOUND(?holder) && EXISTS { ?performer a/rdfs:subClassOf* stonework:DigitalIdentity },
+       "undetermined: identity with no known holder",
+    IF(EXISTS { ?exe stonework:attributedTo ?other FILTER(?other != ?agent) },
+       "undetermined: attributed to another agent",
+    IF(EXISTS { ?ra stonework:rolePlayer ?agent ; stonework:assignedRole ?role ;
+                    stonework:roleContext ?ctx },
+       "conforms", "wrong role")))) AS ?result)
+}
+```
+
+In this example every execution conforms, and Steps 1 and 3 had different performers in
+both runs that reached approval. (Tested against variants of the example: a clerk who
+approves is reported as *wrong role* and *same agent*, an unattributed account and a release
+attributed to the actor as *undetermined*.) "Undetermined" is deliberate. A check that can't
+resolve a performer to a person, or whose identity may have been misused, mustn't report
+the run as conforming. And no check over logs can see the commonest BEC move, an actor
+working through a role holder's own account: the role is right, and the separation can even
+look right. That is what the *misused identity* kind is for, established by an analyst from
+evidence such as sign-ins from an unfamiliar address.
+
+One thing the example shows without meaning to: the controller both approves and releases.
+Many organizations accept that, and this one's plan doesn't forbid it, so no check flags it,
+but it's the single point where one stolen login moves money. A plan that wanted dual
+control would make Step 4 `separatedFrom` Step 3.
 
 ### 2. The hypotheses
 
@@ -220,9 +298,9 @@ the method, and plans are its realizations, offensive, detective or defensive. S
 they share one parent, `stonework:Plan`, and the business process is one of them: the attack
 and the business process meet at one Step that a run went on without.
 
-Three kinds of performer appear: people (the clerk, the controller, the analyst), the
-organization (responsible for the business process), and software (the automation that
-applied the transport rule).
+Four kinds of performer appear: people (the clerk, the controller, the analyst), the
+organization (responsible for the business process), software (the automation that applied
+the transport rule), and identities standing in for people (the logins the logs record).
 
 The plan model covers much of the ground of BPMN (processes, tasks, sequence flows with
 conditions, data objects), and the skipped-step query is what process mining calls
@@ -232,8 +310,8 @@ hypothesis-and-evidence layer.
 
 ## Gaps, as proposals
 
-Numbered for discussion. Proposals 4, 5 and 7 are done in 0.12.0; the rest are not in the
-ontology yet.
+Numbered for discussion. Proposals 2, 4, 5, 6 and 7 are done in 0.12.0; the rest are not in
+the ontology yet.
 
 1. **A Hypothesis has no direct link to what it's about.** Here it reaches T1114.003 only
    after the fact, through its Variable's binding, or through the plan's Step and DET0576. An
@@ -243,10 +321,14 @@ ontology yet.
    the clerk's only by which execution tests it. Proposal: a property from Hypothesis to its
    subject (the technique, actor, vulnerability or asset it's about).
 
-2. **A Step can't say which Role performs it.** Executions have performers, but the plan can't
-   say "Step 2 is the AP clerk's". With it, the graph could answer *whose* step was skipped,
-   and check segregation of duties (the person who enters a payment isn't the one who approves
-   it). Proposal: Step → Role. BPMN calls this a lane.
+2. **Done in 0.12.0: a Step names the Role that performs it.** `stonework:performerRole`
+   (Step → Role; BPMN's lane), so the graph answers *whose* step was skipped. A holder of any
+   one of the Roles listed may do the Step; dual control is two Steps. Segregation of duties is
+   `stonework:separatedFrom` (symmetric, Step ↔ Step): in any one run, the two Steps are
+   performed by different Agents. Roles alone can't enforce that, since one person can hold
+   both. Runs record performers as observed, often an identity, and the checks resolve an
+   identity to its holder through `accountOf` or `attributedToAgent`, reporting
+   *undetermined* when they can't.
 
 3. **No agent for plain software.** `AIAgent` is for systems with autonomous decision-making;
    the automation that applies a transport rule isn't one. The example uses a
@@ -264,13 +346,15 @@ ontology yet.
 5. **Done in 0.12.0: a business process is a `stonework:BusinessProcess`,** a sibling of
    `Playbook` under `Plan`. Each run of it is a `stonework:Process`.
 
-6. **A skipped step is only an absence.** Today "the callback wasn't done" is the lack of an
-   execution, which can't be told apart from "it was done but not recorded". Investigators,
-   insurers and prosecutors need the deviation as a finding with its own evidence (the
-   clerk's statement, the phone records). Options: an execution record with a status
-   (performed, skipped, failed), or an analyst's finding (a `QualifiedAssertion`) that the step
-   was not performed. Process mining reports such a deviation as a finding about one trace,
-   which supports the second option.
+6. **Done in 0.12.0: a deviation is a finding with its own evidence.** `stonework:Deviation`
+   (⊑ `QualifiedAssertion`), with `deviationRun` (functional), `deviationStep`,
+   `deviationExecution`, `deviationKind` (functional; *skipped*, *wrong role*, *same agent*,
+   *out of order*, *misused identity*) and `evidencedBy`, whose domain now takes a Deviation
+   as well as a Sighting. Queries propose candidates; the Deviation is the analyst's finding,
+   so "not done" is told apart from "not recorded" by its evidence. Executions don't get a
+   status: a skipped execution would be a record of something that never happened, and a
+   failed one (the callback was tried and nobody answered) is an execution whose outcome is
+   its output Variable.
 
 7. **Done in 0.12.0: a plan can be run any number of times.** Each run is the execution that
    is `executionOf` the plan; its Steps' executions are `partOfExecution` it; and each value
@@ -300,6 +384,14 @@ ontology yet.
 11. **A ThreatScenario and an OperationPlan are close.** Both are adversary plans: one held as
     a hypothesis, the other believed to exist. A link between them ("this operation matches
     that scenario") may be wanted later. Parked.
+
+12. **Attribution of an identity has no time.** `attributedToAgent` says whose an identity
+    is, with no interval, and `attributedTo` on an activity says who did that one thing. A
+    compromise is a third fact: "the actor controlled the controller's mailbox account from
+    2 to 30 September". With it, every execution through that account in the interval could be
+    flagged for review, not just those already attributed. Proposal: a time-bounded,
+    evidence-backed qualified assertion (`validFrom` / `validUntil`, like `RoleAssignment`)
+    that an Agent controlled an identity. To be designed separately.
 
 Smaller things:
 

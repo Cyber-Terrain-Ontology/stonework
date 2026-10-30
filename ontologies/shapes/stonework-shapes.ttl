@@ -84,6 +84,41 @@ stonework:CvssBaseScoreShape
 	sh:targetSubjectsOf stonework:cvssBaseScore ;
 	.
 
+stonework:DeviationShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:DeviationKind ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Deviation has exactly one kind."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:deviationKind ;
+		] ,
+		[
+			sh:class stonework:DigitalArtifact ;
+			sh:path stonework:evidencedBy ;
+		] ,
+		[
+			sh:class stonework:Process ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Deviation is found in exactly one run."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:deviationRun ;
+		] ,
+		[
+			sh:class stonework:Process ;
+			sh:path stonework:deviationExecution ;
+		] ,
+		[
+			sh:class stonework:Step ;
+			sh:message "A Deviation concerns at least one Step of the run's Plan."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:deviationStep ;
+		]
+		;
+	sh:targetClass stonework:Deviation ;
+	.
+
 stonework:EpssScoreShape
 	a sh:NodeShape ;
 	sh:property [
@@ -339,6 +374,16 @@ stonework:PartOfExecutionShape
 	sh:targetSubjectsOf stonework:partOfExecution ;
 	.
 
+stonework:PerformerRoleShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Role ;
+		sh:message "A Step's performerRole is a Role; the Agents who hold it are given by RoleAssignments."@en ;
+		sh:path stonework:performerRole ;
+	] ;
+	sh:targetSubjectsOf stonework:performerRole ;
+	.
+
 stonework:PortShape
 	a sh:NodeShape ;
 	sh:property
@@ -502,6 +547,16 @@ stonework:SecurityActuationShape
 		]
 		;
 	sh:targetClass stonework:SecurityActuation ;
+	.
+
+stonework:SeparatedFromShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Step ;
+		sh:message "separatedFrom relates two Steps."@en ;
+		sh:path stonework:separatedFrom ;
+	] ;
+	sh:targetSubjectsOf stonework:separatedFrom ;
 	.
 
 stonework:SightingShape
