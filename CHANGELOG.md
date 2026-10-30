@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.12.0 (core), categories 0.3.0
+
+Vocabulary for vulnerability exploit evidence that does not fit the EPSS probability alone, without naming a catalog vendor in the identifier.
+
+### Added
+
+- `stonework:epssPercentile` and `stonework:metricEpssPercentile`. The percentile is the rank of an EPSS probability, not a second probability.
+- `stonework:metricReportedExploited`. A source report that a vulnerability was exploited, including reports that name a threat actor, ransomware, or a botnet. Catalog membership stays `stonework:metricKevMembership`.
+- `stonework:ExploitationReportKind` (`exploited`, `threat-actor`, `ransomware`, `botnet`) and `stonework:hasExploitationReportKind` on the observation. A named actor, malware, or botnet is the observation's `stonework:assertionObject`. That property is single-valued, so each named actor or malware is its own observation, even when the kind is the same.
+- `stonework:ExploitMaturity` (`poc`, `weaponized`, in that order) and `stonework:hasExploitMaturity`. One maturity per subject: the vulnerability's highest known maturity (a convenience projection), or one exploit reference's own maturity. Dated history is not recorded yet.
+- `stonework:AffectedStatus` (`affected`, `unaffected`, `unknown`, `fixed`, `under-investigation`) and functional `stonework:hasAffectedStatus` on `stonework:VulnerabilityAssessment`.
+- SHACL: `EpssPercentileShape`, the same 0.0–1.0 bound as `epssScore`; `ExploitMaturityShape` and `ExploitationReportKindShape`, at most one value per subject. These are SHACL limits rather than `owl:FunctionalProperty`, so two sources that disagree are reported, not merged by a reasoner.
+
+### Changed
+
+- `stonework:VersionedProduct` is a `stonework:CyberEntity`, the same root as `stonework:Product`. A release stays disjoint from its product line.
+- `stonework:metricKevMembership` and `stonework:isKnownExploited` are no longer defined as CISA-only. The catalog is the observation's `stonework:hasProvenance`.
+- `stonework:url` has no domain, so a framework entity's page (an ATT&CK technique's, for one) doesn't make the entity a `stonework:OnlineReference`.
+- `stonework:controlFamily` allows a family code ("AC") as well as a name.
+
+### Framework alignment
+
+Framework properties that already had a STONEWORK term are now tied to it (from the framework-vs-STONEWORK gap audit):
+
+- `nist:family` ⊑ `stonework:controlFamily`
+- `attack:alias` ⊑ `stones:aliases` ⊑ `skos:altLabel`
+- `attack:url` ⊑ `stonework:url`
+- `cpe:lastModified` ⊑ `stonework:modified`
+- `cve:references` ⊑ `stonework:references`
+
 ## 0.11.0 (core), categories 0.2.0
 
 Investigations as first-class records; see [docs/investigation-management.md](docs/investigation-management.md).

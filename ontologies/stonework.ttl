@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.11.0> ;
-	owl:versionInfo "0.11.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.12.0> ;
+	owl:versionInfo "0.12.0" ;
 	.
 
 stonework:AIAgent
@@ -722,7 +722,7 @@ stonework:MetricObservation
 	rdfs:subClassOf stonework:QualifiedAssertion ;
 	skos:definition "A qualified, time-stamped metric value about a cyber entity, carrying its metric type, source provenance, and optional calculation-model version."@en ;
 	skos:prefLabel "Metric Observation"@en ;
-	skos:scopeNote "Use for values that change over time or differ by source, including EPSS probability, KEV membership, confidence, likelihood, risk scores, and normalized monetary valuations. A stonework:metricNormalizedValue observation records its output currency with stonework:valuationCurrency. Direct datatype properties remain convenience projections for consumers that need a single current value."@en ;
+	skos:scopeNote "Use for values that change over time or differ by source, including EPSS probability and percentile, known-exploited catalog membership, confidence, likelihood, risk scores, and normalized monetary valuations. Which source produced a value is stonework:hasProvenance, not a separate metric type. A stonework:metricNormalizedValue observation records its output currency with stonework:valuationCurrency. Direct datatype properties remain convenience projections for consumers that need a single current value."@en ;
 	.
 
 stonework:MetricType
@@ -1227,6 +1227,7 @@ stonework:Variable
 
 stonework:VersionedProduct
 	a owl:Class ;
+	rdfs:subClassOf stonework:CyberEntity ;
 	rdfs:comment "Instances of stonework:VersionedProduct may include operating systems, applications, libraries, devices, or embedded components at a specific release. Versioning, vendor attribution, and edition details SHOULD be represented using explicit properties rather than encoded strings."@en ;
 	skos:definition "A specific versioned release or build of a Product, identified by a CPE name or equivalent product identifier. Represents the unit of software actually deployed and potentially affected by vulnerabilities."@en ;
 	skos:prefLabel "Versioned Product" ;
@@ -1960,8 +1961,9 @@ stonework:controlFamily
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Control ;
 	rdfs:range xsd:string ;
-	skos:definition "The control family or category grouping (e.g. Access Control, Incident Response)."@en ;
+	skos:definition "The control family or category grouping a control belongs to, by code or name (e.g. AC or Access Control, IR or Incident Response)."@en ;
 	skos:prefLabel "controlFamily"@en ;
+	skos:scopeNote "nist:family, the two-letter NIST SP 800-53 family code, is declared rdfs:subPropertyOf this property."@en ;
 	.
 
 stonework:controlId
@@ -2426,6 +2428,15 @@ stonework:endedAtTime
 	rdfs:seeAlso prov:endedAtTime ;
 	skos:definition "The date and time at which a CyberActivity ended."@en ;
 	skos:prefLabel "endedAtTime" ;
+	.
+
+stonework:epssPercentile
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:Vulnerability ;
+	rdfs:range xsd:decimal ;
+	skos:definition "The EPSS percentile (0.0–1.0): the proportion of scored vulnerabilities with an equal or lower EPSS probability."@en ;
+	skos:prefLabel "epssPercentile"@en ;
+	skos:scopeNote "Convenience projection for a current percentile. Preserve dated values, source, and EPSS model version with stonework:MetricObservation and stonework:metricEpssPercentile. Distinct from stonework:epssScore, which is the probability itself."@en ;
 	.
 
 stonework:epssScore
@@ -3331,9 +3342,9 @@ stonework:isKnownExploited
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Vulnerability ;
 	rdfs:range xsd:boolean ;
-	skos:definition "Indicates whether this vulnerability appears in CISA's Known Exploited Vulnerabilities (KEV) catalog."@en ;
+	skos:definition "Indicates whether this vulnerability appears in a known-exploited-vulnerabilities catalog."@en ;
 	skos:prefLabel "isKnownExploited"@en ;
-	skos:scopeNote "Convenience projection for a current catalog snapshot. A false value is only meaningful as of a specific time; preserve dated membership evidence with stonework:MetricObservation and stonework:metricKevMembership."@en ;
+	skos:scopeNote "Convenience projection for one current catalog snapshot. A false value is only meaningful as of a specific time and catalog. Preserve dated membership, and identify the catalog, with stonework:MetricObservation, stonework:metricKevMembership, and stonework:hasProvenance."@en ;
 	.
 
 stonework:isPacked
@@ -4938,17 +4949,10 @@ stonework:uriValue
 
 stonework:url
 	a owl:DatatypeProperty ;
-	rdfs:domain [
-		a owl:Class ;
-		owl:unionOf (
-			stonework:Feed
-			stonework:OnlineReference
-			stonework:Publication
-		) ;
-	] ;
 	rdfs:range xsd:anyURI ;
-	skos:definition "The URL of the online resource."@en ;
+	skos:definition "The URL of an online resource, or of the canonical web page describing an entity."@en ;
 	skos:prefLabel "url"@en ;
+	skos:scopeNote "Domain is intentionally unset. For a stonework:Feed, stonework:OnlineReference, or stonework:Publication it is the resource's own URL; for a framework entity, such as an ATT&CK technique, it is the entity's page on the framework's site (attack:url is declared rdfs:subPropertyOf this property)."@en ;
 	.
 
 stonework:urlOf

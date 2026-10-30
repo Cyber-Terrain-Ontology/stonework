@@ -37,6 +37,7 @@ nist:family
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:controlFamily ;
 	rdfs:label "control family"@en ;
 	rdfs:comment "Two-letter control family code derived from the control identifier, e.g. 'AC' for Access Control, 'SI' for System and Information Integrity."@en ;
 	rdfs:domain nist:Control ;

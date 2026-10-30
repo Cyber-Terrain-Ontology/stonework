@@ -191,6 +191,21 @@ example:protectedHost
 	a stonework:Host ;
 	.
 
+example:ransomwareFamily
+	a stonework:MalwareFamily ;
+	.
+
+example:ransomwareReportObservation
+	a stonework:MetricObservation ;
+	stonework:assertionObject example:ransomwareFamily ;
+	stonework:hasExploitationReportKind stonework:exploitationReportRansomware ;
+	stonework:hasProvenance example:epssFeed ;
+	stonework:metricFor example:vulnerability ;
+	stonework:metricType stonework:metricReportedExploited ;
+	stonework:metricValue "true"^^xsd:boolean ;
+	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
+	.
+
 example:roleSource
 	a stonework:Publication ;
 	.
@@ -255,6 +270,8 @@ example:versionedProduct
 example:vulnerability
 	a stonework:Vulnerability ;
 	stonework:cvssBaseScore "9.8"^^xsd:decimal ;
+	stonework:epssPercentile "0.97"^^xsd:decimal ;
 	stonework:epssScore "0.42"^^xsd:decimal ;
+	stonework:hasExploitMaturity stonework:exploitMaturityWeaponized ;
 	stonework:isKnownExploited "true"^^xsd:boolean ;
 	.
