@@ -1493,7 +1493,7 @@ stonework:hasExploitMaturity
 	rdfs:range stonework:ExploitMaturity ;
 	skos:definition "Relates a vulnerability or an individual exploit to its exploit maturity."@en ;
 	skos:prefLabel "hasExploitMaturity"@en ;
-	skos:scopeNote "At most one per subject (stonework:ExploitMaturityShape). On a vulnerability it is a convenience projection: the highest maturity currently known for it, where weaponized ranks above poc. An exploit reference, such as a stonework:OnlineReference or stonework:Tool, carries that exploit's own maturity. Maturity changes over time and sources can disagree, so preserve dated, sourced values as a stonework:MetricObservation with stonework:metricExploitMaturity that carries this property itself. Domain is unset so each of these subjects is valid."@en ;
+	skos:scopeNote "At most one per subject (stonework:ExploitMaturityShape). On a vulnerability it is a convenience projection: the highest maturity currently known for it, where weaponized ranks above poc. An exploit reference, such as a stonework:OnlineReference or stonework:Tool, carries that exploit's own maturity. Domain is unset so each of these subjects is valid. Dated history is not recorded on this property."@en ;
 	.
 
 stonework:hasExploitationReportKind
@@ -2521,21 +2521,6 @@ stonework:metricEpssScore
 	skos:prefLabel "EPSS Score"@en ;
 	.
 
-stonework:metricExploitMaturity
-	a
-		owl:NamedIndividual ,
-		skos:Concept ,
-		stonework:MetricType
-		;
-	skos:definition "A dated observation of the maturity of known exploits for a vulnerability. Its stonework:metricValue is the maturity's skos:notation (poc, weaponized), and the observation carries the maturity concept itself with stonework:hasExploitMaturity."@en ;
-	skos:inScheme
-		stonework:categoryScheme ,
-		stonework:metricTypeScheme
-		;
-	skos:notation "exploit-maturity" ;
-	skos:prefLabel "Exploit Maturity"@en ;
-	.
-
 stonework:metricKevMembership
 	a
 		owl:NamedIndividual ,
@@ -2595,7 +2580,7 @@ stonework:metricReportedExploited
 		;
 	skos:notation "reported-exploited" ;
 	skos:prefLabel "Reported Exploited"@en ;
-	skos:scopeNote "Distinct from stonework:metricKevMembership, which records catalog membership. A source that separately reports exploitation in general, by a threat actor, by ransomware, or by a botnet records each report as its own observation of this metric type, with the report kind as stonework:hasExploitationReportKind. When the source names the threat actor, malware, or botnet, the observation identifies it with stonework:assertionObject."@en ;
+	skos:scopeNote "Distinct from stonework:metricKevMembership, which records catalog membership. A source that separately reports exploitation in general, by a threat actor, by ransomware, or by a botnet records each report as its own observation of this metric type, with the report kind as stonework:hasExploitationReportKind. When the source names the threat actor, malware, or botnet, the observation identifies it with stonework:assertionObject. assertionObject is single-valued, so each named actor, malware, or botnet is its own observation, even when the kind is the same."@en ;
 	.
 
 stonework:metricRiskScore

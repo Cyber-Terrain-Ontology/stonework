@@ -8,8 +8,8 @@ Vocabulary for vulnerability exploit evidence that does not fit the EPSS probabi
 
 - `stonework:epssPercentile` and `stonework:metricEpssPercentile`. The percentile is the rank of an EPSS probability, not a second probability.
 - `stonework:metricReportedExploited`. A source report that a vulnerability was exploited, including reports that name a threat actor, ransomware, or a botnet. Catalog membership stays `stonework:metricKevMembership`.
-- `stonework:ExploitationReportKind` (`exploited`, `threat-actor`, `ransomware`, `botnet`) and `stonework:hasExploitationReportKind` on the observation. A named actor, malware, or botnet is the observation's `stonework:assertionObject`.
-- `stonework:ExploitMaturity` (`poc`, `weaponized`, in that order) and `stonework:hasExploitMaturity`. One maturity per subject: the vulnerability's highest known maturity (a convenience projection), or one exploit reference's own maturity. Dated, sourced maturity is a `stonework:MetricObservation` with the new `stonework:metricExploitMaturity`.
+- `stonework:ExploitationReportKind` (`exploited`, `threat-actor`, `ransomware`, `botnet`) and `stonework:hasExploitationReportKind` on the observation. A named actor, malware, or botnet is the observation's `stonework:assertionObject`. That property is single-valued, so each named actor or malware is its own observation, even when the kind is the same.
+- `stonework:ExploitMaturity` (`poc`, `weaponized`, in that order) and `stonework:hasExploitMaturity`. One maturity per subject: the vulnerability's highest known maturity (a convenience projection), or one exploit reference's own maturity. Dated history is not recorded yet.
 - `stonework:AffectedStatus` (`affected`, `unaffected`, `unknown`, `fixed`, `under-investigation`) and functional `stonework:hasAffectedStatus` on `stonework:VulnerabilityAssessment`.
 - SHACL: `EpssPercentileShape`, the same 0.0–1.0 bound as `epssScore`; `ExploitMaturityShape` and `ExploitationReportKindShape`, at most one value per subject. These are SHACL limits rather than `owl:FunctionalProperty`, so two sources that disagree are reported, not merged by a reasoner.
 
@@ -25,7 +25,7 @@ Vocabulary for vulnerability exploit evidence that does not fit the EPSS probabi
 Framework properties that already had a STONEWORK term are now tied to it (from the framework-vs-STONEWORK gap audit):
 
 - `nist:family` ⊑ `stonework:controlFamily`
-- `attack:alias` ⊑ `stones:aliases`
+- `attack:alias` ⊑ `stones:aliases` ⊑ `skos:altLabel`
 - `attack:url` ⊑ `stonework:url`
 - `cpe:lastModified` ⊑ `stonework:modified`
 - `cve:references` ⊑ `stonework:references`

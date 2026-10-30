@@ -85,16 +85,6 @@ example:epssObservation
 	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
 	.
 
-example:exploitMaturityObservation
-	a stonework:MetricObservation ;
-	stonework:hasExploitMaturity stonework:exploitMaturityWeaponized ;
-	stonework:hasProvenance example:epssFeed ;
-	stonework:metricFor example:vulnerability ;
-	stonework:metricType stonework:metricExploitMaturity ;
-	stonework:metricValue "weaponized" ;
-	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
-	.
-
 example:hash
 	a stonework:Hash ;
 	stonework:hashAlgorithm "SHA-256" ;

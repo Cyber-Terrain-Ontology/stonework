@@ -48,7 +48,7 @@
         <uri name="https://cyberterrain.org/ns/frameworks/registry" uri="extensions/registry.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/registry/0.1.0" uri="extensions/registry.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/stix" uri="frameworks/stix.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/stix/0.2.0" uri="frameworks/stix.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/stix/0.3.0" uri="frameworks/stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uco" uri="frameworks/uco.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uco/0.1.0" uri="frameworks/uco.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uri" uri="extensions/uri.ttl"/>
