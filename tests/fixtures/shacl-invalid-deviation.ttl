@@ -1,0 +1,44 @@
+@prefix example: <https://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:clerk
+	a stonework:Person ;
+	.
+
+example:deviation
+	a stonework:Deviation ;
+	stonework:evidencedBy example:clerk ;
+	.
+
+example:enterStep
+	a stonework:Step ;
+	stonework:defaultTransition example:variable ;
+	stonework:hasPlaybookType example:clerk ;
+	stonework:joinKind example:variable ;
+	stonework:outcomeVariable example:clerk ;
+	stonework:performerRole example:clerk ;
+	stonework:separatedFrom example:variable ;
+	stonework:splitKind example:clerk ;
+	stonework:stepTarget "the mailbox" ;
+	.
+
+example:hypothesis
+	a stonework:Hypothesis ;
+	stonework:hypothesisPart example:clerk ;
+	.
+
+example:identityControl
+	a stonework:IdentityControl ;
+	stonework:controlledIdentity example:variable ;
+	stonework:controllingAgent example:variable ;
+	stonework:evidencedBy example:clerk ;
+	.
+
+example:variable
+	a stonework:Variable ;
+	stonework:suppliedBy example:clerk ;
+	.

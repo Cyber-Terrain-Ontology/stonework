@@ -86,13 +86,13 @@ this draft.
 | ATT&CK field | `attack:` property | STONEWORK | Note |
 |---|---|---|---|
 | ATT&CK ID (`external_id` of the mitre-attack reference) | `attack:attackId` | ⊑ `stonework:attackId` (new in 0.10.0, ⊑ `skos:notation`) and `stonework:externalId` | Canonical and source forms are the same. Not unique across types: deprecated mitigations reuse T-numbers. Not `relatedTechniqueIdentifier`, which carries a technique ID on another framework's entity as a join key |
-| Page URL (`https://attack.mitre.org/techniques/T1059/`) | `attack:url` | — | The de facto public identifier; a web page, so a value, not `owl:sameAs` |
+| Page URL (`https://attack.mitre.org/techniques/T1059/`) | `attack:url` | ⊑ `stonework:url` | The de facto public identifier; a web page, so a value, not `owl:sameAs`. `stonework:url` has no domain, so the page does not make the technique an `OnlineReference` |
 | `name` | (STONES `stones:name`) | `skos:prefLabel` | Every object gets both |
 | `description` | (STONES) | `stonework:description` | Already materialized |
 | `x_mitre_shortname` (tactics) | `attack:shortname` | — | |
 | `x_mitre_domains` | `attack:domain` | — | Replaces the undeclared `stonework:domain` |
 | `x_mitre_platforms` | `attack:platform` | — | Replaces the undeclared `stonework:platform` |
-| `aliases`, `x_mitre_aliases` | `attack:alias` | — | STONEWORK has no alias property; worth adding? |
+| `aliases`, `x_mitre_aliases` | `attack:alias` | ⊑ `stones:aliases` ⊑ `skos:altLabel` | An ATT&CK alias is a STIX alias, and that is an alternate label. No separate `stonework:alias` |
 | `x_mitre_version`, `x_mitre_attack_spec_version` | `attack:version`, `attack:specVersion` | — | Replace the undeclared `stonework:mitreVersion` |
 | `x_mitre_deprecated` | `attack:deprecated` | — | Replaces the undeclared `stonework:deprecated` |
 | `x_mitre_is_subtechnique` | (class `attack:SubTechnique`) | — | Replaces the undeclared `stonework:isSubtechnique` |
@@ -109,7 +109,7 @@ ATT&CK-specific and move to `attack:`.
 2. None for the strategy → analytic link: with both under `DefendTechnique`, the existing
    `hasTechnique` fits. (The first draft added `stonework:appliesTechnique`; dropped in review.)
 3. Data Components: likely matched to OCSF event classes rather than a new concept (see above). A general asset class (ICS) is still open.
-4. Possibly `stonework:alias`.
+4. Done: `attack:alias` specializes `stones:aliases`, and `stones:aliases` specializes `skos:altLabel`. No `stonework:alias`.
 
 ## Not decided here
 

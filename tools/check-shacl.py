@@ -30,6 +30,7 @@ CORE_SHAPES = SHAPES_DIR / "stonework-shapes.ttl"
 FINANCIAL_SHAPES = SHAPES_DIR / "frameworks" / "financial-shapes.ttl"
 STRICT_SHAPES = SHAPES_DIR / "stonework-strict-shapes.ttl"
 FINANCIAL_EXAMPLE = ROOT / "examples" / "financial-follow-the-money.ttl"
+BEC_EXAMPLE = ROOT / "examples" / "bec-t1114-003.ttl"
 
 # The ontology schemas are loaded as data so that sh:targetClass resolves
 # through rdfs:subClassOf.
@@ -349,6 +350,11 @@ def main() -> int:
             "financial",
             "Financial worked example failed the financial profile",
         )
+        failures += expect_clean(
+            str(BEC_EXAMPLE.relative_to(ROOT)),
+            "financial",
+            "BEC worked example failed the financial profile",
+        )
 
         # Malformed records: the value is wrong, not merely absent.
         for fixture in (
@@ -357,6 +363,8 @@ def main() -> int:
             "shacl-invalid-actuator.ttl",
             "shacl-invalid-multiple-actuators.ttl",
             "shacl-invalid-monetary-amount.ttl",
+            "shacl-invalid-variable-binding.ttl",
+            "shacl-invalid-deviation.ttl",
         ):
             failures += expect_violation(
                 fixture, "core", "Malformed fixture was accepted"
@@ -377,25 +385,39 @@ def main() -> int:
                 "assertionObject",
                 "assertionRelationType",
                 "assertionSubject",
+                "bindingOf",
+                "boundIn",
                 "boundTo",
                 "boundToLiteral",
+                "controlledIdentity",
+                "controllingAgent",
+                "defaultTransition",
+                "deviationKind",
+                "deviationRun",
                 "fromStep",
                 "guardLiteralValue",
                 "guardOperator",
                 "guardType",
+                "guardValue",
                 "guardVariable",
+                "hasExploitMaturity",
+                "hasExploitationReportKind",
                 "hasInvestigationOutcome",
                 "hasInvestigationStatus",
                 "hasPriority",
                 "installationOf",
                 "installedOn",
+                "joinKind",
                 "leadInvestigator",
                 "mergedInto",
+                "outcomeVariable",
+                "partOfExecution",
                 "predictedLiteral",
                 "predictedType",
                 "predictedValue",
                 "predictsVariable",
                 "sightedObject",
+                "splitKind",
                 "toStep",
                 "versionOf",
             ),

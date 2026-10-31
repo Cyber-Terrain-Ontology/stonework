@@ -14,6 +14,7 @@ ex:act-attempt-comsvcs
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-attempt-comsvcs ;
 	stonework:endedAtTime "2026-08-01T14:00:12Z"^^xsd:dateTime ;
+	stonework:partOfExecution ex:run-opplan-t1003-001 ;
 	stonework:startedAtTime "2026-08-01T14:00:00Z"^^xsd:dateTime ;
 	.
 
@@ -24,6 +25,7 @@ ex:act-attempt-procdump
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-attempt-procdump ;
 	stonework:endedAtTime "2026-08-01T14:00:45Z"^^xsd:dateTime ;
+	stonework:partOfExecution ex:run-opplan-t1003-001 ;
 	stonework:startedAtTime "2026-08-01T14:00:15Z"^^xsd:dateTime ;
 	.
 
@@ -35,6 +37,7 @@ ex:act-comsvcs-invoke-minidump
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-comsvcs-invoke-minidump ;
 	stonework:endedAtTime "2026-08-01T14:00:12Z"^^xsd:dateTime ;
+	stonework:partOfExecution ex:act-attempt-comsvcs ;
 	stonework:startedAtTime "2026-08-01T14:00:03Z"^^xsd:dateTime ;
 	.
 
@@ -46,6 +49,7 @@ ex:act-comsvcs-locate-lsass
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-comsvcs-locate-lsass ;
 	stonework:endedAtTime "2026-08-01T14:00:02Z"^^xsd:dateTime ;
+	stonework:partOfExecution ex:act-attempt-comsvcs ;
 	stonework:startedAtTime "2026-08-01T14:00:00Z"^^xsd:dateTime ;
 	.
 
@@ -56,6 +60,7 @@ ex:act-credential-access-achieved
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-credential-access-achieved ;
 	stonework:endedAtTime "2026-08-01T14:00:46Z"^^xsd:dateTime ;
+	stonework:partOfExecution ex:run-opplan-t1003-001 ;
 	stonework:startedAtTime "2026-08-01T14:00:46Z"^^xsd:dateTime ;
 	.
 
@@ -67,6 +72,7 @@ ex:act-procdump-locate-lsass
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-procdump-locate-lsass ;
 	stonework:endedAtTime "2026-08-01T14:00:16Z"^^xsd:dateTime ;
+	stonework:partOfExecution ex:act-attempt-procdump ;
 	stonework:startedAtTime "2026-08-01T14:00:15Z"^^xsd:dateTime ;
 	.
 
@@ -78,8 +84,36 @@ ex:act-procdump-run
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-procdump-run ;
 	stonework:endedAtTime "2026-08-01T14:00:45Z"^^xsd:dateTime ;
+	stonework:partOfExecution ex:act-attempt-procdump ;
 	stonework:produces ex:cond-procdump-credential-material ;
 	stonework:startedAtTime "2026-08-01T14:00:17Z"^^xsd:dateTime ;
+	.
+
+ex:binding-comsvcs-outcome
+	a stonework:VariableBinding ;
+	skos:definition "In this run, the comsvcs.dll attempt was blocked by EDR: its outcome is false."@en ;
+	skos:prefLabel "Binding: comsvcs.dll attempt outcome (this run)"@en ;
+	stonework:bindingOf ex:var-comsvcs-outcome ;
+	stonework:boundIn ex:act-attempt-comsvcs ;
+	stonework:boundToLiteral "false"^^xsd:boolean ;
+	.
+
+ex:binding-credential-outcome
+	a stonework:VariableBinding ;
+	skos:definition "In this run, the operation's overall outcome: the credential material the procdump.exe attempt obtained."@en ;
+	skos:prefLabel "Binding: credential access outcome (this run)"@en ;
+	stonework:bindingOf ex:var-credential-outcome ;
+	stonework:boundIn ex:run-opplan-t1003-001 ;
+	stonework:boundTo ex:cond-procdump-credential-material ;
+	.
+
+ex:binding-procdump-outcome
+	a stonework:VariableBinding ;
+	skos:definition "In this run, the procdump.exe attempt succeeded: its outcome is the credential material it obtained."@en ;
+	skos:prefLabel "Binding: procdump.exe attempt outcome (this run)"@en ;
+	stonework:bindingOf ex:var-procdump-outcome ;
+	stonework:boundIn ex:act-attempt-procdump ;
+	stonework:boundTo ex:cond-procdump-credential-material ;
 	.
 
 ex:cond-procdump-credential-material
@@ -162,6 +196,16 @@ ex:rtproc-lsass
 	a stonework:RuntimeProcess ;
 	skos:definition "The lsass.exe process running on the target endpoint, whose memory was the object of this operation's credential-dumping attempts."@en ;
 	skos:prefLabel "lsass.exe (target endpoint)"@en ;
+	.
+
+ex:run-opplan-t1003-001
+	a stonework:Operation ;
+	skos:definition "One run of the credential-access operation plan against the target endpoint on 1 August 2026: the comsvcs.dll attempt was blocked, the procdump.exe attempt succeeded, and the Mimikatz attempt was never needed."@en ;
+	skos:prefLabel "Run: Credential Access via LSASS Memory, 1 August 2026"@en ;
+	stonework:attributedTo ex:threat-actor ;
+	stonework:endedAtTime "2026-08-01T14:00:46Z"^^xsd:dateTime ;
+	stonework:executionOf ex:opplan-t1003-001 ;
+	stonework:startedAtTime "2026-08-01T14:00:00Z"^^xsd:dateTime ;
 	.
 
 ex:step-attempt-comsvcs
@@ -295,14 +339,12 @@ ex:threat-actor
 ex:var-comsvcs-outcome
 	a stonework:Variable ;
 	skos:definition "The comsvcs.dll MiniDump attempt's own outcome: bound to a SecurityCondition instance if that attempt yields usable credential material, or to literal false if it is blocked or fails."@en ;
-	stonework:boundToLiteral "false"^^xsd:boolean ;
 	stonework:variableName "comsvcsOutcome" ;
 	.
 
 ex:var-credential-outcome
 	a stonework:Variable ;
 	skos:definition "The OperationPlan's overall output: bound to the SecurityCondition instance that ultimately satisfied credential access, once any attempt succeeds."@en ;
-	stonework:boundTo ex:cond-procdump-credential-material ;
 	stonework:variableName "credentialAccessOutcome" ;
 	.
 
@@ -315,6 +357,5 @@ ex:var-mimikatz-outcome
 ex:var-procdump-outcome
 	a stonework:Variable ;
 	skos:definition "The procdump.exe attempt's own outcome: bound to a SecurityCondition instance if that attempt yields usable credential material, or to literal false if it is blocked or fails."@en ;
-	stonework:boundTo ex:cond-procdump-credential-material ;
 	stonework:variableName "procdumpOutcome" ;
 	.
