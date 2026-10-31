@@ -56,9 +56,17 @@ example:firstProductFamily
 
 example:firstStep
 	a stonework:Step ;
+	stonework:defaultTransition
+		example:otherTransition ,
+		example:transition
+		;
 	stonework:joinKind
 		stonework:flowKindExclusive ,
 		stonework:flowKindParallel
+		;
+	stonework:outcomeVariable
+		example:firstVariable ,
+		example:secondVariable
 		;
 	stonework:splitKind
 		stonework:flowKindExclusive ,
@@ -112,6 +120,16 @@ example:investigation
 		example:firstInvestigation ,
 		example:secondInvestigation
 		;
+	.
+
+example:otherTransition
+	a stonework:Transition ;
+	stonework:fromStep example:firstStep ;
+	stonework:guardValue
+		stonework:executionOutcomeFailed ,
+		stonework:executionOutcomeSucceeded
+		;
+	stonework:toStep example:secondStep ;
 	.
 
 example:relationship

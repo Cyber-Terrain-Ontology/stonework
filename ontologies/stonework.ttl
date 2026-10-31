@@ -1211,7 +1211,7 @@ stonework:Transition
 	a owl:Class ;
 	skos:definition "A directed edge between two Steps within the same parent Behavior's Step graph, representing progression from one Step to the next."@en ;
 	skos:prefLabel "Transition" ;
-	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Conditional branching is expressed with the guard properties stonework:guardVariable (the Variable tested), stonework:guardType (a class the bound value must be an instance of) or stonework:guardLiteralValue (a scalar it must equal), and stonework:guardOperator (the comparison; omitting it defaults to equality). The Transition fires when its guard holds against the value the from-Step's execution bound: the stonework:VariableBinding of the guard Variable that is stonework:boundIn that execution. Whether a Step's several outgoing Transitions are alternatives or concurrent branches is given by that Step's stonework:splitKind, and whether a Step entered by several Transitions waits for all of them by its stonework:joinKind; both default to exclusive (one path). A Transition never leaves its Plan: between Plans, only data passes, as a message through a shared Variable (see stonework:Variable)."@en ;
+	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Conditional branching is expressed with the guard properties stonework:guardVariable (the Variable tested), stonework:guardType (a class the bound value must be an instance of) or stonework:guardLiteralValue (a scalar it must equal) or stonework:guardValue (an individual it must be), and stonework:guardOperator (the comparison; omitting it defaults to equality). The Transition fires when its guard holds against the value the from-Step's execution bound: the stonework:VariableBinding of the guard Variable that is stonework:boundIn that execution. Whether a Step's several outgoing Transitions are alternatives or concurrent branches is given by that Step's stonework:splitKind, and whether a Step entered by several Transitions waits for all of them by its stonework:joinKind; both default to exclusive (one path). A Step's stonework:defaultTransition is taken only when no other outgoing Transition's guard holds. A Transition never leaves its Plan: between Plans, only data passes, as a message through a shared Variable (see stonework:Variable)."@en ;
 	.
 
 stonework:URI
@@ -2320,6 +2320,19 @@ stonework:dateUpdated
 	skos:scopeNote "Corresponds to cveMetadata.dateUpdated in CVE JSON 5.x and equivalent update timestamps from other vulnerability sources. cve:dateUpdated is declared rdfs:subPropertyOf this property (one-way)."@en ;
 	.
 
+stonework:defaultTransition
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:Transition ;
+	rdfs:seeAlso <https://www.omg.org/spec/BPMN/2.0.2/> ;
+	skos:definition "The outgoing Transition a Step takes when no other outgoing Transition's guard holds."@en ;
+	skos:prefLabel "defaultTransition"@en ;
+	skos:scopeNote "BPMN's default sequence flow, and the default case of a CACAO switch-condition. The Transition leaves this Step (its stonework:fromStep is this Step) and carries no guard of its own: it is the otherwise branch, so a plan doesn't have to spell out the negation of every other guard. It applies to either stonework:splitKind: with a parallel split, the default is taken only when none of the guarded branches is."@en ;
+	.
+
 stonework:deliveredVia
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:MalwareSample ;
@@ -2791,6 +2804,17 @@ stonework:guardType
 	skos:definition "A Transition fires only if guardVariable's stonework:boundTo value is an instance of this class."@en ;
 	skos:prefLabel "guardType" ;
 	skos:scopeNote "Used for guards that test whether a Variable was bound to an instance of a particular class (e.g. testing that an attempt's outcome Variable was bound to a stonework:SecurityCondition instance) rather than testing equality against a scalar."@en ;
+	.
+
+stonework:guardValue
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Transition ;
+	skos:definition "The individual that guardVariable's stonework:boundTo value must be for the Transition to be taken."@en ;
+	skos:prefLabel "guardValue"@en ;
+	skos:scopeNote "Tests identity with an individual, such as a category value (stonework:executionOutcomeFailed) or a named asset, where stonework:guardType tests class membership and stonework:guardLiteralValue a literal. Mirrors stonework:predictedValue on the Hypothesis side. Range deliberately unset: the value may be any individual."@en ;
 	.
 
 stonework:guardVariable
@@ -4007,6 +4031,19 @@ stonework:osVersion
 	skos:prefLabel "osVersion"@en ;
 	.
 
+stonework:outcomeVariable
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:hasOutputVariable ;
+	rdfs:domain stonework:Behavior ;
+	rdfs:range stonework:Variable ;
+	skos:definition "The output Variable that records whether an execution of a Step or Plan succeeded, failed or timed out."@en ;
+	skos:prefLabel "outcomeVariable"@en ;
+	skos:scopeNote "Its value in a run is a stonework:ExecutionOutcome (succeeded, failed, timed out), bound like any other output. Transitions guarded on it with stonework:guardValue express CACAO's on_success and on_failure. Other output Variables carry what the Step found or made; the outcome Variable says only whether it worked, so a search that ran and found nothing has the outcome succeeded."@en ;
+	.
+
 stonework:overlapsWith
 	a owl:ObjectProperty ;
 	skos:definition "Indicates two entities share common attributes, infrastructure, or behaviour, suggesting possible connection without asserting a specific relationship type."@en ;
@@ -4845,6 +4882,15 @@ stonework:stepOrder
 	skos:definition "An optional ordinal position for a Step within a strictly linear Behavior, where the full precededByStep graph is unnecessary."@en ;
 	skos:prefLabel "stepOrder" ;
 	skos:scopeNote "Most CTI procedure write-ups (a numbered list of adversary actions) are linear. stepOrder is a low-overhead alternative to precededByStep for that common case; the two are not mutually exclusive."@en ;
+	.
+
+stonework:stepTarget
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:CyberEntity ;
+	skos:definition "What a Step is meant to act on: a specific entity, or a Variable whose value in the run is the target."@en ;
+	skos:prefLabel "stepTarget"@en ;
+	skos:scopeNote "The plan-level counterpart of stonework:actsOn, as stonework:performerRole is of stonework:performedBy; CACAO's targets on an action step. A specific entity (the mail tenant) is the target in every run. A stonework:Variable (itself a CyberEntity) means whatever that Variable is bound to in the run, such as the mailbox being contained. An execution whose actsOn is neither departs from the Plan: a wrong-target stonework:Deviation."@en ;
 	.
 
 stonework:storedIn

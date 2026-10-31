@@ -118,6 +118,13 @@ ex:ap-clerk
 	stonework:hasRoleAssignment ex:ra-ap-clerk ;
 	.
 
+ex:b-account-contain
+	a stonework:VariableBinding ;
+	stonework:bindingOf ex:var-account ;
+	stonework:boundIn ex:exe-contain ;
+	stonework:boundTo ex:acct-controller-mailbox ;
+	.
+
 ex:b-mailbox-clerk
 	a stonework:VariableBinding ;
 	stonework:bindingOf ex:var-mailbox ;
@@ -130,6 +137,21 @@ ex:b-mailbox-controller
 	stonework:bindingOf ex:var-mailbox ;
 	stonework:boundIn ex:inv-bec ;
 	stonework:boundTo ex:acct-controller-mailbox ;
+	.
+
+ex:b-outcome-clerk
+	a stonework:VariableBinding ;
+	skos:definition "The search of the clerk's mailbox ran to completion. It found nothing, but it worked."@en ;
+	stonework:bindingOf ex:var-search-outcome ;
+	stonework:boundIn ex:inv-search-clerk ;
+	stonework:boundTo stonework:executionOutcomeSucceeded ;
+	.
+
+ex:b-outcome-controller
+	a stonework:VariableBinding ;
+	stonework:bindingOf ex:var-search-outcome ;
+	stonework:boundIn ex:inv-search-controller ;
+	stonework:boundTo stonework:executionOutcomeSucceeded ;
 	.
 
 ex:b-payment-request-0916
@@ -250,6 +272,7 @@ ex:cstep-block-external
 	a stonework:Step ;
 	skos:prefLabel "Block automatic forwarding to external domains at the transport layer"@en ;
 	stonework:isStepOf ex:ctlplan-forwarding ;
+	stonework:stepTarget ex:mail-tenant ;
 	.
 
 ex:cstep-remove-rule
@@ -263,6 +286,7 @@ ex:cstep-reset
 	a stonework:Step ;
 	skos:prefLabel "Revoke the account's sessions and reset its credentials"@en ;
 	stonework:isStepOf ex:ctlplan-forwarding ;
+	stonework:stepTarget ex:var-account ;
 	.
 
 ex:cstep-review
@@ -300,6 +324,8 @@ ex:ctlplan-forwarding
 	a stonework:ControlPlan ;
 	skos:definition "The organization's containment plan for a malicious email forwarding rule. It implements NIST SP 800-53 AC-4 (information flow enforcement), which the CTI Encyclopedia links to T1114.003. The rule is removed first, keeping a copy as evidence; the credential reset and the transport block are independent and run in parallel; the review waits for both."@en ;
 	skos:prefLabel "Contain a malicious forwarding rule"@en ;
+	stonework:hasInputVariable ex:var-account ;
+	stonework:hasPlaybookType stonework:playbookTypeMitigation ;
 	stonework:hasStep
 		ex:cstep-block-external ,
 		ex:cstep-remove-rule ,
@@ -313,8 +339,11 @@ ex:detplan-forwarding
 	a stonework:DetectionPlan ;
 	skos:definition "Looks for email forwarding rules on the finance team's mailboxes, following ATT&CK's detection strategy DET0576, and hands a confirmed rule to the containment plan."@en ;
 	skos:prefLabel "Detect forwarding rules on finance mailboxes"@en ;
+	stonework:hasPlaybookType stonework:playbookTypeDetection ;
 	stonework:hasStep
 		ex:dstep-contain ,
+		ex:dstep-escalate ,
+		ex:dstep-record ,
 		ex:dstep-search
 		;
 	stonework:implements cti-enc:x-mitre-detection-strategy--f66a9e86-49fb-4de6-963d-0e357a77f679 ;
@@ -339,18 +368,47 @@ ex:dstep-contain
 	skos:prefLabel "Contain the mailbox"@en ;
 	stonework:implements ex:ctlplan-forwarding ;
 	stonework:isStepOf ex:detplan-forwarding ;
-	stonework:stepOrder "2"^^xsd:integer ;
+	.
+
+ex:dstep-escalate
+	a stonework:Step ;
+	skos:definition "If the audit log can't be searched (the search failed or timed out), ask the mail administrator to export the mailbox's rules directly."@en ;
+	skos:prefLabel "Escalate to the mail administrator"@en ;
+	stonework:isStepOf ex:detplan-forwarding ;
+	.
+
+ex:dstep-record
+	a stonework:Step ;
+	skos:definition "Record that the search found no forwarding rule on the mailbox, keeping the saved query and its empty result."@en ;
+	skos:prefLabel "Record a negative result"@en ;
+	stonework:isStepOf ex:detplan-forwarding ;
 	.
 
 ex:dstep-search
 	a stonework:Step ;
 	skos:definition "Search the audit log for New-InboxRule and Set-InboxRule operations on the given mailbox that set ForwardTo, ForwardAsAttachmentTo or RedirectTo, over the last 90 days (ATT&CK analytic AN1591). Run once for each mailbox in question."@en ;
 	skos:prefLabel "Search the audit log for forwarding rules on a mailbox"@en ;
+	stonework:defaultTransition ex:dt-default-to-record ;
 	stonework:hasInputVariable ex:var-mailbox ;
 	stonework:hasOutputVariable ex:var-rule-found ;
 	stonework:implements cti-enc:x-mitre-analytic--710aa303-3e9f-4170-95a4-b2caf5f827fd ;
 	stonework:isStepOf ex:detplan-forwarding ;
-	stonework:stepOrder "1"^^xsd:integer ;
+	stonework:outcomeVariable ex:var-search-outcome ;
+	.
+
+ex:dt-default-to-record
+	a stonework:Transition ;
+	skos:definition "Taken when neither of the search Step's guarded Transitions is: the search worked and found no rule."@en ;
+	stonework:fromStep ex:dstep-search ;
+	stonework:toStep ex:dstep-record ;
+	.
+
+ex:dt-failed-to-escalate
+	a stonework:Transition ;
+	stonework:fromStep ex:dstep-search ;
+	stonework:guardValue stonework:executionOutcomeFailed ;
+	stonework:guardVariable ex:var-search-outcome ;
+	stonework:toStep ex:dstep-escalate ;
 	.
 
 ex:dt-found-to-contain
@@ -426,6 +484,17 @@ ex:exe-cstep-review
 		ex:controller
 		;
 	stonework:startedAtTime "2026-09-30T16:30:00Z"^^xsd:dateTime ;
+	.
+
+ex:exe-record-clerk
+	a stonework:Process ;
+	skos:prefLabel "Execution: record the negative result for the clerk's mailbox"@en ;
+	stonework:correspondsToStep ex:dstep-record ;
+	stonework:endedAtTime "2026-09-30T15:44:00Z"^^xsd:dateTime ;
+	stonework:partOfExecution ex:inv-bec ;
+	stonework:performedBy ex:analyst ;
+	stonework:startedAtTime "2026-09-30T15:41:00Z"^^xsd:dateTime ;
+	stonework:usedBinding ex:b-rule-clerk ;
 	.
 
 ex:exe0909-approve
@@ -633,6 +702,7 @@ ex:opplan-bec
 	a stonework:OperationPlan ;
 	skos:definition "The actor's plan, as the investigation reconstructs it: collect the finance team's mail through a hidden forwarding rule, learn which invoices are due, then ask for one to be paid to a new account."@en ;
 	skos:prefLabel "Divert a supplier payment by email"@en ;
+	stonework:hasPlaybookType stonework:playbookTypeAttack ;
 	stonework:hasStep
 		ex:ostep-read ,
 		ex:ostep-rule ,
@@ -779,6 +849,12 @@ ex:txn-wire
 	stonework:usesInstrument stonework:paymentInstrumentWireTransfer ;
 	.
 
+ex:var-account
+	a stonework:Variable ;
+	skos:definition "The account whose mailbox has the malicious rule: the containment plan's input, and the target of its credential reset."@en ;
+	stonework:variableName "accountToContain" ;
+	.
+
 ex:var-bank-details-changed
 	a stonework:Variable ;
 	skos:definition "Whether the payee's bank details in this request differ from those on file."@en ;
@@ -814,6 +890,12 @@ ex:var-rule-found
 	a stonework:Variable ;
 	skos:definition "What the search found: a Sighting of T1114.003, or false."@en ;
 	stonework:variableName "forwardingRuleFound" ;
+	.
+
+ex:var-search-outcome
+	a stonework:Variable ;
+	skos:definition "Whether the audit-log search worked: succeeded, failed or timed out. Separate from what it found, which is forwardingRuleFound."@en ;
+	stonework:variableName "searchOutcome" ;
 	.
 
 ex:wstep-approve

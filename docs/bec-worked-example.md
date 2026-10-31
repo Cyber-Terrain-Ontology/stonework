@@ -3,7 +3,8 @@
 *First cut 2026-10-22, from a conversation between Ryan Hohimer and Claude; revised
 2026-10-30 for STONEWORK 0.12.0, which adds `stonework:Plan`, `BusinessProcess`, per-run
 Variable bindings, the Roles that perform Steps, deviations as findings, and parallel
-branches, and messages between plans (proposals 2, 4, 5, 6, 7, 9 and 10 below). The gaps it still runs into are
+branches, messages between plans, default branches, step outcomes and targets, and playbook
+types (proposals 2, 4, 5, 6, 7, 9, 10 and 13 to 16 below). The gaps it still runs into are
 listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
@@ -222,17 +223,29 @@ unnecessary: the plan's execution already connects a hypothesis to its evidence.
 
 `ex:detplan-forwarding` is a `stonework:DetectionPlan` that `implements` ATT&CK's detection
 strategy **DET0576** ("Email Forwarding Rule Abuse Detection Across Platforms"), which the
-CTI Encyclopedia says `detects` T1114.003. Two Steps:
+CTI Encyclopedia says `detects` T1114.003. Its `hasPlaybookType` is *detection*. Four Steps:
 
 1. **Search the audit log for forwarding rules on a mailbox:** `New-InboxRule` /
    `Set-InboxRule` setting `ForwardTo`, `ForwardAsAttachmentTo` or `RedirectTo`, 90 days.
    Input `mailbox`, output `forwardingRuleFound`. It `implements` ATT&CK's analytic
    **AN1591** (Office Suite: "Creation of email forwarding/redirect rules in Exchange Online
    via New-InboxRule or transport rule cmdlets…").
+   Its `outcomeVariable` is `searchOutcome`: whether the search worked (*succeeded*, *failed*
+   or *timed out*), kept apart from what it found.
 2. **Contain the mailbox.** It `implements` the control plan below, which is how the
    DetectionPlan's own definition says a confirmed violation is handed on.
+3. **Escalate to the mail administrator**, if the audit log couldn't be searched.
+4. **Record a negative result.**
 
-The Transition from Step 1 to Step 2 is guarded by `guardType stonework:Sighting`.
+Three Transitions leave Step 1, one for each way a search can end:
+
+- to Step 2, guarded by `guardType stonework:Sighting` on `forwardingRuleFound`: a rule was
+  found;
+- to Step 3, guarded by `guardValue stonework:executionOutcomeFailed` on `searchOutcome`:
+  the search didn't work (CACAO's `on_failure`);
+- to Step 4, the Step's `defaultTransition`: neither guard held, so the search worked and
+  found nothing. The default carries no guard, so the plan doesn't have to spell out "not a
+  Sighting and not failed".
 
 The Investigation `ex:inv-bec` is the run: it is `executionOf` the DetectionPlan,
 `investigates` the Incident, and is Closed with outcome Confirmed. It binds the `mailbox`
@@ -245,11 +258,39 @@ the analyst, `sightedAt` the email tenant, `evidencedBy` the `New-InboxRule` aud
 Before 0.12.0 the example needed a separate Step per mailbox, because a Variable could hold
 only one value.
 
+Both searches bind `searchOutcome` to *succeeded*: the clerk's found nothing, but it worked.
+**Did each search take the right branch?** The guarded Transition whose guard held, or else
+the default; and was it followed, by an execution that used the search's output?
+
+```sparql
+SELECT ?execution ?branch ?taken WHERE {
+  ?s stonework:defaultTransition ?d .
+  ?e stonework:correspondsToStep ?s ; skos:prefLabel ?execution .
+  OPTIONAL {                                       # a guarded Transition that held
+    ?t stonework:fromStep ?s ; stonework:guardVariable ?gv ; stonework:toStep ?gto .
+    ?b stonework:bindingOf ?gv ; stonework:boundIn ?e .
+    { ?t stonework:guardValue ?g . ?b stonework:boundTo ?g }
+    UNION { ?t stonework:guardType ?gt . ?b stonework:boundTo ?bo . ?bo a/rdfs:subClassOf* ?gt }
+    UNION { ?t stonework:guardLiteralValue ?gl . ?b stonework:boundToLiteral ?gl } }
+  ?d stonework:toStep ?dto .
+  BIND(COALESCE(?gto, ?dto) AS ?next)              # otherwise, the default
+  ?next skos:prefLabel ?branch .
+  BIND(IF(EXISTS { ?x stonework:correspondsToStep ?next ; stonework:usedBinding ?ub .
+                   ?ub stonework:boundIn ?e }, "yes", "no execution found") AS ?taken)
+} ORDER BY ?execution
+```
+
+→ the clerk's search: "Record a negative result", yes; the controller's: "Contain the
+mailbox", yes. Had the clerk's search failed, the branch would be "Escalate to the mail
+administrator", with no execution found: a candidate *skipped* Deviation.
+
 ### 4. The control plan
 
 `ex:ctlplan-forwarding` is a `stonework:ControlPlan`, "Contain a malicious forwarding rule".
 It `implements` NIST SP 800-53 **AC-4** (Information Flow Enforcement), which the
-Encyclopedia says `mitigatesAttackPattern` T1114.003. Four Steps, two of them in parallel:
+Encyclopedia says `mitigatesAttackPattern` T1114.003. Its `hasPlaybookType` is *mitigation*.
+Its input Variable `accountToContain` is bound, in each run, to the account whose mailbox has
+the rule. Four Steps, two of them in parallel:
 
 ```
 Disable and remove the rule, keeping a copy as evidence      splitKind parallel
@@ -265,6 +306,29 @@ other, so the plan doesn't put them in an order: the removal's `splitKind` is
 controller) waits for both: its `joinKind` is `flowKindParallel`. Written as a sequence, the
 plan would claim an order nobody intends, and a run that blocked forwarding before resetting
 the credentials would look out of order.
+
+**Targets.** The credential reset's `stepTarget` is the Variable `accountToContain`: whatever
+account the run is containing. The transport block's is the mail tenant itself, the same in
+every run. A run is checked by comparing each execution's `actsOn` with the target:
+
+```sparql
+SELECT ?run ?step ?expected ?actual ?verdict WHERE {
+  ?e stonework:correspondsToStep ?s ; stonework:partOfExecution ?run .
+  ?s stonework:stepTarget ?t ; skos:prefLabel ?step .
+  OPTIONAL { ?t a stonework:Variable .                        # a Variable: its value
+             ?b stonework:bindingOf ?t ; stonework:boundIn ?run ;  # in this run
+                stonework:boundTo ?bound }
+  BIND(IF(EXISTS { ?t a stonework:Variable }, ?bound, ?t) AS ?expected)
+  OPTIONAL { ?e stonework:actsOn ?actual }
+  BIND(IF(!BOUND(?expected) || !BOUND(?actual), "undetermined",
+       IF(?actual = ?expected, "conforms", "wrong target")) AS ?verdict)
+} ORDER BY ?run ?step
+```
+
+→ both conform: the reset acted on the controller's mailbox account, the run's value of
+`accountToContain`, and the block on the mail tenant. Had the reset been run against the
+clerk's account, it would be *wrong target*, a Deviation kind; with no binding of
+`accountToContain`, *undetermined*.
 
 Its execution `ex:exe-contain` is three things at once: it `correspondsToStep` the
 DetectionPlan's containment Step and is `partOfExecution` the Investigation (the containment
@@ -347,7 +411,8 @@ never taken.
 ### 5. The actor's plan, and the message that crosses into ours
 
 `ex:opplan-bec` is a `stonework:OperationPlan`, "Divert a supplier payment by email": the
-actor's plan as the investigation reconstructs it. Three Steps, in order:
+actor's plan as the investigation reconstructs it, with `hasPlaybookType` *attack*. Three Steps,
+in order:
 
 1. Create a hidden forwarding rule on a finance mailbox. It `implements` T1114.003.
 2. Read the forwarded invoice threads, and pick an invoice that is due.
@@ -446,7 +511,7 @@ hypothesis-and-evidence layer.
 
 ## Gaps, as proposals
 
-Numbered for discussion. Proposals 2, 4, 5, 6, 7, 9 and 10 are done in 0.12.0, and proposal 1 is
+Numbered for discussion. Proposals 2, 4, 5, 6, 7, 9, 10 and 13 to 16 are done in 0.12.0, and proposal 1 is
 decided; the rest are not in the ontology yet.
 
 1. **A Hypothesis has no direct link to what it's about.** Here it reaches T1114.003 only
@@ -489,7 +554,7 @@ decided; the rest are not in the ontology yet.
 6. **Done in 0.12.0: a deviation is a finding with its own evidence.** `stonework:Deviation`
    (⊑ `QualifiedAssertion`), with `deviationRun` (functional), `deviationStep`,
    `deviationExecution`, `deviationKind` (functional; *skipped*, *wrong role*, *same agent*,
-   *out of order*, *misused identity*) and `evidencedBy`, whose domain now takes a Deviation
+   *out of order*, *misused identity*, *wrong target*) and `evidencedBy`, whose domain now takes a Deviation
    as well as a Sighting. Queries propose candidates; the Deviation is the analyst's finding,
    so "not done" is told apart from "not recorded" by its evidence. Executions don't get a
    status: a skipped execution would be a record of something that never happened, and a
@@ -544,34 +609,32 @@ decided; the rest are not in the ontology yet.
 
 Proposals 13 to 19 came from comparing plans with OASIS CACAO 2.0 (see
 [plan-execution-model.md §7](plan-execution-model.md#7-relationship-to-oasis-cacao)). Each is
-something a CACAO playbook can say that a STONEWORK plan can't yet, so importing it would
-lose it. The first four are small.
+something a CACAO playbook could say that a STONEWORK plan couldn't, so importing it would
+lose it. The four small ones, 13 to 16, are done; 17 to 19 remain.
 
-13. **No default branch.** A CACAO `switch-condition` may have a `default` case, taken when
-    no other case matches; BPMN has a default flow too. A STONEWORK exclusive split can only
-    list guarded Transitions, so "none of the others" has to be spelled out as the negation
-    of every other guard. Proposal: a way to mark a Transition as the default, for example a
-    boolean on the Transition, taken only when no other outgoing Transition's guard holds.
+13. **Done in 0.12.0: a default branch.** `stonework:defaultTransition` (Step → Transition,
+    functional) is the Transition taken when no other outgoing Transition's guard holds: CACAO's
+    switch `default` and BPMN's default flow. It sits on the Step, so a Step has at most one.
 
-14. **No agreed outcome Variable.** CACAO steps go `on_success` or `on_failure`, and the spec
-    leaves what counts as success to the implementation. STONEWORK can express both as
-    Transitions guarded on an output Variable, but nothing says which Variable holds a Step's
-    outcome, so every importer would invent its own. Proposal: a convention, in a scope note
-    or as a small outcome vocabulary (succeeded, failed, timed out), for the Variable that
-    records whether a Step succeeded.
+14. **Done in 0.12.0: an outcome Variable.** `stonework:outcomeVariable` (functional, ⊑
+    `hasOutputVariable`) marks the output Variable that records whether an execution
+    worked, and its values come from a new `ExecutionOutcome` scheme: *succeeded*, *failed*,
+    *timed out*. A new guard, `stonework:guardValue` (Transition → any individual,
+    functional), tests "is this individual", which `guardType` and `guardLiteralValue`
+    couldn't; it mirrors `predictedValue`. CACAO's `on_success` and `on_failure` are
+    Transitions guarded on the outcome Variable.
 
-15. **Targets can't be named on a Step.** A CACAO action step names its `targets`. STONEWORK
-    has `actsOn` only on executions, so a plan can't say what a Step is meant to act on (the
-    mailbox, the mail tenant) before it runs. Proposal: a Step-level property for the
-    intended target, or for the kind of target, mirroring `actsOn` on the run as
-    `performerRole` mirrors `performedBy`.
+15. **Done in 0.12.0: targets on a Step.** `stonework:stepTarget` (Step → CyberEntity) is what
+    a Step is meant to act on: a specific entity, or a Variable whose value in the run is the
+    target. It mirrors `actsOn` on the run, as `performerRole` mirrors `performedBy`. An
+    execution that acted on something else is a new Deviation kind, *wrong target*.
 
-16. **No classes for engagement or notification plans.** CACAO's playbook types include
-    *engagement* (denial and deception against an adversary, as in MITRE Engage) and
-    *notification* (telling others about an event or threat). The others map onto
-    `OperationPlan`, `DetectionPlan`, `InvestigationPlan` and `ControlPlan`. Proposal: decide
-    whether each needs its own subclass of `Plan` or `Playbook`, or whether a playbook type
-    vocabulary, like CACAO's (which allows several types on one playbook), fits better.
+16. **Done in 0.12.0: playbook types.** A `PlaybookType` scheme with CACAO's eight types
+    (attack, detection, engagement, investigation, mitigation, notification, prevention,
+    remediation), applied with `stonework:hasPlaybookType` (Plan → PlaybookType, not
+    functional). No new classes: the existing Plan subclasses have properties of their own,
+    and engagement and notification plans don't. The scope note maps each subclass to its
+    type; the type is stated, not inferred, because a ControlPlan can be any of three.
 
 17. **Guards test one Variable.** A CACAO `condition` is a STIX Patterning expression, so it
     can combine tests with AND, OR and NOT across several variables. A STONEWORK guard

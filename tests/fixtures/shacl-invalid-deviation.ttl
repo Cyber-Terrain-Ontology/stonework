@@ -16,10 +16,14 @@ example:deviation
 
 example:enterStep
 	a stonework:Step ;
+	stonework:defaultTransition example:variable ;
+	stonework:hasPlaybookType example:clerk ;
 	stonework:joinKind example:variable ;
+	stonework:outcomeVariable example:clerk ;
 	stonework:performerRole example:clerk ;
 	stonework:separatedFrom example:variable ;
 	stonework:splitKind example:clerk ;
+	stonework:stepTarget "the mailbox" ;
 	.
 
 example:variable

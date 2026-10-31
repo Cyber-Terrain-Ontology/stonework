@@ -118,7 +118,7 @@ stonework:DeviationKind
 		;
 	skos:definition "A classification of how a run departed from its Plan."@en ;
 	skos:prefLabel "Deviation Kind"@en ;
-	skos:scopeNote "Applied via stonework:deviationKind to Deviation individuals. Named individuals: skipped, wrong role, same agent, out of order, misused identity."@en ;
+	skos:scopeNote "Applied via stonework:deviationKind to Deviation individuals. Named individuals: skipped, wrong role, same agent, out of order, misused identity, wrong target."@en ;
 	.
 
 stonework:Downloader
@@ -149,6 +149,21 @@ stonework:Dropper
 		;
 	skos:notation "dropper" ;
 	skos:prefLabel "Dropper"@en ;
+	.
+
+stonework:ExecutionOutcome
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:executionOutcomeScheme ;
+		]
+		;
+	skos:definition "Whether an execution of a Step or Plan succeeded, failed or timed out."@en ;
+	skos:prefLabel "Execution Outcome"@en ;
+	skos:scopeNote "The value of a Step's stonework:outcomeVariable in a run. Named individuals: succeeded, failed, timed out. A timeout is kept apart from other failures, as CACAO reports it separately."@en ;
 	.
 
 stonework:ExploitKit
@@ -438,6 +453,21 @@ stonework:PaymentInstrument
 		;
 	skos:definition "A classification of the instrument or rail used to move value in a financial transaction."@en ;
 	skos:prefLabel "Payment Instrument"@en ;
+	.
+
+stonework:PlaybookType
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:playbookTypeScheme ;
+		]
+		;
+	skos:definition "A classification of what a Plan is for, from the CACAO playbook types."@en ;
+	skos:prefLabel "Playbook Type"@en ;
+	skos:scopeNote "Applied via stonework:hasPlaybookType. The values are CACAO 2.0's playbook-type-ov. STONEWORK's Plan subclasses correspond: OperationPlan to attack, DetectionPlan to detection, InvestigationPlan to investigation, and ControlPlan to mitigation, prevention or remediation; engagement and notification have no subclass."@en ;
 	.
 
 stonework:PriorityLevel
@@ -1026,6 +1056,21 @@ stonework:deviationKindWrongRole
 	skos:prefLabel "Wrong role"@en ;
 	.
 
+stonework:deviationKindWrongTarget
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "A Step was performed against something other than its stonework:stepTarget, or other than the value its target Variable had in the run."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "wrong-target" ;
+	skos:prefLabel "Wrong target"@en ;
+	.
+
 stonework:evidence
 	a
 		owl:NamedIndividual ,
@@ -1036,6 +1081,59 @@ stonework:evidence
 	skos:inScheme stonework:categoryScheme ;
 	skos:prefLabel "Evidence"@en ;
 	skos:scopeNote "This is a reusable category instance. It is *not* a class. Use stonework:categorizedBy to assert that something is evidence in a given context."@en ;
+	.
+
+stonework:executionOutcomeFailed
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ExecutionOutcome
+		;
+	skos:definition "The execution ended without doing what the Step is for."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:executionOutcomeScheme
+		;
+	skos:notation "failed" ;
+	skos:prefLabel "Failed"@en ;
+	.
+
+stonework:executionOutcomeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Execution Outcome Scheme"@en ;
+	skos:definition "The controlled vocabulary of how an execution of a Step or Plan ended."@en ;
+	skos:prefLabel "STONEWORK Execution Outcome Scheme"@en ;
+	.
+
+stonework:executionOutcomeSucceeded
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ExecutionOutcome
+		;
+	skos:definition "The execution did what the Step is for. A search that ran and found nothing succeeded."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:executionOutcomeScheme
+		;
+	skos:notation "succeeded" ;
+	skos:prefLabel "Succeeded"@en ;
+	.
+
+stonework:executionOutcomeTimedOut
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ExecutionOutcome
+		;
+	skos:definition "The execution was abandoned because it ran past its time limit."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:executionOutcomeScheme
+		;
+	skos:notation "timed-out" ;
+	skos:prefLabel "Timed out"@en ;
 	.
 
 stonework:falsePositiveRateHigh
@@ -1518,6 +1616,17 @@ stonework:hasMotivation
 	skos:definition "Relates a threat actor to one or more motivations that drive their actions and operations."@en ;
 	skos:prefLabel "hasMotivation"@en ;
 	skos:scopeNote "A threat actor may have multiple motivations. Corresponds to the STIX 2.1 primary_motivation and secondary_motivations properties on ThreatActor."@en ;
+	.
+
+stonework:hasPlaybookType
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Plan ;
+	rdfs:range stonework:PlaybookType ;
+	rdfs:seeAlso <https://docs.oasis-open.org/cacao/security-playbooks/v2.0/security-playbooks-v2.0.html> ;
+	skos:definition "Relates a Plan to what it is for: attack, detection, engagement, investigation, mitigation, notification, prevention or remediation."@en ;
+	skos:prefLabel "hasPlaybookType"@en ;
+	skos:scopeNote "Not functional: a Plan may have several types, as a CACAO playbook may. The Plan subclasses already say some of this (see stonework:PlaybookType); the type is stated explicitly, not inferred, because a ControlPlan can be any of three."@en ;
 	.
 
 stonework:hasPriority
@@ -2748,6 +2857,134 @@ stonework:paymentInstrumentWireTransfer
 		;
 	skos:notation "wire-transfer" ;
 	skos:prefLabel "Wire Transfer"@en ;
+	.
+
+stonework:playbookTypeAttack
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Penetration testing or adversary emulation, or an adversary's own operation as reconstructed from intelligence. stonework:OperationPlan is this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "attack" ;
+	skos:prefLabel "Attack"@en ;
+	.
+
+stonework:playbookTypeDetection
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Detecting a known security event or expected security-relevant activity, or threat hunting. stonework:DetectionPlan is this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "detection" ;
+	skos:prefLabel "Detection"@en ;
+	.
+
+stonework:playbookTypeEngagement
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Denial, deception and other adversary engagement that raises the adversary's cost or lowers the value of its operations (see MITRE Engage)."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "engagement" ;
+	skos:prefLabel "Engagement"@en ;
+	.
+
+stonework:playbookTypeInvestigation
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Investigating what a security event, incident or other activity has affected. stonework:InvestigationPlan is this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "investigation" ;
+	skos:prefLabel "Investigation"@en ;
+	.
+
+stonework:playbookTypeMitigation
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Reducing or limiting the impact of an event or incident until it can be remediated. A stonework:ControlPlan is often this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "mitigation" ;
+	skos:prefLabel "Mitigation"@en ;
+	.
+
+stonework:playbookTypeNotification
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Notifying others and disseminating information or playbooks about an event, incident or threat."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "notification" ;
+	skos:prefLabel "Notification"@en ;
+	.
+
+stonework:playbookTypePrevention
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Preventing a known or expected event, incident or threat from occurring. A stonework:ControlPlan is often this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "prevention" ;
+	skos:prefLabel "Prevention"@en ;
+	.
+
+stonework:playbookTypeRemediation
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Returning affected systems to a known good state after an event or incident. A stonework:ControlPlan is often this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "remediation" ;
+	skos:prefLabel "Remediation"@en ;
+	.
+
+stonework:playbookTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Playbook Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of what a Plan is for, aligned with CACAO 2.0's playbook types."@en ;
+	skos:prefLabel "STONEWORK Playbook Type Scheme"@en ;
 	.
 
 stonework:priorityCritical

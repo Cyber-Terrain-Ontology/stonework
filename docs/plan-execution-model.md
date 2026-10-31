@@ -146,7 +146,8 @@ the queries this makes possible.
   required Step has no execution in a run; a `Deviation` (⊑
   `QualifiedAssertion`) records the analyst's finding that it wasn't done, or
   was done by the wrong Role, by the same Agent as a separated Step, out of
-  order, or through a misused identity, with `evidencedBy` its evidence. The
+  order, through a misused identity, or against the wrong target, with
+  `evidencedBy` its evidence. The
   Investigation that establishes it `produces` it. Executions carry no
   status: there's no execution of a skipped Step, and a failed one has an
   outcome in its output Variable.
@@ -159,7 +160,7 @@ plus the one a plan for a team needs:
 | Construct | How a plan says it |
 |---|---|
 | Sequence | A `Transition` (fromStep → toStep), `precededByStep`, or `stepOrder` for a plain numbered list |
-| Conditional branching | A guarded `Transition`: `guardVariable`, with `guardType` or `guardLiteralValue` and optionally `guardOperator` |
+| Conditional branching | A guarded `Transition`: `guardVariable`, with `guardType`, `guardLiteralValue` or `guardValue` and optionally `guardOperator`; a Step's `defaultTransition` for "otherwise"; `outcomeVariable` for whether a Step worked |
 | Looping | A `Transition` back to a Step already reached; each pass is its own execution with its own bindings |
 | Parallel branches | `splitKind` and `joinKind` on a Step, or a `precededByStep` dependency graph |
 
@@ -383,7 +384,12 @@ vulnerability assessment, ...).
 | `stonework:deviationRun` | `Deviation` → `Process` (functional) | The run. |
 | `stonework:deviationStep` | `Deviation` → `Step` | The Step or Steps concerned. |
 | `stonework:deviationExecution` | `Deviation` → `Process` | The executions concerned, if any. |
-| `stonework:deviationKind` | `Deviation` → `DeviationKind` (functional; in `categories.ttl`) | Skipped, wrong role, same agent, out of order, misused identity. |
+| `stonework:deviationKind` | `Deviation` → `DeviationKind` (functional; in `categories.ttl`) | Skipped, wrong role, same agent, out of order, misused identity, wrong target. |
+| `stonework:defaultTransition` | `Step` → `Transition` (functional) | The Transition taken when no other outgoing guard holds. |
+| `stonework:guardValue` | `Transition` → any individual (functional) | A guard that tests identity with an individual, such as a category value. |
+| `stonework:outcomeVariable` | `Behavior` → `Variable` (functional; ⊑ `hasOutputVariable`) | The output Variable whose value is an `ExecutionOutcome`: succeeded, failed, timed out. |
+| `stonework:stepTarget` | `Step` → `CyberEntity` | What a Step is meant to act on: an entity, or a Variable whose value in the run is the target. |
+| `stonework:hasPlaybookType` | `Plan` → `PlaybookType` (in `categories.ttl`) | CACAO's eight playbook types; several allowed. |
 | `stonework:splitKind` | `Step` → `FlowKind` (functional; in `categories.ttl`) | Exclusive (one outgoing Transition) or parallel (every one whose guard holds). Default exclusive. |
 | `stonework:suppliedBy` | `Variable` → `Role` | The participants who supply a value from outside the Plan, when their own plan isn't modelled. |
 | `stonework:joinKind` | `Step` → `FlowKind` (functional; in `categories.ttl`) | Exclusive (start on any incoming Transition) or parallel (wait for every branch taken in the run). Default exclusive. |
@@ -486,16 +492,16 @@ STONEWORK plan can be written in CACAO.
 | CACAO 2.0 | STONEWORK | Fit |
 |---|---|---|
 | `playbook` | `Playbook` (⊑ `Plan`) | Good |
-| `playbook_types` (attack, detection, engagement, investigation, mitigation, notification, prevention, remediation; several allowed) | `OperationPlan` ≈ attack; `DetectionPlan`, `InvestigationPlan`; `ControlPlan` ≈ mitigation, prevention, remediation | Partial: no class for engagement or notification |
+| `playbook_types` (attack, detection, engagement, investigation, mitigation, notification, prevention, remediation; several allowed) | `hasPlaybookType`, with the same eight values; the Plan subclasses correspond (`OperationPlan` attack, `DetectionPlan` detection, `InvestigationPlan` investigation, `ControlPlan` mitigation, prevention or remediation) | Exact |
 | `workflow` (steps keyed by ID), `workflow_start` | `hasStep`; the start is the Step no Transition enters | Good |
 | `start` / `end` steps | Implicit | Generated on export |
-| `action` step: `commands`, `agent`, `targets` | `Step`; `performerRole` for who should do it; `actsOn` for what an execution acted on | Partial: commands have no STONEWORK form, and targets can be named only on executions, not on the Step |
+| `action` step: `commands`, `agent`, `targets` | `Step`; `performerRole` for who should do it; `stepTarget` for what it should act on (an entity, or a Variable bound in the run), checked against `actsOn` on the execution | Partial: commands have no STONEWORK form |
 | `owner` on a step (a STIX Identity, "the owner or responsible party") | Closest is `performerRole`, but that names a Role, not a party | Partial |
 | `playbook-action` (`playbook_id`, `playbook_version`) | A Step that `implements` another Plan; its execution is `executionOf` that Plan; `planVersion` | Good |
 | `on_completion` | Unguarded `Transition` | Exact |
-| `on_success` / `on_failure` | Transitions guarded on an outcome Variable | Works, but there's no agreed outcome Variable; CACAO leaves success to the implementation too |
+| `on_success` / `on_failure` | Transitions guarded with `guardValue` on the Step's `outcomeVariable` (*succeeded*, *failed*, *timed out*) | Good |
 | `if-condition` (`condition`, `on_true`, `on_false`) | Exclusive split: one guarded Transition, and one guarded on the opposite | Partial: CACAO conditions are STIX Patterning expressions; a STONEWORK guard compares one Variable with one value |
-| `switch-condition` (`switch`, `cases`, optional `default`) | Exclusive split, one guarded Transition per case | Gap: no *default* Transition ("none of the others") |
+| `switch-condition` (`switch`, `cases`, optional `default`) | Exclusive split, one guarded Transition per case (`guardValue` or `guardLiteralValue`); the `default` case is the Step's `defaultTransition` | Good |
 | `while-condition` (`condition`, `on_true`) | A guarded Transition back to an earlier Step | Good; each pass is its own execution |
 | `parallel` (`next_steps`, waits for all) | `splitKind parallel` on the Step before, `joinKind parallel` on the Step its `on_completion` names | Good |
 | `workflow_exception` (where a failure goes when a step has no `on_failure`) | None | Gap |
@@ -529,11 +535,10 @@ STONEWORK plan can be written in CACAO.
 
 - **CACAO into STONEWORK:** control flow maps almost without loss. Each
   control step folds into the splits, joins and guards of the Steps around
-  it, and `end` steps disappear. Four things don't fit yet: compound
-  conditions, the `default` case, `workflow_exception`, and delays and
-  timeouts. An agreed outcome Variable would make `on_success` /
-  `on_failure` mechanical. Commands, authentication and signatures would be
-  carried along unread.
+  it, and `end` steps disappear. Three things don't fit yet: compound
+  conditions, `workflow_exception`, and delays and timeouts (proposals 17
+  to 19 in the BEC example). Commands, authentication and signatures would
+  be carried along unread.
 - **STONEWORK into CACAO:** a well-nested plan exports, with Roles as
   `group` agents, a parallel split as a `parallel` step, and an inclusive
   split as a `parallel` step whose branches each open with an

@@ -84,6 +84,17 @@ stonework:CvssBaseScoreShape
 	sh:targetSubjectsOf stonework:cvssBaseScore ;
 	.
 
+stonework:DefaultTransitionShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Transition ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Step has at most one defaultTransition, a Transition."@en ;
+		sh:path stonework:defaultTransition ;
+	] ;
+	sh:targetSubjectsOf stonework:defaultTransition ;
+	.
+
 stonework:DeviationShape
 	a sh:NodeShape ;
 	sh:property
@@ -130,6 +141,16 @@ stonework:EpssScoreShape
 		sh:path stonework:epssScore ;
 	] ;
 	sh:targetSubjectsOf stonework:epssScore ;
+	.
+
+stonework:HasPlaybookTypeShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:PlaybookType ;
+		sh:message "hasPlaybookType takes a PlaybookType."@en ;
+		sh:path stonework:hasPlaybookType ;
+	] ;
+	sh:targetSubjectsOf stonework:hasPlaybookType ;
 	.
 
 stonework:HashShape
@@ -374,6 +395,17 @@ stonework:ObservationWindowShape
 		;
 	.
 
+stonework:OutcomeVariableShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Variable ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Step or Plan has at most one outcomeVariable, a Variable."@en ;
+		sh:path stonework:outcomeVariable ;
+	] ;
+	sh:targetSubjectsOf stonework:outcomeVariable ;
+	.
+
 stonework:PartOfExecutionShape
 	a sh:NodeShape ;
 	sh:property [
@@ -592,6 +624,16 @@ stonework:SplitKindShape
 	sh:targetSubjectsOf stonework:splitKind ;
 	.
 
+stonework:StepTargetShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:CyberEntity ;
+		sh:message "A Step's stepTarget is a CyberEntity, or a Variable whose value in the run is the target."@en ;
+		sh:path stonework:stepTarget ;
+	] ;
+	sh:targetSubjectsOf stonework:stepTarget ;
+	.
+
 stonework:SuppliedByShape
 	a sh:NodeShape ;
 	sh:property [
@@ -628,6 +670,11 @@ stonework:TransitionShape
 			sh:class stonework:Variable ;
 			sh:maxCount "1"^^xsd:integer ;
 			sh:path stonework:guardVariable ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Transition has at most one guardValue."@en ;
+			sh:path stonework:guardValue ;
 		] ,
 		[
 			sh:maxCount "1"^^xsd:integer ;

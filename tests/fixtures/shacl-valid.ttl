@@ -95,6 +95,14 @@ example:epssObservation
 	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
 	.
 
+example:guardedTransition
+	a stonework:Transition ;
+	stonework:fromStep example:sourceStep ;
+	stonework:guardValue stonework:executionOutcomeFailed ;
+	stonework:guardVariable example:variable ;
+	stonework:toStep example:targetStep ;
+	.
+
 example:hash
 	a stonework:Hash ;
 	stonework:hashAlgorithm "SHA-256" ;
@@ -184,6 +192,11 @@ example:openHypothesis
 	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
 	.
 
+example:playbook
+	a stonework:Playbook ;
+	stonework:hasPlaybookType stonework:playbookTypeDetection ;
+	.
+
 example:product
 	a stonework:Product ;
 	.
@@ -232,6 +245,8 @@ example:sighting
 
 example:sourceStep
 	a stonework:Step ;
+	stonework:defaultTransition example:transition ;
+	stonework:outcomeVariable example:variable ;
 	stonework:separatedFrom example:targetStep ;
 	stonework:splitKind stonework:flowKindParallel ;
 	.
@@ -263,6 +278,7 @@ example:targetStep
 	a stonework:Step ;
 	stonework:joinKind stonework:flowKindParallel ;
 	stonework:performerRole example:stepRole ;
+	stonework:stepTarget example:variable ;
 	.
 
 example:threatBulletin
