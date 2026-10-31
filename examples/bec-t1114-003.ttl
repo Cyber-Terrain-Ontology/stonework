@@ -79,6 +79,24 @@ ex:act-send-request
 	stonework:startedAtTime "2026-09-15T22:07:00Z"^^xsd:dateTime ;
 	.
 
+ex:act-signin-0912
+	a stonework:Process ;
+	skos:definition "A sign-in to the controller's mailbox at 03:40 UTC from the same unfamiliar IP address the rule was created from. Not yet attributed."@en ;
+	skos:prefLabel "Sign-in to the controller's mailbox, 12 September 03:40"@en ;
+	stonework:actsOn ex:acct-controller-mailbox ;
+	stonework:performedBy ex:acct-controller-mailbox ;
+	stonework:startedAtTime "2026-09-12T03:40:00Z"^^xsd:dateTime ;
+	.
+
+ex:act-signin-0916
+	a stonework:Process ;
+	skos:definition "A sign-in to the controller's mailbox from the controller's office workstation, shortly before the 16 September approval. Not yet attributed."@en ;
+	skos:prefLabel "Sign-in to the controller's mailbox, 16 September 14:55"@en ;
+	stonework:actsOn ex:acct-controller-mailbox ;
+	stonework:performedBy ex:acct-controller-mailbox ;
+	stonework:startedAtTime "2026-09-16T14:55:00Z"^^xsd:dateTime ;
+	.
+
 ex:actor
 	a stonework:ThreatActor ;
 	skos:definition "The unidentified actor behind this business email compromise."@en ;
@@ -318,6 +336,21 @@ ex:ct-reset-to-review
 	a stonework:Transition ;
 	stonework:fromStep ex:cstep-reset ;
 	stonework:toStep ex:cstep-review ;
+	.
+
+ex:ctl-actor-mailbox
+	a stonework:IdentityControl ;
+	skos:definition "The actor controlled the controller's mailbox account from the rule's creation, the earliest evidence, until the containment plan revoked its sessions and reset its credentials. The controller kept using it throughout."@en ;
+	skos:prefLabel "The actor controlled the controller's mailbox account, 2 to 30 September"@en ;
+	stonework:confidence "80"^^xsd:integer ;
+	stonework:controlledIdentity ex:acct-controller-mailbox ;
+	stonework:controllingAgent ex:actor ;
+	stonework:evidencedBy
+		ex:log-new-inboxrule ,
+		ex:log-signins-controller
+		;
+	stonework:validFrom "2026-09-02T03:14:07Z"^^xsd:dateTime ;
+	stonework:validUntil "2026-09-30T16:05:00Z"^^xsd:dateTime ;
 	.
 
 ex:ctlplan-forwarding
@@ -720,6 +753,13 @@ ex:log-new-inboxrule
 	skos:definition "The audit-log record of the New-InboxRule operation that created the rule \"Sync\" on the controller's mailbox, from an IP address the controller has never used."@en ;
 	skos:prefLabel "Audit log: New-InboxRule on the controller's mailbox"@en ;
 	stonework:logSource "Microsoft 365 unified audit log" ;
+	.
+
+ex:log-signins-controller
+	a stonework:Log ;
+	skos:definition "Sign-ins to the controller's mailbox, 2026-08-01 to 2026-09-30, with their IP addresses and devices."@en ;
+	skos:prefLabel "Sign-in log: controller's mailbox"@en ;
+	stonework:logSource "Microsoft Entra sign-in log" ;
 	.
 
 ex:mail-tenant

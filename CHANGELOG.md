@@ -2,7 +2,7 @@
 
 ## 0.12.0 (core): plans and runs
 
-A common parent for plans, and per-run Variable values, so a plan can be executed any number of times; the Roles that perform Steps; deviations from a plan as findings with evidence; parallel branches; messages between plans; default branches, step outcomes and targets; playbook types; and what a hypothesis is about, with compound hypotheses made of parts. See [docs/plan-execution-model.md](docs/plan-execution-model.md) and the revised [BEC worked example](docs/bec-worked-example.md) (proposals 1, 2, 4, 5, 6, 7, 9, 10 and 13 to 16).
+A common parent for plans, and per-run Variable values, so a plan can be executed any number of times; the Roles that perform Steps; deviations from a plan as findings with evidence; parallel branches; messages between plans; default branches, step outcomes and targets; playbook types; what a hypothesis is about, with compound hypotheses made of parts; and who controlled an identity, and when. See [docs/plan-execution-model.md](docs/plan-execution-model.md) and the revised [BEC worked example](docs/bec-worked-example.md) (proposals 1, 2, 4, 5, 6, 7, 9, 10, 12 and 13 to 16).
 
 ### Added
 
@@ -19,25 +19,26 @@ A common parent for plans, and per-run Variable values, so a plan can be execute
 - `stonework:suppliedBy` (Variable → Role): the participants who supply a value from outside the Plan, when their own plan isn't modelled (BPMN's message flow from a black-box pool).
 - `stonework:hypothesisAbout` (Hypothesis → anything, not functional): what a hypothesis concerns, for finding it.
 - `stonework:hypothesisPart` (Hypothesis → Hypothesis): the claims a compound hypothesis is the conjunction of, each judged separately, so a refuted compound shows which part failed.
+- `stonework:IdentityControl` (⊑ `QualifiedAssertion`), with `stonework:controllingAgent` and `stonework:controlledIdentity` (both functional): that an Agent controlled a DigitalIdentity from `validFrom` to `validUntil`, with evidence. Not exclusive of the identity's holder, so the unattributed executions through it in the interval are the ones to review.
 - `stonework:defaultTransition` (functional, Step → Transition): the Transition taken when no other outgoing guard holds (CACAO's switch default, BPMN's default flow).
 - `stonework:guardValue` (functional, Transition → any individual): a guard that tests identity with an individual; mirrors `predictedValue`.
 - `stonework:outcomeVariable` (functional, ⊑ `hasOutputVariable`): the output Variable recording whether an execution succeeded, failed or timed out (CACAO's on_success / on_failure).
 - `stonework:stepTarget` (Step → CyberEntity): what a Step is meant to act on, an entity or a Variable bound in the run; the plan-level counterpart of `actsOn`.
 - `stonework:hasPlaybookType` (Plan → PlaybookType; in `categories.ttl`): CACAO 2.0's playbook types, several allowed.
 - Categories: `stonework:DeviationKind` scheme (Skipped, Wrong role, Same agent, Out of order, Misused identity, Wrong target); `stonework:ExecutionOutcome` scheme (Succeeded, Failed, Timed out); `stonework:PlaybookType` scheme (Attack, Detection, Engagement, Investigation, Mitigation, Notification, Prevention, Remediation); `stonework:FlowKind` scheme (Exclusive, Parallel).
-- SHACL: `VariableBindingShape` (exactly one Variable and execution, exactly one value), `PartOfExecutionShape`, `UsedBindingShape`, `DeviationShape` (exactly one run and kind, at least one Step), `PerformerRoleShape`, `SeparatedFromShape`, `SplitKindShape`, `JoinKindShape`, `SuppliedByShape`, `DefaultTransitionShape`, `OutcomeVariableShape`, `StepTargetShape`, `HasPlaybookTypeShape`, `HypothesisPartShape`, and `guardValue` at most once on `TransitionShape`; fixtures for each.
+- SHACL: `VariableBindingShape` (exactly one Variable and execution, exactly one value), `PartOfExecutionShape`, `UsedBindingShape`, `DeviationShape` (exactly one run and kind, at least one Step), `PerformerRoleShape`, `SeparatedFromShape`, `SplitKindShape`, `JoinKindShape`, `SuppliedByShape`, `DefaultTransitionShape`, `OutcomeVariableShape`, `StepTargetShape`, `HasPlaybookTypeShape`, `HypothesisPartShape`, `IdentityControlShape`, and `guardValue` at most once on `TransitionShape`; fixtures for each.
 
 ### Changed
 
 - **Breaking:** `stonework:boundTo` and `stonework:boundToLiteral` take a `VariableBinding`, not a `Variable`. `VariableShape` now rejects either on a Variable.
 - `Playbook`, `ControlPlan`, `InvestigationPlan`, `Procedure` and `ThreatScenario` are subclasses of `Plan` rather than directly of `Behavior` (still Behaviors).
 - `stonework:performedBy`, `stonework:triggeredBy` and `stonework:triggersPlaybook` take any `Plan`, not only a `Playbook`.
-- `stonework:evidencedBy` takes a `Deviation` as well as a `Sighting`.
+- `stonework:evidencedBy` takes a `Deviation` or an `IdentityControl` as well as a `Sighting`.
 - Scope notes on `stonework:Variable` and `stonework:Transition`: data flow between Steps of different Plans is a message between participants; control flow never crosses Plans.
 - Scope note on `stonework:precededByStep`: a Step with several values follows all of them, and Steps with no path between them may be performed in parallel.
 - Scope notes on `performedBy` and `attributedToAgent`: an execution names its performer as observed, often an identity; an identity used by someone other than its holder stays the performer, and the Agent responsible is `attributedTo`.
 - Scope notes on `Behavior`, `Step`, `Process`, `Variable`, `Transition`, `Hypothesis` and `executionOf` describe runs and bindings. A Hypothesis is judged by its Variable's binding in the Investigation that tests it.
-- Examples: the T1003.001 trace has a run, nested step executions and bindings; the BEC example runs its business process three times and its search Step once per mailbox, gives each business Step its Role, records the wire's release by the controller's bank-portal login, records the skipped callback as a Deviation, and runs its containment plan's credential reset and transport block as parallel branches joined before the review, and adds the actor's `OperationPlan`, whose sending Step outputs the payment request the business process takes as input. Its detection search has an outcome Variable, a failure branch and a default branch; its containment Steps name their targets; its plans carry playbook types. Its hypotheses say what they're about, and a compound hypothesis splits the activity (confirmed) from the attribution (pending).
+- Examples: the T1003.001 trace has a run, nested step executions and bindings; the BEC example runs its business process three times and its search Step once per mailbox, gives each business Step its Role, records the wire's release by the controller's bank-portal login, records the skipped callback as a Deviation, and runs its containment plan's credential reset and transport block as parallel branches joined before the review, and adds the actor's `OperationPlan`, whose sending Step outputs the payment request the business process takes as input. Its detection search has an outcome Variable, a failure branch and a default branch; its containment Steps name their targets; its plans carry playbook types. Its hypotheses say what they're about, and a compound hypothesis splits the activity (confirmed) from the attribution (pending). The actor's control of the controller's mailbox account is an `IdentityControl` from 2 to 30 September, and two sign-ins in that interval await review.
 
 ### Deprecated
 

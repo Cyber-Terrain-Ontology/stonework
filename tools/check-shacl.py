@@ -389,6 +389,8 @@ def main() -> int:
                 "boundIn",
                 "boundTo",
                 "boundToLiteral",
+                "controlledIdentity",
+                "controllingAgent",
                 "defaultTransition",
                 "deviationKind",
                 "deviationRun",

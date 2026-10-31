@@ -30,6 +30,26 @@ example:deviation
 	stonework:deviationStep example:firstStep ;
 	.
 
+example:doubledIdentityControl
+	a stonework:IdentityControl ;
+	stonework:controlledIdentity
+		example:firstAccount ,
+		example:secondAccount
+		;
+	stonework:controllingAgent
+		example:firstAgent ,
+		example:secondAgent
+		;
+	.
+
+example:firstAccount
+	a stonework:UserAccount ;
+	.
+
+example:firstAgent
+	a stonework:ThreatActor ;
+	.
+
 example:firstAnalyst
 	a stonework:Person ;
 	.
@@ -146,6 +166,14 @@ example:relationship
 		example:firstSubject ,
 		example:secondSubject
 		;
+	.
+
+example:secondAccount
+	a stonework:UserAccount ;
+	.
+
+example:secondAgent
+	a stonework:ThreatActor ;
 	.
 
 example:secondAnalyst

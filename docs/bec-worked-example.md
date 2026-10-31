@@ -4,8 +4,8 @@
 2026-10-30 for STONEWORK 0.12.0, which adds `stonework:Plan`, `BusinessProcess`, per-run
 Variable bindings, the Roles that perform Steps, deviations as findings, and parallel
 branches, messages between plans, default branches, step outcomes and targets, and playbook
-types, and what a hypothesis is about and its parts (proposals 1, 2, 4, 5, 6, 7, 9, 10 and 13
-to 16 below). The gaps it still runs into are
+types, what a hypothesis is about and its parts, and who controlled an identity when
+(proposals 1, 2, 4, 5, 6, 7, 9, 10, 12 and 13 to 16 below). The gaps it still runs into are
 listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
@@ -543,6 +543,31 @@ SELECT ?run ?receiver ?message ?sender ?sentBy WHERE {
 The 9 September request, from the real supplier, isn't recorded as a binding here, and nor is
 the actor's second request on 30 September; the example keeps to the run that matters.
 
+**Who controlled the account, and when.** The rule was created through the controller's own
+mailbox account, so the logs name the account, not the actor. `ex:ctl-actor-mailbox` is a
+`stonework:IdentityControl`: the actor controlled that account from the rule's creation on 2
+September until the credential reset on 30 September, with confidence 80, evidenced by the
+New-InboxRule record and the sign-in log. It isn't exclusive: the controller kept using the
+account the whole time. So every execution performed through the account in the interval, and
+not already attributed, needs review:
+
+```sparql
+SELECT ?execution ?when ?controller WHERE {
+  ?c a stonework:IdentityControl ; stonework:controlledIdentity ?id ;
+     stonework:controllingAgent ?a ; stonework:validFrom ?from .
+  OPTIONAL { ?c stonework:validUntil ?until }
+  ?e stonework:performedBy ?id ; stonework:startedAtTime ?when ; skos:prefLabel ?execution .
+  FILTER(?when >= ?from && (!BOUND(?until) || ?when < ?until))
+  FILTER NOT EXISTS { ?e stonework:attributedTo ?anyone }
+  ?a skos:prefLabel ?controller .
+} ORDER BY ?when
+```
+
+→ the 12 September sign-in at 03:40 from the rule's IP address, and the 16 September sign-in
+from the controller's workstation, both with "Unidentified BEC actor". The rule's creation is
+in the interval too, but it's already attributed. Review sorts the two: the first is the actor
+reading the mail, the second is the controller.
+
 ## What it shows about plans
 
 Every link from this case to T1114.003 goes through a plan or a plan's execution, and none
@@ -574,7 +599,7 @@ hypothesis-and-evidence layer.
 
 ## Gaps, as proposals
 
-Numbered for discussion. Proposals 1, 2, 4, 5, 6, 7, 9, 10 and 13 to 16 are done in 0.12.0;
+Numbered for discussion. Proposals 1, 2, 4, 5, 6, 7, 9, 10, 12 and 13 to 16 are done in 0.12.0;
 the rest are not in the ontology yet.
 
 1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
@@ -659,13 +684,14 @@ the rest are not in the ontology yet.
     that scenario") may be wanted later. Parked; the example now has an OperationPlan,
     reconstructed by the investigation, but no ThreatScenario.
 
-12. **Attribution of an identity has no time.** `attributedToAgent` says whose an identity
-    is, with no interval, and `attributedTo` on an activity says who did that one thing. A
-    compromise is a third fact: "the actor controlled the controller's mailbox account from
-    2 to 30 September". With it, every execution through that account in the interval could be
-    flagged for review, not just those already attributed. Proposal: a time-bounded,
-    evidence-backed qualified assertion (`validFrom` / `validUntil`, like `RoleAssignment`)
-    that an Agent controlled an identity. To be designed separately.
+12. **Done in 0.12.0: who controlled an identity, and when.** `stonework:IdentityControl`
+    (⊑ `QualifiedAssertion`, like `RoleAssignment`) records that an Agent
+    (`stonework:controllingAgent`) controlled a DigitalIdentity (`stonework:controlledIdentity`)
+    from `validFrom` to `validUntil`, with evidence (`evidencedBy`), provenance and confidence.
+    It sits between `attributedToAgent` (whose the identity is, timeless) and `attributedTo`
+    (who did one thing). Control isn't exclusive, so the executions through the identity in the
+    interval that aren't yet attributed are the ones to review; the query is in section 5. No
+    timeless projection property, since it would lose the interval.
 
 Proposals 13 to 19 came from comparing plans with OASIS CACAO 2.0 (see
 [plan-execution-model.md §7](plan-execution-model.md#7-relationship-to-oasis-cacao)). Each is

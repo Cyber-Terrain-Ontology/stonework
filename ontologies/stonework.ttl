@@ -569,6 +569,14 @@ stonework:Identifier
 	skos:scopeNote "Identifier does not provide the RDF identity of every CyberEntity and does not imply that every CyberEntity has an Identifier. Named RDF resources are identified by their IRIs; identifiers originating in external systems are recorded with dcterms:identifier or stonework:externalId. Use the most specific available subclass, such as EmailAddress, Hash, MACAddress, PhoneNumber, URI, or UserAgent. Instantiate Identifier directly only when the identifier type is unknown or no suitable subclass exists."@en ;
 	.
 
+stonework:IdentityControl
+	a owl:Class ;
+	rdfs:subClassOf stonework:QualifiedAssertion ;
+	skos:definition "A qualified record that an Agent controlled a DigitalIdentity, able to act through it, during an interval."@en ;
+	skos:prefLabel "Identity Control"@en ;
+	skos:scopeNote "The Agent is stonework:controllingAgent, the identity stonework:controlledIdentity, and the interval stonework:validFrom and stonework:validUntil; with no validUntil, control continues or its end is unknown. Evidence is stonework:evidencedBy (the sign-ins, the audit records), and provenance and confidence apply as on any qualified assertion. Three facts about identities differ: stonework:attributedToAgent (and stonework:accountOf) says whose an identity is, with no time; stonework:attributedTo on an activity says who did that one thing; an IdentityControl says who could act through the identity, and when. Control is not exclusive: the holder usually keeps using the account while an actor also controls it, so every execution performed through the identity in the interval and not yet attributed needs review. Typically used for a compromise, but it also fits delegated or shared access. No timeless projection property is declared, since it would lose the interval that is the point. When control is itself in doubt, a stonework:Hypothesis can be stonework:hypothesisAbout the IdentityControl."@en ;
+	.
+
 stonework:IllicitFinanceTechnique
 	a owl:Class ;
 	rdfs:subClassOf stonework:Technique ;
@@ -1644,7 +1652,7 @@ stonework:attributedToAgent
 	rdfs:range stonework:Agent ;
 	skos:definition "Links a digital identity to the real-world Agent it is believed to belong to." ;
 	skos:prefLabel "attributedToAgent" ;
-	skos:scopeNote "Names the identity's holder, not whoever used it on a given occasion. When an identity is used by someone else, such as an actor holding a victim's stolen credentials, the activity keeps the identity as its stonework:performedBy and names the Agent responsible with stonework:attributedTo."@en ;
+	skos:scopeNote "Names the identity's holder, not whoever used it on a given occasion. When an identity is used by someone else, such as an actor holding a victim's stolen credentials, the activity keeps the identity as its stonework:performedBy and names the Agent responsible with stonework:attributedTo. That someone else controlled the identity for a period, such as an actor holding a mailbox's credentials from its compromise to its containment, is a stonework:IdentityControl."@en ;
 	.
 
 stonework:authoredBy
@@ -2035,6 +2043,28 @@ stonework:controlId
 	rdfs:range xsd:string ;
 	skos:definition "The framework-specific identifier for the control (e.g. AC-2, CIS 4.1)."@en ;
 	skos:prefLabel "controlId"@en ;
+	.
+
+stonework:controlledIdentity
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:IdentityControl ;
+	rdfs:range stonework:DigitalIdentity ;
+	skos:definition "The DigitalIdentity, such as a UserAccount, controlled in a stonework:IdentityControl."@en ;
+	skos:prefLabel "controlledIdentity"@en ;
+	.
+
+stonework:controllingAgent
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:IdentityControl ;
+	rdfs:range stonework:Agent ;
+	skos:definition "The Agent who controlled the identity in a stonework:IdentityControl."@en ;
+	skos:prefLabel "controllingAgent"@en ;
 	.
 
 stonework:controls
@@ -2550,11 +2580,12 @@ stonework:evidencedBy
 		a owl:Class ;
 		owl:unionOf (
 			stonework:Deviation
+			stonework:IdentityControl
 			stonework:Sighting
 		) ;
 	] ;
 	rdfs:range stonework:DigitalArtifact ;
-	skos:definition "A Sighting or Deviation is substantiated by this DigitalArtifact (memory dump, PCAP, log excerpt, sample, call record, recorded statement). Connects analytical observation to forensic evidence."@en ;
+	skos:definition "A Sighting, Deviation or IdentityControl is substantiated by this DigitalArtifact (memory dump, PCAP, log excerpt, sample, call record, recorded statement). Connects analytical observation to forensic evidence."@en ;
 	skos:prefLabel "evidencedBy"@en ;
 	.
 

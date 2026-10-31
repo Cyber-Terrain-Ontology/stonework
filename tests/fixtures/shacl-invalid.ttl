@@ -11,6 +11,10 @@ example:activity
 	stonework:startedAtTime "2026-08-20T11:00:00Z"^^xsd:dateTime ;
 	.
 
+example:actor
+	a stonework:ThreatActor ;
+	.
+
 example:address
 	a stonework:IPAddress ;
 	stonework:ipVersion "5"^^xsd:integer ;
@@ -30,6 +34,11 @@ example:domain
 example:hash
 	a stonework:Hash ;
 	stonework:hashAlgorithm "SHA-256" ;
+	.
+
+example:incompleteIdentityControl
+	a stonework:IdentityControl ;
+	stonework:controllingAgent example:actor ;
 	.
 
 example:incompleteMetric

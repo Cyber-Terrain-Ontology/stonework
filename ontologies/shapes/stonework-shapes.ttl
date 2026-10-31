@@ -208,6 +208,31 @@ stonework:HypothesisShape
 	sh:targetClass stonework:Hypothesis ;
 	.
 
+stonework:IdentityControlShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:Agent ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An IdentityControl names exactly one controlling Agent."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:controllingAgent ;
+		] ,
+		[
+			sh:class stonework:DigitalArtifact ;
+			sh:path stonework:evidencedBy ;
+		] ,
+		[
+			sh:class stonework:DigitalIdentity ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An IdentityControl names exactly one controlled DigitalIdentity."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:controlledIdentity ;
+		]
+		;
+	sh:targetClass stonework:IdentityControl ;
+	.
+
 stonework:InvestigationOutcomeShape
 	a sh:NodeShape ;
 	sh:property

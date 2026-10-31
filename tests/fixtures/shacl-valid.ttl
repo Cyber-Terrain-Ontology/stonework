@@ -5,6 +5,10 @@
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+example:account
+	a stonework:UserAccount ;
+	.
+
 example:activity
 	a stonework:CyberActivity ;
 	stonework:endedAtTime "2026-08-20T10:05:00Z"^^xsd:dateTime ;
@@ -19,6 +23,15 @@ example:activityHypothesis
 example:actor
 	a stonework:ThreatActor ;
 	stonework:hasRoleAssignment example:sponsorAssignment ;
+	.
+
+example:actorControl
+	a stonework:IdentityControl ;
+	stonework:controlledIdentity example:account ;
+	stonework:controllingAgent example:actor ;
+	stonework:hasProvenance example:roleSource ;
+	stonework:validFrom "2026-09-02T03:14:07Z"^^xsd:dateTime ;
+	stonework:validUntil "2026-09-30T16:05:00Z"^^xsd:dateTime ;
 	.
 
 example:address

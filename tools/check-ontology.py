@@ -233,6 +233,8 @@ def main() -> int:
         STONEWORK + "boundIn",
         STONEWORK + "boundTo",
         STONEWORK + "boundToLiteral",
+        STONEWORK + "controlledIdentity",
+        STONEWORK + "controllingAgent",
         STONEWORK + "deviationKind",
         STONEWORK + "defaultTransition",
         STONEWORK + "deviationRun",

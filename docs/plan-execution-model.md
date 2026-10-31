@@ -387,6 +387,9 @@ vulnerability assessment, ...).
 | `stonework:deviationKind` | `Deviation` → `DeviationKind` (functional; in `categories.ttl`) | Skipped, wrong role, same agent, out of order, misused identity, wrong target. |
 | `stonework:hypothesisAbout` | `Hypothesis` → anything | What a hypothesis concerns, for finding it; several values, no roles. |
 | `stonework:hypothesisPart` | `Hypothesis` → `Hypothesis` | A claim a compound hypothesis is the conjunction of; refuted parts say which claim failed. |
+| `stonework:IdentityControl` | class, under `QualifiedAssertion` | That an Agent controlled a DigitalIdentity during an interval (`validFrom`, `validUntil`), with evidence; not exclusive of the holder. |
+| `stonework:controllingAgent` | `IdentityControl` → `Agent` (functional) | Who controlled it. |
+| `stonework:controlledIdentity` | `IdentityControl` → `DigitalIdentity` (functional) | The identity, such as a UserAccount. |
 | `stonework:defaultTransition` | `Step` → `Transition` (functional) | The Transition taken when no other outgoing guard holds. |
 | `stonework:guardValue` | `Transition` → any individual (functional) | A guard that tests identity with an individual, such as a category value. |
 | `stonework:outcomeVariable` | `Behavior` → `Variable` (functional; ⊑ `hasOutputVariable`) | The output Variable whose value is an `ExecutionOutcome`: succeeded, failed, timed out. |
@@ -396,7 +399,7 @@ vulnerability assessment, ...).
 | `stonework:suppliedBy` | `Variable` → `Role` | The participants who supply a value from outside the Plan, when their own plan isn't modelled. |
 | `stonework:joinKind` | `Step` → `FlowKind` (functional; in `categories.ttl`) | Exclusive (start on any incoming Transition) or parallel (wait for every branch taken in the run). Default exclusive. |
 
-`evidencedBy` takes a `Deviation` as well as a `Sighting`.
+`evidencedBy` takes a `Deviation` or an `IdentityControl` as well as a `Sighting`.
 `Playbook`, `ControlPlan`, `InvestigationPlan`, `Procedure` and
 `ThreatScenario` moved from `Behavior` to `Plan`. `performedBy`,
 `triggeredBy` and `triggersPlaybook` now take any Plan. `boundTo` and

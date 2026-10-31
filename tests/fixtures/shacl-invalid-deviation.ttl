@@ -31,6 +31,13 @@ example:hypothesis
 	stonework:hypothesisPart example:clerk ;
 	.
 
+example:identityControl
+	a stonework:IdentityControl ;
+	stonework:controlledIdentity example:variable ;
+	stonework:controllingAgent example:variable ;
+	stonework:evidencedBy example:clerk ;
+	.
+
 example:variable
 	a stonework:Variable ;
 	stonework:suppliedBy example:clerk ;
