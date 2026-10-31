@@ -310,16 +310,20 @@ hypothesis-and-evidence layer.
 
 ## Gaps, as proposals
 
-Numbered for discussion. Proposals 2, 4, 5, 6 and 7 are done in 0.12.0; the rest are not in
-the ontology yet.
+Numbered for discussion. Proposals 2, 4, 5, 6 and 7 are done in 0.12.0, and proposal 1 is
+decided; the rest are not in the ontology yet.
 
 1. **A Hypothesis has no direct link to what it's about.** Here it reaches T1114.003 only
    after the fact, through its Variable's binding, or through the plan's Step and DET0576. An
    untested hypothesis, or one tested without a plan (allowed since 0.11.0), has no link at
    all. The 0.12.0 revision adds a second reason: when one search Step runs for several
    mailboxes, the hypothesis about the controller's mailbox is told apart from the one about
-   the clerk's only by which execution tests it. Proposal: a property from Hypothesis to its
-   subject (the technique, actor, vulnerability or asset it's about).
+   the clerk's only by which execution tests it. Decided: a property from Hypothesis to its
+   subject (the technique, actor, vulnerability or asset it's about) will be added. Open: whether
+   a hypothesis has one subject or several. "The actor used T1114.003 on the controller's
+   mailbox" is about both the technique and the mailbox, which argues against making the
+   property functional (a reasoner would conclude the two are the same thing); a SHACL
+   `maxCount` could still require one where a profile wants it.
 
 2. **Done in 0.12.0: a Step names the Role that performs it.** `stonework:performerRole`
    (Step → Role; BPMN's lane), so the graph answers *whose* step was skipped. A holder of any
