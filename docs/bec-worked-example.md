@@ -3,7 +3,7 @@
 *First cut 2026-10-22, from a conversation between Ryan Hohimer and Claude; revised
 2026-10-30 for STONEWORK 0.12.0, which adds `stonework:Plan`, `BusinessProcess`, per-run
 Variable bindings, the Roles that perform Steps, deviations as findings, and parallel
-branches (proposals 2, 4, 5, 6, 7 and 9 below). The gaps it still runs into are
+branches, and messages between plans (proposals 2, 4, 5, 6, 7, 9 and 10 below). The gaps it still runs into are
 listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
@@ -32,9 +32,9 @@ A small manufacturer pays its suppliers by wire. All names are illustrative.
 
 | When | What happened | Modelled as |
 |---|---|---|
-| 2 Sep, 03:14 | With the controller's stolen credentials, the actor creates a hidden inbox rule: mail mentioning an invoice, a payment or a wire is forwarded to an outside address and moved to RSS Feeds. | `Process` `executionOf` T1114.003, `performedBy` the controller's mailbox account, `attributedTo` the actor, `produces` the rule |
+| 2 Sep, 03:14 | With the controller's stolen credentials, the actor creates a hidden inbox rule: mail mentioning an invoice, a payment or a wire is forwarded to an outside address and moved to RSS Feeds. | `Process` `executionOf` T1114.003 and Step 1 of the actor's `OperationPlan`, `performedBy` the controller's mailbox account, `attributedTo` the actor, `produces` the rule |
 | 9 Sep | An ordinary payment: the supplier's August invoice, to the account on file. | A run of the business process |
-| 15 Sep | From a lookalike of the supplier's address, the actor replies to a real invoice thread: "we've changed banks". | `EmailMessage`, `EmailAddress` |
+| 15 Sep | From a lookalike of the supplier's address, the actor replies to a real invoice thread: "we've changed banks". | `EmailMessage`, `EmailAddress`; the execution of the actor's sending Step, whose output the 16 Sep run uses |
 | 16 Sep | The AP clerk enters the September payment with the new bank details. The callback the process requires is never made. The controller approves, and releases a $186,400 wire to a mule account. | A second run, with no execution of the callback Step |
 | 1 Oct | The clerk's statement and the phone system's call records show that the callback wasn't made, rather than made and not recorded. | A `Deviation` of kind *skipped*, with its evidence |
 | 30 Sep, morning | The actor asks for another invoice to be paid to the same account. This time the clerk calls the supplier at the number on file: it hasn't changed banks, and hasn't been paid for September. | A third run, stopped at the callback |
@@ -42,15 +42,16 @@ A small manufacturer pays its suppliers by wire. All names are illustrative.
 | 30 Sep | Two hypotheses: a forwarding rule on the controller's mailbox, and one on the clerk's. The analyst runs a detection plan built from ATT&CK's DET0576, whose search Step runs once for each mailbox. The first is confirmed, the second refuted. | `Hypothesis` ×2, `DetectionPlan`, `Sighting` |
 | 30 Sep – 1 Oct | The containment plan runs: the rule is removed, sessions revoked, external auto-forwarding blocked (by automation), and the exposed mail reviewed. | `ControlPlan` and its execution |
 
-## The four pieces
+## The five pieces
 
 ### 1. The business process: paying a supplier by wire
 
 `ex:bp-supplier-wire` is a `stonework:BusinessProcess`, `performedBy` the organization (the
 Agent responsible for it), `planVersion` 3.2. Four Steps:
 
-1. **Enter the invoice and payment request** (`performerRole` AP clerk). Output Variables `bankDetailsChanged`
-   and `payeeBankDetails` (the account the request names).
+1. **Enter the invoice and payment request** (`performerRole` AP clerk). Input `paymentRequest`,
+   `suppliedBy` the Supplier role: it comes from outside the organization (see piece 5). Output
+   Variables `bankDetailsChanged` and `payeeBankDetails` (the account the request names).
 2. **Verify changed bank details by callback** (AP clerk). Input `payeeBankDetails`: the
    account Step 1 recorded is what the callback checks. Output `callbackVerified`. The Step
    `implements` the organization's own control `ex:control-callback`, a `stonework:Control`
@@ -343,6 +344,77 @@ SELECT ?run ?split ?missing WHERE {
 Transition guarded on a binding that didn't hold, it returns nothing, since that branch was
 never taken.
 
+### 5. The actor's plan, and the message that crosses into ours
+
+`ex:opplan-bec` is a `stonework:OperationPlan`, "Divert a supplier payment by email": the
+actor's plan as the investigation reconstructs it. Three Steps, in order:
+
+1. Create a hidden forwarding rule on a finance mailbox. It `implements` T1114.003.
+2. Read the forwarded invoice threads, and pick an invoice that is due.
+3. Send a bank-change request from a lookalike address. Output `paymentRequest`.
+
+Its run, `ex:run-actor-op`, is `attributedTo` the actor. The rule's creation on 2 September is
+the execution of Step 1, and the email sent on 15 September is the execution of Step 3, whose
+output is the email.
+
+**A message is data flow between two plans.** Step 3's output Variable, `paymentRequest`, is
+the input Variable of the business process's first Step. Within a plan, a shared Variable is
+ordinary data flow; between plans, it's a message from one participant to another (BPMN's
+message flow between pools). Control never crosses: a `Transition` stays inside its plan, so
+the actor can hand the organization a payment request but can't make the clerk do anything
+with it. In the 16 September run, the binding of `paymentRequest` is `boundIn` the actor's
+sending execution, and the clerk's "enter the invoice" execution records `usedBinding` of it.
+
+**When the sender's plan isn't modelled,** `stonework:suppliedBy` names the Role whose
+holders supply the value: `paymentRequest` is `suppliedBy` the Supplier role. The value is
+then bound in the execution that received it.
+
+`paymentRequest` therefore has two possible sources: a real supplier, and the actor's plan.
+The clerk's Step can't tell them apart, which is exactly why the business process has the
+callback Step and the FIN-07 control. The graph shows that reasoning directly.
+
+**Attack surface:** the Steps that take input from outside their own plan, and where it can
+come from:
+
+```sparql
+SELECT ?step ?input ?kind ?source WHERE {
+  ?s stonework:hasInputVariable ?v ; stonework:isStepOf ?plan ; skos:prefLabel ?step .
+  ?v stonework:variableName ?input .
+  { ?v stonework:suppliedBy ?r .  ?r skos:prefLabel ?source .
+    BIND("participant" AS ?kind) }
+  UNION
+  { ?o stonework:hasOutputVariable ?v ; stonework:isStepOf ?other ; skos:prefLabel ?source .
+    BIND(IF(EXISTS { ?other a stonework:OperationPlan }, "adversary plan", "another plan")
+         AS ?kind) }
+  FILTER(!BOUND(?other) || ?other != ?plan)
+} ORDER BY ?step ?kind
+```
+
+→ "Enter the invoice and payment request | paymentRequest | adversary plan | Send a
+bank-change request from a lookalike address" and "… | participant | Supplier".
+
+**Messages received in runs:** a binding made in an execution of another plan.
+
+```sparql
+SELECT ?run ?receiver ?message ?sender ?sentBy WHERE {
+  ?re stonework:usedBinding ?b ; stonework:partOfExecution ?run ;
+      stonework:correspondsToStep ?rs .
+  ?rs stonework:isStepOf ?rp ; skos:prefLabel ?receiver .
+  ?b stonework:boundIn ?se ; stonework:boundTo ?m .
+  ?se stonework:correspondsToStep ?ss .
+  ?ss stonework:isStepOf ?sp ; skos:prefLabel ?sender .
+  FILTER(?sp != ?rp)
+  ?m skos:prefLabel ?message .
+  OPTIONAL { ?se stonework:attributedTo ?a . ?a skos:prefLabel ?sentBy }
+}
+```
+
+→ run-wire-0916 | Enter the invoice and payment request | Email: "Updated remittance details"
+| Send a bank-change request from a lookalike address | Unidentified BEC actor.
+
+The 9 September request, from the real supplier, isn't recorded as a binding here, and nor is
+the actor's second request on 30 September; the example keeps to the run that matters.
+
 ## What it shows about plans
 
 Every link from this case to T1114.003 goes through a plan or a plan's execution, and none
@@ -374,7 +446,7 @@ hypothesis-and-evidence layer.
 
 ## Gaps, as proposals
 
-Numbered for discussion. Proposals 2, 4, 5, 6, 7 and 9 are done in 0.12.0, and proposal 1 is
+Numbered for discussion. Proposals 2, 4, 5, 6, 7, 9 and 10 are done in 0.12.0, and proposal 1 is
 decided; the rest are not in the ontology yet.
 
 1. **A Hypothesis has no direct link to what it's about.** Here it reaches T1114.003 only
@@ -449,14 +521,18 @@ decided; the rest are not in the ontology yet.
    it. `precededByStep` now says a Step follows all of its predecessors, so a plain dependency
    graph expresses parallel work without guards. The containment plan uses both properties.
 
-10. **No messages between participants.** The actor's email enters the business process as a
-    Step's input, but nothing says it was sent from the actor's plan to the organization's
-    (BPMN's message flow between pools). Proposal: discuss whether it's needed, or whether
-    `hasInput` on the receiving execution is enough.
+10. **Done in 0.12.0: messages between participants.** A message is data flow between Steps
+    of different Plans: the sending Step's output Variable is the receiving Step's input
+    Variable, and in a run the receiving execution records `usedBinding` of the sender's
+    binding. Control (`Transition`) never crosses Plans. When the sender's plan isn't
+    modelled, `stonework:suppliedBy` (Variable → Role) names who supplies the value. No
+    `MessageFlow` class: the Variables already say it. The channel (email, phone, an
+    authenticated portal) matters for risk and is parked.
 
 11. **A ThreatScenario and an OperationPlan are close.** Both are adversary plans: one held as
     a hypothesis, the other believed to exist. A link between them ("this operation matches
-    that scenario") may be wanted later. Parked.
+    that scenario") may be wanted later. Parked; the example now has an OperationPlan,
+    reconstructed by the investigation, but no ThreatScenario.
 
 12. **Attribution of an identity has no time.** `attributedToAgent` says whose an identity
     is, with no interval, and `attributedTo` on an activity says who did that one thing. A

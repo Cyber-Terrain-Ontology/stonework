@@ -1211,7 +1211,7 @@ stonework:Transition
 	a owl:Class ;
 	skos:definition "A directed edge between two Steps within the same parent Behavior's Step graph, representing progression from one Step to the next."@en ;
 	skos:prefLabel "Transition" ;
-	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Conditional branching is expressed with the guard properties stonework:guardVariable (the Variable tested), stonework:guardType (a class the bound value must be an instance of) or stonework:guardLiteralValue (a scalar it must equal), and stonework:guardOperator (the comparison; omitting it defaults to equality). The Transition fires when its guard holds against the value the from-Step's execution bound: the stonework:VariableBinding of the guard Variable that is stonework:boundIn that execution. Whether a Step's several outgoing Transitions are alternatives or concurrent branches is given by that Step's stonework:splitKind, and whether a Step entered by several Transitions waits for all of them by its stonework:joinKind; both default to exclusive (one path)."@en ;
+	skos:scopeNote "Unconditioned, a Transition expresses plain sequence — an alternative to stonework:precededByStep for the same purpose, used when a Step has more than one possible successor and the edges themselves need to be individually referenceable. When a Transition's stonework:toStep targets a Step already reached earlier in the same graph, it expresses a loop back-edge; looping is not a separate construct. Conditional branching is expressed with the guard properties stonework:guardVariable (the Variable tested), stonework:guardType (a class the bound value must be an instance of) or stonework:guardLiteralValue (a scalar it must equal), and stonework:guardOperator (the comparison; omitting it defaults to equality). The Transition fires when its guard holds against the value the from-Step's execution bound: the stonework:VariableBinding of the guard Variable that is stonework:boundIn that execution. Whether a Step's several outgoing Transitions are alternatives or concurrent branches is given by that Step's stonework:splitKind, and whether a Step entered by several Transitions waits for all of them by its stonework:joinKind; both default to exclusive (one path). A Transition never leaves its Plan: between Plans, only data passes, as a message through a shared Variable (see stonework:Variable)."@en ;
 	.
 
 stonework:URI
@@ -1250,7 +1250,7 @@ stonework:Variable
 	rdfs:seeAlso <http://purl.org/net/p-plan#Variable> ;
 	skos:definition "A named placeholder for a value declared by a Plan or Step, which takes a value in each execution of it."@en ;
 	skos:prefLabel "Variable" ;
-	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. A Variable belongs to the plan, not to a run: the value it takes in one execution is a stonework:VariableBinding (stonework:bindingOf the Variable, stonework:boundIn the execution that bound it), so a plan run many times keeps every run's values. Data flows between Steps through a shared Variable, as in P-Plan: one Step declares it as an output, a later Step as an input, and in a run the later Step's execution records the binding it received with stonework:usedBinding. An input supplied when a run starts, for example an existing stonework:CvssMetric assessment, is bound in the run itself. Variables carry execution-time values and do not replace persistent domain relationships. A binding's value is what stonework:Transition guard properties test, and what a stonework:Hypothesis that predicts the Variable is judged against."@en ;
+	skos:scopeNote "Declared via stonework:hasInputVariable or stonework:hasOutputVariable. A Variable belongs to the plan, not to a run: the value it takes in one execution is a stonework:VariableBinding (stonework:bindingOf the Variable, stonework:boundIn the execution that bound it), so a plan run many times keeps every run's values. Data flows between Steps through a shared Variable, as in P-Plan: one Step declares it as an output, a later Step as an input, and in a run the later Step's execution records the binding it received with stonework:usedBinding. An input supplied when a run starts, for example an existing stonework:CvssMetric assessment, is bound in the run itself. When the producing Step and the consuming Step belong to different Plans, the data flow is a message between participants (BPMN's message flow): an adversary's OperationPlan whose Step outputs the payment request an organization's BusinessProcess takes as input, for example. Control flow never crosses Plans; only data does. When the sender's plan isn't modelled, stonework:suppliedBy names the Role whose holders supply the value, and the value is bound in the execution that received it. Variables carry execution-time values and do not replace persistent domain relationships. A binding's value is what stonework:Transition guard properties test, and what a stonework:Hypothesis that predicts the Variable is judged against."@en ;
 	.
 
 stonework:VariableBinding
@@ -4928,6 +4928,16 @@ stonework:supersedes
 	rdfs:range stonework:VersionedProduct ;
 	skos:definition "Relates a product version to an older version it replaces. Transitive to support full product lifecycle reasoning."@en ;
 	skos:prefLabel "supersedes"@en ;
+	.
+
+stonework:suppliedBy
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Variable ;
+	rdfs:range stonework:Role ;
+	rdfs:seeAlso <https://www.omg.org/spec/BPMN/2.0.2/> ;
+	skos:definition "Relates a Variable to the Role whose holders supply its value from outside the Plan, as a message from a participant whose own plan isn't modelled."@en ;
+	skos:prefLabel "suppliedBy"@en ;
+	skos:scopeNote "BPMN's message flow from a black-box pool: the supplier who sends an invoice, a customer who places an order. The value is bound in the execution that received it. When the sender's plan is modelled, a Step of that plan declares the Variable with stonework:hasOutputVariable instead, and the receiving execution records stonework:usedBinding of the sender's binding. A Variable may have both: a payment request is supplied by the supplier, and a business email compromise actor's OperationPlan can produce one too, which the receiving Step can't tell apart from the real thing. Steps whose input Variables are supplied from outside the organization are its attack surface for messages."@en ;
 	.
 
 stonework:targets

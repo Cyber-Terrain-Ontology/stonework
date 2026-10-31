@@ -60,10 +60,23 @@ ex:act-create-rule
 	skos:prefLabel "Execution: create a hidden forwarding rule on the controller's mailbox"@en ;
 	stonework:actsOn ex:acct-controller-mailbox ;
 	stonework:attributedTo ex:actor ;
+	stonework:correspondsToStep ex:ostep-rule ;
 	stonework:executionOf cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ;
+	stonework:partOfExecution ex:run-actor-op ;
 	stonework:performedBy ex:acct-controller-mailbox ;
 	stonework:produces ex:rule-forward ;
 	stonework:startedAtTime "2026-09-02T03:14:07Z"^^xsd:dateTime ;
+	.
+
+ex:act-send-request
+	a stonework:Process ;
+	skos:definition "From the lookalike supplier address, the actor replied to a genuine invoice thread read through the forwarding rule, saying the supplier had changed banks."@en ;
+	skos:prefLabel "Execution: send the bank-change request"@en ;
+	stonework:attributedTo ex:actor ;
+	stonework:correspondsToStep ex:ostep-send ;
+	stonework:hasOutput ex:email-bank-change ;
+	stonework:partOfExecution ex:run-actor-op ;
+	stonework:startedAtTime "2026-09-15T22:07:00Z"^^xsd:dateTime ;
 	.
 
 ex:actor
@@ -117,6 +130,13 @@ ex:b-mailbox-controller
 	stonework:bindingOf ex:var-mailbox ;
 	stonework:boundIn ex:inv-bec ;
 	stonework:boundTo ex:acct-controller-mailbox ;
+	.
+
+ex:b-payment-request-0916
+	a stonework:VariableBinding ;
+	stonework:bindingOf ex:var-payment-request ;
+	stonework:boundIn ex:act-send-request ;
+	stonework:boundTo ex:email-bank-change ;
 	.
 
 ex:b-rule-clerk
@@ -454,6 +474,7 @@ ex:exe0916-enter
 	stonework:partOfExecution ex:run-wire-0916 ;
 	stonework:performedBy ex:ap-clerk ;
 	stonework:startedAtTime "2026-09-16T09:12:00Z"^^xsd:dateTime ;
+	stonework:usedBinding ex:b-payment-request-0916 ;
 	.
 
 ex:exe0916-release
@@ -608,10 +629,45 @@ ex:mule
 	skos:prefLabel "Example money mule"@en ;
 	.
 
+ex:opplan-bec
+	a stonework:OperationPlan ;
+	skos:definition "The actor's plan, as the investigation reconstructs it: collect the finance team's mail through a hidden forwarding rule, learn which invoices are due, then ask for one to be paid to a new account."@en ;
+	skos:prefLabel "Divert a supplier payment by email"@en ;
+	stonework:hasStep
+		ex:ostep-read ,
+		ex:ostep-rule ,
+		ex:ostep-send
+		;
+	.
+
 ex:org
 	a stonework:Organization ;
 	skos:definition "The victim of this worked example: a small manufacturer that pays its suppliers by wire."@en ;
 	skos:prefLabel "Example manufacturer"@en ;
+	.
+
+ex:ostep-read
+	a stonework:Step ;
+	skos:prefLabel "Read the forwarded invoice threads, and pick an invoice that is due"@en ;
+	stonework:isStepOf ex:opplan-bec ;
+	stonework:stepOrder "2"^^xsd:integer ;
+	.
+
+ex:ostep-rule
+	a stonework:Step ;
+	skos:prefLabel "Create a hidden forwarding rule on a finance mailbox"@en ;
+	stonework:implements cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ;
+	stonework:isStepOf ex:opplan-bec ;
+	stonework:stepOrder "1"^^xsd:integer ;
+	.
+
+ex:ostep-send
+	a stonework:Step ;
+	skos:definition "Reply to the invoice thread from a lookalike of the supplier's address, giving new bank details. Its output is the payment request the business process takes as input."@en ;
+	skos:prefLabel "Send a bank-change request from a lookalike address"@en ;
+	stonework:hasOutputVariable ex:var-payment-request ;
+	stonework:isStepOf ex:opplan-bec ;
+	stonework:stepOrder "3"^^xsd:integer ;
 	.
 
 ex:ra-ap-clerk
@@ -640,10 +696,24 @@ ex:role-controller
 	skos:prefLabel "Controller"@en ;
 	.
 
+ex:role-supplier
+	a stonework:Role ;
+	skos:definition "A supplier that sends invoices and payment requests to accounts payable."@en ;
+	skos:prefLabel "Supplier"@en ;
+	.
+
 ex:rule-forward
 	a stonework:DigitalArtifact ;
 	skos:definition "The inbox rule \"Sync\" on the controller's mailbox: messages containing \"invoice\", \"payment\" or \"wire\" are forwarded to archive.mailbox@freemail.example and moved to RSS Feeds."@en ;
 	skos:prefLabel 'Forwarding inbox rule "Sync"'@en ;
+	.
+
+ex:run-actor-op
+	a stonework:Process ;
+	skos:prefLabel "The actor's operation against the manufacturer"@en ;
+	stonework:attributedTo ex:actor ;
+	stonework:executionOf ex:opplan-bec ;
+	stonework:startedAtTime "2026-09-02T03:14:07Z"^^xsd:dateTime ;
 	.
 
 ex:run-wire-0909
@@ -733,6 +803,13 @@ ex:var-payee-bank-details
 	stonework:variableName "payeeBankDetails" ;
 	.
 
+ex:var-payment-request
+	a stonework:Variable ;
+	skos:definition "The invoice and payment request, as received: an input of entering the invoice. A supplier sends it, but so can anyone who can make an email look like a supplier's."@en ;
+	stonework:suppliedBy ex:role-supplier ;
+	stonework:variableName "paymentRequest" ;
+	.
+
 ex:var-rule-found
 	a stonework:Variable ;
 	skos:definition "What the search found: a Sighting of T1114.003, or false."@en ;
@@ -752,6 +829,7 @@ ex:wstep-enter
 	a stonework:Step ;
 	skos:definition "The accounts-payable clerk enters the invoice and the payment request, noting whether the payee's bank details differ from those on file."@en ;
 	skos:prefLabel "Enter the invoice and payment request"@en ;
+	stonework:hasInputVariable ex:var-payment-request ;
 	stonework:hasOutputVariable
 		ex:var-bank-details-changed ,
 		ex:var-payee-bank-details

@@ -198,6 +198,35 @@ parallel split took, with no execution in the run, is a candidate *skipped*
 `Deviation`. The [BEC worked example](bec-worked-example.md#4-the-control-plan)
 has both queries.
 
+## 2d. Messages between plans (0.12.0)
+
+Plans belong to participants: an organization's business process, its
+playbooks, a supplier's own process, an adversary's operation. Between them,
+only data passes:
+
+- **Control flow stays inside a plan.** A `Transition` never leaves its Plan.
+  One participant can't make another's Step run; it can only send something
+  that Step takes as input.
+- **A message is data flow that crosses Plans.** The sending Step declares a
+  Variable with `hasOutputVariable`, the receiving Step (in another Plan)
+  declares the same Variable with `hasInputVariable`, and in a run the
+  receiving execution records `usedBinding` of the binding made in the
+  sending execution. This is BPMN's message flow between pools, with no new
+  terms: a query tells a message from internal data flow by comparing the
+  two Steps' `isStepOf`.
+- **`suppliedBy`** (Variable → Role) is for a sender whose plan isn't
+  modelled (BPMN's black-box pool): the value comes from a holder of that
+  Role, such as a supplier or a customer, and is bound in the execution that
+  received it.
+
+A Variable can have both: a payment request is `suppliedBy` the supplier,
+and an adversary's OperationPlan can produce one too. The Steps whose inputs
+come from outside the organization are its attack surface for messages, and
+an adversary Step that outputs the same Variable is an attack path into it.
+The [BEC worked example](bec-worked-example.md#5-the-actors-plan-and-the-message-that-crosses-into-ours)
+has both queries. How a message travels (email, phone, an authenticated
+portal) matters for its risk and is not modelled yet.
+
 ---
 
 ## 3. Entity-relationship diagram — one full vertical slice
@@ -356,6 +385,7 @@ vulnerability assessment, ...).
 | `stonework:deviationExecution` | `Deviation` → `Process` | The executions concerned, if any. |
 | `stonework:deviationKind` | `Deviation` → `DeviationKind` (functional; in `categories.ttl`) | Skipped, wrong role, same agent, out of order, misused identity. |
 | `stonework:splitKind` | `Step` → `FlowKind` (functional; in `categories.ttl`) | Exclusive (one outgoing Transition) or parallel (every one whose guard holds). Default exclusive. |
+| `stonework:suppliedBy` | `Variable` → `Role` | The participants who supply a value from outside the Plan, when their own plan isn't modelled. |
 | `stonework:joinKind` | `Step` → `FlowKind` (functional; in `categories.ttl`) | Exclusive (start on any incoming Transition) or parallel (wait for every branch taken in the run). Default exclusive. |
 
 `evidencedBy` takes a `Deviation` as well as a `Sighting`.

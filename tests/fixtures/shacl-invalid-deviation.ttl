@@ -24,4 +24,5 @@ example:enterStep
 
 example:variable
 	a stonework:Variable ;
+	stonework:suppliedBy example:clerk ;
 	.

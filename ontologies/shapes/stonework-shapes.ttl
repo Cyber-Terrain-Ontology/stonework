@@ -592,6 +592,16 @@ stonework:SplitKindShape
 	sh:targetSubjectsOf stonework:splitKind ;
 	.
 
+stonework:SuppliedByShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Role ;
+		sh:message "A Variable's suppliedBy is a Role: the participants who supply its value from outside the Plan."@en ;
+		sh:path stonework:suppliedBy ;
+	] ;
+	sh:targetSubjectsOf stonework:suppliedBy ;
+	.
+
 stonework:TransitionShape
 	a sh:NodeShape ;
 	sh:property

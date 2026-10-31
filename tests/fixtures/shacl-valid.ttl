@@ -277,6 +277,7 @@ example:transition
 
 example:variable
 	a stonework:Variable ;
+	stonework:suppliedBy example:stepRole ;
 	.
 
 example:variableBinding
