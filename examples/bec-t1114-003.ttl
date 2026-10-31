@@ -289,6 +289,7 @@ ex:controller
 ex:cstep-block-external
 	a stonework:Step ;
 	skos:prefLabel "Block automatic forwarding to external domains at the transport layer"@en ;
+	stonework:implements cti-enc:course-of-action--eb88d97c-32f1-40be-80f0-d61a4b0b4b31 ;
 	stonework:isStepOf ex:ctlplan-forwarding ;
 	stonework:stepTarget ex:mail-tenant ;
 	.
@@ -1012,7 +1013,10 @@ ex:wstep-verify
 	skos:prefLabel "Verify changed bank details by callback"@en ;
 	stonework:hasInputVariable ex:var-payee-bank-details ;
 	stonework:hasOutputVariable ex:var-callback-verified ;
-	stonework:implements ex:control-callback ;
+	stonework:implements
+		cti-enc:course-of-action--80a0e940-f683-4fbd-ac00-e9f935f2f808 ,
+		ex:control-callback
+		;
 	stonework:isStepOf ex:bp-supplier-wire ;
 	stonework:performerRole ex:role-ap-clerk ;
 	stonework:stepOrder "2"^^xsd:integer ;

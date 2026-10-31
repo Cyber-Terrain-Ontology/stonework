@@ -4,8 +4,8 @@
 2026-10-30 for STONEWORK 0.12.0, which adds `stonework:Plan`, `BusinessProcess`, per-run
 Variable bindings, the Roles that perform Steps, deviations as findings, and parallel
 branches, messages between plans, default branches, step outcomes and targets, and playbook
-types, what a hypothesis is about and its parts, and who controlled an identity when
-(proposals 1, 2, 4, 5, 6, 7, 9, 10, 12 and 13 to 16 below). The gaps it still runs into are
+types, what a hypothesis is about and its parts, who controlled an identity when, and ATT&CK
+mitigations as Behaviors (proposals 1, 2, 4 to 10, 12 and 13 to 16 below). The gaps it still runs into are
 listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
@@ -471,6 +471,27 @@ SELECT ?run ?split ?missing WHERE {
 Transition guarded on a binding that didn't hold, it returns nothing, since that branch was
 never taken.
 
+**ATT&CK mitigations.** The transport block also `implements` ATT&CK M1042, *Disable or
+Remove Feature or Program*, which the Encyclopedia links to T1114.003 alongside AC-4; and the
+business process's callback Step implements M1060, *Out-of-Band Communications Channel*, as
+well as FIN-07. A mitigation is a `Behavior`, like a NIST control, so this is the same
+`implements` that links a plan to a control. Which of the technique's mitigations does the
+organization carry out, and where?
+
+```sparql
+SELECT ?id ?mitigation ?step ?plan WHERE {
+  ?t stonework:attackId "T1114.003" .
+  ?m stonework:mitigatesAttackPattern ?t ; stonework:attackId ?id ; skos:prefLabel ?mitigation .
+  OPTIONAL { ?s stonework:implements ?m ; skos:prefLabel ?step .
+             OPTIONAL { ?s stonework:isStepOf ?p . ?p skos:prefLabel ?plan } }
+} ORDER BY ?id
+```
+
+→ M1041, *Encrypt Sensitive Information*: none; M1042: "Block automatic forwarding to
+external domains at the transport layer", in the containment plan; M1047, *Audit*: none;
+M1060: "Verify changed bank details by callback", in the business process. The two empty rows
+are the technique's mitigations nothing here implements.
+
 ### 5. The actor's plan, and the message that crosses into ours
 
 `ex:opplan-bec` is a `stonework:OperationPlan`, "Divert a supplier payment by email": the
@@ -578,6 +599,7 @@ attacker's Process ──executionOf──────────────�
 DetectionPlan ──implements──▶ DET0576 ──detects───────────────────▶ T1114.003
   Step ──implements──▶ AN1591 (an analytic of DET0576)
 ControlPlan ──implements──▶ AC-4 ──mitigatesAttackPattern─────────▶ T1114.003
+  Step ──implements──▶ M1042 ──mitigatesAttackPattern─────────────▶ T1114.003
 Hypothesis ──predictsVariable──▶ Variable ◀──bindingOf── VariableBinding
                                    ──boundTo──▶ Sighting ──sightedObject──▶ T1114.003
 ```
@@ -599,7 +621,7 @@ hypothesis-and-evidence layer.
 
 ## Gaps, as proposals
 
-Numbered for discussion. Proposals 1, 2, 4, 5, 6, 7, 9, 10, 12 and 13 to 16 are done in 0.12.0;
+Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.12.0;
 the rest are not in the ontology yet.
 
 1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
@@ -654,13 +676,12 @@ the rest are not in the ontology yet.
    literal values are handled the same way as individuals. `boundTo` and `boundToLiteral` no
    longer go on the Variable itself.
 
-8. **ATT&CK mitigations aren't Behaviors.** M1042, M1047 and M1060 are `Countermeasure` /
-   `CourseOfAction` / `Mitigation`, so a ControlPlan that `implements` one would make a
-   reasoner classify the mitigation as a `Behavior`. That's not an inconsistency (STONEWORK
-   declares almost no disjoint classes) but it's a silent reclassification. NIST controls are
-   already Behaviors, which is why this example's ControlPlan implements AC-4. Options: make
-   `Mitigation` a `Behavior`, as `Control` is; or link a ControlPlan to a mitigation with a
-   different property.
+8. **Done in 0.12.0: ATT&CK mitigations are Behaviors.** `stonework:Mitigation` (and so
+   `CourseOfAction` and `attack:Mitigation`) is now a `Behavior` as well as a
+   `Countermeasure`, as `Control` already was: a specification of how to act. A ControlPlan
+   or Step that `implements` an ATT&CK mitigation no longer makes a reasoner reclassify the
+   mitigation, and one property links plans to NIST controls and ATT&CK mitigations alike.
+   Detection logic (`DetectionRule`, `Signature`) stays out of `Behavior`.
 
 9. **Done in 0.12.0: parallel branches.** `stonework:splitKind` and `stonework:joinKind`
    (Step → `FlowKind`: exclusive or parallel, both defaulting to exclusive, the meaning

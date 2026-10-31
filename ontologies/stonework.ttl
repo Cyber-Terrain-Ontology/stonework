@@ -128,7 +128,7 @@ stonework:Behavior
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "A pattern of actions or methods characteristic of an entity, particularly adversaries."@en ;
 	skos:prefLabel "Behavior" ;
-	skos:scopeNote "Groups TTP-related classes (Tactic, Technique and its subclasses), Controls, Steps, and stonework:Plan, the step-structured specifications that are executed. Methods such as Techniques and Controls are not Plans; Plans implement them. In BFO terms, Behaviors are GenericallyDependentContinuants — specifications or patterns describing how actions are carried out. The execution of a Technique is a CyberActivity; the Technique itself is a Behavior. Aligns with IAO PlanSpecification."@en ;
+	skos:scopeNote "Groups TTP-related classes (Tactic, Technique and its subclasses), Controls, Mitigations (and so CoursesOfAction), Steps, and stonework:Plan, the step-structured specifications that are executed. Methods such as Techniques, Controls and Mitigations are not Plans; Plans implement them. In BFO terms, Behaviors are GenericallyDependentContinuants — specifications or patterns describing how actions are carried out. The execution of a Technique is a CyberActivity; the Technique itself is a Behavior. Aligns with IAO PlanSpecification."@en ;
 	.
 
 stonework:BomEntry
@@ -224,9 +224,9 @@ stonework:Control
 stonework:ControlPlan
 	a owl:Class ;
 	rdfs:subClassOf stonework:Plan ;
-	skos:definition "A concrete, Step-decomposed sequence of actions that implements a Control in a specific operational context."@en ;
+	skos:definition "A concrete, Step-decomposed sequence of actions that implements a Control or Mitigation in a specific operational context."@en ;
 	skos:prefLabel "Control Plan" ;
-	skos:scopeNote "Mirrors the Technique/Procedure split on the defensive side: stonework:Control is the abstract prescribed safeguard (a catalog entry, e.g. NIST AC-2 or a CIS control); ControlPlan is its concrete implementation as a Step sequence, linked back via stonework:implements. A ControlPlan is typically invoked from within a Playbook or DetectionPlan by a Step that stonework:implements it."@en ;
+	skos:scopeNote "Mirrors the Technique/Procedure split on the defensive side: stonework:Control is the abstract prescribed safeguard (a catalog entry, e.g. NIST AC-2 or a CIS control), and a stonework:Mitigation (e.g. an ATT&CK mitigation) is another; ControlPlan is its concrete implementation as a Step sequence, linked back via stonework:implements. A ControlPlan is typically invoked from within a Playbook or DetectionPlan by a Step that stonework:implements it."@en ;
 	.
 
 stonework:Countermeasure
@@ -234,7 +234,7 @@ stonework:Countermeasure
 	rdfs:subClassOf stonework:CyberEntity ;
 	skos:definition "Any control, mitigation, or safeguard applied to protect against, reduce, or respond to security risks."@en ;
 	skos:prefLabel "Countermeasure" ;
-	skos:scopeNote "Includes Controls, Mitigations, CoursesOfAction, and DetectionRules. The two primary branches are preventive/reactive measures (Mitigation, CourseOfAction, Control) and detection logic (DetectionRule, Signature). A Countermeasure describes the safeguard or procedure; the deployed mechanism that can apply it is a stonework:SecurityActuator, and a particular application is a stonework:SecurityActuation."@en ;
+	skos:scopeNote "Includes Controls, Mitigations, CoursesOfAction, and DetectionRules. The two primary branches are preventive/reactive measures (Mitigation, CourseOfAction, Control), which are also stonework:Behaviors that plans implement, and detection logic (DetectionRule, Signature). A Countermeasure describes the safeguard or procedure; the deployed mechanism that can apply it is a stonework:SecurityActuator, and a particular application is a stonework:SecurityActuation."@en ;
 	.
 
 stonework:Country
@@ -765,11 +765,14 @@ stonework:MetricType
 
 stonework:Mitigation
 	a owl:Class ;
-	rdfs:subClassOf stonework:Countermeasure ;
+	rdfs:subClassOf
+		stonework:Behavior ,
+		stonework:Countermeasure
+		;
 	rdfs:seeAlso <https://csrc.nist.gov/glossary/term/mitigation> ;
 	skos:definition "A deliberate action or control intended to reduce the likelihood, impact, or severity of a risk, threat, vulnerability, or adverse event."@en ;
 	skos:prefLabel "Mitigation" ;
-	skos:scopeNote "Mitigations are proactive or reactive measures applied to address weaknesses or threats. Examples include: applying a security patch, enabling MFA, deploying a firewall rule, isolating a compromised host, or training users. A Mitigation may be a reusable control (ATT&CK sense) or a specific situational action. CourseOfAction is a subclass for contextualized, packaged response actions."@en ;
+	skos:scopeNote "Mitigations are proactive or reactive measures applied to address weaknesses or threats. Examples include: applying a security patch, enabling MFA, deploying a firewall rule, isolating a compromised host, or training users. A Mitigation may be a reusable control (ATT&CK sense) or a specific situational action. CourseOfAction is a subclass for contextualized, packaged response actions. Like stonework:Control, a Mitigation is a stonework:Behavior: a specification of how to act, not an occurrence. So a stonework:ControlPlan, or one of its Steps, stonework:implements an ATT&CK mitigation the same way it implements a NIST control, and the technique it mitigates is reached through stonework:mitigatesAttackPattern either way."@en ;
 	.
 
 stonework:MobileDevice

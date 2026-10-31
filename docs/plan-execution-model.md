@@ -400,6 +400,9 @@ vulnerability assessment, ...).
 | `stonework:joinKind` | `Step` → `FlowKind` (functional; in `categories.ttl`) | Exclusive (start on any incoming Transition) or parallel (wait for every branch taken in the run). Default exclusive. |
 
 `evidencedBy` takes a `Deviation` or an `IdentityControl` as well as a `Sighting`.
+`Mitigation` (and so `CourseOfAction`) is a `Behavior` as well as a
+`Countermeasure`, so a ControlPlan or Step `implements` an ATT&CK
+mitigation as it does a NIST control.
 `Playbook`, `ControlPlan`, `InvestigationPlan`, `Procedure` and
 `ThreatScenario` moved from `Behavior` to `Plan`. `performedBy`,
 `triggeredBy` and `triggersPlaybook` now take any Plan. `boundTo` and
