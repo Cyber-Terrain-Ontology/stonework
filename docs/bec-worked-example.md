@@ -466,6 +466,54 @@ decided; the rest are not in the ontology yet.
     evidence-backed qualified assertion (`validFrom` / `validUntil`, like `RoleAssignment`)
     that an Agent controlled an identity. To be designed separately.
 
+Proposals 13 to 19 came from comparing plans with OASIS CACAO 2.0 (see
+[plan-execution-model.md §7](plan-execution-model.md#7-relationship-to-oasis-cacao)). Each is
+something a CACAO playbook can say that a STONEWORK plan can't yet, so importing it would
+lose it. The first four are small.
+
+13. **No default branch.** A CACAO `switch-condition` may have a `default` case, taken when
+    no other case matches; BPMN has a default flow too. A STONEWORK exclusive split can only
+    list guarded Transitions, so "none of the others" has to be spelled out as the negation
+    of every other guard. Proposal: a way to mark a Transition as the default, for example a
+    boolean on the Transition, taken only when no other outgoing Transition's guard holds.
+
+14. **No agreed outcome Variable.** CACAO steps go `on_success` or `on_failure`, and the spec
+    leaves what counts as success to the implementation. STONEWORK can express both as
+    Transitions guarded on an output Variable, but nothing says which Variable holds a Step's
+    outcome, so every importer would invent its own. Proposal: a convention, in a scope note
+    or as a small outcome vocabulary (succeeded, failed, timed out), for the Variable that
+    records whether a Step succeeded.
+
+15. **Targets can't be named on a Step.** A CACAO action step names its `targets`. STONEWORK
+    has `actsOn` only on executions, so a plan can't say what a Step is meant to act on (the
+    mailbox, the mail tenant) before it runs. Proposal: a Step-level property for the
+    intended target, or for the kind of target, mirroring `actsOn` on the run as
+    `performerRole` mirrors `performedBy`.
+
+16. **No classes for engagement or notification plans.** CACAO's playbook types include
+    *engagement* (denial and deception against an adversary, as in MITRE Engage) and
+    *notification* (telling others about an event or threat). The others map onto
+    `OperationPlan`, `DetectionPlan`, `InvestigationPlan` and `ControlPlan`. Proposal: decide
+    whether each needs its own subclass of `Plan` or `Playbook`, or whether a playbook type
+    vocabulary, like CACAO's (which allows several types on one playbook), fits better.
+
+17. **Guards test one Variable.** A CACAO `condition` is a STIX Patterning expression, so it
+    can combine tests with AND, OR and NOT across several variables. A STONEWORK guard
+    compares one Variable with one value or class. Proposal: discuss whether to carry the
+    expression as a literal (simple, but not queryable), allow several guards on one
+    Transition joined by AND (covers most cases), or model expressions as nodes.
+
+18. **No exception path for a whole plan.** CACAO's `workflow_exception` names where control
+    goes when a step fails and has no `on_failure` of its own. STONEWORK has no plan-level
+    fallback, so every failure path has to be drawn as Transitions. Proposal: a property from
+    a Plan to the Step (or Plan) that handles any failure not otherwise handled.
+
+19. **No delays or timeouts.** CACAO steps can wait before starting (`delay`) and fail after a
+    time limit (`timeout`, which invokes `on_failure`). A STONEWORK plan has no durations, so
+    it can't say "if the supplier hasn't called back within a day, escalate". This matters for
+    business processes as well as playbooks. Proposal: discuss durations on Steps, and
+    whether a timeout is a guard on time elapsed or a separate kind of Transition.
+
 Smaller things:
 
 - No class for an inbox or mailbox rule (STIX has none either); the example uses
