@@ -5,15 +5,33 @@
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+example:account
+	a stonework:UserAccount ;
+	.
+
 example:activity
 	a stonework:CyberActivity ;
 	stonework:endedAtTime "2026-08-20T10:05:00Z"^^xsd:dateTime ;
 	stonework:startedAtTime "2026-08-20T10:00:00Z"^^xsd:dateTime ;
 	.
 
+example:activityHypothesis
+	a stonework:Hypothesis ;
+	stonework:hypothesisAbout example:indicator ;
+	.
+
 example:actor
 	a stonework:ThreatActor ;
 	stonework:hasRoleAssignment example:sponsorAssignment ;
+	.
+
+example:actorControl
+	a stonework:IdentityControl ;
+	stonework:controlledIdentity example:account ;
+	stonework:controllingAgent example:actor ;
+	stonework:hasProvenance example:roleSource ;
+	stonework:validFrom "2026-09-02T03:14:07Z"^^xsd:dateTime ;
+	stonework:validUntil "2026-09-30T16:05:00Z"^^xsd:dateTime ;
 	.
 
 example:address
@@ -61,6 +79,22 @@ example:componentContext
 		;
 	.
 
+example:compoundHypothesis
+	a stonework:Hypothesis ;
+	stonework:hypothesisAbout example:actor ;
+	stonework:hypothesisPart example:activityHypothesis ;
+	.
+
+example:deviation
+	a stonework:Deviation ;
+	stonework:deviationExecution example:stepExecution ;
+	stonework:deviationKind stonework:deviationKindWrongRole ;
+	stonework:deviationRun example:investigation ;
+	stonework:deviationStep example:targetStep ;
+	stonework:evidencedBy example:statement ;
+	stonework:hasProvenance example:roleSource ;
+	.
+
 example:domain
 	a stonework:Domain ;
 	stonework:registrationDate "2026-08-20T10:00:00Z"^^xsd:dateTime ;
@@ -83,6 +117,14 @@ example:epssObservation
 	stonework:metricValue "0.42"^^xsd:decimal ;
 	stonework:modelVersion "2026.1" ;
 	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
+	.
+
+example:guardedTransition
+	a stonework:Transition ;
+	stonework:fromStep example:sourceStep ;
+	stonework:guardValue stonework:executionOutcomeFailed ;
+	stonework:guardVariable example:variable ;
+	stonework:toStep example:targetStep ;
 	.
 
 example:hash
@@ -133,6 +175,12 @@ example:isolationControl
 	a stonework:DetectionRule ;
 	.
 
+example:laterStepExecution
+	a stonework:Process ;
+	stonework:partOfExecution example:investigation ;
+	stonework:usedBinding example:variableBinding ;
+	.
+
 example:likelihood
 	a stonework:Likelihood ;
 	stonework:likelihoodScore "0.6"^^xsd:decimal ;
@@ -166,6 +214,11 @@ example:openHypothesis
 	stonework:confidence "60"^^xsd:integer ;
 	stonework:description "The intrusion set behind the campaign is APT28."@en ;
 	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
+	.
+
+example:playbook
+	a stonework:Playbook ;
+	stonework:hasPlaybookType stonework:playbookTypeDetection ;
 	.
 
 example:product
@@ -231,6 +284,10 @@ example:sighting
 
 example:sourceStep
 	a stonework:Step ;
+	stonework:defaultTransition example:transition ;
+	stonework:outcomeVariable example:variable ;
+	stonework:separatedFrom example:targetStep ;
+	stonework:splitKind stonework:flowKindParallel ;
 	.
 
 example:sponsorAssignment
@@ -243,8 +300,24 @@ example:sponsorAssignment
 	stonework:validUntil "2026-12-31T23:59:59Z"^^xsd:dateTime ;
 	.
 
+example:statement
+	a stonework:File ;
+	.
+
+example:stepExecution
+	a stonework:Process ;
+	stonework:partOfExecution example:investigation ;
+	.
+
+example:stepRole
+	a stonework:Role ;
+	.
+
 example:targetStep
 	a stonework:Step ;
+	stonework:joinKind stonework:flowKindParallel ;
+	stonework:performerRole example:stepRole ;
+	stonework:stepTarget example:variable ;
 	.
 
 example:threatBulletin
@@ -259,6 +332,13 @@ example:transition
 
 example:variable
 	a stonework:Variable ;
+	stonework:suppliedBy example:stepRole ;
+	.
+
+example:variableBinding
+	a stonework:VariableBinding ;
+	stonework:bindingOf example:variable ;
+	stonework:boundIn example:stepExecution ;
 	stonework:boundTo example:boundEntity ;
 	.
 

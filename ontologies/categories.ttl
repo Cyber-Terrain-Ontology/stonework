@@ -121,6 +121,21 @@ stonework:DDoS
 	skos:prefLabel "DDoS Malware"@en ;
 	.
 
+stonework:DeviationKind
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:deviationKindScheme ;
+		]
+		;
+	skos:definition "A classification of how a run departed from its Plan."@en ;
+	skos:prefLabel "Deviation Kind"@en ;
+	skos:scopeNote "Applied via stonework:deviationKind to Deviation individuals. Named individuals: skipped, wrong role, same agent, out of order, misused identity, wrong target."@en ;
+	.
+
 stonework:Downloader
 	a
 		owl:NamedIndividual ,
@@ -149,6 +164,21 @@ stonework:Dropper
 		;
 	skos:notation "dropper" ;
 	skos:prefLabel "Dropper"@en ;
+	.
+
+stonework:ExecutionOutcome
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:executionOutcomeScheme ;
+		]
+		;
+	skos:definition "Whether an execution of a Step or Plan succeeded, failed or timed out."@en ;
+	skos:prefLabel "Execution Outcome"@en ;
+	skos:scopeNote "The value of a Step's stonework:outcomeVariable in a run. Named individuals: succeeded, failed, timed out. A timeout is kept apart from other failures, as CACAO reports it separately."@en ;
 	.
 
 stonework:ExploitKit
@@ -236,6 +266,21 @@ stonework:FinancialInstitutionType
 		;
 	skos:definition "A classification of a financial institution by its regulatory form and the service it provides."@en ;
 	skos:prefLabel "Financial Institution Type"@en ;
+	.
+
+stonework:FlowKind
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:flowKindScheme ;
+		]
+		;
+	skos:definition "A classification of how control flow splits after a Step or joins before one."@en ;
+	skos:prefLabel "Flow Kind"@en ;
+	skos:scopeNote "Applied via stonework:splitKind and stonework:joinKind to Steps. Named individuals: exclusive, parallel."@en ;
 	.
 
 stonework:HypothesisStatus
@@ -453,6 +498,21 @@ stonework:PaymentInstrument
 		;
 	skos:definition "A classification of the instrument or rail used to move value in a financial transaction."@en ;
 	skos:prefLabel "Payment Instrument"@en ;
+	.
+
+stonework:PlaybookType
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:playbookTypeScheme ;
+		]
+		;
+	skos:definition "A classification of what a Plan is for, from the CACAO playbook types."@en ;
+	skos:prefLabel "Playbook Type"@en ;
+	skos:scopeNote "Applied via stonework:hasPlaybookType. The values are CACAO 2.0's playbook-type-ov. STONEWORK's Plan subclasses correspond: OperationPlan to attack, DetectionPlan to detection, InvestigationPlan to investigation, and ControlPlan to mitigation, prevention or remediation; engagement and notification have no subclass."@en ;
 	.
 
 stonework:PriorityLevel
@@ -1029,6 +1089,117 @@ stonework:currencyUSD
 	stonework:minorUnitDigits "2"^^xsd:nonNegativeInteger ;
 	.
 
+stonework:deviationKind
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Deviation ;
+	rdfs:range stonework:DeviationKind ;
+	skos:definition "Relates a Deviation to the kind of departure from the Plan it records."@en ;
+	skos:prefLabel "deviationKind"@en ;
+	.
+
+stonework:deviationKindMisusedIdentity
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "The Step was performed through the identity of someone who holds its Role, but not by that holder: for example, by an actor using the holder's stolen credentials."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "misused-identity" ;
+	skos:prefLabel "Misused identity"@en ;
+	skos:scopeNote "Logs alone can't show this, since the role and separation checks see the right identity; an analyst establishes it from evidence such as sign-ins from an unfamiliar address."@en ;
+	.
+
+stonework:deviationKindOutOfOrder
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "Two Steps were performed in an order the Plan doesn't allow."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "out-of-order" ;
+	skos:prefLabel "Out of order"@en ;
+	.
+
+stonework:deviationKindSameAgent
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "Two Steps that are stonework:separatedFrom each other were performed by the same Agent in one run."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "same-agent" ;
+	skos:prefLabel "Same agent"@en ;
+	.
+
+stonework:deviationKindScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Deviation Kind Scheme"@en ;
+	skos:definition "The controlled vocabulary of the ways a run can depart from its Plan."@en ;
+	skos:prefLabel "STONEWORK Deviation Kind Scheme"@en ;
+	.
+
+stonework:deviationKindSkipped
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "A Step the Plan required in this run was not performed."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "skipped" ;
+	skos:prefLabel "Skipped"@en ;
+	.
+
+stonework:deviationKindWrongRole
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "A Step was performed by an Agent who doesn't hold any of its stonework:performerRole Roles."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "wrong-role" ;
+	skos:prefLabel "Wrong role"@en ;
+	.
+
+stonework:deviationKindWrongTarget
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:DeviationKind
+		;
+	skos:definition "A Step was performed against something other than its stonework:stepTarget, or other than the value its target Variable had in the run."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:deviationKindScheme
+		;
+	skos:notation "wrong-target" ;
+	skos:prefLabel "Wrong target"@en ;
+	.
+
 stonework:evidence
 	a
 		owl:NamedIndividual ,
@@ -1039,6 +1210,59 @@ stonework:evidence
 	skos:inScheme stonework:categoryScheme ;
 	skos:prefLabel "Evidence"@en ;
 	skos:scopeNote "This is a reusable category instance. It is *not* a class. Use stonework:categorizedBy to assert that something is evidence in a given context."@en ;
+	.
+
+stonework:executionOutcomeFailed
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ExecutionOutcome
+		;
+	skos:definition "The execution ended without doing what the Step is for."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:executionOutcomeScheme
+		;
+	skos:notation "failed" ;
+	skos:prefLabel "Failed"@en ;
+	.
+
+stonework:executionOutcomeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Execution Outcome Scheme"@en ;
+	skos:definition "The controlled vocabulary of how an execution of a Step or Plan ended."@en ;
+	skos:prefLabel "STONEWORK Execution Outcome Scheme"@en ;
+	.
+
+stonework:executionOutcomeSucceeded
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ExecutionOutcome
+		;
+	skos:definition "The execution did what the Step is for. A search that ran and found nothing succeeded."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:executionOutcomeScheme
+		;
+	skos:notation "succeeded" ;
+	skos:prefLabel "Succeeded"@en ;
+	.
+
+stonework:executionOutcomeTimedOut
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ExecutionOutcome
+		;
+	skos:definition "The execution was abandoned because it ran past its time limit."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:executionOutcomeScheme
+		;
+	skos:notation "timed-out" ;
+	skos:prefLabel "Timed out"@en ;
 	.
 
 stonework:exploitMaturityPoc
@@ -1466,6 +1690,44 @@ stonework:financialInstitutionTypeVirtualAssetServiceProvider
 	skos:prefLabel "Virtual Asset Service Provider"@en ;
 	.
 
+stonework:flowKindExclusive
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FlowKind
+		;
+	skos:definition "One path. As a split, exactly one of the Step's outgoing Transitions is taken, one whose guard holds. As a join, the Step may start as soon as any one of its incoming Transitions is taken."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:flowKindScheme
+		;
+	skos:notation "exclusive" ;
+	skos:prefLabel "Exclusive"@en ;
+	.
+
+stonework:flowKindParallel
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FlowKind
+		;
+	skos:definition "All paths. As a split, every outgoing Transition whose guard holds is taken, and the branches run concurrently. As a join, the Step starts only after the execution of every Step it is entered from, by a Transition taken in the same run, has ended."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:flowKindScheme
+		;
+	skos:notation "parallel" ;
+	skos:prefLabel "Parallel"@en ;
+	.
+
+stonework:flowKindScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Flow Kind Scheme"@en ;
+	skos:definition "The controlled vocabulary of the ways control flow splits after a Step or joins before one."@en ;
+	skos:prefLabel "STONEWORK Flow Kind Scheme"@en ;
+	.
+
 stonework:hasAccountType
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:categorizedBy ;
@@ -1621,6 +1883,17 @@ stonework:hasMotivation
 	skos:definition "Relates a threat actor to one or more motivations that drive their actions and operations."@en ;
 	skos:prefLabel "hasMotivation"@en ;
 	skos:scopeNote "A threat actor may have multiple motivations. Corresponds to the STIX 2.1 primary_motivation and secondary_motivations properties on ThreatActor."@en ;
+	.
+
+stonework:hasPlaybookType
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Plan ;
+	rdfs:range stonework:PlaybookType ;
+	rdfs:seeAlso <https://docs.oasis-open.org/cacao/security-playbooks/v2.0/security-playbooks-v2.0.html> ;
+	skos:definition "Relates a Plan to what it is for: attack, detection, engagement, investigation, mitigation, notification, prevention or remediation."@en ;
+	skos:prefLabel "hasPlaybookType"@en ;
+	skos:scopeNote "Not functional: a Plan may have several types, as a CACAO playbook may. The Plan subclasses already say some of this (see stonework:PlaybookType); the type is stated explicitly, not inferred, because a ControlPlan can be any of three."@en ;
 	.
 
 stonework:hasPriority
@@ -2336,6 +2609,20 @@ stonework:investigationStatusScheme
 	skos:prefLabel "STONEWORK Investigation Status Scheme"@en ;
 	.
 
+stonework:joinKind
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:FlowKind ;
+	rdfs:seeAlso <https://www.omg.org/spec/BPMN/2.0.2/> ;
+	skos:definition "When a Step entered by several Transitions may start: exclusive, as soon as one incoming Transition is taken; parallel, only after every incoming Transition taken in the same run."@en ;
+	skos:prefLabel "joinKind"@en ;
+	skos:scopeNote "Omitted means exclusive. An incoming Transition is taken in a run when its from-Step has an execution that is stonework:partOfExecution that run and its guard held against that execution's binding. A parallel join therefore waits only for the branches that were started in the run, so a parallel join after an inclusive split (a parallel split with guarded Transitions) is well defined for recorded runs. A run whose join execution starts before the execution of a taken incoming branch has ended departs from the Plan: an out-of-order stonework:Deviation. As with stonework:splitKind, there are no gateway nodes; a BPMN converging gateway maps onto the joinKind of the Step it leads to."@en ;
+	.
+
 stonework:killChainPhaseScheme
 	a skos:ConceptScheme ;
 	dcterms:isPartOf stonework:categoryScheme ;
@@ -2871,6 +3158,134 @@ stonework:paymentInstrumentWireTransfer
 	skos:prefLabel "Wire Transfer"@en ;
 	.
 
+stonework:playbookTypeAttack
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Penetration testing or adversary emulation, or an adversary's own operation as reconstructed from intelligence. stonework:OperationPlan is this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "attack" ;
+	skos:prefLabel "Attack"@en ;
+	.
+
+stonework:playbookTypeDetection
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Detecting a known security event or expected security-relevant activity, or threat hunting. stonework:DetectionPlan is this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "detection" ;
+	skos:prefLabel "Detection"@en ;
+	.
+
+stonework:playbookTypeEngagement
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Denial, deception and other adversary engagement that raises the adversary's cost or lowers the value of its operations (see MITRE Engage)."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "engagement" ;
+	skos:prefLabel "Engagement"@en ;
+	.
+
+stonework:playbookTypeInvestigation
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Investigating what a security event, incident or other activity has affected. stonework:InvestigationPlan is this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "investigation" ;
+	skos:prefLabel "Investigation"@en ;
+	.
+
+stonework:playbookTypeMitigation
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Reducing or limiting the impact of an event or incident until it can be remediated. A stonework:ControlPlan is often this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "mitigation" ;
+	skos:prefLabel "Mitigation"@en ;
+	.
+
+stonework:playbookTypeNotification
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Notifying others and disseminating information or playbooks about an event, incident or threat."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "notification" ;
+	skos:prefLabel "Notification"@en ;
+	.
+
+stonework:playbookTypePrevention
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Preventing a known or expected event, incident or threat from occurring. A stonework:ControlPlan is often this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "prevention" ;
+	skos:prefLabel "Prevention"@en ;
+	.
+
+stonework:playbookTypeRemediation
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:PlaybookType
+		;
+	skos:definition "Returning affected systems to a known good state after an event or incident. A stonework:ControlPlan is often this type."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:playbookTypeScheme
+		;
+	skos:notation "remediation" ;
+	skos:prefLabel "Remediation"@en ;
+	.
+
+stonework:playbookTypeScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Playbook Type Scheme"@en ;
+	skos:definition "The controlled vocabulary of what a Plan is for, aligned with CACAO 2.0's playbook types."@en ;
+	skos:prefLabel "STONEWORK Playbook Type Scheme"@en ;
+	.
+
 stonework:priorityCritical
 	a
 		owl:NamedIndividual ,
@@ -3384,6 +3799,20 @@ stonework:sophisticationLevelStrategic
 		;
 	skos:notation "strategic" ;
 	skos:prefLabel "Strategic"@en ;
+	.
+
+stonework:splitKind
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:FlowKind ;
+	rdfs:seeAlso <https://www.omg.org/spec/BPMN/2.0.2/> ;
+	skos:definition "How a Step's outgoing Transitions are taken when it finishes: exclusive, exactly one, whose guard holds; parallel, every one whose guard holds, as concurrent branches."@en ;
+	skos:prefLabel "splitKind"@en ;
+	skos:scopeNote "Omitted means exclusive, the meaning several outgoing Transitions had before splitKind existed. With parallel, an unguarded Transition is always taken, so a parallel split whose Transitions are all unguarded is BPMN's parallel gateway, and one whose Transitions are guarded is its inclusive gateway. The branches may overlap in time; the Step where they meet says by its stonework:joinKind whether it waits for them all. As in YAWL, a split is a property of the Step it follows, not a separate gateway node, so every Step remains a unit of action; a BPMN diverging gateway maps onto the splitKind of the Step before it."@en ;
 	.
 
 stonework:threatActorRoleAgent

@@ -21,22 +21,31 @@ subclasses form a gradient from abstract objective to concrete directive:
   Technique       method — the approach, in general terms       no step structure
     │  implements / procedureFor  (0..N)
     ▼
+  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ above: methods  ·  below: stonework:Plan ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
   Procedure       one realization path for one Technique        prose, or Step-decomposed
     │  implements  (a Plan's Step implements a Procedure)  (0..N)
     ▼
   Playbook /      objective-scoped orchestration of several     Step + Transition + Variable
   OperationPlan / Procedures/Techniques with branching & retry
-  ControlPlan
-    │  executionOf / correspondsToStep
+  ControlPlan /
+  BusinessProcess
+    │  executionOf / correspondsToStep / partOfExecution
     ▼
   ───────────────────────────────────────────────────────────────────────────────
-  Process /       what actually happened                        CyberActivity (occurrent)
+  Process /       what actually happened, one run at a time     CyberActivity (occurrent)
   CyberActivity   attributed, timestamped, acts-on
 ```
 
 The cardinalities matter: **one Technique has zero-to-many Procedures, and a
 Procedure has zero-to-many Plans that invoke it.** A Technique is not a plan and
 does not become one — the step structure lives one or two layers below it.
+
+Since 0.12.0 every layer from Procedure down is a `stonework:Plan`: a
+Procedure, Playbook, OperationPlan, ControlPlan, InvestigationPlan,
+BusinessProcess or ThreatScenario can be run any number of times, each run
+with its own Variable bindings. Realization and orchestration differ in
+scope, not in kind. Tactics, Techniques and Controls stay methods: Plans
+implement them.
 
 ### The same gradient, three domains
 

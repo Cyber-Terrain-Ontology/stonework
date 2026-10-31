@@ -111,7 +111,7 @@ attack:Mitigation
 	a owl:Class ;
 	rdfs:subClassOf stonework:Mitigation ;
 	rdfs:label "ATT&CK Mitigation"@en ;
-	rdfs:comment "A security concept or class of technologies that can prevent a technique from succeeding. STIX type course-of-action; ATT&CK ID Mxxxx. ATT&CK mitigations are general, so they sit under stonework:Mitigation; their faithful STIX typing (stones:CourseOfAction, under stonework:CourseOfAction) also applies, which is consistent since CourseOfAction is a kind of Mitigation."@en ;
+	rdfs:comment "A security concept or class of technologies that can prevent a technique from succeeding. STIX type course-of-action; ATT&CK ID Mxxxx. ATT&CK mitigations are general, so they sit under stonework:Mitigation; their faithful STIX typing (stones:CourseOfAction, under stonework:CourseOfAction) also applies, which is consistent since CourseOfAction is a kind of Mitigation. As a stonework:Mitigation it is a stonework:Behavior, so a ControlPlan or Step can stonework:implements it."@en ;
 	rdfs:seeAlso <https://mitre-attack.github.io/attack-data-model/schemas/sdo/mitigation.schema> ;
 	.
 

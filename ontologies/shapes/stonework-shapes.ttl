@@ -84,6 +84,52 @@ stonework:CvssBaseScoreShape
 	sh:targetSubjectsOf stonework:cvssBaseScore ;
 	.
 
+stonework:DefaultTransitionShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Transition ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Step has at most one defaultTransition, a Transition."@en ;
+		sh:path stonework:defaultTransition ;
+	] ;
+	sh:targetSubjectsOf stonework:defaultTransition ;
+	.
+
+stonework:DeviationShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:DeviationKind ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Deviation has exactly one kind."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:deviationKind ;
+		] ,
+		[
+			sh:class stonework:DigitalArtifact ;
+			sh:path stonework:evidencedBy ;
+		] ,
+		[
+			sh:class stonework:Process ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Deviation is found in exactly one run."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:deviationRun ;
+		] ,
+		[
+			sh:class stonework:Process ;
+			sh:path stonework:deviationExecution ;
+		] ,
+		[
+			sh:class stonework:Step ;
+			sh:message "A Deviation concerns at least one Step of the run's Plan."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:deviationStep ;
+		]
+		;
+	sh:targetClass stonework:Deviation ;
+	.
+
 stonework:EpssPercentileShape
 	a sh:NodeShape ;
 	sh:property [
@@ -132,6 +178,16 @@ stonework:ExploitationReportKindShape
 	sh:targetSubjectsOf stonework:hasExploitationReportKind ;
 	.
 
+stonework:HasPlaybookTypeShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:PlaybookType ;
+		sh:message "hasPlaybookType takes a PlaybookType."@en ;
+		sh:path stonework:hasPlaybookType ;
+	] ;
+	sh:targetSubjectsOf stonework:hasPlaybookType ;
+	.
+
 stonework:HashShape
 	a sh:NodeShape ;
 	sh:property
@@ -149,6 +205,16 @@ stonework:HashShape
 		]
 		;
 	sh:targetClass stonework:Hash ;
+	.
+
+stonework:HypothesisPartShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Hypothesis ;
+		sh:message "A Hypothesis's parts are Hypotheses: the claims it is the conjunction of."@en ;
+		sh:path stonework:hypothesisPart ;
+	] ;
+	sh:targetSubjectsOf stonework:hypothesisPart ;
 	.
 
 stonework:HypothesisShape
@@ -175,6 +241,31 @@ stonework:HypothesisShape
 		]
 		;
 	sh:targetClass stonework:Hypothesis ;
+	.
+
+stonework:IdentityControlShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:Agent ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An IdentityControl names exactly one controlling Agent."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:controllingAgent ;
+		] ,
+		[
+			sh:class stonework:DigitalArtifact ;
+			sh:path stonework:evidencedBy ;
+		] ,
+		[
+			sh:class stonework:DigitalIdentity ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An IdentityControl names exactly one controlled DigitalIdentity."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:controlledIdentity ;
+		]
+		;
+	sh:targetClass stonework:IdentityControl ;
 	.
 
 stonework:InvestigationOutcomeShape
@@ -240,6 +331,17 @@ stonework:IpVersionShape
 		sh:path stonework:ipVersion ;
 	] ;
 	sh:targetSubjectsOf stonework:ipVersion ;
+	.
+
+stonework:JoinKindShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:FlowKind ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Step has at most one joinKind, a FlowKind (exclusive or parallel)."@en ;
+		sh:path stonework:joinKind ;
+	] ;
+	sh:targetSubjectsOf stonework:joinKind ;
 	.
 
 stonework:KnownExploitedShape
@@ -361,6 +463,38 @@ stonework:ObservationWindowShape
 		stonework:firstSeen ,
 		stonework:lastSeen
 		;
+	.
+
+stonework:OutcomeVariableShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Variable ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Step or Plan has at most one outcomeVariable, a Variable."@en ;
+		sh:path stonework:outcomeVariable ;
+	] ;
+	sh:targetSubjectsOf stonework:outcomeVariable ;
+	.
+
+stonework:PartOfExecutionShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:CyberActivity ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "An execution is part of at most one parent execution; use stonework:partOfExecution+ for every ancestor."@en ;
+		sh:path stonework:partOfExecution ;
+	] ;
+	sh:targetSubjectsOf stonework:partOfExecution ;
+	.
+
+stonework:PerformerRoleShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Role ;
+		sh:message "A Step's performerRole is a Role; the Agents who hold it are given by RoleAssignments."@en ;
+		sh:path stonework:performerRole ;
+	] ;
+	sh:targetSubjectsOf stonework:performerRole ;
 	.
 
 stonework:PortShape
@@ -528,6 +662,16 @@ stonework:SecurityActuationShape
 	sh:targetClass stonework:SecurityActuation ;
 	.
 
+stonework:SeparatedFromShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Step ;
+		sh:message "separatedFrom relates two Steps."@en ;
+		sh:path stonework:separatedFrom ;
+	] ;
+	sh:targetSubjectsOf stonework:separatedFrom ;
+	.
+
 stonework:SightingShape
 	a sh:NodeShape ;
 	sh:property [
@@ -537,6 +681,37 @@ stonework:SightingShape
 		sh:path stonework:sightedObject ;
 	] ;
 	sh:targetClass stonework:Sighting ;
+	.
+
+stonework:SplitKindShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:FlowKind ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Step has at most one splitKind, a FlowKind (exclusive or parallel)."@en ;
+		sh:path stonework:splitKind ;
+	] ;
+	sh:targetSubjectsOf stonework:splitKind ;
+	.
+
+stonework:StepTargetShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:CyberEntity ;
+		sh:message "A Step's stepTarget is a CyberEntity, or a Variable whose value in the run is the target."@en ;
+		sh:path stonework:stepTarget ;
+	] ;
+	sh:targetSubjectsOf stonework:stepTarget ;
+	.
+
+stonework:SuppliedByShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Role ;
+		sh:message "A Variable's suppliedBy is a Role: the participants who supply its value from outside the Plan."@en ;
+		sh:path stonework:suppliedBy ;
+	] ;
+	sh:targetSubjectsOf stonework:suppliedBy ;
 	.
 
 stonework:TransitionShape
@@ -568,6 +743,11 @@ stonework:TransitionShape
 		] ,
 		[
 			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Transition has at most one guardValue."@en ;
+			sh:path stonework:guardValue ;
+		] ,
+		[
+			sh:maxCount "1"^^xsd:integer ;
 			sh:nodeKind sh:IRI ;
 			sh:path stonework:guardType ;
 		] ,
@@ -579,9 +759,32 @@ stonework:TransitionShape
 	sh:targetClass stonework:Transition ;
 	.
 
-stonework:VariableShape
+stonework:UsedBindingShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:VariableBinding ;
+		sh:path stonework:usedBinding ;
+	] ;
+	sh:targetSubjectsOf stonework:usedBinding ;
+	.
+
+stonework:VariableBindingShape
 	a sh:NodeShape ;
 	sh:property
+		[
+			sh:class stonework:CyberActivity ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A VariableBinding names exactly one execution it was bound in."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:boundIn ;
+		] ,
+		[
+			sh:class stonework:Variable ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A VariableBinding records the value of exactly one Variable."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:bindingOf ;
+		] ,
 		[
 			sh:maxCount "1"^^xsd:integer ;
 			sh:nodeKind sh:Literal ;
@@ -590,6 +793,37 @@ stonework:VariableShape
 		[
 			sh:maxCount "1"^^xsd:integer ;
 			sh:path stonework:boundTo ;
+		]
+		;
+	sh:targetClass stonework:VariableBinding ;
+	sh:xone (
+		[
+			sh:property [
+				sh:minCount "1"^^xsd:integer ;
+				sh:path stonework:boundTo ;
+			] ;
+		]
+		[
+			sh:property [
+				sh:minCount "1"^^xsd:integer ;
+				sh:path stonework:boundToLiteral ;
+			] ;
+		]
+	) ;
+	.
+
+stonework:VariableShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:maxCount "0"^^xsd:integer ;
+			sh:message "Since 0.12.0 a Variable's value in one execution is a stonework:VariableBinding; boundTo is no longer said of the Variable."@en ;
+			sh:path stonework:boundTo ;
+		] ,
+		[
+			sh:maxCount "0"^^xsd:integer ;
+			sh:message "Since 0.12.0 a Variable's value in one execution is a stonework:VariableBinding; boundToLiteral is no longer said of the Variable."@en ;
+			sh:path stonework:boundToLiteral ;
 		]
 		;
 	sh:targetClass stonework:Variable ;

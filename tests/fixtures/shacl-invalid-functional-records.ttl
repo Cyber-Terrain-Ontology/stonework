@@ -17,6 +17,39 @@ example:componentContext
 		;
 	.
 
+example:deviation
+	a stonework:Deviation ;
+	stonework:deviationKind
+		stonework:deviationKindSameAgent ,
+		stonework:deviationKindSkipped
+		;
+	stonework:deviationRun
+		example:firstInvestigation ,
+		example:secondInvestigation
+		;
+	stonework:deviationStep example:firstStep ;
+	.
+
+example:doubledIdentityControl
+	a stonework:IdentityControl ;
+	stonework:controlledIdentity
+		example:firstAccount ,
+		example:secondAccount
+		;
+	stonework:controllingAgent
+		example:firstAgent ,
+		example:secondAgent
+		;
+	.
+
+example:firstAccount
+	a stonework:UserAccount ;
+	.
+
+example:firstAgent
+	a stonework:ThreatActor ;
+	.
+
 example:firstAnalyst
 	a stonework:Person ;
 	.
@@ -43,6 +76,22 @@ example:firstProductFamily
 
 example:firstStep
 	a stonework:Step ;
+	stonework:defaultTransition
+		example:otherTransition ,
+		example:transition
+		;
+	stonework:joinKind
+		stonework:flowKindExclusive ,
+		stonework:flowKindParallel
+		;
+	stonework:outcomeVariable
+		example:firstVariable ,
+		example:secondVariable
+		;
+	stonework:splitKind
+		stonework:flowKindExclusive ,
+		stonework:flowKindParallel
+		;
 	.
 
 example:firstVariable
@@ -93,6 +142,16 @@ example:investigation
 		;
 	.
 
+example:otherTransition
+	a stonework:Transition ;
+	stonework:fromStep example:firstStep ;
+	stonework:guardValue
+		stonework:executionOutcomeFailed ,
+		stonework:executionOutcomeSucceeded
+		;
+	stonework:toStep example:secondStep ;
+	.
+
 example:relationship
 	a stonework:QualifiedAssertion ;
 	stonework:assertionObject
@@ -107,6 +166,14 @@ example:relationship
 		example:firstSubject ,
 		example:secondSubject
 		;
+	.
+
+example:secondAccount
+	a stonework:UserAccount ;
+	.
+
+example:secondAgent
+	a stonework:ThreatActor ;
 	.
 
 example:secondAnalyst
@@ -142,6 +209,14 @@ example:sighting
 	stonework:sightedObject
 		example:firstSubject ,
 		example:secondSubject
+		;
+	.
+
+example:stepExecution
+	a stonework:Process ;
+	stonework:partOfExecution
+		example:firstInvestigation ,
+		example:secondInvestigation
 		;
 	.
 
@@ -191,8 +266,16 @@ example:twoReportKinds
 	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
 	.
 
-example:variable
-	a stonework:Variable ;
+example:variableBinding
+	a stonework:VariableBinding ;
+	stonework:bindingOf
+		example:firstVariable ,
+		example:secondVariable
+		;
+	stonework:boundIn
+		example:firstInvestigation ,
+		example:secondInvestigation
+		;
 	stonework:boundTo
 		example:firstSubject ,
 		example:secondSubject
