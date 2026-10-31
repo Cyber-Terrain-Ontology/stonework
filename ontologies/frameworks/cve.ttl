@@ -919,6 +919,7 @@ cve:refType
 
 cve:references
 	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:references ;
 	rdfs:label "references"@en ;
 	rdfs:domain cve:CveRecord ;
 	rdfs:range cve:Reference ;

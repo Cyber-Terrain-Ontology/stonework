@@ -76,6 +76,7 @@ cpe:lastModified
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty
 		;
+	rdfs:subPropertyOf stonework:modified ;
 	rdfs:label "last modified"@en ;
 	rdfs:comment "Date this CPE entry was last modified in the NVD dictionary."@en ;
 	rdfs:domain stonework:VersionedProduct ;

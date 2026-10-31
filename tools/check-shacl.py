@@ -400,6 +400,8 @@ def main() -> int:
                 "guardType",
                 "guardValue",
                 "guardVariable",
+                "hasExploitMaturity",
+                "hasExploitationReportKind",
                 "hasInvestigationOutcome",
                 "hasInvestigationStatus",
                 "hasPriority",

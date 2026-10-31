@@ -1,8 +1,10 @@
 # Changelog
 
-## 0.12.0 (core): plans and runs
+## 0.12.0 (core), categories 0.3.0: plans and runs; exploit evidence
 
-A common parent for plans, and per-run Variable values, so a plan can be executed any number of times; the Roles that perform Steps; deviations from a plan as findings with evidence; parallel branches; messages between plans; default branches, step outcomes and targets; playbook types; what a hypothesis is about, with compound hypotheses made of parts; who controlled an identity, and when; and ATT&CK mitigations as Behaviors that plans implement. See [docs/plan-execution-model.md](docs/plan-execution-model.md) and the revised [BEC worked example](docs/bec-worked-example.md) (proposals 1, 2, 4 to 10, 12 and 13 to 16).
+Two strands of work. **Plans and runs:** a common parent for plans, and per-run Variable values, so a plan can be executed any number of times; the Roles that perform Steps; deviations from a plan as findings with evidence; parallel branches; messages between plans; default branches, step outcomes and targets; playbook types; what a hypothesis is about, with compound hypotheses made of parts; who controlled an identity, and when; and ATT&CK mitigations as Behaviors that plans implement. See [docs/plan-execution-model.md](docs/plan-execution-model.md) and the revised [BEC worked example](docs/bec-worked-example.md) (proposals 1, 2, 4 to 10, 12 and 13 to 16).
+
+**Exploit evidence:** vocabulary for vulnerability exploit evidence that does not fit the EPSS probability alone, without naming a catalog vendor in the identifier.
 
 ### Added
 
@@ -27,6 +29,12 @@ A common parent for plans, and per-run Variable values, so a plan can be execute
 - `stonework:hasPlaybookType` (Plan → PlaybookType; in `categories.ttl`): CACAO 2.0's playbook types, several allowed.
 - Categories: `stonework:DeviationKind` scheme (Skipped, Wrong role, Same agent, Out of order, Misused identity, Wrong target); `stonework:ExecutionOutcome` scheme (Succeeded, Failed, Timed out); `stonework:PlaybookType` scheme (Attack, Detection, Engagement, Investigation, Mitigation, Notification, Prevention, Remediation); `stonework:FlowKind` scheme (Exclusive, Parallel).
 - SHACL: `VariableBindingShape` (exactly one Variable and execution, exactly one value), `PartOfExecutionShape`, `UsedBindingShape`, `DeviationShape` (exactly one run and kind, at least one Step), `PerformerRoleShape`, `SeparatedFromShape`, `SplitKindShape`, `JoinKindShape`, `SuppliedByShape`, `DefaultTransitionShape`, `OutcomeVariableShape`, `StepTargetShape`, `HasPlaybookTypeShape`, `HypothesisPartShape`, `IdentityControlShape`, and `guardValue` at most once on `TransitionShape`; fixtures for each.
+- `stonework:epssPercentile` and `stonework:metricEpssPercentile`. The percentile is the rank of an EPSS probability, not a second probability.
+- `stonework:metricReportedExploited`. A source report that a vulnerability was exploited, including reports that name a threat actor, ransomware, or a botnet. Catalog membership stays `stonework:metricKevMembership`.
+- `stonework:ExploitationReportKind` (`exploited`, `threat-actor`, `ransomware`, `botnet`) and `stonework:hasExploitationReportKind` on the observation. A named actor, malware, or botnet is the observation's `stonework:assertionObject`. That property is single-valued, so each named actor or malware is its own observation, even when the kind is the same.
+- `stonework:ExploitMaturity` (`poc`, `weaponized`, in that order) and `stonework:hasExploitMaturity`. One maturity per subject: the vulnerability's highest known maturity (a convenience projection), or one exploit reference's own maturity. Dated history is not recorded yet.
+- `stonework:AffectedStatus` (`affected`, `unaffected`, `unknown`, `fixed`, `under-investigation`) and functional `stonework:hasAffectedStatus` on `stonework:VulnerabilityAssessment`.
+- SHACL: `EpssPercentileShape`, the same 0.0–1.0 bound as `epssScore`; `ExploitMaturityShape` and `ExploitationReportKindShape`, at most one value per subject. These are SHACL limits rather than `owl:FunctionalProperty`, so two sources that disagree are reported, not merged by a reasoner.
 
 ### Changed
 
@@ -40,10 +48,25 @@ A common parent for plans, and per-run Variable values, so a plan can be execute
 - Scope notes on `performedBy` and `attributedToAgent`: an execution names its performer as observed, often an identity; an identity used by someone other than its holder stays the performer, and the Agent responsible is `attributedTo`.
 - Scope notes on `Behavior`, `Step`, `Process`, `Variable`, `Transition`, `Hypothesis` and `executionOf` describe runs and bindings. A Hypothesis is judged by its Variable's binding in the Investigation that tests it.
 - Examples: the T1003.001 trace has a run, nested step executions and bindings; the BEC example runs its business process three times and its search Step once per mailbox, gives each business Step its Role, records the wire's release by the controller's bank-portal login, records the skipped callback as a Deviation, and runs its containment plan's credential reset and transport block as parallel branches joined before the review, and adds the actor's `OperationPlan`, whose sending Step outputs the payment request the business process takes as input. Its detection search has an outcome Variable, a failure branch and a default branch; its containment Steps name their targets; its plans carry playbook types. Its hypotheses say what they're about, and a compound hypothesis splits the activity (confirmed) from the attribution (pending). The actor's control of the controller's mailbox account is an `IdentityControl` from 2 to 30 September, and two sign-ins in that interval await review. Its transport block implements ATT&CK M1042 and its callback Step M1060.
+- `stonework:VersionedProduct` is a `stonework:CyberEntity`, the same root as `stonework:Product`. A release stays disjoint from its product line.
+- `stonework:metricKevMembership` and `stonework:isKnownExploited` are no longer defined as CISA-only. The catalog is the observation's `stonework:hasProvenance`.
+- `stonework:url` has no domain, so a framework entity's page (an ATT&CK technique's, for one) doesn't make the entity a `stonework:OnlineReference`.
+- `stonework:controlFamily` allows a family code ("AC") as well as a name.
 
 ### Deprecated
 
 - `stonework:playbookVersion` and `stonework:playbookFormat`: now sub-properties of `planVersion` and `planFormat`.
+
+### Framework alignment
+
+Framework properties that already had a STONEWORK term are now tied to it (from the framework-vs-STONEWORK gap audit):
+
+- `nist:family` ⊑ `stonework:controlFamily`
+- `attack:alias` ⊑ `stones:aliases` ⊑ `skos:altLabel`
+- `attack:url` ⊑ `stonework:url`
+- `cpe:lastModified` ⊑ `stonework:modified`
+- `cve:references` ⊑ `stonework:references`
+
 
 ## 0.11.0 (core), categories 0.2.0
 
