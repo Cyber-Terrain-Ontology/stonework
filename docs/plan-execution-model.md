@@ -151,6 +151,53 @@ the queries this makes possible.
   status: there's no execution of a skipped Step, and a failed one has an
   outcome in its output Variable.
 
+## 2c. Plans as programs: sequence, branching, loops, parallel branches (0.12.0)
+
+A plan's control flow has the three constructs any sequential program needs,
+plus the one a plan for a team needs:
+
+| Construct | How a plan says it |
+|---|---|
+| Sequence | A `Transition` (fromStep → toStep), `precededByStep`, or `stepOrder` for a plain numbered list |
+| Conditional branching | A guarded `Transition`: `guardVariable`, with `guardType` or `guardLiteralValue` and optionally `guardOperator` |
+| Looping | A `Transition` back to a Step already reached; each pass is its own execution with its own bindings |
+| Parallel branches | `splitKind` and `joinKind` on a Step, or a `precededByStep` dependency graph |
+
+Sequence, branching and looping say what may happen next; they assume one
+thread of control. Parallel branches say what doesn't depend on what. A plan
+carried out by several people or systems needs that: written as a sequence,
+two independent Steps claim an order nobody intends, and a run that did them
+the other way round would look like an out-of-order deviation. The join is
+the part that matters most: "don't warn the suppliers until both the reset
+and the block are done" is a real control requirement.
+
+- **`splitKind`** (Step → `FlowKind`): when the Step finishes, *exclusive*
+  takes exactly one outgoing Transition, one whose guard holds; *parallel*
+  takes every one whose guard holds, as concurrent branches. An unguarded
+  Transition always holds, so a parallel split with unguarded Transitions is
+  BPMN's parallel gateway and one with guarded Transitions is its inclusive
+  gateway.
+- **`joinKind`** (Step → `FlowKind`): *exclusive* lets the Step start as soon
+  as one incoming Transition is taken; *parallel* makes it wait until the
+  execution of every Step it's entered from, by a Transition taken in the
+  same run, has ended. "Taken in the same run" is read from the record, so a
+  join after an inclusive split waits only for the branches that started.
+- **Both default to exclusive**, the meaning Transitions had before, so
+  existing plans are unchanged.
+- **No gateway nodes.** As in YAWL, a split or join is a property of the Step
+  it belongs to, so every Step stays a unit of action. A BPMN gateway maps
+  onto the `splitKind` or `joinKind` of the Step next to it.
+- **Without guards, `precededByStep` is enough.** A Step with several
+  `precededByStep` values follows all of them, and Steps with no path
+  between them may run in parallel.
+
+Two checks against a run follow from this. A parallel join whose execution
+started before a taken branch's execution ended is a candidate *out-of-order*
+`Deviation`, and an undetermined one if either time is missing. A branch a
+parallel split took, with no execution in the run, is a candidate *skipped*
+`Deviation`. The [BEC worked example](bec-worked-example.md#4-the-control-plan)
+has both queries.
+
 ---
 
 ## 3. Entity-relationship diagram — one full vertical slice
@@ -308,6 +355,8 @@ vulnerability assessment, ...).
 | `stonework:deviationStep` | `Deviation` → `Step` | The Step or Steps concerned. |
 | `stonework:deviationExecution` | `Deviation` → `Process` | The executions concerned, if any. |
 | `stonework:deviationKind` | `Deviation` → `DeviationKind` (functional; in `categories.ttl`) | Skipped, wrong role, same agent, out of order, misused identity. |
+| `stonework:splitKind` | `Step` → `FlowKind` (functional; in `categories.ttl`) | Exclusive (one outgoing Transition) or parallel (every one whose guard holds). Default exclusive. |
+| `stonework:joinKind` | `Step` → `FlowKind` (functional; in `categories.ttl`) | Exclusive (start on any incoming Transition) or parallel (wait for every branch taken in the run). Default exclusive. |
 
 `evidencedBy` takes a `Deviation` as well as a `Sighting`.
 `Playbook`, `ControlPlan`, `InvestigationPlan`, `Procedure` and

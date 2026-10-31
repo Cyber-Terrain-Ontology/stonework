@@ -208,6 +208,21 @@ stonework:FinancialInstitutionType
 	skos:prefLabel "Financial Institution Type"@en ;
 	.
 
+stonework:FlowKind
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:flowKindScheme ;
+		]
+		;
+	skos:definition "A classification of how control flow splits after a Step or joins before one."@en ;
+	skos:prefLabel "Flow Kind"@en ;
+	skos:scopeNote "Applied via stonework:splitKind and stonework:joinKind to Steps. Named individuals: exclusive, parallel."@en ;
+	.
+
 stonework:HypothesisStatus
 	a owl:Class ;
 	rdfs:subClassOf
@@ -1341,6 +1356,44 @@ stonework:financialInstitutionTypeVirtualAssetServiceProvider
 	skos:prefLabel "Virtual Asset Service Provider"@en ;
 	.
 
+stonework:flowKindExclusive
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FlowKind
+		;
+	skos:definition "One path. As a split, exactly one of the Step's outgoing Transitions is taken, one whose guard holds. As a join, the Step may start as soon as any one of its incoming Transitions is taken."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:flowKindScheme
+		;
+	skos:notation "exclusive" ;
+	skos:prefLabel "Exclusive"@en ;
+	.
+
+stonework:flowKindParallel
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:FlowKind
+		;
+	skos:definition "All paths. As a split, every outgoing Transition whose guard holds is taken, and the branches run concurrently. As a join, the Step starts only after the execution of every Step it is entered from, by a Transition taken in the same run, has ended."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:flowKindScheme
+		;
+	skos:notation "parallel" ;
+	skos:prefLabel "Parallel"@en ;
+	.
+
+stonework:flowKindScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Flow Kind Scheme"@en ;
+	skos:definition "The controlled vocabulary of the ways control flow splits after a Step or joins before one."@en ;
+	skos:prefLabel "STONEWORK Flow Kind Scheme"@en ;
+	.
+
 stonework:hasAccountType
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:categorizedBy ;
@@ -2178,6 +2231,20 @@ stonework:investigationStatusScheme
 	dcterms:title "STONEWORK Investigation Status Scheme"@en ;
 	skos:definition "The controlled vocabulary of investigation lifecycle states."@en ;
 	skos:prefLabel "STONEWORK Investigation Status Scheme"@en ;
+	.
+
+stonework:joinKind
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:FlowKind ;
+	rdfs:seeAlso <https://www.omg.org/spec/BPMN/2.0.2/> ;
+	skos:definition "When a Step entered by several Transitions may start: exclusive, as soon as one incoming Transition is taken; parallel, only after every incoming Transition taken in the same run."@en ;
+	skos:prefLabel "joinKind"@en ;
+	skos:scopeNote "Omitted means exclusive. An incoming Transition is taken in a run when its from-Step has an execution that is stonework:partOfExecution that run and its guard held against that execution's binding. A parallel join therefore waits only for the branches that were started in the run, so a parallel join after an inclusive split (a parallel split with guarded Transitions) is well defined for recorded runs. A run whose join execution starts before the execution of a taken incoming branch has ended departs from the Plan: an out-of-order stonework:Deviation. As with stonework:splitKind, there are no gateway nodes; a BPMN converging gateway maps onto the joinKind of the Step it leads to."@en ;
 	.
 
 stonework:killChainPhaseScheme
@@ -3196,6 +3263,20 @@ stonework:sophisticationLevelStrategic
 		;
 	skos:notation "strategic" ;
 	skos:prefLabel "Strategic"@en ;
+	.
+
+stonework:splitKind
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:FlowKind ;
+	rdfs:seeAlso <https://www.omg.org/spec/BPMN/2.0.2/> ;
+	skos:definition "How a Step's outgoing Transitions are taken when it finishes: exclusive, exactly one, whose guard holds; parallel, every one whose guard holds, as concurrent branches."@en ;
+	skos:prefLabel "splitKind"@en ;
+	skos:scopeNote "Omitted means exclusive, the meaning several outgoing Transitions had before splitKind existed. With parallel, an unguarded Transition is always taken, so a parallel split whose Transitions are all unguarded is BPMN's parallel gateway, and one whose Transitions are guarded is its inclusive gateway. The branches may overlap in time; the Step where they meet says by its stonework:joinKind whether it waits for them all. As in YAWL, a split is a property of the Step it follows, not a separate gateway node, so every Step remains a unit of action; a BPMN diverging gateway maps onto the splitKind of the Step before it."@en ;
 	.
 
 stonework:threatActorRoleAgent

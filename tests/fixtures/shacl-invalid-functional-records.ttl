@@ -56,6 +56,14 @@ example:firstProductFamily
 
 example:firstStep
 	a stonework:Step ;
+	stonework:joinKind
+		stonework:flowKindExclusive ,
+		stonework:flowKindParallel
+		;
+	stonework:splitKind
+		stonework:flowKindExclusive ,
+		stonework:flowKindParallel
+		;
 	.
 
 example:firstVariable

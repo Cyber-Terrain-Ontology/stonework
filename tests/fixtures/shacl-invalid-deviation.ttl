@@ -16,8 +16,10 @@ example:deviation
 
 example:enterStep
 	a stonework:Step ;
+	stonework:joinKind example:variable ;
 	stonework:performerRole example:clerk ;
 	stonework:separatedFrom example:variable ;
+	stonework:splitKind example:clerk ;
 	.
 
 example:variable

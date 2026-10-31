@@ -233,6 +233,7 @@ example:sighting
 example:sourceStep
 	a stonework:Step ;
 	stonework:separatedFrom example:targetStep ;
+	stonework:splitKind stonework:flowKindParallel ;
 	.
 
 example:sponsorAssignment
@@ -260,6 +261,7 @@ example:stepRole
 
 example:targetStep
 	a stonework:Step ;
+	stonework:joinKind stonework:flowKindParallel ;
 	stonework:performerRole example:stepRole ;
 	.
 

@@ -2,7 +2,7 @@
 
 ## 0.12.0 (core): plans and runs
 
-A common parent for plans, and per-run Variable values, so a plan can be executed any number of times; the Roles that perform Steps; and deviations from a plan as findings with evidence. See [docs/plan-execution-model.md](docs/plan-execution-model.md) and the revised [BEC worked example](docs/bec-worked-example.md) (proposals 2, 4, 5, 6 and 7).
+A common parent for plans, and per-run Variable values, so a plan can be executed any number of times; the Roles that perform Steps; deviations from a plan as findings with evidence; and parallel branches. See [docs/plan-execution-model.md](docs/plan-execution-model.md) and the revised [BEC worked example](docs/bec-worked-example.md) (proposals 2, 4, 5, 6, 7 and 9).
 
 ### Added
 
@@ -15,8 +15,9 @@ A common parent for plans, and per-run Variable values, so a plan can be execute
 - `stonework:performerRole` (Step → Role): the Role whose holder is expected to perform a Step.
 - `stonework:separatedFrom` (symmetric, Step ↔ Step): segregation of duties; in any one run, the two Steps are performed by different Agents.
 - `stonework:Deviation` (⊑ `QualifiedAssertion`): an established finding that a run departed from its Plan, with `stonework:deviationRun` (functional), `stonework:deviationStep`, `stonework:deviationExecution` and `stonework:deviationKind` (functional).
-- Categories: `stonework:DeviationKind` scheme (Skipped, Wrong role, Same agent, Out of order, Misused identity).
-- SHACL: `VariableBindingShape` (exactly one Variable and execution, exactly one value), `PartOfExecutionShape`, `UsedBindingShape`, `DeviationShape` (exactly one run and kind, at least one Step), `PerformerRoleShape`, `SeparatedFromShape`; fixtures for each.
+- `stonework:splitKind` and `stonework:joinKind` (both functional, Step → `FlowKind`; in `categories.ttl`): whether a Step's outgoing Transitions are alternatives or concurrent branches, and whether a Step entered by several Transitions waits for all of them. Both default to exclusive, the meaning Transitions already had.
+- Categories: `stonework:DeviationKind` scheme (Skipped, Wrong role, Same agent, Out of order, Misused identity); `stonework:FlowKind` scheme (Exclusive, Parallel).
+- SHACL: `VariableBindingShape` (exactly one Variable and execution, exactly one value), `PartOfExecutionShape`, `UsedBindingShape`, `DeviationShape` (exactly one run and kind, at least one Step), `PerformerRoleShape`, `SeparatedFromShape`, `SplitKindShape`, `JoinKindShape`; fixtures for each.
 
 ### Changed
 
@@ -24,9 +25,10 @@ A common parent for plans, and per-run Variable values, so a plan can be execute
 - `Playbook`, `ControlPlan`, `InvestigationPlan`, `Procedure` and `ThreatScenario` are subclasses of `Plan` rather than directly of `Behavior` (still Behaviors).
 - `stonework:performedBy`, `stonework:triggeredBy` and `stonework:triggersPlaybook` take any `Plan`, not only a `Playbook`.
 - `stonework:evidencedBy` takes a `Deviation` as well as a `Sighting`.
+- Scope note on `stonework:precededByStep`: a Step with several values follows all of them, and Steps with no path between them may be performed in parallel.
 - Scope notes on `performedBy` and `attributedToAgent`: an execution names its performer as observed, often an identity; an identity used by someone other than its holder stays the performer, and the Agent responsible is `attributedTo`.
 - Scope notes on `Behavior`, `Step`, `Process`, `Variable`, `Transition`, `Hypothesis` and `executionOf` describe runs and bindings. A Hypothesis is judged by its Variable's binding in the Investigation that tests it.
-- Examples: the T1003.001 trace has a run, nested step executions and bindings; the BEC example runs its business process three times and its search Step once per mailbox, gives each business Step its Role, records the wire's release by the controller's bank-portal login, and records the skipped callback as a Deviation.
+- Examples: the T1003.001 trace has a run, nested step executions and bindings; the BEC example runs its business process three times and its search Step once per mailbox, gives each business Step its Role, records the wire's release by the controller's bank-portal login, records the skipped callback as a Deviation, and runs its containment plan's credential reset and transport block as parallel branches joined before the review.
 
 ### Deprecated
 

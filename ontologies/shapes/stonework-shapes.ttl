@@ -242,6 +242,17 @@ stonework:IpVersionShape
 	sh:targetSubjectsOf stonework:ipVersion ;
 	.
 
+stonework:JoinKindShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:FlowKind ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Step has at most one joinKind, a FlowKind (exclusive or parallel)."@en ;
+		sh:path stonework:joinKind ;
+	] ;
+	sh:targetSubjectsOf stonework:joinKind ;
+	.
+
 stonework:KnownExploitedShape
 	a sh:NodeShape ;
 	sh:property [
@@ -568,6 +579,17 @@ stonework:SightingShape
 		sh:path stonework:sightedObject ;
 	] ;
 	sh:targetClass stonework:Sighting ;
+	.
+
+stonework:SplitKindShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:FlowKind ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Step has at most one splitKind, a FlowKind (exclusive or parallel)."@en ;
+		sh:path stonework:splitKind ;
+	] ;
+	sh:targetSubjectsOf stonework:splitKind ;
 	.
 
 stonework:TransitionShape

@@ -230,33 +230,55 @@ ex:cstep-block-external
 	a stonework:Step ;
 	skos:prefLabel "Block automatic forwarding to external domains at the transport layer"@en ;
 	stonework:isStepOf ex:ctlplan-forwarding ;
-	stonework:stepOrder "3"^^xsd:integer ;
 	.
 
 ex:cstep-remove-rule
 	a stonework:Step ;
 	skos:prefLabel "Disable and remove the forwarding rule, keeping a copy as evidence"@en ;
 	stonework:isStepOf ex:ctlplan-forwarding ;
-	stonework:stepOrder "1"^^xsd:integer ;
+	stonework:splitKind stonework:flowKindParallel ;
 	.
 
 ex:cstep-reset
 	a stonework:Step ;
 	skos:prefLabel "Revoke the account's sessions and reset its credentials"@en ;
 	stonework:isStepOf ex:ctlplan-forwarding ;
-	stonework:stepOrder "2"^^xsd:integer ;
 	.
 
 ex:cstep-review
 	a stonework:Step ;
 	skos:prefLabel "Review what was forwarded, and warn the suppliers and customers it exposed"@en ;
 	stonework:isStepOf ex:ctlplan-forwarding ;
-	stonework:stepOrder "4"^^xsd:integer ;
+	stonework:joinKind stonework:flowKindParallel ;
+	.
+
+ex:ct-block-to-review
+	a stonework:Transition ;
+	stonework:fromStep ex:cstep-block-external ;
+	stonework:toStep ex:cstep-review ;
+	.
+
+ex:ct-remove-to-block
+	a stonework:Transition ;
+	stonework:fromStep ex:cstep-remove-rule ;
+	stonework:toStep ex:cstep-block-external ;
+	.
+
+ex:ct-remove-to-reset
+	a stonework:Transition ;
+	stonework:fromStep ex:cstep-remove-rule ;
+	stonework:toStep ex:cstep-reset ;
+	.
+
+ex:ct-reset-to-review
+	a stonework:Transition ;
+	stonework:fromStep ex:cstep-reset ;
+	stonework:toStep ex:cstep-review ;
 	.
 
 ex:ctlplan-forwarding
 	a stonework:ControlPlan ;
-	skos:definition "The organization's containment plan for a malicious email forwarding rule. It implements NIST SP 800-53 AC-4 (information flow enforcement), which the CTI Encyclopedia links to T1114.003."@en ;
+	skos:definition "The organization's containment plan for a malicious email forwarding rule. It implements NIST SP 800-53 AC-4 (information flow enforcement), which the CTI Encyclopedia links to T1114.003. The rule is removed first, keeping a copy as evidence; the credential reset and the transport block are independent and run in parallel; the review waits for both."@en ;
 	skos:prefLabel "Contain a malicious forwarding rule"@en ;
 	stonework:hasStep
 		ex:cstep-block-external ,

@@ -2,8 +2,8 @@
 
 *First cut 2026-10-22, from a conversation between Ryan Hohimer and Claude; revised
 2026-10-30 for STONEWORK 0.12.0, which adds `stonework:Plan`, `BusinessProcess`, per-run
-Variable bindings, the Roles that perform Steps, and deviations as findings (proposals 2, 4,
-5, 6 and 7 below). The gaps it still runs into are
+Variable bindings, the Roles that perform Steps, deviations as findings, and parallel
+branches (proposals 2, 4, 5, 6, 7 and 9 below). The gaps it still runs into are
 listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
@@ -248,13 +248,22 @@ only one value.
 
 `ex:ctlplan-forwarding` is a `stonework:ControlPlan`, "Contain a malicious forwarding rule".
 It `implements` NIST SP 800-53 **AC-4** (Information Flow Enforcement), which the
-Encyclopedia says `mitigatesAttackPattern` T1114.003. Four Steps:
+Encyclopedia says `mitigatesAttackPattern` T1114.003. Four Steps, two of them in parallel:
 
-1. Disable and remove the rule, keeping a copy as evidence. *(analyst)*
-2. Revoke the account's sessions and reset its credentials. *(analyst)*
-3. Block automatic forwarding to external domains at the transport layer. *(automation)*
-4. Review what was forwarded, and warn the suppliers and customers it exposed. *(analyst and
-   controller)*
+```
+Disable and remove the rule, keeping a copy as evidence      splitKind parallel
+  ├─► Revoke the account's sessions and reset its credentials     ─┐
+  └─► Block automatic forwarding to external domains              ─┤
+Review what was forwarded, and warn those it exposed  ◄────────────┘  joinKind parallel
+```
+
+The rule is removed first, so the evidence is kept before anything else changes. The
+credential reset (the analyst) and the transport block (automation) don't depend on each
+other, so the plan doesn't put them in an order: the removal's `splitKind` is
+`flowKindParallel`, and both of its Transitions are taken. The review (the analyst and the
+controller) waits for both: its `joinKind` is `flowKindParallel`. Written as a sequence, the
+plan would claim an order nobody intends, and a run that blocked forwarding before resetting
+the credentials would look out of order.
 
 Its execution `ex:exe-contain` is three things at once: it `correspondsToStep` the
 DetectionPlan's containment Step and is `partOfExecution` the Investigation (the containment
@@ -278,6 +287,61 @@ SELECT ?kind ?plan ?via WHERE {
 
 → "respond: `ex:ctlplan-forwarding` via AC-4" and "detect: `ex:detplan-forwarding` via DET0576".
 Neither plan names the technique; both reach it through what they implement.
+
+**Did the review wait for both branches?** A parallel join is checked against the branches
+taken in the same run: each incoming Transition whose from-Step has an execution in the run,
+and whose guard, if any, held against that execution's binding.
+
+```sparql
+# Did each parallel join wait for every branch taken in its run?
+SELECT ?run ?join ?branch ?ended ?started ?verdict WHERE {
+  ?j stonework:joinKind stonework:flowKindParallel ; skos:prefLabel ?join .
+  ?je stonework:correspondsToStep ?j ; stonework:partOfExecution ?run .
+  ?t stonework:toStep ?j ; stonework:fromStep ?f .            # an incoming Transition
+  ?fe stonework:correspondsToStep ?f ; stonework:partOfExecution ?run .
+  ?f skos:prefLabel ?branch .
+  FILTER (NOT EXISTS { ?t stonework:guardVariable ?any }      # taken: unguarded,
+    || EXISTS { ?t stonework:guardVariable ?gv .              # or its guard held
+        ?b stonework:bindingOf ?gv ; stonework:boundIn ?fe .
+        { ?t stonework:guardLiteralValue ?gl . ?b stonework:boundToLiteral ?gl }
+        UNION
+        { ?t stonework:guardType ?gt . ?b stonework:boundTo ?bo .
+          ?bo a/rdfs:subClassOf* ?gt } })
+  OPTIONAL { ?fe stonework:endedAtTime ?ended }
+  OPTIONAL { ?je stonework:startedAtTime ?started }
+  BIND(IF(!BOUND(?ended) || !BOUND(?started), "undetermined",
+       IF(?started >= ?ended, "conforms", "out of order")) AS ?verdict)
+} ORDER BY ?run ?join ?branch
+```
+
+→ the reset ended 16:05:00 and the block 16:06:04 on 30 September; the review started at
+16:30. Both rows conform. A review started at 16:06:00 would be *out of order* against the
+block, and a branch with no recorded end time gives *undetermined*. (The guard test here is
+equality only; `guardOperator` would extend it.)
+
+A join can only wait for branches that were performed, so a branch the split took but the
+run never performed needs its own query. It's a candidate *skipped* Deviation:
+
+```sparql
+SELECT ?run ?split ?missing WHERE {
+  ?s stonework:splitKind stonework:flowKindParallel ; skos:prefLabel ?split .
+  ?se stonework:correspondsToStep ?s ; stonework:partOfExecution ?run .
+  ?t stonework:fromStep ?s ; stonework:toStep ?m .            # an outgoing Transition
+  FILTER (NOT EXISTS { ?t stonework:guardVariable ?any }      # taken (as above)
+    || EXISTS { ?t stonework:guardVariable ?gv .
+        ?b stonework:bindingOf ?gv ; stonework:boundIn ?se .
+        { ?t stonework:guardLiteralValue ?gl . ?b stonework:boundToLiteral ?gl }
+        UNION
+        { ?t stonework:guardType ?gt . ?b stonework:boundTo ?bo .
+          ?bo a/rdfs:subClassOf* ?gt } })
+  FILTER NOT EXISTS { ?x stonework:correspondsToStep ?m ; stonework:partOfExecution ?run }
+  ?m skos:prefLabel ?missing .
+}
+```
+
+→ nothing here. With the block's execution removed, it returns the block; with the block's
+Transition guarded on a binding that didn't hold, it returns nothing, since that branch was
+never taken.
 
 ## What it shows about plans
 
@@ -310,7 +374,7 @@ hypothesis-and-evidence layer.
 
 ## Gaps, as proposals
 
-Numbered for discussion. Proposals 2, 4, 5, 6 and 7 are done in 0.12.0, and proposal 1 is
+Numbered for discussion. Proposals 2, 4, 5, 6, 7 and 9 are done in 0.12.0, and proposal 1 is
 decided; the rest are not in the ontology yet.
 
 1. **A Hypothesis has no direct link to what it's about.** Here it reaches T1114.003 only
@@ -376,9 +440,14 @@ decided; the rest are not in the ontology yet.
    `Mitigation` a `Behavior`, as `Control` is; or link a ControlPlan to a mitigation with a
    different property.
 
-9. **No parallel branches.** A Transition is a guarded sequence flow, so a plan can't say that
-   Steps run side by side and join afterwards (BPMN's parallel gateway). The containment
-   plan's Steps 1 to 3 could run in parallel. Proposal: discuss a split/join construct.
+9. **Done in 0.12.0: parallel branches.** `stonework:splitKind` and `stonework:joinKind`
+   (Step → `FlowKind`: exclusive or parallel, both defaulting to exclusive, the meaning
+   Transitions already had). A parallel split takes every outgoing Transition whose guard
+   holds, so guarded Transitions give BPMN's inclusive split as well as its parallel one; a
+   parallel join waits for every branch taken in the run. There are no gateway nodes: as in
+   YAWL, the split or join belongs to the Step, and a BPMN gateway maps onto the Step next to
+   it. `precededByStep` now says a Step follows all of its predecessors, so a plain dependency
+   graph expresses parallel work without guards. The containment plan uses both properties.
 
 10. **No messages between participants.** The actor's email enters the business process as a
     Step's input, but nothing says it was sent from the actor's plan to the organization's

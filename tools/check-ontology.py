@@ -244,6 +244,7 @@ def main() -> int:
         STONEWORK + "hasInvestigationStatus",
         STONEWORK + "hasPriority",
         STONEWORK + "installedOn",
+        STONEWORK + "joinKind",
         STONEWORK + "leadInvestigator",
         STONEWORK + "mergedInto",
         STONEWORK + "partOfExecution",
@@ -252,6 +253,7 @@ def main() -> int:
         STONEWORK + "predictedValue",
         STONEWORK + "predictsVariable",
         STONEWORK + "sightedObject",
+        STONEWORK + "splitKind",
         STONEWORK + "toStep",
         STONEWORK + "versionOf",
     }
