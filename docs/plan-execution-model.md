@@ -385,6 +385,8 @@ vulnerability assessment, ...).
 | `stonework:deviationStep` | `Deviation` → `Step` | The Step or Steps concerned. |
 | `stonework:deviationExecution` | `Deviation` → `Process` | The executions concerned, if any. |
 | `stonework:deviationKind` | `Deviation` → `DeviationKind` (functional; in `categories.ttl`) | Skipped, wrong role, same agent, out of order, misused identity, wrong target. |
+| `stonework:hypothesisAbout` | `Hypothesis` → anything | What a hypothesis concerns, for finding it; several values, no roles. |
+| `stonework:hypothesisPart` | `Hypothesis` → `Hypothesis` | A claim a compound hypothesis is the conjunction of; refuted parts say which claim failed. |
 | `stonework:defaultTransition` | `Step` → `Transition` (functional) | The Transition taken when no other outgoing guard holds. |
 | `stonework:guardValue` | `Transition` → any individual (functional) | A guard that tests identity with an individual, such as a category value. |
 | `stonework:outcomeVariable` | `Behavior` → `Variable` (functional; ⊑ `hasOutputVariable`) | The output Variable whose value is an `ExecutionOutcome`: succeeded, failed, timed out. |
@@ -523,7 +525,8 @@ STONEWORK plan can be written in CACAO.
   Checks answer conforms, deviates or undetermined, because a log often shows
   only an account.
 - **Hypotheses.** A predicted outcome, separate from the actual one, with
-  confidence and a confirmed / refuted status. CACAO has no epistemic layer.
+  confidence and a confirmed / refuted status, what it's about, and parts
+  that can be judged separately. CACAO has no epistemic layer.
 - **Business processes as plans.** CACAO's playbooks are security
   orchestration; an organization's routine work, where attacks such as BEC
   succeed or fail, is outside its scope.

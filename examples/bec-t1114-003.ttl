@@ -583,12 +583,41 @@ ex:file-clerk-statement
 	skos:prefLabel "Accounts-payable clerk's statement (1 October)"@en ;
 	.
 
+ex:hyp-actor-diverted
+	a stonework:Hypothesis ;
+	skos:definition "The actor who sent the bank-change email diverted the 16 September wire by reading the controller's mail through a forwarding rule (T1114.003). A conjunction of two claims tested differently: the rule (the activity) and who set it (the attribution)."@en ;
+	skos:prefLabel "Hypothesis: the email's sender diverted the wire through a forwarding rule"@en ;
+	stonework:confidence "60"^^xsd:integer ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
+	stonework:hypothesisPart
+		ex:hyp-attribution ,
+		ex:hyp-controller-rule
+		;
+	.
+
+ex:hyp-attribution
+	a stonework:Hypothesis ;
+	skos:definition "The forwarding rule and the email from the lookalike address are the work of the same actor. The rule was created through the controller's own account and the email came from an address registered to no one known, so the link rests on timing and on what the email knew."@en ;
+	skos:prefLabel "Hypothesis: the rule's creator sent the bank-change email"@en ;
+	stonework:confidence "60"^^xsd:integer ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
+	stonework:hypothesisAbout
+		ex:actor ,
+		ex:email-bank-change ,
+		ex:rule-forward
+		;
+	.
+
 ex:hyp-clerk-rule
 	a stonework:Hypothesis ;
 	skos:definition "T1114.003 is also in use on the accounts-payable clerk's mailbox."@en ;
 	skos:prefLabel "Hypothesis: a forwarding rule on the clerk's mailbox"@en ;
 	stonework:confidence "30"^^xsd:integer ;
 	stonework:hasHypothesisStatus stonework:hypothesisStatusRefuted ;
+	stonework:hypothesisAbout
+		cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ,
+		ex:acct-ap-clerk-mailbox
+		;
 	stonework:predictedType stonework:Sighting ;
 	stonework:predictsVariable ex:var-rule-found ;
 	.
@@ -599,6 +628,10 @@ ex:hyp-controller-rule
 	skos:prefLabel "Hypothesis: a forwarding rule on the controller's mailbox"@en ;
 	stonework:confidence "70"^^xsd:integer ;
 	stonework:hasHypothesisStatus stonework:hypothesisStatusConfirmed ;
+	stonework:hypothesisAbout
+		cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ,
+		ex:acct-controller-mailbox
+		;
 	stonework:predictedType stonework:Sighting ;
 	stonework:predictsVariable ex:var-rule-found ;
 	.
@@ -631,6 +664,8 @@ ex:inv-bec
 	stonework:produces ex:dev-0916-callback ;
 	stonework:startedAtTime "2026-09-30T14:00:00Z"^^xsd:dateTime ;
 	stonework:testsHypothesis
+		ex:hyp-actor-diverted ,
+		ex:hyp-attribution ,
 		ex:hyp-clerk-rule ,
 		ex:hyp-controller-rule
 		;

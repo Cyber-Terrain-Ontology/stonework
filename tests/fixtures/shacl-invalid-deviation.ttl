@@ -26,6 +26,11 @@ example:enterStep
 	stonework:stepTarget "the mailbox" ;
 	.
 
+example:hypothesis
+	a stonework:Hypothesis ;
+	stonework:hypothesisPart example:clerk ;
+	.
+
 example:variable
 	a stonework:Variable ;
 	stonework:suppliedBy example:clerk ;

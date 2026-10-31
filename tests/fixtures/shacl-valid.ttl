@@ -11,6 +11,11 @@ example:activity
 	stonework:startedAtTime "2026-08-20T10:00:00Z"^^xsd:dateTime ;
 	.
 
+example:activityHypothesis
+	a stonework:Hypothesis ;
+	stonework:hypothesisAbout example:indicator ;
+	.
+
 example:actor
 	a stonework:ThreatActor ;
 	stonework:hasRoleAssignment example:sponsorAssignment ;
@@ -59,6 +64,12 @@ example:componentContext
 		example:secondVersionedProduct ,
 		example:versionedProduct
 		;
+	.
+
+example:compoundHypothesis
+	a stonework:Hypothesis ;
+	stonework:hypothesisAbout example:actor ;
+	stonework:hypothesisPart example:activityHypothesis ;
 	.
 
 example:deviation

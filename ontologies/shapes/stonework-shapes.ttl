@@ -172,6 +172,16 @@ stonework:HashShape
 	sh:targetClass stonework:Hash ;
 	.
 
+stonework:HypothesisPartShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Hypothesis ;
+		sh:message "A Hypothesis's parts are Hypotheses: the claims it is the conjunction of."@en ;
+		sh:path stonework:hypothesisPart ;
+	] ;
+	sh:targetSubjectsOf stonework:hypothesisPart ;
+	.
+
 stonework:HypothesisShape
 	a sh:NodeShape ;
 	sh:property

@@ -536,7 +536,7 @@ stonework:Hypothesis
 	rdfs:subClassOf stonework:IntelligenceProduct ;
 	skos:definition "A structured, falsifiable prediction about the value a Variable will resolve to once the Behavior or Step declaring that Variable executes."@en ;
 	skos:prefLabel "Hypothesis" ;
-	skos:scopeNote "Formalizes the anticipated side of the Variable lifecycle described in stonework:Variable's scopeNote: a Hypothesis names, in advance, the value an output Variable is predicted to be bound to. Linked to the Variable it predicts via stonework:predictsVariable, and to the prediction itself via stonework:predictedType (a class, the common case — mirrors stonework:guardType), stonework:predictedValue (a specific individual), or stonework:predictedLiteral (a scalar) — mirroring stonework:boundTo/stonework:boundToLiteral on the actual-result side. A Hypothesis is judged against the stonework:VariableBinding of its Variable in the Investigation that tests it (stonework:testsHypothesis): the binding stonework:boundIn that Investigation or in an execution stonework:partOfExecution it. When a run binds the Variable more than once, as when one search Step is run for each of several mailboxes, the Step's own execution (itself an Investigation) tests the Hypothesis, so that one binding judges it. A Transition's guard properties, which test a Variable's actual bound value, implicitly test agreement with whichever Hypothesis predicted that Variable — confirming it if they match, refuting it otherwise. May attach at any level of a Step/Plan decomposition, since stonework:Step is itself a stonework:Behavior."@en ;
+	skos:scopeNote "Formalizes the anticipated side of the Variable lifecycle described in stonework:Variable's scopeNote: a Hypothesis names, in advance, the value an output Variable is predicted to be bound to. Linked to the Variable it predicts via stonework:predictsVariable, and to the prediction itself via stonework:predictedType (a class, the common case — mirrors stonework:guardType), stonework:predictedValue (a specific individual), or stonework:predictedLiteral (a scalar) — mirroring stonework:boundTo/stonework:boundToLiteral on the actual-result side. A Hypothesis is judged against the stonework:VariableBinding of its Variable in the Investigation that tests it (stonework:testsHypothesis): the binding stonework:boundIn that Investigation or in an execution stonework:partOfExecution it. When a run binds the Variable more than once, as when one search Step is run for each of several mailboxes, the Step's own execution (itself an Investigation) tests the Hypothesis, so that one binding judges it. A Transition's guard properties, which test a Variable's actual bound value, implicitly test agreement with whichever Hypothesis predicted that Variable — confirming it if they match, refuting it otherwise. May attach at any level of a Step/Plan decomposition, since stonework:Step is itself a stonework:Behavior. What a Hypothesis is about is stonework:hypothesisAbout. A compound claim, such as \"actor X is using technique Y\", is a Hypothesis whose stonework:hypothesisPart values are its separately testable claims (the activity, the attribution), so a refuted compound shows which part failed."@en ;
 	.
 
 stonework:IBAN
@@ -3278,6 +3278,23 @@ stonework:hostname
 	rdfs:range xsd:string ;
 	skos:definition "The system hostname or NetBIOS name."@en ;
 	skos:prefLabel "hostname"@en ;
+	.
+
+stonework:hypothesisAbout
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Hypothesis ;
+	skos:definition "Relates a Hypothesis to something it is about: a technique, actor, account, asset, vulnerability or event."@en ;
+	skos:prefLabel "hypothesisAbout"@en ;
+	skos:scopeNote "For finding hypotheses (\"everything we've hypothesized about T1114.003\", \"about the controller's account\"), not for judging them. Not functional: \"the actor is using a forwarding rule on the controller's mailbox\" is about the actor, the technique and the mailbox. The values carry no roles; a claim whose roles matter, or whose parts can fail separately, is split into parts with stonework:hypothesisPart. A compound Hypothesis is also about whatever its parts are about, so it need not repeat them: follow stonework:hypothesisPart* first. Range deliberately unset, like stonework:noteAbout."@en ;
+	.
+
+stonework:hypothesisPart
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range stonework:Hypothesis ;
+	skos:definition "Relates a compound Hypothesis to one of the claims it is the conjunction of: the compound holds only if every part holds."@en ;
+	skos:prefLabel "hypothesisPart"@en ;
+	skos:scopeNote "\"X is doing Y\" is two claims tested differently: that Y is happening (a search can confirm it) and that X is doing it (only attribution evidence can). Testing them together, a failure says only that something is wrong. As parts, each is a Hypothesis with its own prediction, test, status (stonework:hasHypothesisStatus), confidence and evidence, so the parts with status refuted are the ones that failed, and a confirmed part survives a refuted compound for reuse in a new one. Conjunction only: alternatives (\"X or W did it\") are competing Hypotheses, not parts of one. The compound's status and confidence stay explicit, not inferred; consistency requires that a confirmed compound has only confirmed parts, that a compound with a refuted part is refuted, and that its confidence is no higher than any part's. Parts may themselves have parts."@en ;
 	.
 
 stonework:iban

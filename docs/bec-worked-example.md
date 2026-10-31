@@ -4,7 +4,8 @@
 2026-10-30 for STONEWORK 0.12.0, which adds `stonework:Plan`, `BusinessProcess`, per-run
 Variable bindings, the Roles that perform Steps, deviations as findings, and parallel
 branches, messages between plans, default branches, step outcomes and targets, and playbook
-types (proposals 2, 4, 5, 6, 7, 9, 10 and 13 to 16 below). The gaps it still runs into are
+types, and what a hypothesis is about and its parts (proposals 1, 2, 4, 5, 6, 7, 9, 10 and 13
+to 16 below). The gaps it still runs into are
 listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
@@ -40,7 +41,7 @@ A small manufacturer pays its suppliers by wire. All names are illustrative.
 | 1 Oct | The clerk's statement and the phone system's call records show that the callback wasn't made, rather than made and not recorded. | A `Deviation` of kind *skipped*, with its evidence |
 | 30 Sep, morning | The actor asks for another invoice to be paid to the same account. This time the clerk calls the supplier at the number on file: it hasn't changed banks, and hasn't been paid for September. | A third run, stopped at the callback |
 | 30 Sep | An incident is declared and an analyst opens an investigation. | `Incident`, `Investigation` |
-| 30 Sep | Two hypotheses: a forwarding rule on the controller's mailbox, and one on the clerk's. The analyst runs a detection plan built from ATT&CK's DET0576, whose search Step runs once for each mailbox. The first is confirmed, the second refuted. | `Hypothesis` ×2, `DetectionPlan`, `Sighting` |
+| 30 Sep | Two hypotheses: a forwarding rule on the controller's mailbox, and one on the clerk's. The analyst runs a detection plan built from ATT&CK's DET0576, whose search Step runs once for each mailbox. The first is confirmed, the second refuted. | `Hypothesis` ×2, `DetectionPlan`, `Sighting`; and a compound hypothesis whose parts are the activity and the attribution |
 | 30 Sep – 1 Oct | The containment plan runs: the rule is removed, sessions revoked, external auto-forwarding blocked (by automation), and the exposed mail reviewed. | `ControlPlan` and its execution |
 
 ## The five pieces
@@ -218,6 +219,68 @@ SELECT ?hypothesis ?status ?result ?evidence WHERE {
 
 This may make the `supportsHypothesis` / `refutesHypothesis` properties discussed earlier
 unnecessary: the plan's execution already connects a hypothesis to its evidence.
+
+**What each is about.** `stonework:hypothesisAbout` links each hypothesis to T1114.003 and
+to the mailbox account it names. It may have several values, and carries no roles: it is for
+finding hypotheses, not for judging them.
+
+**A compound hypothesis, and which part failed.** The investigation's real question is
+bigger than either search: *the actor who sent the bank-change email diverted the wire by
+reading the controller's mail through a forwarding rule*. That is two claims, tested in
+different ways:
+
+| Hypothesis | Confidence | Status |
+|---|---|---|
+| The email's sender diverted the wire through a forwarding rule (the compound) | 60 | Pending |
+| ↳ A forwarding rule on the controller's mailbox (the activity) | 70 | Confirmed, by the search |
+| ↳ The rule's creator sent the bank-change email (the attribution) | 60 | Pending |
+
+The compound has both as `stonework:hypothesisPart`: it holds only if every part holds. The
+search can confirm the activity; only attribution evidence can settle who set the rule, and
+the rule was created through the controller's own account and the email came from an address
+registered to no one known. So the compound stays pending, and the table says why. Had the
+attribution been refuted (someone else set the rule), the compound would be refuted, the
+refuted part would say which claim failed, and the confirmed activity would survive for a new
+hypothesis. Alternatives, such as "the actor or an insider", are competing hypotheses, not
+parts of one.
+
+The compound's status and confidence are stated, not inferred, so a query checks them
+against the parts:
+
+```sparql
+SELECT ?compound ?part ?problem WHERE {
+  ?c stonework:hypothesisPart+ ?p ; skos:prefLabel ?compound ;
+     stonework:hasHypothesisStatus ?cs .
+  ?p skos:prefLabel ?part ; stonework:hasHypothesisStatus ?ps .
+  OPTIONAL { ?c stonework:confidence ?cc } OPTIONAL { ?p stonework:confidence ?pc }
+  BIND(IF(?cs = stonework:hypothesisStatusConfirmed
+          && ?ps != stonework:hypothesisStatusConfirmed,
+          "confirmed, but this part is not",
+       IF(?ps = stonework:hypothesisStatusRefuted
+          && ?cs != stonework:hypothesisStatusRefuted,
+          "this part is refuted, but the compound is not",
+       IF(BOUND(?cc) && BOUND(?pc) && ?cc > ?pc,
+          "more confident than this part", ""))) AS ?problem)
+  FILTER(?problem != "")
+}
+```
+
+→ nothing here. With the attribution refuted and the compound left pending, it returns "this
+part is refuted, but the compound is not"; with the compound marked confirmed at 90, it
+returns "confirmed, but this part is not" and "more confident than this part".
+
+A compound is about whatever its parts are about, so "everything hypothesized about
+T1114.003" follows the parts:
+
+```sparql
+SELECT DISTINCT ?hypothesis ?status WHERE {
+  ?h stonework:hypothesisPart*/stonework:hypothesisAbout ?t .
+  ?t stonework:attackId "T1114.003" .
+  ?h skos:prefLabel ?hypothesis ; stonework:hasHypothesisStatus ?status .
+}
+```
+
+→ all three: the two mailbox hypotheses and the compound.
 
 ### 3. The detection plan
 
@@ -511,20 +574,17 @@ hypothesis-and-evidence layer.
 
 ## Gaps, as proposals
 
-Numbered for discussion. Proposals 2, 4, 5, 6, 7, 9, 10 and 13 to 16 are done in 0.12.0, and proposal 1 is
-decided; the rest are not in the ontology yet.
+Numbered for discussion. Proposals 1, 2, 4, 5, 6, 7, 9, 10 and 13 to 16 are done in 0.12.0;
+the rest are not in the ontology yet.
 
-1. **A Hypothesis has no direct link to what it's about.** Here it reaches T1114.003 only
-   after the fact, through its Variable's binding, or through the plan's Step and DET0576. An
-   untested hypothesis, or one tested without a plan (allowed since 0.11.0), has no link at
-   all. The 0.12.0 revision adds a second reason: when one search Step runs for several
-   mailboxes, the hypothesis about the controller's mailbox is told apart from the one about
-   the clerk's only by which execution tests it. Decided: a property from Hypothesis to its
-   subject (the technique, actor, vulnerability or asset it's about) will be added. Open: whether
-   a hypothesis has one subject or several. "The actor used T1114.003 on the controller's
-   mailbox" is about both the technique and the mailbox, which argues against making the
-   property functional (a reasoner would conclude the two are the same thing); a SHACL
-   `maxCount` could still require one where a profile wants it.
+1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
+   (Hypothesis → anything, not functional) links a hypothesis to the technique, actor,
+   account, asset or event it concerns, for finding hypotheses. It has no roles, so a claim
+   whose parts can fail separately ("X is doing Y": the activity and the attribution) is a
+   compound with `stonework:hypothesisPart` (Hypothesis → Hypothesis): it holds only if every
+   part holds, each part has its own test, status and confidence, and the refuted parts say
+   which claim failed. Conjunction only; alternatives are competing hypotheses. The
+   compound's status stays explicit, checked against its parts by a query.
 
 2. **Done in 0.12.0: a Step names the Role that performs it.** `stonework:performerRole`
    (Step → Role; BPMN's lane), so the graph answers *whose* step was skipped. A holder of any
