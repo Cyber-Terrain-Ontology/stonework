@@ -419,63 +419,99 @@ a home for complex output artifacts (plots, time series) — neither
 
 ## 7. Relationship to OASIS CACAO
 
+*Checked against CACAO Security Playbooks Version 2.0, Committee Specification 01
+(27 November 2023), the latest version; revised 2026-10-31 for 0.12.0.*
+
 [CACAO](https://docs.oasis-open.org/cacao/security-playbooks/v2.0/security-playbooks-v2.0.html)
 (Collaborative Automated Course of Action Operations) is OASIS's standard for
-machine-readable security playbooks — JSON documents handed to a SOAR
-orchestration engine for direct execution. Surface-level, it looks like it
-covers the same ground as this pattern. It doesn't, and the differences are
-informative.
+machine-readable security playbooks: JSON documents shared between
+organizations and run by orchestration tools. It covers the plan. STONEWORK
+covers the plan too, and also what happened when it was run, which CACAO
+leaves out: the spec says that deciding whether a step succeeded, failed or
+completed "is implementation specific and is out of scope for this
+specification", and it has no object for a run.
 
-**Where they converge — structural parallels arrived at independently:**
+### Control flow: structured blocks vs. a graph
 
-| CACAO concept | STONEWORK equivalent |
-|---|---|
-| `workflow` step, `on_success`/`on_failure`/`on_true`/`on_false` | `Step` + `Transition` (`fromStep`/`toStep`/`guardType`/`guardLiteralValue`) |
-| `variables` (playbook- or step-scoped, typed) | `Variable` (`hasInputVariable`/`hasOutputVariable`), with each run's values as `VariableBinding`s |
-| `agent` on a `command` (what executes it) | `stonework:attributedTo` |
-| `target` on a `command` (what it acts against) | `stonework:actsOn` |
-| `playbook_types` open vocabulary (`attack`, `investigation`, `detection`, `mitigation`, `prevention`, ...) | The production/assessment split — `OperationPlan` ≈ `attack`; `InvestigationPlan`/`DetectionPlan` ≈ `investigation`/`detection`; `ControlPlan` ≈ `mitigation`/`prevention` |
+Both are programs in the sense of §2c, with sequence, branching, looping and
+parallel branches. They differ in shape:
 
-CACAO's own vocabulary independently landing on an offense/investigation/defense
-split is external validation that this distinction isn't idiosyncratic to
-STONEWORK — it's one the field converges on from multiple directions.
+- **CACAO is block-structured.** Its control steps (`if-condition`,
+  `while-condition`, `switch-condition`, `parallel`) own their branches. Each
+  branch MUST end at its own `end` step, and control then returns to the step
+  that opened it, which carries on through its `on_completion` (or
+  `on_success` / `on_failure`). A `parallel` step waits for all its branches;
+  a `while-condition` runs its `on_true` branch while its condition holds.
+  This is structured programming: every block has one way in and one way out.
+- **STONEWORK is a graph.** Steps are actions linked by `Transition`s; a
+  guard on a Transition is a branch, a Transition back to an earlier Step is
+  a loop, and `splitKind` / `joinKind` mark parallel branches. There are no
+  control nodes, and nothing requires the graph to be well nested.
 
-**Where they diverge:**
+So every CACAO workflow can be written in STONEWORK, but only a well-nested
+STONEWORK plan can be written in CACAO.
 
-1. **Format and purpose.** CACAO is JSON, designed for a SOAR engine to
-   execute directly — its center of gravity is *vendor interop for
-   automation*. This pattern is native RDF/OWL, living inside the same graph
-   as the CTI Encyclopedia — its center of gravity is *knowledge
-   representation and reasoning*. A CACAO playbook is a document sent
-   somewhere to be run; a STONEWORK `OperationPlan` is a graph node that can
-   be SPARQL-queried, reasoned over, and semantically joined to CVE/CWE/
-   ATT&CK data natively.
-2. **Control flow is embedded, not addressable.** CACAO's `on_success`/
-   `on_failure` are step-ID string references embedded inside the step
-   object itself. `Transition` is a first-class RDF resource with its own
-   URI — annotatable and independently referenceable. A `Hypothesis` can't
-   attach to a CACAO branch; it can attach to `ex:t-comsvcs-to-procdump`.
-3. **No epistemic layer.** CACAO has no concept of a predicted outcome
-   distinct from an actual one, no confidence scoring, no confirm/refute
-   status — it's a "do this, then do that" execution graph. `Hypothesis` /
-   `predictsVariable` / `confidence` / `hasHypothesisStatus` have no CACAO
-   counterpart.
-4. **Technique attribution is a loose pointer, not a graph traversal.**
-   CACAO references ATT&CK techniques via `external_references` — an ID
-   sitting in a metadata field, not something traversable. The `implements`
-   chain (§4) is a real property path a SPARQL query walks, landing on an
-   actual `cti-enc:` individual embedded in the encyclopedia graph.
-5. **Variables are key-values, not addressable resources.** A CACAO variable
-   is `{name, type, value}` sitting inside a step, with no identity outside
-   its containing document. A STONEWORK `Variable` is its own URI-bearing
-   individual — which is exactly what makes `predictsVariable` possible at
-   all.
+### How each CACAO construct maps
 
-**Positioning:** the same relationship this project already has with STIX
-2.1 applies here — "supported import/export format, not the ceiling." A
-CACAO playbook's `workflow` maps reasonably cleanly onto `Step`/`Transition`/
-`Variable`, making CACAO a plausible *ingest* format. What it structurally
-cannot provide is the execution-trace layer described in this document: what
-a SOAR engine *actually did* when it ran that playbook — attributed,
-timestamped, confirmed-or-refuted against what was expected, and joined
-natively to the rest of the threat-intel graph.
+| CACAO 2.0 | STONEWORK | Fit |
+|---|---|---|
+| `playbook` | `Playbook` (⊑ `Plan`) | Good |
+| `playbook_types` (attack, detection, engagement, investigation, mitigation, notification, prevention, remediation; several allowed) | `OperationPlan` ≈ attack; `DetectionPlan`, `InvestigationPlan`; `ControlPlan` ≈ mitigation, prevention, remediation | Partial: no class for engagement or notification |
+| `workflow` (steps keyed by ID), `workflow_start` | `hasStep`; the start is the Step no Transition enters | Good |
+| `start` / `end` steps | Implicit | Generated on export |
+| `action` step: `commands`, `agent`, `targets` | `Step`; `performerRole` for who should do it; `actsOn` for what an execution acted on | Partial: commands have no STONEWORK form, and targets can be named only on executions, not on the Step |
+| `owner` on a step (a STIX Identity, "the owner or responsible party") | Closest is `performerRole`, but that names a Role, not a party | Partial |
+| `playbook-action` (`playbook_id`, `playbook_version`) | A Step that `implements` another Plan; its execution is `executionOf` that Plan; `planVersion` | Good |
+| `on_completion` | Unguarded `Transition` | Exact |
+| `on_success` / `on_failure` | Transitions guarded on an outcome Variable | Works, but there's no agreed outcome Variable; CACAO leaves success to the implementation too |
+| `if-condition` (`condition`, `on_true`, `on_false`) | Exclusive split: one guarded Transition, and one guarded on the opposite | Partial: CACAO conditions are STIX Patterning expressions; a STONEWORK guard compares one Variable with one value |
+| `switch-condition` (`switch`, `cases`, optional `default`) | Exclusive split, one guarded Transition per case | Gap: no *default* Transition ("none of the others") |
+| `while-condition` (`condition`, `on_true`) | A guarded Transition back to an earlier Step | Good; each pass is its own execution |
+| `parallel` (`next_steps`, waits for all) | `splitKind parallel` on the Step before, `joinKind parallel` on the Step its `on_completion` names | Good |
+| `workflow_exception` (where a failure goes when a step has no `on_failure`) | None | Gap |
+| `delay`, `timeout` (milliseconds; a timeout invokes `on_failure`) | None | Gap |
+| `playbook_variables`, `step_variables`, `in_args`, `out_args` | `Variable`, `hasInputVariable`, `hasOutputVariable`; at run time `VariableBinding` and `usedBinding` | Good. CACAO variables are reassigned as the playbook runs; STONEWORK keeps every value as its own binding. `external` (passed in by the caller) is a Plan's `hasInputVariable`; `constant` has no equivalent |
+| `agent_definitions`, `target_definitions` (group, individual, organization, location, sector; http-api, linux, net-address, security-category, ssh) | `Role` for the expected performer; `performedBy` and `actsOn` on executions | Different on purpose: CACAO names the executor; STONEWORK separates the Role a plan expects from the identity a run observed |
+| `created_by` (a STIX Identity), `markings` (TLP 2.0, IEP), `signatures`, `authentication_info_definitions` | STONES provenance and markings | Signatures and authentication carried as opaque content |
+| `external_references` (how a step or playbook cites ATT&CK) | `implements`, a property path to the Encyclopedia's own technique, analytic or control | STONEWORK is stronger: a traversable link, not a cited ID |
+
+### What only STONEWORK has
+
+- **Runs.** A run is an execution that is `executionOf` the plan, with its
+  Steps' executions `partOfExecution` it and each value a `VariableBinding`.
+  A plan run many times keeps every run apart, so runs can be compared step
+  by step.
+- **Checks against the plan, and deviations.** Skipped Steps, wrong Roles,
+  segregation of duties (`separatedFrom`), joins that didn't wait, and
+  misused identities, each recorded as a `Deviation` with its evidence.
+  Checks answer conforms, deviates or undetermined, because a log often shows
+  only an account.
+- **Hypotheses.** A predicted outcome, separate from the actual one, with
+  confidence and a confirmed / refuted status. CACAO has no epistemic layer.
+- **Business processes as plans.** CACAO's playbooks are security
+  orchestration; an organization's routine work, where attacks such as BEC
+  succeed or fail, is outside its scope.
+- **Addressable edges.** A CACAO step has an ID, but its links are strings
+  inside it. A `Transition` is a resource with its own IRI, so a Hypothesis or
+  a Deviation can refer to it.
+
+### Compatibility
+
+- **CACAO into STONEWORK:** control flow maps almost without loss. Each
+  control step folds into the splits, joins and guards of the Steps around
+  it, and `end` steps disappear. Four things don't fit yet: compound
+  conditions, the `default` case, `workflow_exception`, and delays and
+  timeouts. An agreed outcome Variable would make `on_success` /
+  `on_failure` mechanical. Commands, authentication and signatures would be
+  carried along unread.
+- **STONEWORK into CACAO:** a well-nested plan exports, with Roles as
+  `group` agents, a parallel split as a `parallel` step, and an inclusive
+  split as a `parallel` step whose branches each open with an
+  `if-condition`. A plan whose graph isn't well nested needs restructuring
+  first. Runs, deviations, hypotheses and `separatedFrom` have no CACAO
+  form, as expected for a plan format.
+
+**Positioning:** the same relationship as STONEWORK has with STIX 2.1: a
+supported import and export format, not the ceiling. The natural pairing is
+a CACAO playbook as the plan and STONEWORK as the record of its runs, judged
+against it and joined to the rest of the threat-intelligence graph.
