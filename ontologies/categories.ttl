@@ -13,8 +13,8 @@
 	rdfs:label "STONEWORK Categories and Roles"@en ;
 	dcterms:description "Category and Role subclasses, associated vocabulary named individuals, and category-specific object properties for the STONEWORK ontology. Kept separate to allow the core ontology to load without the full vocabulary set."@en ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.3.0> ;
-	owl:versionInfo "0.3.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.4.0> ;
+	owl:versionInfo "0.4.0" ;
 	.
 
 stonework:AccountType
@@ -59,6 +59,36 @@ stonework:AffectedStatus
 	skos:definition "A judgment of whether a product or version is affected by a vulnerability."@en ;
 	skos:prefLabel "Affected Status"@en ;
 	skos:scopeNote "Applied with stonework:hasAffectedStatus on a stonework:VulnerabilityAssessment. Covers the CVE record statuses affected, unaffected, and unknown, and the VEX statuses fixed and under investigation."@en ;
+	.
+
+stonework:AuthenticationMethod
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:authenticationMethodScheme ;
+		]
+		;
+	skos:definition "A sender-authentication method for email."@en ;
+	skos:prefLabel "Authentication Method"@en ;
+	skos:scopeNote "Applied via stonework:hasAuthenticationMethod to EmailAuthenticationResult individuals. Named individuals: SPF, DKIM, DMARC, ARC."@en ;
+	.
+
+stonework:AuthenticationVerdict
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:authenticationVerdictScheme ;
+		]
+		;
+	skos:definition "A verdict of a sender-authentication check on an email."@en ;
+	skos:prefLabel "Authentication Verdict"@en ;
+	skos:scopeNote "Applied via stonework:hasAuthenticationVerdict to EmailAuthenticationResult individuals. The verdicts of an Authentication-Results header (RFC 8601): pass, fail, soft fail, neutral, none, temporary error, permanent error, policy."@en ;
 	.
 
 stonework:Backdoor
@@ -993,6 +1023,202 @@ stonework:affectedStatusUnknown
 	skos:prefLabel "Unknown"@en ;
 	.
 
+stonework:authenticationMethodARC
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationMethod
+		;
+	skos:definition "Authenticated Received Chain (RFC 8617): the authentication results recorded by the intermediaries that forwarded the message, sealed so a later receiver can rely on them."@en ;
+	skos:inScheme
+		stonework:authenticationMethodScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "arc" ;
+	skos:prefLabel "ARC"@en ;
+	.
+
+stonework:authenticationMethodDKIM
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationMethod
+		;
+	skos:definition "DomainKeys Identified Mail (RFC 6376): a signature over the message's headers and body by a signing domain, checked against that domain's published key."@en ;
+	skos:inScheme
+		stonework:authenticationMethodScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "dkim" ;
+	skos:prefLabel "DKIM"@en ;
+	.
+
+stonework:authenticationMethodDMARC
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationMethod
+		;
+	skos:definition "Domain-based Message Authentication, Reporting and Conformance (RFC 7489): whether the From domain is aligned with a domain that passed SPF or DKIM, under the From domain's published policy."@en ;
+	skos:inScheme
+		stonework:authenticationMethodScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "dmarc" ;
+	skos:prefLabel "DMARC"@en ;
+	.
+
+stonework:authenticationMethodSPF
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationMethod
+		;
+	skos:definition "Sender Policy Framework (RFC 7208): whether the sending server is authorized to send for the envelope sender's domain."@en ;
+	skos:inScheme
+		stonework:authenticationMethodScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "spf" ;
+	skos:prefLabel "SPF"@en ;
+	.
+
+stonework:authenticationMethodScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Authentication Method Scheme"@en ;
+	skos:definition "The controlled vocabulary of sender-authentication methods for email."@en ;
+	skos:prefLabel "STONEWORK Authentication Method Scheme"@en ;
+	.
+
+stonework:authenticationVerdictFail
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationVerdict
+		;
+	skos:definition "The check ran and the message failed it."@en ;
+	skos:inScheme
+		stonework:authenticationVerdictScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "fail" ;
+	skos:prefLabel "Fail"@en ;
+	.
+
+stonework:authenticationVerdictNeutral
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationVerdict
+		;
+	skos:definition "The domain's policy makes no assertion about this sender."@en ;
+	skos:inScheme
+		stonework:authenticationVerdictScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "neutral" ;
+	skos:prefLabel "Neutral"@en ;
+	.
+
+stonework:authenticationVerdictNone
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationVerdict
+		;
+	skos:definition "There was nothing to check: no policy, record or signature."@en ;
+	skos:inScheme
+		stonework:authenticationVerdictScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "none" ;
+	skos:prefLabel "None"@en ;
+	.
+
+stonework:authenticationVerdictPass
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationVerdict
+		;
+	skos:definition "The check ran and the message passed it. A pass authenticates the domain checked, which may be a lookalike the actor registered."@en ;
+	skos:inScheme
+		stonework:authenticationVerdictScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "pass" ;
+	skos:prefLabel "Pass"@en ;
+	.
+
+stonework:authenticationVerdictPermError
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationVerdict
+		;
+	skos:definition "The check could not be completed because the domain's published records are invalid."@en ;
+	skos:inScheme
+		stonework:authenticationVerdictScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "permerror" ;
+	skos:prefLabel "Permanent error"@en ;
+	.
+
+stonework:authenticationVerdictPolicy
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationVerdict
+		;
+	skos:definition "The message passed the check technically, but a local policy of the receiving server overrode the result."@en ;
+	skos:inScheme
+		stonework:authenticationVerdictScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "policy" ;
+	skos:prefLabel "Policy"@en ;
+	.
+
+stonework:authenticationVerdictScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Authentication Verdict Scheme"@en ;
+	skos:definition "The controlled vocabulary of the verdicts of sender-authentication checks on email."@en ;
+	skos:prefLabel "STONEWORK Authentication Verdict Scheme"@en ;
+	.
+
+stonework:authenticationVerdictSoftFail
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationVerdict
+		;
+	skos:definition "The domain's policy says the sender is probably not authorized, without asking for rejection (SPF ~all)."@en ;
+	skos:inScheme
+		stonework:authenticationVerdictScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "softfail" ;
+	skos:prefLabel "Soft fail"@en ;
+	.
+
+stonework:authenticationVerdictTempError
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:AuthenticationVerdict
+		;
+	skos:definition "The check could not be completed because of a transient error, such as a DNS timeout."@en ;
+	skos:inScheme
+		stonework:authenticationVerdictScheme ,
+		stonework:categoryScheme
+		;
+	skos:notation "temperror" ;
+	skos:prefLabel "Temporary error"@en ;
+	.
+
 stonework:currencyAED
 	a
 		owl:NamedIndividual ,
@@ -1747,6 +1973,30 @@ stonework:hasAffectedStatus
 	rdfs:range stonework:AffectedStatus ;
 	skos:definition "Relates a vulnerability assessment to the applicability judgment it records."@en ;
 	skos:prefLabel "hasAffectedStatus"@en ;
+	.
+
+stonework:hasAuthenticationMethod
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:EmailAuthenticationResult ;
+	rdfs:range stonework:AuthenticationMethod ;
+	skos:definition "The method of a sender-authentication check: SPF, DKIM, DMARC or ARC."@en ;
+	skos:prefLabel "hasAuthenticationMethod"@en ;
+	.
+
+stonework:hasAuthenticationVerdict
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:EmailAuthenticationResult ;
+	rdfs:range stonework:AuthenticationVerdict ;
+	skos:definition "The verdict a sender-authentication check reached."@en ;
+	skos:prefLabel "hasAuthenticationVerdict"@en ;
 	.
 
 stonework:hasExploitMaturity

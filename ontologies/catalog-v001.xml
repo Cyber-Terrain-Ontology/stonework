@@ -2,9 +2,9 @@
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
         <uri name="https://cyberterrain.org/ns/stonework#" uri="stonework.ttl"/>
-        <uri name="https://cyberterrain.org/ns/stonework/0.12.0" uri="stonework.ttl"/>
+        <uri name="https://cyberterrain.org/ns/stonework/0.13.0" uri="stonework.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/categories#" uri="categories.ttl"/>
-        <uri name="https://cyberterrain.org/ns/stonework/categories/0.3.0" uri="categories.ttl"/>
+        <uri name="https://cyberterrain.org/ns/stonework/categories/0.4.0" uri="categories.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/full" uri="profiles/stonework-full.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/full/0.2.0" uri="profiles/stonework-full.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/stix" uri="profiles/stonework-stix.ttl"/>
@@ -48,7 +48,7 @@
         <uri name="https://cyberterrain.org/ns/frameworks/registry" uri="extensions/registry.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/registry/0.1.0" uri="extensions/registry.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/stix" uri="frameworks/stix.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/stix/0.3.0" uri="frameworks/stix.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/stix/0.4.0" uri="frameworks/stix.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uco" uri="frameworks/uco.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uco/0.1.0" uri="frameworks/uco.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/uri" uri="extensions/uri.ttl"/>

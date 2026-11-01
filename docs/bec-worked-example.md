@@ -5,8 +5,10 @@
 Variable bindings, the Roles that perform Steps, deviations as findings, and parallel
 branches, messages between plans, default branches, step outcomes and targets, and playbook
 types, what a hypothesis is about and its parts, who controlled an identity when, and ATT&CK
-mitigations as Behaviors (proposals 1, 2, 4 to 10, 12 and 13 to 16 below). The gaps it still runs into are
-listed at the end as proposals, not changes.*
+mitigations as Behaviors (proposals 1, 2, 4 to 10, 12 and 13 to 16 below); and 2026-11-01
+for 0.13.0, which gives the email its headers and authentication results, and the
+forwarding rule its own class. The gaps it still
+runs into are listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
 `financial` SHACL profile, and every triple satisfies its property's declared domain
@@ -506,6 +508,31 @@ Its run, `ex:run-actor-op`, is `attributedTo` the actor. The rule's creation on 
 the execution of Step 1, and the email sent on 15 September is the execution of Step 3, whose
 output is the email.
 
+**The rule.** Step 1's execution `produces` `ex:rule-forward`, a `stonework:MailboxRule`
+`ruleOfMailbox` the controller's account: `ruleName` "Sync", `matchesKeyword` "invoice",
+"payment" and "wire", `forwardsTo` the actor's free-mail address, and `movesToFolder` "RSS
+Feeds" so the controller never sees the originals. `ruleContent` keeps the parameters as the
+audit log recorded them. The execution of the containment plan's first Step, removing the
+rule on 30 September, `actsOn` the same resource.
+
+**Rules that send mail outside the mailbox's domain and keep the original out of sight:**
+
+```sparql
+SELECT ?rule ?mailbox ?sendsTo ?original WHERE {
+  ?r a stonework:MailboxRule ; skos:prefLabel ?rule ;
+     stonework:ruleOfMailbox/stonework:accountName ?mailbox ;
+     stonework:forwardsTo|stonework:redirectsTo ?a .
+  ?a stonework:emailValue ?sendsTo .
+  FILTER(STRAFTER(?sendsTo, "@") != STRAFTER(?mailbox, "@"))
+  { ?r stonework:movesToFolder ?folder . BIND(CONCAT("moved to ", ?folder) AS ?original) }
+  UNION
+  { ?r stonework:deletesMessage true . BIND("deleted" AS ?original) }
+}
+```
+
+→ Forwarding inbox rule "Sync" | controller@manufacturer.example |
+archive.mailbox@freemail.example | moved to RSS Feeds.
+
 **A message is data flow between two plans.** Step 3's output Variable, `paymentRequest`, is
 the input Variable of the business process's first Step. Within a plan, a shared Variable is
 ordinary data flow; between plans, it's a message from one participant to another (BPMN's
@@ -564,6 +591,38 @@ SELECT ?run ?receiver ?message ?sender ?sentBy WHERE {
 The 9 September request, from the real supplier, isn't recorded as a binding here, and nor is
 the actor's second request on 30 September; the example keeps to the run that matters.
 
+**The email itself.** The message carries its headers as data: the addresses by role
+(`hasFromAddress`, `hasReplyToAddress`, `hasReturnPathAddress`, `hasToAddress`, `hasCcAddress`),
+`fromDisplayName`, `emailSubject`, `sentAtTime` and `messageId`. `inReplyTo` names the genuine
+invoice the actor answered, `ex:email-invoice-44871`, which the supplier sent to accounts
+payable with the controller copied, and which the forwarding rule passed to the actor. Each
+`stonework:EmailAuthenticationResult` records one check the organization's inbound server made:
+SPF, DKIM and DMARC all **pass**, for `supp1ier.example`. A pass authenticates the domain the
+actor registered, not the supplier. The Received header is an `Event`, `ex:hop-bank-change`,
+`generatedFrom` the email, with the sending server's address (`hasSourceAddress`) and the
+receiving server (`occursOn`).
+
+**Replies from a different domain than the message they answer,** with their authentication
+results:
+
+```sparql
+SELECT ?reply ?from ?answering ?verdicts WHERE {
+  { SELECT ?r ?o (GROUP_CONCAT(?v; separator=", ") AS ?verdicts) WHERE {
+      ?r stonework:inReplyTo ?o .
+      OPTIONAL { ?r stonework:hasAuthenticationResult ?a .
+                 ?a stonework:hasAuthenticationMethod/skos:notation ?m ;
+                    stonework:hasAuthenticationVerdict/skos:notation ?res .
+                 BIND(CONCAT(?m, "=", ?res) AS ?v) }
+    } GROUP BY ?r ?o }
+  ?r skos:prefLabel ?reply ; stonework:hasFromAddress/stonework:emailValue ?from .
+  ?o stonework:hasFromAddress/stonework:emailValue ?answering .
+  FILTER(STRAFTER(?from, "@") != STRAFTER(?answering, "@"))
+}
+```
+
+→ Email: "Updated remittance details" | accounts@supp1ier.example | accounts@supplier.example |
+dmarc=pass, dkim=pass, spf=pass.
+
 **Who controlled the account, and when.** The rule was created through the controller's own
 mailbox account, so the logs name the account, not the actor. `ex:ctl-actor-mailbox` is a
 `stonework:IdentityControl`: the actor controlled that account from the rule's creation on 2
@@ -588,6 +647,27 @@ SELECT ?execution ?when ?controller WHERE {
 from the controller's workstation, both with "Unidentified BEC actor". The rule's creation is
 in the interval too, but it's already attributed. Review sorts the two: the first is the actor
 reading the mail, the second is the controller.
+
+**What review has to go on.** Each sign-in, and the rule's creation, records its client's
+address (`hasSourceAddress`) and browser (`usedUserAgent`); where an address is comes from a
+geolocation lookup, a fact about the address (`locatedAt` on the `IPAddress`). Unattributed
+activity from an address that attributed activity also came from:
+
+```sparql
+SELECT ?execution ?address ?where ?client ?sharedWith WHERE {
+  ?known stonework:attributedTo ?actor ; stonework:hasSourceAddress ?a ;
+         skos:prefLabel ?sharedWith .
+  ?e stonework:hasSourceAddress ?a ; skos:prefLabel ?execution .
+  FILTER NOT EXISTS { ?e stonework:attributedTo ?anyone }
+  ?a stonework:ipValue ?address .
+  OPTIONAL { ?a stonework:locatedAt/skos:prefLabel ?where }
+  OPTIONAL { ?e stonework:usedUserAgent/skos:prefLabel ?client }
+}
+```
+
+→ the 12 September sign-in | 198.51.100.77 | Netherlands | Linux Chrome browser | the rule's
+creation. The 16 September sign-in came from the office address with Outlook for Windows, and
+doesn't appear.
 
 ## What it shows about plans
 
@@ -762,10 +842,6 @@ lose it. The four small ones, 13 to 16, are done; 17 to 19 remain.
 
 Smaller things:
 
-- No class for an inbox or mailbox rule (STIX has none either); the example uses
-  `DigitalArtifact`.
-- The email's sender and recipients are in prose; `stones:fromRef` and `stones:toRefs` could
-  carry them, once their alignment with `stonework:EmailMessage` is checked.
 - `ex:control-callback` is an organization-defined control. If financial controls (callback
   verification, dual approval, payee-change holds) recur across cases, they may deserve their
   own catalogue, perhaps in the financial module.
