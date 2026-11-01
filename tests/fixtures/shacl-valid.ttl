@@ -48,6 +48,13 @@ example:analystOpinion
 	stonework:opinionOf example:proposedLink ;
 	.
 
+example:authResult
+	a stonework:EmailAuthenticationResult ;
+	stonework:authenticatedDomain example:domain ;
+	stonework:hasAuthenticationMethod stonework:authenticationMethodDMARC ;
+	stonework:hasAuthenticationVerdict stonework:authenticationVerdictPass ;
+	.
+
 example:boundEntity
 	a stonework:CyberEntity ;
 	.
@@ -100,6 +107,11 @@ example:domain
 	stonework:registrationDate "2026-08-20T10:00:00Z"^^xsd:dateTime ;
 	.
 
+example:earlierMessage
+	a stonework:EmailMessage ;
+	stonework:messageId "<invoice-44871@supplier.example>" ;
+	.
+
 example:edrActuator
 	a stonework:SecurityActuator ;
 	stonework:implementsCountermeasure example:isolationControl ;
@@ -117,6 +129,11 @@ example:epssObservation
 	stonework:metricValue "0.42"^^xsd:decimal ;
 	stonework:modelVersion "2026.1" ;
 	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
+	.
+
+example:fromAddress
+	a stonework:EmailAddress ;
+	stonework:emailValue "accounts@supplier.example" ;
 	.
 
 example:guardedTransition
@@ -203,6 +220,19 @@ example:mergedInvestigation
 	stonework:mergedInto example:investigation ;
 	.
 
+example:message
+	a stonework:EmailMessage ;
+	stonework:emailSubject "RE: Invoice 44871" ;
+	stonework:fromDisplayName "Supplier Accounts" ;
+	stonework:hasAuthenticationResult example:authResult ;
+	stonework:hasFromAddress example:fromAddress ;
+	stonework:hasReplyToAddress example:fromAddress ;
+	stonework:hasToAddress example:toAddress ;
+	stonework:inReplyTo example:earlierMessage ;
+	stonework:messageId "<reply-1@supplier.example>" ;
+	stonework:sentAtTime "2026-09-15T22:07:00Z"^^xsd:dateTime ;
+	.
+
 example:observation
 	a stonework:SecurityObservation ;
 	stonework:firstSeen "2026-08-20T10:00:00Z"^^xsd:dateTime ;
@@ -257,6 +287,14 @@ example:ransomwareReportObservation
 	stonework:metricType stonework:metricReportedExploited ;
 	stonework:metricValue "true"^^xsd:boolean ;
 	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
+	.
+
+example:receivedHop
+	a stonework:Event ;
+	stonework:actsOn example:message ;
+	stonework:generatedFrom example:message ;
+	stonework:hasSourceAddress example:address ;
+	stonework:startedAtTime "2026-09-15T22:07:04Z"^^xsd:dateTime ;
 	.
 
 example:roleSource
@@ -322,6 +360,11 @@ example:targetStep
 
 example:threatBulletin
 	a stonework:Report ;
+	.
+
+example:toAddress
+	a stonework:EmailAddress ;
+	stonework:emailValue "ap@manufacturer.example" ;
 	.
 
 example:transition

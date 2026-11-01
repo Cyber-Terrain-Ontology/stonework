@@ -130,6 +130,120 @@ stonework:DeviationShape
 	sh:targetClass stonework:Deviation ;
 	.
 
+stonework:EmailAuthenticationResultShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:AuthenticationMethod ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailAuthenticationResult names exactly one AuthenticationMethod."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:hasAuthenticationMethod ;
+		] ,
+		[
+			sh:class stonework:AuthenticationVerdict ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailAuthenticationResult names exactly one AuthenticationVerdict."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:hasAuthenticationVerdict ;
+		] ,
+		[
+			sh:class stonework:Domain ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailAuthenticationResult names at most one authenticated Domain."@en ;
+			sh:path stonework:authenticatedDomain ;
+		] ,
+		[
+			sh:class stonework:Infrastructure ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailAuthenticationResult names at most one server that performed the check."@en ;
+			sh:path stonework:authenticatedBy ;
+		]
+		;
+	sh:targetClass stonework:EmailAuthenticationResult ;
+	.
+
+stonework:EmailMessageShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:EmailAddress ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailMessage has at most one From address."@en ;
+			sh:path stonework:hasFromAddress ;
+		] ,
+		[
+			sh:class stonework:EmailAddress ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailMessage has at most one Return-Path address."@en ;
+			sh:path stonework:hasReturnPathAddress ;
+		] ,
+		[
+			sh:class stonework:EmailAddress ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailMessage has at most one Sender address."@en ;
+			sh:path stonework:hasSenderAddress ;
+		] ,
+		[
+			sh:class stonework:EmailAddress ;
+			sh:path stonework:hasBccAddress ;
+		] ,
+		[
+			sh:class stonework:EmailAddress ;
+			sh:path stonework:hasCcAddress ;
+		] ,
+		[
+			sh:class stonework:EmailAddress ;
+			sh:path stonework:hasReplyToAddress ;
+		] ,
+		[
+			sh:class stonework:EmailAddress ;
+			sh:path stonework:hasToAddress ;
+		] ,
+		[
+			sh:class stonework:EmailAuthenticationResult ;
+			sh:path stonework:hasAuthenticationResult ;
+		] ,
+		[
+			sh:class stonework:EmailMessage ;
+			sh:path stonework:inReplyTo ;
+		] ,
+		[
+			sh:class stonework:EmailMessage ;
+			sh:path stonework:referencesMessage ;
+		] ,
+		[
+			sh:class stonework:File ;
+			sh:path stonework:hasAttachment ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailMessage has at most one Date."@en ;
+			sh:path stonework:sentAtTime ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailMessage has at most one From display name."@en ;
+			sh:path stonework:fromDisplayName ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailMessage has at most one Message-ID."@en ;
+			sh:path stonework:messageId ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailMessage has at most one Subject."@en ;
+			sh:path stonework:emailSubject ;
+		]
+		;
+	sh:targetClass stonework:EmailMessage ;
+	.
+
 stonework:EpssPercentileShape
 	a sh:NodeShape ;
 	sh:property [
@@ -176,6 +290,16 @@ stonework:ExploitationReportKindShape
 		sh:path stonework:hasExploitationReportKind ;
 	] ;
 	sh:targetSubjectsOf stonework:hasExploitationReportKind ;
+	.
+
+stonework:GeneratedFromShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:DigitalArtifact ;
+		sh:message "An Event is generatedFrom a DigitalArtifact: the log, traffic or message it was derived from."@en ;
+		sh:path stonework:generatedFrom ;
+	] ;
+	sh:targetSubjectsOf stonework:generatedFrom ;
 	.
 
 stonework:HasPlaybookTypeShape

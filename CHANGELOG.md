@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.13.0 (core), categories 0.4.0, STIX framework 0.4.0: email evidence
+
+An `EmailMessage` carries its headers as data, so a message taken from a mailbox is evidence that can be queried: who it claimed to be from, where replies went, which thread it joined, and what the receiving server's authentication checks found. Received headers are Events derived from the message, which is also how a parsed log record points back to its log.
+
+### Added
+
+- Email headers on `stonework:EmailMessage`: `hasFromAddress`, `hasSenderAddress` and `hasReturnPathAddress` (functional); `hasReplyToAddress`, `hasToAddress`, `hasCcAddress`, `hasBccAddress` (→ `EmailAddress`); `fromDisplayName`, `emailSubject`, `sentAtTime` and `messageId` (functional); `emailBody`; `inReplyTo` and `referencesMessage` (→ `EmailMessage`, the thread); `hasAttachment` (→ `File`). STIX has no Reply-To; it is a common step in business email compromise.
+- `stonework:EmailAuthenticationResult` (⊑ `Assessment`), linked by `hasAuthenticationResult`: one SPF, DKIM, DMARC or ARC check, with `authenticatedDomain` and `authenticatedBy` (both functional). Its method and verdict are categories: `hasAuthenticationMethod` and `hasAuthenticationVerdict` (functional, in `categories.ttl`), with the `AuthenticationMethod` scheme (SPF, DKIM, DMARC, ARC) and the `AuthenticationVerdict` scheme (the RFC 8601 verdicts: pass, fail, soft fail, neutral, none, temporary error, permanent error, policy).
+- STIX framework: `stones:fromRef`, `senderRef`, `toRefs`, `ccRefs`, `bccRefs`, `date` and `messageId` are subproperties of the STONEWORK header properties.
+- SHACL: `EmailMessageShape`, `EmailAuthenticationResultShape` and `GeneratedFromShape`; fixtures for each.
+
+### Changed
+
+- `stonework:generatedFrom` takes any `DigitalArtifact`, not only a `Log` or `NetworkTraffic`: a Received hop is generated from its EmailMessage. Scope note: the link stays when the Event is assigned to a Step, and `externalId` on the Event names the record within the artifact.
+- `stonework:hasSourceAddress` and `stonework:hasDestinationAddress` take an `Event` as well as `NetworkTraffic`: the client of a sign-in, the sending server of a hop.
+- Scope note on `stonework:EmailMessage` lists its header properties and how a Received hop is recorded.
+- Examples: the BEC example's bank-change email has its headers, the genuine invoice it replies to, SPF, DKIM and DMARC passes for the lookalike domain, and its Received hop. The worked example's query finds replies from a different domain than the message they answer.
+
 ## 0.12.0 (core), categories 0.3.0: plans and runs; exploit evidence
 
 Two strands of work. **Plans and runs:** a common parent for plans, and per-run Variable values, so a plan can be executed any number of times; the Roles that perform Steps; deviations from a plan as findings with evidence; parallel branches; messages between plans; default branches, step outcomes and targets; playbook types; what a hypothesis is about, with compound hypotheses made of parts; who controlled an identity, and when; and ATT&CK mitigations as Behaviors that plans implement. See [docs/plan-execution-model.md](docs/plan-execution-model.md) and the revised [BEC worked example](docs/bec-worked-example.md) (proposals 1, 2, 4 to 10, 12 and 13 to 16).

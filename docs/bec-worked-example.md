@@ -5,8 +5,9 @@
 Variable bindings, the Roles that perform Steps, deviations as findings, and parallel
 branches, messages between plans, default branches, step outcomes and targets, and playbook
 types, what a hypothesis is about and its parts, who controlled an identity when, and ATT&CK
-mitigations as Behaviors (proposals 1, 2, 4 to 10, 12 and 13 to 16 below). The gaps it still runs into are
-listed at the end as proposals, not changes.*
+mitigations as Behaviors (proposals 1, 2, 4 to 10, 12 and 13 to 16 below); and 2026-11-01
+for 0.13.0, which gives the email its headers and authentication results. The gaps it still
+runs into are listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
 `financial` SHACL profile, and every triple satisfies its property's declared domain
@@ -564,6 +565,38 @@ SELECT ?run ?receiver ?message ?sender ?sentBy WHERE {
 The 9 September request, from the real supplier, isn't recorded as a binding here, and nor is
 the actor's second request on 30 September; the example keeps to the run that matters.
 
+**The email itself.** The message carries its headers as data: the addresses by role
+(`hasFromAddress`, `hasReplyToAddress`, `hasReturnPathAddress`, `hasToAddress`, `hasCcAddress`),
+`fromDisplayName`, `emailSubject`, `sentAtTime` and `messageId`. `inReplyTo` names the genuine
+invoice the actor answered, `ex:email-invoice-44871`, which the supplier sent to accounts
+payable with the controller copied, and which the forwarding rule passed to the actor. Each
+`stonework:EmailAuthenticationResult` records one check the organization's inbound server made:
+SPF, DKIM and DMARC all **pass**, for `supp1ier.example`. A pass authenticates the domain the
+actor registered, not the supplier. The Received header is an `Event`, `ex:hop-bank-change`,
+`generatedFrom` the email, with the sending server's address (`hasSourceAddress`) and the
+receiving server (`occursOn`).
+
+**Replies from a different domain than the message they answer,** with their authentication
+results:
+
+```sparql
+SELECT ?reply ?from ?answering ?verdicts WHERE {
+  { SELECT ?r ?o (GROUP_CONCAT(?v; separator=", ") AS ?verdicts) WHERE {
+      ?r stonework:inReplyTo ?o .
+      OPTIONAL { ?r stonework:hasAuthenticationResult ?a .
+                 ?a stonework:hasAuthenticationMethod/skos:notation ?m ;
+                    stonework:hasAuthenticationVerdict/skos:notation ?res .
+                 BIND(CONCAT(?m, "=", ?res) AS ?v) }
+    } GROUP BY ?r ?o }
+  ?r skos:prefLabel ?reply ; stonework:hasFromAddress/stonework:emailValue ?from .
+  ?o stonework:hasFromAddress/stonework:emailValue ?answering .
+  FILTER(STRAFTER(?from, "@") != STRAFTER(?answering, "@"))
+}
+```
+
+→ Email: "Updated remittance details" | accounts@supp1ier.example | accounts@supplier.example |
+dmarc=pass, dkim=pass, spf=pass.
+
 **Who controlled the account, and when.** The rule was created through the controller's own
 mailbox account, so the logs name the account, not the actor. `ex:ctl-actor-mailbox` is a
 `stonework:IdentityControl`: the actor controlled that account from the rule's creation on 2
@@ -764,8 +797,6 @@ Smaller things:
 
 - No class for an inbox or mailbox rule (STIX has none either); the example uses
   `DigitalArtifact`.
-- The email's sender and recipients are in prose; `stones:fromRef` and `stones:toRefs` could
-  carry them, once their alignment with `stonework:EmailMessage` is checked.
 - `ex:control-callback` is an organization-defined control. If financial controls (callback
   verification, dual approval, payee-change holds) recur across cases, they may deserve their
   own catalogue, perhaps in the financial module.

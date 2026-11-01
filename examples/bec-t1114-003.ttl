@@ -103,6 +103,20 @@ ex:actor
 	skos:prefLabel "Unidentified BEC actor"@en ;
 	.
 
+ex:addr-ap-clerk
+	a stonework:EmailAddress ;
+	skos:prefLabel "Accounts-payable address"@en ;
+	stonework:emailOf ex:ap-clerk ;
+	stonework:emailValue "ap@manufacturer.example" ;
+	.
+
+ex:addr-controller
+	a stonework:EmailAddress ;
+	skos:prefLabel "Controller's address"@en ;
+	stonework:emailOf ex:controller ;
+	stonework:emailValue "controller@manufacturer.example" ;
+	.
+
 ex:addr-forward-target
 	a stonework:EmailAddress ;
 	skos:prefLabel "External address the forwarding rule sends to"@en ;
@@ -116,6 +130,13 @@ ex:addr-lookalike
 	skos:prefLabel "Lookalike supplier address"@en ;
 	stonework:emailOf ex:actor ;
 	stonework:emailValue "accounts@supp1ier.example" ;
+	.
+
+ex:addr-supplier
+	a stonework:EmailAddress ;
+	skos:prefLabel "Supplier's accounts address"@en ;
+	stonework:displayName "Supplier Accounts" ;
+	stonework:emailValue "accounts@supplier.example" ;
 	.
 
 ex:amt-wire
@@ -134,6 +155,33 @@ ex:ap-clerk
 	a stonework:Person ;
 	skos:prefLabel "Example accounts-payable clerk"@en ;
 	stonework:hasRoleAssignment ex:ra-ap-clerk ;
+	.
+
+ex:auth-dkim-bank-change
+	a stonework:EmailAuthenticationResult ;
+	skos:prefLabel "DKIM: pass for supp1ier.example"@en ;
+	stonework:authenticatedBy ex:mx-inbound ;
+	stonework:authenticatedDomain ex:dom-lookalike ;
+	stonework:hasAuthenticationMethod stonework:authenticationMethodDKIM ;
+	stonework:hasAuthenticationVerdict stonework:authenticationVerdictPass ;
+	.
+
+ex:auth-dmarc-bank-change
+	a stonework:EmailAuthenticationResult ;
+	skos:prefLabel "DMARC: pass for supp1ier.example"@en ;
+	stonework:authenticatedBy ex:mx-inbound ;
+	stonework:authenticatedDomain ex:dom-lookalike ;
+	stonework:hasAuthenticationMethod stonework:authenticationMethodDMARC ;
+	stonework:hasAuthenticationVerdict stonework:authenticationVerdictPass ;
+	.
+
+ex:auth-spf-bank-change
+	a stonework:EmailAuthenticationResult ;
+	skos:prefLabel "SPF: pass for supp1ier.example"@en ;
+	stonework:authenticatedBy ex:mx-inbound ;
+	stonework:authenticatedDomain ex:dom-lookalike ;
+	stonework:hasAuthenticationMethod stonework:authenticationMethodSPF ;
+	stonework:hasAuthenticationVerdict stonework:authenticationVerdictPass ;
 	.
 
 ex:b-account-contain
@@ -396,6 +444,14 @@ ex:dev-0916-callback
 		;
 	.
 
+ex:dom-lookalike
+	a stonework:Domain ;
+	skos:definition "A lookalike of the supplier's domain, with a digit 1 in place of the letter l, registered by the actor two weeks before the bank-change email. It passes SPF, DKIM and DMARC for itself."@en ;
+	skos:prefLabel "Lookalike supplier domain"@en ;
+	stonework:domainName "supp1ier.example" ;
+	stonework:registrationDate "2026-09-01T09:12:00Z"^^xsd:dateTime ;
+	.
+
 ex:dstep-contain
 	a stonework:Step ;
 	skos:definition "Run the containment plan for the mailbox where a rule was found."@en ;
@@ -457,6 +513,34 @@ ex:email-bank-change
 	a stonework:EmailMessage ;
 	skos:definition "Sent from the lookalike supplier address in reply to a genuine invoice thread the actor had read through the forwarding rule. It says the supplier has changed banks and gives new account details for the outstanding invoice."@en ;
 	skos:prefLabel 'Email: "Updated remittance details"'@en ;
+	stonework:emailSubject "RE: Invoice 44871 - updated remittance details" ;
+	stonework:fromDisplayName "Supplier Accounts" ;
+	stonework:hasAuthenticationResult
+		ex:auth-dkim-bank-change ,
+		ex:auth-dmarc-bank-change ,
+		ex:auth-spf-bank-change
+		;
+	stonework:hasFromAddress ex:addr-lookalike ;
+	stonework:hasReplyToAddress ex:addr-lookalike ;
+	stonework:hasReturnPathAddress ex:addr-lookalike ;
+	stonework:hasToAddress ex:addr-ap-clerk ;
+	stonework:inReplyTo ex:email-invoice-44871 ;
+	stonework:messageId "<CAF4x9qQ7r.20260915220700@mail.supp1ier.example>" ;
+	stonework:referencesMessage ex:email-invoice-44871 ;
+	stonework:sentAtTime "2026-09-15T22:07:00Z"^^xsd:dateTime ;
+	.
+
+ex:email-invoice-44871
+	a stonework:EmailMessage ;
+	skos:definition "The supplier's genuine invoice for the September delivery, sent to accounts payable with the controller copied. The forwarding rule on the controller's mailbox sent a copy to the actor."@en ;
+	skos:prefLabel 'Email: "Invoice 44871"'@en ;
+	stonework:emailSubject "Invoice 44871" ;
+	stonework:fromDisplayName "Supplier Accounts" ;
+	stonework:hasCcAddress ex:addr-controller ;
+	stonework:hasFromAddress ex:addr-supplier ;
+	stonework:hasToAddress ex:addr-ap-clerk ;
+	stonework:messageId "<20260910151204.44871@mail.supplier.example>" ;
+	stonework:sentAtTime "2026-09-10T15:12:04Z"^^xsd:dateTime ;
 	.
 
 ex:exe-contain
@@ -617,6 +701,17 @@ ex:file-clerk-statement
 	skos:prefLabel "Accounts-payable clerk's statement (1 October)"@en ;
 	.
 
+ex:hop-bank-change
+	a stonework:Event ;
+	skos:definition "The organization's inbound mail server received the bank-change email from the actor's sending server, as its Received header records."@en ;
+	skos:prefLabel "Received: the bank-change email, at the organization's mail server"@en ;
+	stonework:actsOn ex:email-bank-change ;
+	stonework:generatedFrom ex:email-bank-change ;
+	stonework:hasSourceAddress ex:ip-actor-mail ;
+	stonework:occursOn ex:mx-inbound ;
+	stonework:startedAtTime "2026-09-15T22:07:04Z"^^xsd:dateTime ;
+	.
+
 ex:hyp-actor-diverted
 	a stonework:Hypothesis ;
 	skos:definition "The actor who sent the bank-change email diverted the 16 September wire by reading the controller's mail through a forwarding rule (T1114.003). A conjunction of two claims tested differently: the rule (the activity) and who set it (the attribution)."@en ;
@@ -735,6 +830,13 @@ ex:inv-search-controller
 	stonework:usedBinding ex:b-mailbox-controller ;
 	.
 
+ex:ip-actor-mail
+	a stonework:IPAddress ;
+	skos:prefLabel "The sending server of the bank-change email"@en ;
+	stonework:ipValue "203.0.113.45" ;
+	stonework:ipVersion "4"^^xsd:integer ;
+	.
+
 ex:log-calls-0916
 	a stonework:Log ;
 	skos:definition "Call detail records for the accounts-payable extensions on 16 September: no call to the supplier's number on file."@en ;
@@ -772,6 +874,12 @@ ex:mail-tenant
 ex:mule
 	a stonework:Person ;
 	skos:prefLabel "Example money mule"@en ;
+	.
+
+ex:mx-inbound
+	a stonework:Host ;
+	skos:definition "The server of the organization's email tenant that receives inbound mail and records its authentication results."@en ;
+	skos:prefLabel "Organization's inbound mail server"@en ;
 	.
 
 ex:opplan-bec

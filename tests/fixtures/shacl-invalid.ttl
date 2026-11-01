@@ -36,6 +36,11 @@ example:hash
 	stonework:hashAlgorithm "SHA-256" ;
 	.
 
+example:incompleteAuthResult
+	a stonework:EmailAuthenticationResult ;
+	stonework:authenticatedDomain example:domain ;
+	.
+
 example:incompleteIdentityControl
 	a stonework:IdentityControl ;
 	stonework:controllingAgent example:actor ;

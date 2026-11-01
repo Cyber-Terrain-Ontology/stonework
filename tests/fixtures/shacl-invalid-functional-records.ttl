@@ -30,6 +30,26 @@ example:deviation
 	stonework:deviationStep example:firstStep ;
 	.
 
+example:doubledAuthResult
+	a stonework:EmailAuthenticationResult ;
+	stonework:authenticatedBy
+		example:firstServer ,
+		example:secondServer
+		;
+	stonework:authenticatedDomain
+		example:firstDomain ,
+		example:secondDomain
+		;
+	stonework:hasAuthenticationMethod
+		stonework:authenticationMethodDKIM ,
+		stonework:authenticationMethodSPF
+		;
+	stonework:hasAuthenticationVerdict
+		stonework:authenticationVerdictFail ,
+		stonework:authenticationVerdictPass
+		;
+	.
+
 example:doubledIdentityControl
 	a stonework:IdentityControl ;
 	stonework:controlledIdentity
@@ -39,6 +59,38 @@ example:doubledIdentityControl
 	stonework:controllingAgent
 		example:firstAgent ,
 		example:secondAgent
+		;
+	.
+
+example:doubledMessage
+	a stonework:EmailMessage ;
+	stonework:emailSubject
+		"First subject" ,
+		"Second subject"
+		;
+	stonework:fromDisplayName
+		"First name" ,
+		"Second name"
+		;
+	stonework:hasFromAddress
+		example:firstEmailAddress ,
+		example:secondEmailAddress
+		;
+	stonework:hasReturnPathAddress
+		example:firstEmailAddress ,
+		example:secondEmailAddress
+		;
+	stonework:hasSenderAddress
+		example:firstEmailAddress ,
+		example:secondEmailAddress
+		;
+	stonework:messageId
+		"<first@example.org>" ,
+		"<second@example.org>"
+		;
+	stonework:sentAtTime
+		"2026-09-15T22:07:00Z"^^xsd:dateTime ,
+		"2026-09-15T22:08:00Z"^^xsd:dateTime
 		;
 	.
 
@@ -52,6 +104,14 @@ example:firstAgent
 
 example:firstAnalyst
 	a stonework:Person ;
+	.
+
+example:firstDomain
+	a stonework:Domain ;
+	.
+
+example:firstEmailAddress
+	a stonework:EmailAddress ;
 	.
 
 example:firstInfrastructure
@@ -72,6 +132,10 @@ example:firstProduct
 
 example:firstProductFamily
 	a stonework:Product ;
+	.
+
+example:firstServer
+	a stonework:Host ;
 	.
 
 example:firstStep
@@ -180,6 +244,14 @@ example:secondAnalyst
 	a stonework:Person ;
 	.
 
+example:secondDomain
+	a stonework:Domain ;
+	.
+
+example:secondEmailAddress
+	a stonework:EmailAddress ;
+	.
+
 example:secondInfrastructure
 	a stonework:Infrastructure ;
 	.
@@ -194,6 +266,10 @@ example:secondProduct
 
 example:secondProductFamily
 	a stonework:Product ;
+	.
+
+example:secondServer
+	a stonework:Host ;
 	.
 
 example:secondStep
