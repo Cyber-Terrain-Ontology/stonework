@@ -610,7 +610,7 @@ SELECT ?reply ?from ?answering ?verdicts WHERE {
   { SELECT ?r ?o (GROUP_CONCAT(?v; separator=", ") AS ?verdicts) WHERE {
       ?r stonework:inReplyTo ?o .
       OPTIONAL { ?r stonework:hasAuthenticationResult ?a .
-                 ?a stonework:hasAuthenticationMethod/skos:notation ?m ;
+                 ?a stonework:hasEmailAuthenticationMethod/skos:notation ?m ;
                     stonework:hasAuthenticationVerdict/skos:notation ?res .
                  BIND(CONCAT(?m, "=", ?res) AS ?v) }
     } GROUP BY ?r ?o }
@@ -668,6 +668,13 @@ SELECT ?execution ?address ?where ?client ?sharedWith WHERE {
 → the 12 September sign-in | 198.51.100.77 | Netherlands | Linux Chrome browser | the rule's
 creation. The 16 September sign-in came from the office address with Outlook for Windows, and
 doesn't appear.
+
+Both sign-ins are `authenticatedWith` a **session token**: neither presented a fresh factor, so
+neither has an `authenticationFactor`. For the controller's Outlook that is routine, a desktop
+client refreshing its token. For a browser on a hosting address it is how an adversary in the
+middle gets past MFA: the actor relayed one real sign-in, kept the session token, and replays
+it. Both `hasOutcome` succeeded. A sign-in refused after the credential reset would have
+`hasOutcome` failed, with the identity provider's reason as its `outcomeDetail`.
 
 ## What it shows about plans
 

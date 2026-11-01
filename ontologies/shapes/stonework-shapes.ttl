@@ -27,6 +27,38 @@ stonework:ActivityWindowShape
 		;
 	.
 
+stonework:AuthenticatedWithShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:AuthenticatorType ;
+		sh:message "authenticatedWith names an AuthenticatorType."@en ;
+		sh:path stonework:authenticatedWith ;
+	] ;
+	sh:targetSubjectsOf stonework:authenticatedWith ;
+	.
+
+stonework:AuthenticationFactorShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:AuthenticationFactor ;
+		sh:maxCount "3"^^xsd:integer ;
+		sh:message "authenticationFactor names at most three distinct AuthenticationFactors."@en ;
+		sh:path stonework:authenticationFactor ;
+	] ;
+	sh:targetSubjectsOf stonework:authenticationFactor ;
+	.
+
+stonework:AuthenticatorTypeShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:datatype xsd:boolean ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "An AuthenticatorType's phishingResistant is a single boolean."@en ;
+		sh:path stonework:phishingResistant ;
+	] ;
+	sh:targetClass stonework:AuthenticatorType ;
+	.
+
 stonework:BomEntryShape
 	a sh:NodeShape ;
 	sh:property [
@@ -134,13 +166,6 @@ stonework:EmailAuthenticationResultShape
 	a sh:NodeShape ;
 	sh:property
 		[
-			sh:class stonework:AuthenticationMethod ;
-			sh:maxCount "1"^^xsd:integer ;
-			sh:message "An EmailAuthenticationResult names exactly one AuthenticationMethod."@en ;
-			sh:minCount "1"^^xsd:integer ;
-			sh:path stonework:hasAuthenticationMethod ;
-		] ,
-		[
 			sh:class stonework:AuthenticationVerdict ;
 			sh:maxCount "1"^^xsd:integer ;
 			sh:message "An EmailAuthenticationResult names exactly one AuthenticationVerdict."@en ;
@@ -152,6 +177,13 @@ stonework:EmailAuthenticationResultShape
 			sh:maxCount "1"^^xsd:integer ;
 			sh:message "An EmailAuthenticationResult names at most one authenticated Domain."@en ;
 			sh:path stonework:authenticatedDomain ;
+		] ,
+		[
+			sh:class stonework:EmailAuthenticationMethod ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An EmailAuthenticationResult names exactly one EmailAuthenticationMethod."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:hasEmailAuthenticationMethod ;
 		] ,
 		[
 			sh:class stonework:Infrastructure ;
@@ -300,6 +332,23 @@ stonework:GeneratedFromShape
 		sh:path stonework:generatedFrom ;
 	] ;
 	sh:targetSubjectsOf stonework:generatedFrom ;
+	.
+
+stonework:HasOutcomeShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:ExecutionOutcome ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "An activity has at most one outcome, and it is an ExecutionOutcome."@en ;
+			sh:path stonework:hasOutcome ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:path stonework:outcomeDetail ;
+		]
+		;
+	sh:targetSubjectsOf stonework:hasOutcome ;
 	.
 
 stonework:HasPlaybookTypeShape

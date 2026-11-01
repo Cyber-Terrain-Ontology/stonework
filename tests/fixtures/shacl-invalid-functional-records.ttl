@@ -40,13 +40,13 @@ example:doubledAuthResult
 		example:firstDomain ,
 		example:secondDomain
 		;
-	stonework:hasAuthenticationMethod
-		stonework:authenticationMethodDKIM ,
-		stonework:authenticationMethodSPF
-		;
 	stonework:hasAuthenticationVerdict
 		stonework:authenticationVerdictFail ,
 		stonework:authenticationVerdictPass
+		;
+	stonework:hasEmailAuthenticationMethod
+		stonework:emailAuthenticationMethodDKIM ,
+		stonework:emailAuthenticationMethodSPF
 		;
 	.
 
@@ -119,6 +119,14 @@ example:doubledMessage
 	stonework:sentAtTime
 		"2026-09-15T22:07:00Z"^^xsd:dateTime ,
 		"2026-09-15T22:08:00Z"^^xsd:dateTime
+		;
+	.
+
+example:doubledOutcome
+	a stonework:Event ;
+	stonework:hasOutcome
+		stonework:executionOutcomeFailed ,
+		stonework:executionOutcomeSucceeded
 		;
 	.
 

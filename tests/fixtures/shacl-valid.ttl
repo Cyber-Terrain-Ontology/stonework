@@ -51,8 +51,8 @@ example:analystOpinion
 example:authResult
 	a stonework:EmailAuthenticationResult ;
 	stonework:authenticatedDomain example:domain ;
-	stonework:hasAuthenticationMethod stonework:authenticationMethodDMARC ;
 	stonework:hasAuthenticationVerdict stonework:authenticationVerdictPass ;
+	stonework:hasEmailAuthenticationMethod stonework:emailAuthenticationMethodDMARC ;
 	.
 
 example:boundEntity
@@ -134,6 +134,21 @@ example:epssObservation
 example:externalAddress
 	a stonework:EmailAddress ;
 	stonework:emailValue "archive.mailbox@freemail.example" ;
+	.
+
+example:freshSignIn
+	a stonework:Event ;
+	stonework:authenticatedWith
+		stonework:authenticatorPassword ,
+		stonework:authenticatorPushApproval
+		;
+	stonework:authenticationFactor
+		stonework:authenticationFactorKnowledge ,
+		stonework:authenticationFactorPossession
+		;
+	stonework:hasOutcome stonework:executionOutcomeSucceeded ;
+	stonework:performedBy example:account ;
+	stonework:startedAtTime "2026-09-16T14:55:00Z"^^xsd:dateTime ;
 	.
 
 example:fromAddress
@@ -314,6 +329,14 @@ example:receivedHop
 	stonework:generatedFrom example:message ;
 	stonework:hasSourceAddress example:address ;
 	stonework:startedAtTime "2026-09-15T22:07:04Z"^^xsd:dateTime ;
+	.
+
+example:refusedToken
+	a stonework:Event ;
+	stonework:authenticatedWith stonework:authenticatorSessionToken ;
+	stonework:hasOutcome stonework:executionOutcomeFailed ;
+	stonework:outcomeDetail "50173: The provided grant has expired due to it being revoked." ;
+	stonework:startedAtTime "2026-09-30T22:15:37Z"^^xsd:dateTime ;
 	.
 
 example:roleSource

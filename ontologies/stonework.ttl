@@ -404,7 +404,7 @@ stonework:EmailAuthenticationResult
 	rdfs:subClassOf stonework:Assessment ;
 	skos:definition "The verdict of one sender-authentication check (SPF, DKIM, DMARC or ARC) on an EmailMessage, as a receiving server recorded it in an Authentication-Results header: the method, the verdict, the domain checked, and the server that checked."@en ;
 	skos:prefLabel "Email Authentication Result"@en ;
-	skos:scopeNote "A pass authenticates the domain, not the sender's honesty: a lookalike domain registered by an actor passes SPF, DKIM and DMARC for itself. Compare stonework:authenticatedDomain with the domain the recipient expected. The method and verdict are categories (stonework:hasAuthenticationMethod, stonework:hasAuthenticationVerdict)."@en ;
+	skos:scopeNote "A pass authenticates the domain, not the sender's honesty: a lookalike domain registered by an actor passes SPF, DKIM and DMARC for itself. Compare stonework:authenticatedDomain with the domain the recipient expected. The method and verdict are categories (stonework:hasEmailAuthenticationMethod, stonework:hasAuthenticationVerdict)."@en ;
 	.
 
 stonework:EmailMessage
@@ -4342,6 +4342,14 @@ stonework:osVersion
 	rdfs:range xsd:string ;
 	skos:definition "The version string of the operating system."@en ;
 	skos:prefLabel "osVersion"@en ;
+	.
+
+stonework:outcomeDetail
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range xsd:string ;
+	skos:definition "Why an activity ended as it did, as the source system reports it, such as an error code and its message."@en ;
+	skos:prefLabel "outcomeDetail"@en ;
 	.
 
 stonework:outcomeVariable
