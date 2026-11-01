@@ -517,6 +517,66 @@ stonework:LongitudeShape
 	sh:targetSubjectsOf stonework:longitude ;
 	.
 
+stonework:MailboxRuleShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:EmailAddress ;
+			sh:path stonework:forwardsTo ;
+		] ,
+		[
+			sh:class stonework:EmailAddress ;
+			sh:path stonework:matchesSender ;
+		] ,
+		[
+			sh:class stonework:EmailAddress ;
+			sh:path stonework:redirectsTo ;
+		] ,
+		[
+			sh:class stonework:UserAccount ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A MailboxRule belongs to exactly one mailbox account."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:ruleOfMailbox ;
+		] ,
+		[
+			sh:datatype xsd:boolean ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A MailboxRule's deletesMessage is a single boolean."@en ;
+			sh:path stonework:deletesMessage ;
+		] ,
+		[
+			sh:datatype xsd:boolean ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A MailboxRule's hiddenFromUser is a single boolean."@en ;
+			sh:path stonework:hiddenFromUser ;
+		] ,
+		[
+			sh:datatype xsd:boolean ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A MailboxRule's marksAsRead is a single boolean."@en ;
+			sh:path stonework:marksAsRead ;
+		] ,
+		[
+			sh:datatype xsd:boolean ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A MailboxRule's ruleEnabled is a single boolean."@en ;
+			sh:path stonework:ruleEnabled ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A MailboxRule moves messages to at most one folder."@en ;
+			sh:path stonework:movesToFolder ;
+		] ,
+		[
+			sh:datatype xsd:string ;
+			sh:path stonework:matchesKeyword ;
+		]
+		;
+	sh:targetClass stonework:MailboxRule ;
+	.
+
 stonework:MetricObservationShape
 	a sh:NodeShape ;
 	sh:property

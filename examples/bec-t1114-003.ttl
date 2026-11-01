@@ -957,9 +957,20 @@ ex:role-supplier
 	.
 
 ex:rule-forward
-	a stonework:DigitalArtifact ;
+	a stonework:MailboxRule ;
 	skos:definition "The inbox rule \"Sync\" on the controller's mailbox: messages containing \"invoice\", \"payment\" or \"wire\" are forwarded to archive.mailbox@freemail.example and moved to RSS Feeds."@en ;
 	skos:prefLabel 'Forwarding inbox rule "Sync"'@en ;
+	stonework:forwardsTo ex:addr-forward-target ;
+	stonework:matchesKeyword
+		"invoice" ,
+		"payment" ,
+		"wire"
+		;
+	stonework:movesToFolder "RSS Feeds" ;
+	stonework:ruleContent 'New-InboxRule -Name "Sync" -SubjectOrBodyContainsWords "invoice","payment","wire" -ForwardTo "archive.mailbox@freemail.example" -MoveToFolder "RSS Feeds" -StopProcessingRules $true' ;
+	stonework:ruleEnabled "true"^^xsd:boolean ;
+	stonework:ruleName "Sync" ;
+	stonework:ruleOfMailbox ex:acct-controller-mailbox ;
 	.
 
 ex:run-actor-op

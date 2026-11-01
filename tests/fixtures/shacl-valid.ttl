@@ -131,6 +131,11 @@ example:epssObservation
 	stonework:observedAt "2026-08-20T12:00:00Z"^^xsd:dateTime ;
 	.
 
+example:externalAddress
+	a stonework:EmailAddress ;
+	stonework:emailValue "archive.mailbox@freemail.example" ;
+	.
+
 example:fromAddress
 	a stonework:EmailAddress ;
 	stonework:emailValue "accounts@supplier.example" ;
@@ -212,6 +217,20 @@ example:location
 	a stonework:Location ;
 	stonework:latitude "40.7128"^^xsd:decimal ;
 	stonework:longitude "-74.0060"^^xsd:decimal ;
+	.
+
+example:mailboxRule
+	a stonework:MailboxRule ;
+	stonework:forwardsTo example:externalAddress ;
+	stonework:hiddenFromUser "false"^^xsd:boolean ;
+	stonework:matchesKeyword
+		"invoice" ,
+		"wire"
+		;
+	stonework:movesToFolder "RSS Feeds" ;
+	stonework:ruleEnabled "true"^^xsd:boolean ;
+	stonework:ruleName "Sync" ;
+	stonework:ruleOfMailbox example:account ;
 	.
 
 example:mergedInvestigation

@@ -6,7 +6,8 @@ Variable bindings, the Roles that perform Steps, deviations as findings, and par
 branches, messages between plans, default branches, step outcomes and targets, and playbook
 types, what a hypothesis is about and its parts, who controlled an identity when, and ATT&CK
 mitigations as Behaviors (proposals 1, 2, 4 to 10, 12 and 13 to 16 below); and 2026-11-01
-for 0.13.0, which gives the email its headers and authentication results. The gaps it still
+for 0.13.0, which gives the email its headers and authentication results, and the
+forwarding rule its own class. The gaps it still
 runs into are listed at the end as proposals, not changes.*
 
 The Turtle is [`examples/bec-t1114-003.ttl`](../examples/bec-t1114-003.ttl). It passes the
@@ -507,6 +508,31 @@ Its run, `ex:run-actor-op`, is `attributedTo` the actor. The rule's creation on 
 the execution of Step 1, and the email sent on 15 September is the execution of Step 3, whose
 output is the email.
 
+**The rule.** Step 1's execution `produces` `ex:rule-forward`, a `stonework:MailboxRule`
+`ruleOfMailbox` the controller's account: `ruleName` "Sync", `matchesKeyword` "invoice",
+"payment" and "wire", `forwardsTo` the actor's free-mail address, and `movesToFolder` "RSS
+Feeds" so the controller never sees the originals. `ruleContent` keeps the parameters as the
+audit log recorded them. The execution of the containment plan's first Step, removing the
+rule on 30 September, `actsOn` the same resource.
+
+**Rules that send mail outside the mailbox's domain and keep the original out of sight:**
+
+```sparql
+SELECT ?rule ?mailbox ?sendsTo ?original WHERE {
+  ?r a stonework:MailboxRule ; skos:prefLabel ?rule ;
+     stonework:ruleOfMailbox/stonework:accountName ?mailbox ;
+     stonework:forwardsTo|stonework:redirectsTo ?a .
+  ?a stonework:emailValue ?sendsTo .
+  FILTER(STRAFTER(?sendsTo, "@") != STRAFTER(?mailbox, "@"))
+  { ?r stonework:movesToFolder ?folder . BIND(CONCAT("moved to ", ?folder) AS ?original) }
+  UNION
+  { ?r stonework:deletesMessage true . BIND("deleted" AS ?original) }
+}
+```
+
+→ Forwarding inbox rule "Sync" | controller@manufacturer.example |
+archive.mailbox@freemail.example | moved to RSS Feeds.
+
 **A message is data flow between two plans.** Step 3's output Variable, `paymentRequest`, is
 the input Variable of the business process's first Step. Within a plan, a shared Variable is
 ordinary data flow; between plans, it's a message from one participant to another (BPMN's
@@ -795,8 +821,6 @@ lose it. The four small ones, 13 to 16, are done; 17 to 19 remain.
 
 Smaller things:
 
-- No class for an inbox or mailbox rule (STIX has none either); the example uses
-  `DigitalArtifact`.
 - `ex:control-callback` is an organization-defined control. If financial controls (callback
   verification, dual approval, payee-change holds) recur across cases, they may deserve their
   own catalogue, perhaps in the financial module.

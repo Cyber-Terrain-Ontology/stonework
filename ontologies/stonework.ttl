@@ -711,6 +711,14 @@ stonework:MACAddress
 	skos:scopeNote "Covers 48-bit and 64-bit MAC address representations, including values carried by the STIX 2.1 MAC Address SCO."@en ;
 	.
 
+stonework:MailboxRule
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A rule a mailbox applies automatically to the email it receives: conditions that select messages, and actions taken on them, such as forwarding, moving or deleting."@en ;
+	skos:prefLabel "Mailbox Rule"@en ;
+	skos:scopeNote "Covers server-side inbox rules (Exchange, Microsoft 365), client rules and webmail filters (Gmail). An actor holding a mailbox's credentials creates one to read mail without signing in again (ATT&CK T1114.003, Email Forwarding Rule) or to keep replies and warnings from the holder (T1564.008, Email Hiding Rules). The activity that creates a rule produces it (stonework:produces); later changes and its removal are activities that act on it (stonework:actsOn). Rules applied by the mail service to a whole organization (transport or mail-flow rules) are not mailbox rules."@en ;
+	.
+
 stonework:Malware
 	a owl:Class ;
 	rdfs:subClassOf stonework:CyberEntity ;
@@ -2398,6 +2406,17 @@ stonework:defaultTransition
 	skos:scopeNote "BPMN's default sequence flow, and the default case of a CACAO switch-condition. The Transition leaves this Step (its stonework:fromStep is this Step) and carries no guard of its own: it is the otherwise branch, so a plan doesn't have to spell out the negation of every other guard. It applies to either stonework:splitKind: with a parallel split, the default is taken only when none of the guarded branches is."@en ;
 	.
 
+stonework:deletesMessage
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:boolean ;
+	skos:definition "Whether a MailboxRule deletes the messages it selects."@en ;
+	skos:prefLabel "deletesMessage"@en ;
+	.
+
 stonework:deliveredVia
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:MalwareSample ;
@@ -2777,6 +2796,14 @@ stonework:fixedInProduct
 	skos:definition "Relates a vulnerability to the product version in which it was addressed."@en ;
 	skos:prefLabel "fixedInProduct"@en ;
 	skos:scopeNote "The range is a stonework:VersionedProduct individual whose IRI is derived deterministically from the CPE identifier. Populated by CVE/patch ingest."@en ;
+	.
+
+stonework:forwardsTo
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "An address a MailboxRule forwards the messages it selects to, inline or as attachments."@en ;
+	skos:prefLabel "forwardsTo"@en ;
 	.
 
 stonework:fqdn
@@ -3452,6 +3479,18 @@ stonework:heldAt
 	skos:scopeNote "Optional. Absent for a self-custody crypto wallet or an account whose institution is unknown; present and pointing at a virtual asset service provider for a custodial wallet."@en ;
 	.
 
+stonework:hiddenFromUser
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:boolean ;
+	skos:definition "Whether a MailboxRule is hidden from the mailbox's holder, so that it appears in neither the mail client nor the mailbox settings and only an administrative query finds it."@en ;
+	skos:prefLabel "hiddenFromUser"@en ;
+	skos:scopeNote "A hidden rule is distinct from a rule that hides messages, such as one that moves them to a folder the holder never opens (stonework:movesToFolder)."@en ;
+	.
+
 stonework:hostedBy
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Infrastructure ;
@@ -3933,6 +3972,34 @@ stonework:markingRef
 	skos:prefLabel "markingRef" ;
 	.
 
+stonework:marksAsRead
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:boolean ;
+	skos:definition "Whether a MailboxRule marks the messages it selects as read."@en ;
+	skos:prefLabel "marksAsRead"@en ;
+	.
+
+stonework:matchesKeyword
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:string ;
+	skos:definition "A word or phrase a MailboxRule looks for in a message's subject or body to select it."@en ;
+	skos:prefLabel "matchesKeyword"@en ;
+	skos:scopeNote "One property whichever part of the message the rule searches; the exact conditions are in stonework:ruleContent."@en ;
+	.
+
+stonework:matchesSender
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "A sender whose messages a MailboxRule selects."@en ;
+	skos:prefLabel "matchesSender"@en ;
+	.
+
 stonework:memberOf
 	a owl:ObjectProperty ;
 	rdfs:range [
@@ -4099,6 +4166,18 @@ stonework:modified
 	skos:definition "The timestamp when this individual was last modified."@en ;
 	skos:prefLabel "modified"@en ;
 	skos:scopeNote "Compatibility alias for dcterms:modified. Prefer dcterms:modified in newly authored data."@en ;
+	.
+
+stonework:movesToFolder
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:string ;
+	skos:definition "The name of the folder a MailboxRule moves the messages it selects to."@en ;
+	skos:prefLabel "movesToFolder"@en ;
+	skos:scopeNote "Folders the holder rarely opens, such as RSS Feeds, Conversation History or Archive, keep selected messages out of sight (T1564.008)."@en ;
 	.
 
 stonework:mutexName
@@ -4634,6 +4713,14 @@ stonework:rawEntry
 	skos:prefLabel "rawEntry"@en ;
 	.
 
+stonework:redirectsTo
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "An address a MailboxRule redirects the messages it selects to, keeping the original sender, so the recipient sees them as if sent directly."@en ;
+	skos:prefLabel "redirectsTo"@en ;
+	.
+
 stonework:references
 	a owl:ObjectProperty ;
 	skos:definition "Generic reference from one entity to another. Use a more specific property where one exists."@en ;
@@ -4889,10 +4976,27 @@ stonework:rolePlayer
 
 stonework:ruleContent
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:DetectionRule ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:DetectionRule
+			stonework:MailboxRule
+		) ;
+	] ;
 	rdfs:range xsd:string ;
-	skos:definition "The full text content of the detection rule."@en ;
+	skos:definition "The full text content of a detection rule, or the recorded definition of a mailbox rule (its conditions and actions as the mail service reports them)."@en ;
 	skos:prefLabel "ruleContent"@en ;
+	.
+
+stonework:ruleEnabled
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:boolean ;
+	skos:definition "Whether a MailboxRule is enabled, as last recorded."@en ;
+	skos:prefLabel "ruleEnabled"@en ;
 	.
 
 stonework:ruleFormat
@@ -4905,10 +5009,27 @@ stonework:ruleFormat
 
 stonework:ruleName
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:DetectionRule ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:DetectionRule
+			stonework:MailboxRule
+		) ;
+	] ;
 	rdfs:range xsd:string ;
-	skos:definition "The human-readable name of the detection rule."@en ;
+	skos:definition "The human-readable name of a detection rule or mailbox rule."@en ;
 	skos:prefLabel "ruleName"@en ;
+	.
+
+stonework:ruleOfMailbox
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range stonework:UserAccount ;
+	skos:definition "The mailbox account a MailboxRule belongs to and applies to."@en ;
+	skos:prefLabel "ruleOfMailbox"@en ;
 	.
 
 stonework:ruleVersion

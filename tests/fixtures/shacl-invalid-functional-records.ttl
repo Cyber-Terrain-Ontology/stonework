@@ -62,6 +62,34 @@ example:doubledIdentityControl
 		;
 	.
 
+example:doubledMailboxRule
+	a stonework:MailboxRule ;
+	stonework:deletesMessage
+		"false"^^xsd:boolean ,
+		"true"^^xsd:boolean
+		;
+	stonework:hiddenFromUser
+		"false"^^xsd:boolean ,
+		"true"^^xsd:boolean
+		;
+	stonework:marksAsRead
+		"false"^^xsd:boolean ,
+		"true"^^xsd:boolean
+		;
+	stonework:movesToFolder
+		"Archive" ,
+		"RSS Feeds"
+		;
+	stonework:ruleEnabled
+		"false"^^xsd:boolean ,
+		"true"^^xsd:boolean
+		;
+	stonework:ruleOfMailbox
+		example:firstAccount ,
+		example:secondAccount
+		;
+	.
+
 example:doubledMessage
 	a stonework:EmailMessage ;
 	stonework:emailSubject

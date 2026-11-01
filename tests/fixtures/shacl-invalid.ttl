@@ -73,6 +73,12 @@ example:observation
 	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
 	.
 
+example:orphanMailboxRule
+	a stonework:MailboxRule ;
+	stonework:deletesMessage "yes" ;
+	stonework:ruleName "." ;
+	.
+
 example:service
 	a stonework:NetworkService ;
 	stonework:port "70000"^^xsd:integer ;
