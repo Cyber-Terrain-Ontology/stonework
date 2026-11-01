@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.12.0> ;
-	owl:versionInfo "0.12.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.13.0> ;
+	owl:versionInfo "0.13.0" ;
 	.
 
 stonework:AIAgent
@@ -399,12 +399,20 @@ stonework:EmailAddress
 	skos:prefLabel "Email Address"@en ;
 	.
 
+stonework:EmailAuthenticationResult
+	a owl:Class ;
+	rdfs:subClassOf stonework:Assessment ;
+	skos:definition "The verdict of one sender-authentication check (SPF, DKIM, DMARC or ARC) on an EmailMessage, as a receiving server recorded it in an Authentication-Results header: the method, the verdict, the domain checked, and the server that checked."@en ;
+	skos:prefLabel "Email Authentication Result"@en ;
+	skos:scopeNote "A pass authenticates the domain, not the sender's honesty: a lookalike domain registered by an actor passes SPF, DKIM and DMARC for itself. Compare stonework:authenticatedDomain with the domain the recipient expected. The method and verdict are categories (stonework:hasAuthenticationMethod, stonework:hasAuthenticationVerdict)."@en ;
+	.
+
 stonework:EmailMessage
 	a owl:Class ;
 	rdfs:subClassOf stonework:DigitalArtifact ;
 	skos:definition "A discrete email communication, including headers, body content, and optional attachments, transmitted over an email protocol."@en ;
 	skos:prefLabel "Email Message"@en ;
-	skos:scopeNote "Distinct from stonework:EmailAddress, which represents the sender/recipient identifier. An EmailMessage is the content artifact itself. Used to represent phishing lures, spear-phishing emails, or other email-borne threat delivery mechanisms. Corresponds to STIX EmailMessage SCO."@en ;
+	skos:scopeNote "Distinct from stonework:EmailAddress, which represents the sender/recipient identifier. An EmailMessage is the content artifact itself. Used to represent phishing lures, spear-phishing emails, or other email-borne threat delivery mechanisms. Corresponds to STIX EmailMessage SCO. Its headers: the addresses by role (stonework:hasFromAddress, hasSenderAddress, hasReplyToAddress, hasReturnPathAddress, hasToAddress, hasCcAddress, hasBccAddress), stonework:fromDisplayName, emailSubject, sentAtTime, messageId, the thread (inReplyTo, referencesMessage), and the receiving servers' stonework:hasAuthenticationResult. Each Received header is a hop: a stonework:Event generatedFrom the message, with its time (startedAtTime), the sending server's address (hasSourceAddress) and the receiving server (occursOn)."@en ;
 	.
 
 stonework:Equals
@@ -701,6 +709,14 @@ stonework:MACAddress
 	skos:definition "A media access control address that identifies a network interface at the data-link layer."@en ;
 	skos:prefLabel "MAC Address"@en ;
 	skos:scopeNote "Covers 48-bit and 64-bit MAC address representations, including values carried by the STIX 2.1 MAC Address SCO."@en ;
+	.
+
+stonework:MailboxRule
+	a owl:Class ;
+	rdfs:subClassOf stonework:DigitalArtifact ;
+	skos:definition "A rule a mailbox applies automatically to the email it receives: conditions that select messages, and actions taken on them, such as forwarding, moving or deleting."@en ;
+	skos:prefLabel "Mailbox Rule"@en ;
+	skos:scopeNote "Covers server-side inbox rules (Exchange, Microsoft 365), client rules and webmail filters (Gmail). An actor holding a mailbox's credentials creates one to read mail without signing in again (ATT&CK T1114.003, Email Forwarding Rule) or to keep replies and warnings from the holder (T1564.008, Email Hiding Rules). The activity that creates a rule produces it (stonework:produces); later changes and its removal are activities that act on it (stonework:actsOn). Rules applied by the mail service to a whole organization (transport or mail-flow rules) are not mailbox rules."@en ;
 	.
 
 stonework:Malware
@@ -1659,6 +1675,28 @@ stonework:attributedToAgent
 	skos:scopeNote "Names the identity's holder, not whoever used it on a given occasion. When an identity is used by someone else, such as an actor holding a victim's stolen credentials, the activity keeps the identity as its stonework:performedBy and names the Agent responsible with stonework:attributedTo. That someone else controlled the identity for a period, such as an actor holding a mailbox's credentials from its compromise to its containment, is a stonework:IdentityControl."@en ;
 	.
 
+stonework:authenticatedBy
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:EmailAuthenticationResult ;
+	rdfs:range stonework:Infrastructure ;
+	skos:definition "The server that performed an authentication check and recorded its result (the authserv-id of an Authentication-Results header)."@en ;
+	skos:prefLabel "authenticatedBy"@en ;
+	.
+
+stonework:authenticatedDomain
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:EmailAuthenticationResult ;
+	rdfs:range stonework:Domain ;
+	skos:definition "The domain an authentication check evaluated: the envelope sender's domain for SPF, the signing domain for DKIM, the From domain for DMARC."@en ;
+	skos:prefLabel "authenticatedDomain"@en ;
+	.
+
 stonework:authoredBy
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Provenance ;
@@ -2368,6 +2406,17 @@ stonework:defaultTransition
 	skos:scopeNote "BPMN's default sequence flow, and the default case of a CACAO switch-condition. The Transition leaves this Step (its stonework:fromStep is this Step) and carries no guard of its own: it is the otherwise branch, so a plan doesn't have to spell out the negation of every other guard. It applies to either stonework:splitKind: with a parallel split, the default is taken only when none of the guarded branches is."@en ;
 	.
 
+stonework:deletesMessage
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:boolean ;
+	skos:definition "Whether a MailboxRule deletes the messages it selects."@en ;
+	skos:prefLabel "deletesMessage"@en ;
+	.
+
 stonework:deliveredVia
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:MalwareSample ;
@@ -2523,6 +2572,14 @@ stonework:dstPort
 	skos:prefLabel "dstPort"@en ;
 	.
 
+stonework:emailBody
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range xsd:string ;
+	skos:definition "The text of an EmailMessage's body (its text/plain part, or the text of its HTML part)."@en ;
+	skos:prefLabel "emailBody"@en ;
+	.
+
 stonework:emailOf
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:EmailAddress ;
@@ -2530,6 +2587,17 @@ stonework:emailOf
 	owl:inverseOf stonework:hasEmail ;
 	skos:definition "The Agent that owns or is associated with this EmailAddress. Inverse of stonework:hasEmail."@en ;
 	skos:prefLabel "emailOf" ;
+	.
+
+stonework:emailSubject
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range xsd:string ;
+	skos:definition "The Subject header of an EmailMessage."@en ;
+	skos:prefLabel "emailSubject"@en ;
 	.
 
 stonework:emailValue
@@ -2730,12 +2798,32 @@ stonework:fixedInProduct
 	skos:scopeNote "The range is a stonework:VersionedProduct individual whose IRI is derived deterministically from the CPE identifier. Populated by CVE/patch ingest."@en ;
 	.
 
+stonework:forwardsTo
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "An address a MailboxRule forwards the messages it selects to, inline or as attachments."@en ;
+	skos:prefLabel "forwardsTo"@en ;
+	.
+
 stonework:fqdn
 	a owl:DatatypeProperty ;
 	rdfs:domain stonework:Host ;
 	rdfs:range xsd:string ;
 	skos:definition "The fully qualified domain name of the host."@en ;
 	skos:prefLabel "fqdn"@en ;
+	.
+
+stonework:fromDisplayName
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range xsd:string ;
+	skos:definition "The display name in an EmailMessage's From header, as this message gave it."@en ;
+	skos:prefLabel "fromDisplayName"@en ;
+	skos:scopeNote "Recorded on the message, not the address, because the sender chooses it per message: display-name spoofing pairs a trusted name with an unrelated address. stonework:displayName on an EmailAddress is the name usually associated with the address."@en ;
 	.
 
 stonework:fromStep
@@ -2782,15 +2870,10 @@ stonework:generatedBy
 stonework:generatedFrom
 	a owl:ObjectProperty ;
 	rdfs:domain stonework:Event ;
-	rdfs:range [
-		a owl:Class ;
-		owl:unionOf (
-			stonework:Log
-			stonework:NetworkTraffic
-		) ;
-	] ;
-	skos:definition "Links an Event to the raw log or network traffic from which it was derived."@en ;
+	rdfs:range stonework:DigitalArtifact ;
+	skos:definition "Links an Event to the raw record from which it was derived: a log, network traffic, or another artifact such as an EmailMessage whose Received headers record its route."@en ;
 	skos:prefLabel "generatedFrom"@en ;
+	skos:scopeNote "The Event keeps this link when an analyst later assigns it to a Step (stonework:correspondsToStep), so an execution found in evidence stays traceable to the record it came from. Name the record within the artifact with stonework:externalId on the Event, such as an audit-log record's identifier."@en ;
 	.
 
 stonework:grantedTo
@@ -2891,6 +2974,30 @@ stonework:hasArtifact
 	skos:scopeNote "Optional — a MalwareSample may be known via hashes or threat reports without the binary being available. When present, the artifact provides retrievable binary evidence. Corresponds to the STIX 2.1 sample_refs property on the malware SDO."@en ;
 	.
 
+stonework:hasAttachment
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:File ;
+	skos:definition "A File attached to an EmailMessage."@en ;
+	skos:prefLabel "hasAttachment"@en ;
+	.
+
+stonework:hasAuthenticationResult
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailAuthenticationResult ;
+	skos:definition "The result of a sender-authentication check a receiving server performed on an EmailMessage."@en ;
+	skos:prefLabel "hasAuthenticationResult"@en ;
+	.
+
+stonework:hasBccAddress
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "An address in an EmailMessage's Bcc header, where the sender's copy records one."@en ;
+	skos:prefLabel "hasBccAddress"@en ;
+	.
+
 stonework:hasBehavior
 	a owl:ObjectProperty ;
 	rdfs:range stonework:Behavior ;
@@ -2905,6 +3012,14 @@ stonework:hasBomEntry
 	skos:definition "Relates a Software Bill of Materials to one of its component entries."@en ;
 	skos:prefLabel "has BOM entry" ;
 	skos:scopeNote "Each BomEntry carries the component's VersionedProduct reference (via stonework:installationOf) and any component-specific metadata (PURL, license, hash, component type). Range is BomEntry rather than VersionedProduct directly because the same VersionedProduct may appear in multiple SBOMs with different component-level attributes."@en ;
+	.
+
+stonework:hasCcAddress
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "An address in an EmailMessage's Cc header."@en ;
+	skos:prefLabel "hasCcAddress"@en ;
 	.
 
 stonework:hasCvssMetric
@@ -2928,9 +3043,15 @@ stonework:hasDependency
 
 stonework:hasDestinationAddress
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:NetworkTraffic ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:CyberActivity
+			stonework:NetworkTraffic
+		) ;
+	] ;
 	rdfs:range stonework:IPAddress ;
-	skos:definition "Relates NetworkTraffic to the destination IP address."@en ;
+	skos:definition "Relates NetworkTraffic, or an activity observed on the network, to the destination IP address."@en ;
 	skos:prefLabel "hasDestinationAddress"@en ;
 	.
 
@@ -2957,6 +3078,18 @@ stonework:hasExecution
 	rdfs:range stonework:CyberActivity ;
 	skos:definition "Relates a Behavior plan to a CyberActivity that executes it."@en ;
 	skos:prefLabel "hasExecution"@en ;
+	.
+
+stonework:hasFromAddress
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "The address in an EmailMessage's From header: the author the recipient sees."@en ;
+	skos:prefLabel "hasFromAddress"@en ;
+	skos:scopeNote "Single-valued, as STIX's from_ref is. RFC 5322 allows a list of authors, with a Sender; record the first author here."@en ;
 	.
 
 stonework:hasHash
@@ -3158,6 +3291,26 @@ stonework:hasProvenance
 	skos:prefLabel "hasProvenance"@en ;
 	.
 
+stonework:hasReplyToAddress
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "An address in an EmailMessage's Reply-To header, where replies go."@en ;
+	skos:prefLabel "hasReplyToAddress"@en ;
+	skos:scopeNote "A Reply-To that differs from the From address sends the recipient's answer to someone else, a common step in business email compromise. STIX has no Reply-To property."@en ;
+	.
+
+stonework:hasReturnPathAddress
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "The address in an EmailMessage's Return-Path header: the envelope sender, where bounces go and whose domain SPF checks."@en ;
+	skos:prefLabel "hasReturnPathAddress"@en ;
+	.
+
 stonework:hasRisk
 	a owl:ObjectProperty ;
 	rdfs:domain [
@@ -3182,6 +3335,17 @@ stonework:hasRoleAssignment
 	skos:prefLabel "hasRoleAssignment"@en ;
 	.
 
+stonework:hasSenderAddress
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "The address in an EmailMessage's Sender header: the mailbox that sent the message on the author's behalf."@en ;
+	skos:prefLabel "hasSenderAddress"@en ;
+	.
+
 stonework:hasSignature
 	a owl:ObjectProperty ;
 	rdfs:range stonework:Signature ;
@@ -3191,10 +3355,17 @@ stonework:hasSignature
 
 stonework:hasSourceAddress
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:NetworkTraffic ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:CyberActivity
+			stonework:NetworkTraffic
+		) ;
+	] ;
 	rdfs:range stonework:IPAddress ;
-	skos:definition "Relates NetworkTraffic to the source IP address."@en ;
+	skos:definition "Relates NetworkTraffic, or an activity observed on the network, to the source IP address: the client of a sign-in, the sending server of a Received hop."@en ;
 	skos:prefLabel "hasSourceAddress"@en ;
+	skos:scopeNote "Where the address was is a fact about the address: say it with stonework:locatedAt on the IPAddress (a geolocation lookup gives a Country or Region), not on the activity."@en ;
 	.
 
 stonework:hasStep
@@ -3222,6 +3393,14 @@ stonework:hasTechnique
 	owl:inverseOf stonework:techniqueOf ;
 	skos:definition "Relates a Tactic to a Technique that serves its goal, or a Technique to a more specific Technique it contains."@en ;
 	skos:prefLabel "hasTechnique" ;
+	.
+
+stonework:hasToAddress
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "An address in an EmailMessage's To header."@en ;
+	skos:prefLabel "hasToAddress"@en ;
 	.
 
 stonework:hasVendor
@@ -3299,6 +3478,18 @@ stonework:heldAt
 	skos:definition "The financial institution that maintains this account."@en ;
 	skos:prefLabel "heldAt"@en ;
 	skos:scopeNote "Optional. Absent for a self-custody crypto wallet or an account whose institution is unknown; present and pointing at a virtual asset service provider for a custodial wallet."@en ;
+	.
+
+stonework:hiddenFromUser
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:boolean ;
+	skos:definition "Whether a MailboxRule is hidden from the mailbox's holder, so that it appears in neither the mail client nor the mailbox settings and only an administrative query finds it."@en ;
+	skos:prefLabel "hiddenFromUser"@en ;
+	skos:scopeNote "A hidden rule is distinct from a rule that hides messages, such as one that moves them to a folder the holder never opens (stonework:movesToFolder)."@en ;
 	.
 
 stonework:hostedBy
@@ -3418,6 +3609,15 @@ stonework:inBlock
 	rdfs:range stonework:IPBlock ;
 	skos:definition "Relates an IPAddress to the IPBlock whose address space contains it."@en ;
 	skos:prefLabel "inBlock"@en ;
+	.
+
+stonework:inReplyTo
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailMessage ;
+	skos:definition "The EmailMessage this one answers, named by its Message-ID in the In-Reply-To header."@en ;
+	skos:prefLabel "inReplyTo"@en ;
+	skos:scopeNote "The answered message need not be at hand: give it its stonework:messageId and nothing else, and it is the same resource when its own copy is added. A reply placed in a genuine thread is how an actor who has read the thread makes a request look routine."@en ;
 	.
 
 stonework:indicates
@@ -3773,6 +3973,34 @@ stonework:markingRef
 	skos:prefLabel "markingRef" ;
 	.
 
+stonework:marksAsRead
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:boolean ;
+	skos:definition "Whether a MailboxRule marks the messages it selects as read."@en ;
+	skos:prefLabel "marksAsRead"@en ;
+	.
+
+stonework:matchesKeyword
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:string ;
+	skos:definition "A word or phrase a MailboxRule looks for in a message's subject or body to select it."@en ;
+	skos:prefLabel "matchesKeyword"@en ;
+	skos:scopeNote "One property whichever part of the message the rule searches; the exact conditions are in stonework:ruleContent."@en ;
+	.
+
+stonework:matchesSender
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "A sender whose messages a MailboxRule selects."@en ;
+	skos:prefLabel "matchesSender"@en ;
+	.
+
 stonework:memberOf
 	a owl:ObjectProperty ;
 	rdfs:range [
@@ -3822,6 +4050,17 @@ stonework:mergedInto
 	skos:definition "Relates an Investigation to the Investigation it was merged into, once analysts concluded the two examine the same matter."@en ;
 	skos:prefLabel "mergedInto"@en ;
 	skos:scopeNote "Keeps the merged Investigation as a record rather than deleting it, so its identity, findings and history stay traceable. A merge is an analyst's decision; when and by whom are recorded through stonework:hasProvenance or a stonework:QualifiedAssertion."@en ;
+	.
+
+stonework:messageId
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range xsd:string ;
+	skos:definition "The Message-ID header of an EmailMessage, with its angle brackets."@en ;
+	skos:prefLabel "messageId"@en ;
 	.
 
 stonework:metricFor
@@ -3928,6 +4167,18 @@ stonework:modified
 	skos:definition "The timestamp when this individual was last modified."@en ;
 	skos:prefLabel "modified"@en ;
 	skos:scopeNote "Compatibility alias for dcterms:modified. Prefer dcterms:modified in newly authored data."@en ;
+	.
+
+stonework:movesToFolder
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:string ;
+	skos:definition "The name of the folder a MailboxRule moves the messages it selects to."@en ;
+	skos:prefLabel "movesToFolder"@en ;
+	skos:scopeNote "Folders the holder rarely opens, such as RSS Feeds, Conversation History or Archive, keep selected messages out of sight (T1564.008)."@en ;
 	.
 
 stonework:mutexName
@@ -4463,10 +4714,26 @@ stonework:rawEntry
 	skos:prefLabel "rawEntry"@en ;
 	.
 
+stonework:redirectsTo
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range stonework:EmailAddress ;
+	skos:definition "An address a MailboxRule redirects the messages it selects to, keeping the original sender, so the recipient sees them as if sent directly."@en ;
+	skos:prefLabel "redirectsTo"@en ;
+	.
+
 stonework:references
 	a owl:ObjectProperty ;
 	skos:definition "Generic reference from one entity to another. Use a more specific property where one exists."@en ;
 	skos:prefLabel "references" ;
+	.
+
+stonework:referencesMessage
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range stonework:EmailMessage ;
+	skos:definition "An earlier EmailMessage of the same thread, named by its Message-ID in the References header."@en ;
+	skos:prefLabel "referencesMessage"@en ;
 	.
 
 stonework:refersTo
@@ -4710,10 +4977,27 @@ stonework:rolePlayer
 
 stonework:ruleContent
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:DetectionRule ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:DetectionRule
+			stonework:MailboxRule
+		) ;
+	] ;
 	rdfs:range xsd:string ;
-	skos:definition "The full text content of the detection rule."@en ;
+	skos:definition "The full text content of a detection rule, or the recorded definition of a mailbox rule (its conditions and actions as the mail service reports them)."@en ;
 	skos:prefLabel "ruleContent"@en ;
+	.
+
+stonework:ruleEnabled
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range xsd:boolean ;
+	skos:definition "Whether a MailboxRule is enabled, as last recorded."@en ;
+	skos:prefLabel "ruleEnabled"@en ;
 	.
 
 stonework:ruleFormat
@@ -4726,10 +5010,27 @@ stonework:ruleFormat
 
 stonework:ruleName
 	a owl:DatatypeProperty ;
-	rdfs:domain stonework:DetectionRule ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:DetectionRule
+			stonework:MailboxRule
+		) ;
+	] ;
 	rdfs:range xsd:string ;
-	skos:definition "The human-readable name of the detection rule."@en ;
+	skos:definition "The human-readable name of a detection rule or mailbox rule."@en ;
 	skos:prefLabel "ruleName"@en ;
+	.
+
+stonework:ruleOfMailbox
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:MailboxRule ;
+	rdfs:range stonework:UserAccount ;
+	skos:definition "The mailbox account a MailboxRule belongs to and applies to."@en ;
+	skos:prefLabel "ruleOfMailbox"@en ;
 	.
 
 stonework:ruleVersion
@@ -4777,6 +5078,18 @@ stonework:scenarioTechnique
 	rdfs:range stonework:AttackTechnique ;
 	skos:definition "Relates a ThreatScenario to the AttackTechniques in the attack path."@en ;
 	skos:prefLabel "scenarioTechnique"@en ;
+	.
+
+stonework:sentAtTime
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:EmailMessage ;
+	rdfs:range xsd:dateTime ;
+	skos:definition "The time in an EmailMessage's Date header."@en ;
+	skos:prefLabel "sentAtTime"@en ;
+	skos:scopeNote "The sending client sets the Date header, so this is the sender's claim. The times receiving servers observed are on the Received hops, each a stonework:Event generatedFrom the message."@en ;
 	.
 
 stonework:separatedFrom
@@ -5236,6 +5549,21 @@ stonework:usedBinding
 	skos:definition "Relates an execution to a VariableBinding whose value it received as input."@en ;
 	skos:prefLabel "usedBinding" ;
 	skos:scopeNote "Mirrors prov:used. Records data flow in a run: the binding a Step's execution received for one of its input Variables, usually bound by an earlier Step's execution. Recorded rather than inferred from times, because after a loop an output Variable has several bindings in the same run."@en ;
+	.
+
+stonework:usedUserAgent
+	a owl:ObjectProperty ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:CyberActivity
+			stonework:NetworkTraffic
+		) ;
+	] ;
+	rdfs:range stonework:UserAgent ;
+	skos:definition "Relates an activity, such as a sign-in, or NetworkTraffic to the UserAgent its client presented."@en ;
+	skos:prefLabel "usedUserAgent"@en ;
+	skos:scopeNote "A sign-in with a user agent its account has never presented, or one typical of scripted clients, is a common sign of a session the holder didn't start."@en ;
 	.
 
 stonework:userAgentString

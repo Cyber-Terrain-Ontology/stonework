@@ -36,6 +36,11 @@ example:hash
 	stonework:hashAlgorithm "SHA-256" ;
 	.
 
+example:incompleteAuthResult
+	a stonework:EmailAuthenticationResult ;
+	stonework:authenticatedDomain example:domain ;
+	.
+
 example:incompleteIdentityControl
 	a stonework:IdentityControl ;
 	stonework:controllingAgent example:actor ;
@@ -68,9 +73,20 @@ example:observation
 	stonework:lastSeen "2026-08-20T11:00:00Z"^^xsd:dateTime ;
 	.
 
+example:orphanMailboxRule
+	a stonework:MailboxRule ;
+	stonework:deletesMessage "yes" ;
+	stonework:ruleName "." ;
+	.
+
 example:service
 	a stonework:NetworkService ;
 	stonework:port "70000"^^xsd:integer ;
+	.
+
+example:signInWithAddressAsAgent
+	a stonework:Event ;
+	stonework:usedUserAgent example:address ;
 	.
 
 example:vulnerability

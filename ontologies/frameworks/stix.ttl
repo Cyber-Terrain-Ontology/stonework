@@ -19,8 +19,8 @@ frameworks:stix
 		<https://cyberterrain.org/ns/stonework#> ,
 		<https://cyberterrain.org/ns/stonework/categories#>
 		;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/stix/0.3.0> ;
-	owl:versionInfo "0.3.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/stix/0.4.0> ;
+	owl:versionInfo "0.4.0" ;
 	skos:scopeNote "STIX Bundle is intentionally not mapped to a STONEWORK domain class. A bundle is a transport container rather than a STIX Core Object or an assertion about the cyber domain; consumers may retain it as packaging metadata without treating it as a CyberEntity."@en ;
 	.
 
@@ -302,6 +302,21 @@ stones:attributed_to
 	rdfs:subPropertyOf stonework:attributedTo ;
 	.
 
+stones:bccRefs
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasBccAddress ;
+	.
+
+stones:ccRefs
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasCcAddress ;
+	.
+
+stones:date
+	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf stonework:sentAtTime ;
+	.
+
 stones:description
 	a owl:DatatypeProperty ;
 	rdfs:subPropertyOf stonework:description ;
@@ -317,6 +332,11 @@ stones:exploits
 	rdfs:subPropertyOf stonework:exploits ;
 	.
 
+stones:fromRef
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasFromAddress ;
+	.
+
 stones:granularMarkings
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:markingRef ;
@@ -330,6 +350,11 @@ stones:indicates
 stones:markingRef
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:markingRef ;
+	.
+
+stones:messageId
+	a owl:DatatypeProperty ;
+	rdfs:subPropertyOf stonework:messageId ;
 	.
 
 stones:mitigates
@@ -364,6 +389,11 @@ stones:revoked_by
 	rdfs:subPropertyOf stonework:revokedBy ;
 	.
 
+stones:senderRef
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasSenderAddress ;
+	.
+
 stones:sourceRef
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:assertionSubject ;
@@ -382,6 +412,11 @@ stones:targetRef
 stones:targets
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:targets ;
+	.
+
+stones:toRefs
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf stonework:hasToAddress ;
 	.
 
 stones:uses
