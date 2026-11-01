@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `stonework:performedBy` takes any `CyberActivity` (or a `Plan`), not only a `Process`: an `Event` parsed from a log record names the account that performed it without also being typed a `Process`.
+- Scope note on `stonework:Event`: an Event parsed from a record keeps `generatedFrom` and names its performer; placed in a run (`correspondsToStep`, `partOfExecution`), it stays an Event and is the Step's execution without changing type.
+
 ## 0.13.0 (core), categories 0.4.0, STIX framework 0.4.0: email evidence
 
 An `EmailMessage` carries its headers as data, so a message taken from a mailbox is evidence that can be queried: who it claimed to be from, where replies went, which thread it joined, and what the receiving server's authentication checks found. Received headers are Events derived from the message, which is also how a parsed log record points back to its log. A mailbox rule, the artifact at the centre of T1114.003, has its own class.

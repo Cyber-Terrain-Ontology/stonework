@@ -342,6 +342,7 @@ example:sighting
 example:signIn
 	a stonework:Event ;
 	stonework:hasSourceAddress example:address ;
+	stonework:performedBy example:account ;
 	stonework:startedAtTime "2026-09-12T03:40:00Z"^^xsd:dateTime ;
 	stonework:usedUserAgent example:userAgent ;
 	.
