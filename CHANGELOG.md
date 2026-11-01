@@ -16,6 +16,7 @@ How an activity ended, and how a sign-in was authenticated.
 ### Changed
 
 - `stonework:performedBy` takes any `CyberActivity` (or a `Plan`), not only a `Process`: an `Event` parsed from a log record names the account that performed it without also being typed a `Process`.
+- `stonework:hasInput` and `stonework:hasOutput` take any `CyberActivity`, for the same reason: a bank portal's release record has the wire as its output.
 - Scope note on `stonework:Event`: an Event parsed from a record keeps `generatedFrom` and names its performer; placed in a run (`correspondsToStep`, `partOfExecution`), it stays an Event and is the Step's execution without changing type.
 - **Breaking (released in 0.13.0 only):** the email sender-authentication categories are renamed so they can't be mistaken for sign-in authentication: `AuthenticationMethod` → `EmailAuthenticationMethod`, `hasAuthenticationMethod` → `hasEmailAuthenticationMethod`, `authenticationMethodScheme` and its individuals (`authenticationMethodSPF`, …) → `emailAuthenticationMethod…`.
 - `ExecutionOutcome` covers any observed activity, not only executions of a Step.

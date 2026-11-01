@@ -3125,8 +3125,8 @@ stonework:hasImpact
 
 stonework:hasInput
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:Process ;
-	skos:definition "Relates a Process to its input data or artifacts."@en ;
+	rdfs:domain stonework:CyberActivity ;
+	skos:definition "Relates an activity to its input data or artifacts, or to an activity it takes up, such as the payment an approval acts on."@en ;
 	skos:prefLabel "hasInput"@en ;
 	.
 
@@ -3237,8 +3237,8 @@ stonework:hasOnlineReference
 
 stonework:hasOutput
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:Process ;
-	skos:definition "Relates a Process to the data or artifacts it produces."@en ;
+	rdfs:domain stonework:CyberActivity ;
+	skos:definition "Relates an activity to what it produces as output, data, artifacts or an activity it sets going, such as the wire a release sends."@en ;
 	skos:prefLabel "hasOutput"@en ;
 	.
 
