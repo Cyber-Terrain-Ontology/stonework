@@ -339,6 +339,13 @@ example:sighting
 	stonework:sightedObject example:indicator ;
 	.
 
+example:signIn
+	a stonework:Event ;
+	stonework:hasSourceAddress example:address ;
+	stonework:startedAtTime "2026-09-12T03:40:00Z"^^xsd:dateTime ;
+	stonework:usedUserAgent example:userAgent ;
+	.
+
 example:sourceStep
 	a stonework:Step ;
 	stonework:defaultTransition example:transition ;
@@ -390,6 +397,11 @@ example:transition
 	a stonework:Transition ;
 	stonework:fromStep example:sourceStep ;
 	stonework:toStep example:targetStep ;
+	.
+
+example:userAgent
+	a stonework:UserAgent ;
+	stonework:userAgentString "Mozilla/5.0 (X11; Linux x86_64)" ;
 	.
 
 example:variable

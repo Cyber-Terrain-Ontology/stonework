@@ -952,6 +952,16 @@ stonework:UsedBindingShape
 	sh:targetSubjectsOf stonework:usedBinding ;
 	.
 
+stonework:UsedUserAgentShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:UserAgent ;
+		sh:message "usedUserAgent names a UserAgent."@en ;
+		sh:path stonework:usedUserAgent ;
+	] ;
+	sh:targetSubjectsOf stonework:usedUserAgent ;
+	.
+
 stonework:VariableBindingShape
 	a sh:NodeShape ;
 	sh:property

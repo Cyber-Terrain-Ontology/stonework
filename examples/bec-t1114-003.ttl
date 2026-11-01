@@ -62,10 +62,12 @@ ex:act-create-rule
 	stonework:attributedTo ex:actor ;
 	stonework:correspondsToStep ex:ostep-rule ;
 	stonework:executionOf cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ;
+	stonework:hasSourceAddress ex:ip-actor-signin ;
 	stonework:partOfExecution ex:run-actor-op ;
 	stonework:performedBy ex:acct-controller-mailbox ;
 	stonework:produces ex:rule-forward ;
 	stonework:startedAtTime "2026-09-02T03:14:07Z"^^xsd:dateTime ;
+	stonework:usedUserAgent ex:ua-actor ;
 	.
 
 ex:act-send-request
@@ -84,8 +86,10 @@ ex:act-signin-0912
 	skos:definition "A sign-in to the controller's mailbox at 03:40 UTC from the same unfamiliar IP address the rule was created from. Not yet attributed."@en ;
 	skos:prefLabel "Sign-in to the controller's mailbox, 12 September 03:40"@en ;
 	stonework:actsOn ex:acct-controller-mailbox ;
+	stonework:hasSourceAddress ex:ip-actor-signin ;
 	stonework:performedBy ex:acct-controller-mailbox ;
 	stonework:startedAtTime "2026-09-12T03:40:00Z"^^xsd:dateTime ;
+	stonework:usedUserAgent ex:ua-actor ;
 	.
 
 ex:act-signin-0916
@@ -93,8 +97,10 @@ ex:act-signin-0916
 	skos:definition "A sign-in to the controller's mailbox from the controller's office workstation, shortly before the 16 September approval. Not yet attributed."@en ;
 	skos:prefLabel "Sign-in to the controller's mailbox, 16 September 14:55"@en ;
 	stonework:actsOn ex:acct-controller-mailbox ;
+	stonework:hasSourceAddress ex:ip-controller-office ;
 	stonework:performedBy ex:acct-controller-mailbox ;
 	stonework:startedAtTime "2026-09-16T14:55:00Z"^^xsd:dateTime ;
+	stonework:usedUserAgent ex:ua-controller ;
 	.
 
 ex:actor
@@ -837,6 +843,35 @@ ex:ip-actor-mail
 	stonework:ipVersion "4"^^xsd:integer ;
 	.
 
+ex:ip-actor-signin
+	a stonework:IPAddress ;
+	skos:definition "A hosting provider's address, never used by the controller before 2 September: the rule was created from it, and the 12 September sign-in came from it."@en ;
+	skos:prefLabel "Unfamiliar sign-in address"@en ;
+	stonework:ipValue "198.51.100.77" ;
+	stonework:ipVersion "4"^^xsd:integer ;
+	stonework:locatedAt ex:loc-netherlands ;
+	.
+
+ex:ip-controller-office
+	a stonework:IPAddress ;
+	skos:prefLabel "Manufacturer's office address"@en ;
+	stonework:ipValue "192.0.2.10" ;
+	stonework:ipVersion "4"^^xsd:integer ;
+	stonework:locatedAt ex:loc-united-states ;
+	.
+
+ex:loc-netherlands
+	a stonework:Country ;
+	skos:prefLabel "Netherlands"@en ;
+	stonework:countryCode "NL" ;
+	.
+
+ex:loc-united-states
+	a stonework:Country ;
+	skos:prefLabel "United States"@en ;
+	stonework:countryCode "US" ;
+	.
+
 ex:log-calls-0916
 	a stonework:Log ;
 	skos:definition "Call detail records for the accounts-payable extensions on 16 September: no call to the supplier's number on file."@en ;
@@ -1042,6 +1077,19 @@ ex:txn-wire
 	stonework:originatorAccount ex:acct-operating ;
 	stonework:startedAtTime "2026-09-16T16:31:00Z"^^xsd:dateTime ;
 	stonework:usesInstrument stonework:paymentInstrumentWireTransfer ;
+	.
+
+ex:ua-actor
+	a stonework:UserAgent ;
+	skos:definition "A Linux desktop browser, which no one at the manufacturer uses."@en ;
+	skos:prefLabel "Linux Chrome browser"@en ;
+	stonework:userAgentString "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" ;
+	.
+
+ex:ua-controller
+	a stonework:UserAgent ;
+	skos:prefLabel "Outlook for Windows"@en ;
+	stonework:userAgentString "Microsoft Office/16.0 (Windows NT 10.0; Microsoft Outlook 16.0.17928; Pro)" ;
 	.
 
 ex:var-account

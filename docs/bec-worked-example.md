@@ -648,6 +648,27 @@ from the controller's workstation, both with "Unidentified BEC actor". The rule'
 in the interval too, but it's already attributed. Review sorts the two: the first is the actor
 reading the mail, the second is the controller.
 
+**What review has to go on.** Each sign-in, and the rule's creation, records its client's
+address (`hasSourceAddress`) and browser (`usedUserAgent`); where an address is comes from a
+geolocation lookup, a fact about the address (`locatedAt` on the `IPAddress`). Unattributed
+activity from an address that attributed activity also came from:
+
+```sparql
+SELECT ?execution ?address ?where ?client ?sharedWith WHERE {
+  ?known stonework:attributedTo ?actor ; stonework:hasSourceAddress ?a ;
+         skos:prefLabel ?sharedWith .
+  ?e stonework:hasSourceAddress ?a ; skos:prefLabel ?execution .
+  FILTER NOT EXISTS { ?e stonework:attributedTo ?anyone }
+  ?a stonework:ipValue ?address .
+  OPTIONAL { ?a stonework:locatedAt/skos:prefLabel ?where }
+  OPTIONAL { ?e stonework:usedUserAgent/skos:prefLabel ?client }
+}
+```
+
+→ the 12 September sign-in | 198.51.100.77 | Netherlands | Linux Chrome browser | the rule's
+creation. The 16 September sign-in came from the office address with Outlook for Windows, and
+doesn't appear.
+
 ## What it shows about plans
 
 Every link from this case to T1114.003 goes through a plan or a plan's execution, and none

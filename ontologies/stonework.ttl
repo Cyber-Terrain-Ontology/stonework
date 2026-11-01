@@ -3046,12 +3046,12 @@ stonework:hasDestinationAddress
 	rdfs:domain [
 		a owl:Class ;
 		owl:unionOf (
-			stonework:Event
+			stonework:CyberActivity
 			stonework:NetworkTraffic
 		) ;
 	] ;
 	rdfs:range stonework:IPAddress ;
-	skos:definition "Relates NetworkTraffic, or an Event observed on the network, to the destination IP address."@en ;
+	skos:definition "Relates NetworkTraffic, or an activity observed on the network, to the destination IP address."@en ;
 	skos:prefLabel "hasDestinationAddress"@en ;
 	.
 
@@ -3358,13 +3358,14 @@ stonework:hasSourceAddress
 	rdfs:domain [
 		a owl:Class ;
 		owl:unionOf (
-			stonework:Event
+			stonework:CyberActivity
 			stonework:NetworkTraffic
 		) ;
 	] ;
 	rdfs:range stonework:IPAddress ;
-	skos:definition "Relates NetworkTraffic, or an Event observed on the network, to the source IP address: the client of a sign-in, the sending server of a Received hop."@en ;
+	skos:definition "Relates NetworkTraffic, or an activity observed on the network, to the source IP address: the client of a sign-in, the sending server of a Received hop."@en ;
 	skos:prefLabel "hasSourceAddress"@en ;
+	skos:scopeNote "Where the address was is a fact about the address: say it with stonework:locatedAt on the IPAddress (a geolocation lookup gives a Country or Region), not on the activity."@en ;
 	.
 
 stonework:hasStep
@@ -5548,6 +5549,21 @@ stonework:usedBinding
 	skos:definition "Relates an execution to a VariableBinding whose value it received as input."@en ;
 	skos:prefLabel "usedBinding" ;
 	skos:scopeNote "Mirrors prov:used. Records data flow in a run: the binding a Step's execution received for one of its input Variables, usually bound by an earlier Step's execution. Recorded rather than inferred from times, because after a loop an output Variable has several bindings in the same run."@en ;
+	.
+
+stonework:usedUserAgent
+	a owl:ObjectProperty ;
+	rdfs:domain [
+		a owl:Class ;
+		owl:unionOf (
+			stonework:CyberActivity
+			stonework:NetworkTraffic
+		) ;
+	] ;
+	rdfs:range stonework:UserAgent ;
+	skos:definition "Relates an activity, such as a sign-in, or NetworkTraffic to the UserAgent its client presented."@en ;
+	skos:prefLabel "usedUserAgent"@en ;
+	skos:scopeNote "A sign-in with a user agent its account has never presented, or one typical of scripted clients, is a common sign of a session the holder didn't start."@en ;
 	.
 
 stonework:userAgentString

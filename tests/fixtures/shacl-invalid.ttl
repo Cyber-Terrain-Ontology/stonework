@@ -84,6 +84,11 @@ example:service
 	stonework:port "70000"^^xsd:integer ;
 	.
 
+example:signInWithAddressAsAgent
+	a stonework:Event ;
+	stonework:usedUserAgent example:address ;
+	.
+
 example:vulnerability
 	a stonework:Vulnerability ;
 	stonework:cvssBaseScore "-1.0"^^xsd:decimal ;
