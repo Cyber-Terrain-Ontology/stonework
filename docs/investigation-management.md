@@ -88,3 +88,11 @@ reasoner it would also merge each publisher's names, dates and markings onto the
 that the object refers to the canonical entity. A link found by a heuristic, such as an ID
 parsed from an object's name, should carry its method and confidence through a
 `QualifiedAssertion` or `hasProvenance`.
+
+Evidence raises the same question. A parsed audit log names the tenant it came from, and the
+organization's plan names its own tenant as a Step's target: two individuals for one thing.
+The log's tenant `refersTo` the organization's. Because `refersTo` is neither symmetric nor
+transitive and merges nothing, a check that compares an execution's target with its Step's
+follows it explicitly, and an analyst who retracts the link retracts nothing else with it.
+Two candidate links can also stand side by side until one is judged, which `owl:sameAs` would
+turn into one merged individual.

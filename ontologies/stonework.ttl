@@ -4755,9 +4755,9 @@ stonework:referencesMessage
 
 stonework:refersTo
 	a owl:ObjectProperty ;
-	skos:definition "Relates an object, typically from an intelligence source, to the canonical entity it refers to, such as an ATT&CK technique, a CVE, or a malware family, when the two are distinct individuals."@en ;
+	skos:definition "Relates an object, from an intelligence source or from evidence, to the canonical entity it refers to, such as an ATT&CK technique, a CVE, a malware family, or one of the organization's own assets or accounts, when the two are distinct individuals."@en ;
 	skos:prefLabel "refersTo"@en ;
-	skos:scopeNote "Unlike owl:sameAs, it does not merge the two individuals' properties. Two STIX objects with different STIX IDs are different objects even when both describe T1059: stones:stixId is functional, so owl:sameAs between them is inconsistent. Unlike skos:exactMatch, it does not make either end a skos:Concept. Domain and range intentionally unset: any intelligence object can refer to any canonical entity. A link found by a heuristic, such as an identifier parsed from a name, should carry its method and confidence through a stonework:QualifiedAssertion or stonework:hasProvenance."@en ;
+	skos:scopeNote "Unlike owl:sameAs, it does not merge the two individuals' properties. Two STIX objects with different STIX IDs are different objects even when both describe T1059: stones:stixId is functional, so owl:sameAs between them is inconsistent. Unlike skos:exactMatch, it does not make either end a skos:Concept. Domain and range intentionally unset: any intelligence object can refer to any canonical entity. A link found by a heuristic, such as an identifier parsed from a name, should carry its method and confidence through a stonework:QualifiedAssertion or stonework:hasProvenance. The same holds for what evidence names: the resource a log or message gives a tenant, an account or a host refersTo the organization's own entity for it, such as a Plan Step's target, without merging the two. Neither symmetric nor transitive, so nothing follows from it unless an application follows it: an analyst can retract the link without retracting anything inferred from it, and competing links can stand side by side until one is judged."@en ;
 	.
 
 stonework:refines

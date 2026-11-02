@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `stonework:refersTo` covers evidence as well as intelligence: what a log or message names (a tenant, an account, a host) refers to the organization's own entity for it, such as a Plan Step's target. Definition and scope note only; the scope note now says why it isn't `owl:sameAs` for revision (nothing follows from it unless followed, so retracting it retracts nothing else). Docs: [investigation-management.md](docs/investigation-management.md).
+
 ## 0.15.0 (core), categories 0.6.0: reviews of records
 
 An analyst working through an investigation's records can record that they looked at some and found them relevant, or not relevant, so the next analyst doesn't look through them again.
