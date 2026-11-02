@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.15.0 (core), categories 0.6.0: reviews of records
+
+An analyst working through an investigation's records can record that they looked at some and found them relevant, or not relevant, so the next analyst doesn't look through them again.
+
+### Added
+
+- `stonework:Review` (⊑ `Process`): an analyst's examination of records or artifacts, as part of an investigation. The records are `hasInput`, the investigation is the execution it is `partOfExecution`, the analyst is `performedBy`, and a Review can be the execution of an InvestigationPlan's triage Step (`correspondsToStep`). Follows the CASE investigative action.
+- `stonework:ReviewFinding` scheme (relevant, not relevant) and `stonework:hasReviewFinding` (Review → `ReviewFinding`, functional; in `categories.ttl`). The finding applies to every input, so a mixed batch is two Reviews; a later Review of the same record supersedes an earlier one. "Not relevant" says nothing about whether a record is true or benign.
+- SHACL: `ReviewShape` (exactly one finding, at least one input, part of an execution; warnings for no analyst or end time); fixtures for each.
+
+### Changed
+
+- Scope note on `stonework:Investigation`: its reviews of records are Reviews that are `partOfExecution` it.
+- Docs: [record-review.md](docs/record-review.md), the design and the alternatives it rejected; proposal 20 in the BEC worked example.
+
 ## 0.14.0 (core), categories 0.5.0: outcomes and sign-in authentication
 
 How an activity ended, and how a sign-in was authenticated.

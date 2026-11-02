@@ -258,6 +258,7 @@ def main() -> int:
         STONEWORK + "hasOutcome",
         STONEWORK + "hasPriority",
         STONEWORK + "hasReturnPathAddress",
+        STONEWORK + "hasReviewFinding",
         STONEWORK + "hasSenderAddress",
         STONEWORK + "installedOn",
         STONEWORK + "joinKind",
