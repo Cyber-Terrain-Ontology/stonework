@@ -61,6 +61,7 @@ ex:act-create-rule
 	stonework:actsOn ex:acct-controller-mailbox ;
 	stonework:attributedTo ex:persona-rule-creator ;
 	stonework:correspondsToStep ex:ostep-rule ;
+	stonework:evidencedBy ex:log-new-inboxrule ;
 	stonework:executionOf cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ;
 	stonework:hasSourceAddress ex:ip-actor-signin ;
 	stonework:partOfExecution ex:run-actor-op ;
@@ -76,6 +77,7 @@ ex:act-send-request
 	skos:prefLabel "Execution: send the bank-change request"@en ;
 	stonework:attributedTo ex:persona-sender ;
 	stonework:correspondsToStep ex:ostep-send ;
+	stonework:evidencedBy ex:email-bank-change ;
 	stonework:hasOutput ex:email-bank-change ;
 	stonework:partOfExecution ex:run-actor-op ;
 	stonework:startedAtTime "2026-09-15T22:07:00Z"^^xsd:dateTime ;
@@ -574,6 +576,7 @@ ex:exe-cstep-block-external
 	stonework:actsOn ex:mail-tenant ;
 	stonework:correspondsToStep ex:cstep-block-external ;
 	stonework:endedAtTime "2026-09-30T16:06:04Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-audit-containment ;
 	stonework:partOfExecution ex:exe-contain ;
 	stonework:performedBy ex:svc-automation ;
 	stonework:startedAtTime "2026-09-30T16:06:00Z"^^xsd:dateTime ;
@@ -585,6 +588,7 @@ ex:exe-cstep-remove-rule
 	stonework:actsOn ex:rule-forward ;
 	stonework:correspondsToStep ex:cstep-remove-rule ;
 	stonework:endedAtTime "2026-09-30T15:50:00Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-audit-containment ;
 	stonework:partOfExecution ex:exe-contain ;
 	stonework:performedBy ex:analyst ;
 	stonework:startedAtTime "2026-09-30T15:45:00Z"^^xsd:dateTime ;
@@ -596,6 +600,7 @@ ex:exe-cstep-reset
 	stonework:actsOn ex:acct-controller-mailbox ;
 	stonework:correspondsToStep ex:cstep-reset ;
 	stonework:endedAtTime "2026-09-30T16:05:00Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-audit-containment ;
 	stonework:partOfExecution ex:exe-contain ;
 	stonework:performedBy ex:analyst ;
 	stonework:startedAtTime "2026-09-30T15:51:00Z"^^xsd:dateTime ;
@@ -606,6 +611,8 @@ ex:exe-cstep-review
 	skos:prefLabel "Execution: review the forwarded mail and warn those exposed"@en ;
 	stonework:correspondsToStep ex:cstep-review ;
 	stonework:endedAtTime "2026-10-01T12:00:00Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:file-review-notice ;
+	stonework:hasOutput ex:file-review-notice ;
 	stonework:partOfExecution ex:exe-contain ;
 	stonework:performedBy
 		ex:analyst ,
@@ -619,6 +626,7 @@ ex:exe-record-clerk
 	skos:prefLabel "Execution: record the negative result for the clerk's mailbox"@en ;
 	stonework:correspondsToStep ex:dstep-record ;
 	stonework:endedAtTime "2026-09-30T15:44:00Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-clerk-search ;
 	stonework:partOfExecution ex:inv-bec ;
 	stonework:performedBy ex:analyst ;
 	stonework:startedAtTime "2026-09-30T15:41:00Z"^^xsd:dateTime ;
@@ -629,6 +637,7 @@ ex:exe0909-approve
 	a stonework:Process ;
 	skos:prefLabel "Execution: approve the payment (9 September)"@en ;
 	stonework:correspondsToStep ex:wstep-approve ;
+	stonework:evidencedBy ex:log-bank-portal ;
 	stonework:partOfExecution ex:run-wire-0909 ;
 	stonework:performedBy ex:controller ;
 	stonework:startedAtTime "2026-09-09T14:10:00Z"^^xsd:dateTime ;
@@ -638,6 +647,7 @@ ex:exe0909-enter
 	a stonework:Process ;
 	skos:prefLabel "Execution: enter the invoice (9 September)"@en ;
 	stonework:correspondsToStep ex:wstep-enter ;
+	stonework:evidencedBy ex:log-bank-portal ;
 	stonework:partOfExecution ex:run-wire-0909 ;
 	stonework:performedBy ex:ap-clerk ;
 	stonework:startedAtTime "2026-09-09T10:02:00Z"^^xsd:dateTime ;
@@ -647,6 +657,7 @@ ex:exe0909-release
 	a stonework:Process ;
 	skos:prefLabel "Execution: release the wire (9 September)"@en ;
 	stonework:correspondsToStep ex:wstep-release ;
+	stonework:evidencedBy ex:log-bank-portal ;
 	stonework:partOfExecution ex:run-wire-0909 ;
 	stonework:performedBy ex:acct-controller-bank ;
 	stonework:startedAtTime "2026-09-09T15:30:00Z"^^xsd:dateTime ;
@@ -657,6 +668,7 @@ ex:exe0916-approve
 	skos:prefLabel "Execution: approve the payment"@en ;
 	stonework:correspondsToStep ex:wstep-approve ;
 	stonework:endedAtTime "2026-09-16T15:04:00Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-bank-portal ;
 	stonework:partOfExecution ex:run-wire-0916 ;
 	stonework:performedBy ex:controller ;
 	stonework:startedAtTime "2026-09-16T15:02:00Z"^^xsd:dateTime ;
@@ -667,6 +679,10 @@ ex:exe0916-enter
 	skos:prefLabel "Execution: enter the invoice with the new bank details"@en ;
 	stonework:correspondsToStep ex:wstep-enter ;
 	stonework:endedAtTime "2026-09-16T09:20:00Z"^^xsd:dateTime ;
+	stonework:evidencedBy
+		ex:file-clerk-statement ,
+		ex:log-bank-portal
+		;
 	stonework:hasInput ex:email-bank-change ;
 	stonework:partOfExecution ex:run-wire-0916 ;
 	stonework:performedBy ex:ap-clerk ;
@@ -679,6 +695,7 @@ ex:exe0916-release
 	skos:prefLabel "Execution: release the wire"@en ;
 	stonework:correspondsToStep ex:wstep-release ;
 	stonework:endedAtTime "2026-09-16T16:31:00Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-bank-portal ;
 	stonework:hasOutput ex:txn-wire ;
 	stonework:partOfExecution ex:run-wire-0916 ;
 	stonework:performedBy ex:acct-controller-bank ;
@@ -689,6 +706,7 @@ ex:exe0930-enter
 	a stonework:Process ;
 	skos:prefLabel "Execution: enter the second payment request (30 September)"@en ;
 	stonework:correspondsToStep ex:wstep-enter ;
+	stonework:evidencedBy ex:log-bank-portal ;
 	stonework:partOfExecution ex:run-wire-0930 ;
 	stonework:performedBy ex:ap-clerk ;
 	stonework:startedAtTime "2026-09-30T09:05:00Z"^^xsd:dateTime ;
@@ -711,6 +729,12 @@ ex:file-clerk-statement
 	a stonework:File ;
 	skos:definition "The clerk's signed statement of 1 October: the request came in the supplier's usual invoice thread, the payment was due that day, and the callback was not made."@en ;
 	skos:prefLabel "Accounts-payable clerk's statement (1 October)"@en ;
+	.
+
+ex:file-review-notice
+	a stonework:File ;
+	skos:definition "The notice the review sent on 1 October to the suppliers and customers whose mail the rule forwarded, warning them of the compromise and of any bank-detail change made in the manufacturer's name."@en ;
+	skos:prefLabel "Notice to suppliers and customers (1 October)"@en ;
 	.
 
 ex:hop-bank-change
@@ -791,6 +815,9 @@ ex:inv-bec
 	skos:prefLabel "Investigation: diverted supplier payment"@en ;
 	stonework:collects
 		ex:file-clerk-statement ,
+		ex:file-review-notice ,
+		ex:log-audit-containment ,
+		ex:log-bank-portal ,
 		ex:log-calls-0916 ,
 		ex:log-clerk-search ,
 		ex:log-new-inboxrule
@@ -820,6 +847,7 @@ ex:inv-search-clerk
 	stonework:actsOn ex:acct-ap-clerk-mailbox ;
 	stonework:correspondsToStep ex:dstep-search ;
 	stonework:endedAtTime "2026-09-30T15:41:00Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-clerk-search ;
 	stonework:hasOutput ex:log-clerk-search ;
 	stonework:partOfExecution ex:inv-bec ;
 	stonework:performedBy ex:analyst ;
@@ -834,6 +862,7 @@ ex:inv-search-controller
 	stonework:actsOn ex:acct-controller-mailbox ;
 	stonework:correspondsToStep ex:dstep-search ;
 	stonework:endedAtTime "2026-09-30T15:25:00Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-new-inboxrule ;
 	stonework:hasOutput ex:log-new-inboxrule ;
 	stonework:partOfExecution ex:inv-bec ;
 	stonework:performedBy ex:analyst ;
@@ -877,6 +906,20 @@ ex:loc-united-states
 	a stonework:Country ;
 	skos:prefLabel "United States"@en ;
 	stonework:countryCode "US" ;
+	.
+
+ex:log-audit-containment
+	a stonework:Log ;
+	skos:definition "The audit-log records of the containment's operations on 30 September: Remove-InboxRule for the rule \"Sync\", the controller's password reset and session revocation, and the transport rule blocking automatic forwarding to external domains."@en ;
+	skos:prefLabel "Audit log: the containment, 30 September"@en ;
+	stonework:logSource "Microsoft 365 unified audit log" ;
+	.
+
+ex:log-bank-portal
+	a stonework:Log ;
+	skos:definition "The bank portal's payment activity for the manufacturer's operating account, September: each payment's creation, approval, release or cancellation, and the portal login that did it."@en ;
+	skos:prefLabel "Bank portal payment activity, September"@en ;
+	stonework:logSource "Bank portal payment activity" ;
 	.
 
 ex:log-calls-0916

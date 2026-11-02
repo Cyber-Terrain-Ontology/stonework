@@ -93,8 +93,9 @@ window (CIDOC CRM's "begin of the begin" and "end of the begin"), so an estimate
 appear on a timeline as a fact. A comparison with another time is undetermined while the
 window overlaps it.
 
-`ExecutionSupportShape` warns about an execution placed in a run with neither: nothing in
-the data says what it rests on.
+`ExecutionSupportShape` warns about an execution placed in a run that rests on nothing: no
+record, no evidence, and no executions of its own (a sub-run rests on its parts). An analyst's
+own step, such as a review, rests on what it produced: the notice it sent, the notes it kept.
 
 ## `refersTo` rather than `owl:sameAs`
 

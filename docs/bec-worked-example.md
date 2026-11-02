@@ -876,7 +876,9 @@ Smaller things:
     the clerk's statement, and the statement gives no time. `evidencedBy` now applies to any
     activity, separating a reported execution from a recorded one (`generatedFrom`), and
     `startedNotBefore` and `startedNotAfter` give the window the evidence allows in place of an
-    estimated time.
+    estimated time. Every execution in the example now cites what it rests on, which needed
+    three artifacts the investigation would have had: the bank portal's payment activity, the
+    containment's audit-log records, and the review's notice to suppliers and customers.
 
 22. **Unreleased: attribution to personas, and a run's attribution.** Attributing the rule's
     creation and the email to one actor asserted what the attribution hypothesis says is
