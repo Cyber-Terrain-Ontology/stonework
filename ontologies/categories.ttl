@@ -13,8 +13,8 @@
 	rdfs:label "STONEWORK Categories and Roles"@en ;
 	dcterms:description "Category and Role subclasses, associated vocabulary named individuals, and category-specific object properties for the STONEWORK ontology. Kept separate to allow the core ontology to load without the full vocabulary set."@en ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.5.0> ;
-	owl:versionInfo "0.5.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.6.0> ;
+	owl:versionInfo "0.6.0" ;
 	.
 
 stonework:AccountType
@@ -661,6 +661,20 @@ stonework:ResourceLevel
 		;
 	skos:definition "A classification of the organizational resources available to a threat actor."@en ;
 	skos:prefLabel "Resource Level"@en ;
+	.
+
+stonework:ReviewFinding
+	a owl:Class ;
+	rdfs:subClassOf
+		stonework:Category ,
+		[
+			a owl:Restriction ;
+			owl:onProperty skos:inScheme ;
+			owl:hasValue stonework:reviewFindingScheme ;
+		]
+		;
+	skos:definition "A classification of what a review found about the records it examined, relative to the investigation it is part of."@en ;
+	skos:prefLabel "Review Finding"@en ;
 	.
 
 stonework:RiskLevel
@@ -2582,6 +2596,19 @@ stonework:hasResourceLevel
 	skos:prefLabel "hasResourceLevel"@en ;
 	.
 
+stonework:hasReviewFinding
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:categorizedBy ;
+	rdfs:domain stonework:Review ;
+	rdfs:range stonework:ReviewFinding ;
+	skos:definition "Relates a Review to what it found about the records it examined."@en ;
+	skos:prefLabel "hasReviewFinding"@en ;
+	skos:scopeNote "The finding applies to every record the Review takes as input (stonework:hasInput). Relevance is to the investigation the Review is part of: the same record can be relevant to one investigation and not to another."@en ;
+	.
+
 stonework:hasRiskLevel
 	a owl:ObjectProperty ;
 	rdfs:subPropertyOf stonework:categorizedBy ;
@@ -4268,6 +4295,44 @@ stonework:resourceLevelTeam
 		;
 	skos:notation "team" ;
 	skos:prefLabel "Team"@en ;
+	.
+
+stonework:reviewFindingNotRelevant
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ReviewFinding
+		;
+	skos:definition "The records were examined and do not bear on the investigation. They are not judged false or benign, only not relevant to it."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:reviewFindingScheme
+		;
+	skos:notation "not-relevant" ;
+	skos:prefLabel "Not Relevant"@en ;
+	.
+
+stonework:reviewFindingRelevant
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:ReviewFinding
+		;
+	skos:definition "The records bear on the investigation and are kept for analysis."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:reviewFindingScheme
+		;
+	skos:notation "relevant" ;
+	skos:prefLabel "Relevant"@en ;
+	.
+
+stonework:reviewFindingScheme
+	a skos:ConceptScheme ;
+	dcterms:isPartOf stonework:categoryScheme ;
+	dcterms:title "STONEWORK Review Finding Scheme"@en ;
+	skos:definition "The controlled vocabulary of what a review of records found."@en ;
+	skos:prefLabel "STONEWORK Review Finding Scheme"@en ;
 	.
 
 stonework:riskLevelCritical

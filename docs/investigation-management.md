@@ -48,11 +48,35 @@ Incident, MalwareSample or ThreatActor. The union range rejected nothing; it onl
 infer that any other subject (a vulnerability, a product's exposure, an activity cluster)
 belonged to the union.
 
+## Reviews of records
+
+*Added in STONEWORK 0.15.0. The design and the alternatives it rejected are in
+[record-review.md](record-review.md).*
+
+An analyst working through an investigation's records records what they looked at as a
+`stonework:Review`, part of the investigation, with a `ReviewFinding` of relevant or not
+relevant:
+
+```turtle
+ex:review-0917
+    a stonework:Review ;
+    stonework:partOfExecution  ex:inv-2026-114 ;
+    stonework:performedBy      ex:analyst-rh ;
+    stonework:hasInput         ex:signin-0412 , ex:signin-0413 ;
+    stonework:hasReviewFinding stonework:reviewFindingNotRelevant ;
+    stonework:endedAtTime      "2026-04-14T15:20:00Z"^^xsd:dateTime .
+```
+
+Not relevant is relative to this investigation, and says nothing about whether the records
+are true or benign: that would be an `Opinion`.
+
 ## Validation
 
 `InvestigationShape` holds the functional properties to at most one value each (violations).
 `InvestigationOutcomeShape` warns when an investigation has an outcome but isn't Closed, or
-has no `endedAtTime`: incomplete, not malformed.
+has no `endedAtTime`: incomplete, not malformed. `ReviewShape` requires a Review's one
+finding, at least one input and the execution it is part of, and warns when it names no
+analyst or end time.
 
 ## `refersTo` rather than `owl:sameAs`
 
