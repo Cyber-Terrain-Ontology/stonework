@@ -59,7 +59,7 @@ ex:act-create-rule
 	skos:definition "Using the controller's stolen credentials, the actor created an inbox rule that forwards every message mentioning an invoice, a payment or a wire to an external address, and moves the original to the RSS Feeds folder, where the controller wouldn't look."@en ;
 	skos:prefLabel "Execution: create a hidden forwarding rule on the controller's mailbox"@en ;
 	stonework:actsOn ex:acct-controller-mailbox ;
-	stonework:attributedTo ex:actor ;
+	stonework:attributedTo ex:persona-rule-creator ;
 	stonework:correspondsToStep ex:ostep-rule ;
 	stonework:executionOf cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ;
 	stonework:hasSourceAddress ex:ip-actor-signin ;
@@ -74,7 +74,7 @@ ex:act-send-request
 	a stonework:Process ;
 	skos:definition "From the lookalike supplier address, the actor replied to a genuine invoice thread read through the forwarding rule, saying the supplier had changed banks."@en ;
 	skos:prefLabel "Execution: send the bank-change request"@en ;
-	stonework:attributedTo ex:actor ;
+	stonework:attributedTo ex:persona-sender ;
 	stonework:correspondsToStep ex:ostep-send ;
 	stonework:hasOutput ex:email-bank-change ;
 	stonework:partOfExecution ex:run-actor-op ;
@@ -109,7 +109,7 @@ ex:act-signin-0916
 
 ex:actor
 	a stonework:ThreatActor ;
-	skos:definition "The unidentified actor behind this business email compromise."@en ;
+	skos:definition "The single actor the investigation believes is behind both personas, the rule's creator and the email's sender. Until the attribution hypothesis is confirmed, nothing is attributed to it, and neither persona is attributedToAgent it."@en ;
 	skos:prefLabel "Unidentified BEC actor"@en ;
 	.
 
@@ -130,7 +130,7 @@ ex:addr-controller
 ex:addr-forward-target
 	a stonework:EmailAddress ;
 	skos:prefLabel "External address the forwarding rule sends to"@en ;
-	stonework:emailOf ex:actor ;
+	stonework:emailOf ex:persona-rule-creator ;
 	stonework:emailValue "archive.mailbox@freemail.example" ;
 	.
 
@@ -138,7 +138,7 @@ ex:addr-lookalike
 	a stonework:EmailAddress ;
 	skos:definition "A lookalike of the supplier's accounts address, with a digit 1 in place of the letter l."@en ;
 	skos:prefLabel "Lookalike supplier address"@en ;
-	stonework:emailOf ex:actor ;
+	stonework:emailOf ex:persona-sender ;
 	stonework:emailValue "accounts@supp1ier.example" ;
 	.
 
@@ -399,11 +399,11 @@ ex:ct-reset-to-review
 
 ex:ctl-actor-mailbox
 	a stonework:IdentityControl ;
-	skos:definition "The actor controlled the controller's mailbox account from the rule's creation, the earliest evidence, until the containment plan revoked its sessions and reset its credentials. The controller kept using it throughout."@en ;
-	skos:prefLabel "The actor controlled the controller's mailbox account, 2 to 30 September"@en ;
+	skos:definition "The rule's creator controlled the controller's mailbox account from the rule's creation, the earliest evidence, until the containment plan revoked its sessions and reset its credentials. The controller kept using it throughout."@en ;
+	skos:prefLabel "The rule's creator controlled the controller's mailbox account, 2 to 30 September"@en ;
 	stonework:confidence "80"^^xsd:integer ;
 	stonework:controlledIdentity ex:acct-controller-mailbox ;
-	stonework:controllingAgent ex:actor ;
+	stonework:controllingAgent ex:persona-rule-creator ;
 	stonework:evidencedBy
 		ex:log-new-inboxrule ,
 		ex:log-signins-controller
@@ -738,13 +738,14 @@ ex:hyp-actor-diverted
 
 ex:hyp-attribution
 	a stonework:Hypothesis ;
-	skos:definition "The forwarding rule and the email from the lookalike address are the work of the same actor. The rule was created through the controller's own account and the email came from an address registered to no one known, so the link rests on timing and on what the email knew."@en ;
+	skos:definition "The forwarding rule's creator and the lookalike email's sender, two personas, are the same actor. The rule was created through the controller's own account and the email came from an address registered to no one known, so the link rests on timing and on what the email knew."@en ;
 	skos:prefLabel "Hypothesis: the rule's creator sent the bank-change email"@en ;
 	stonework:confidence "60"^^xsd:integer ;
 	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
 	stonework:hypothesisAbout
-		ex:actor ,
 		ex:email-bank-change ,
+		ex:persona-rule-creator ,
+		ex:persona-sender ,
 		ex:rule-forward
 		;
 	.
@@ -781,7 +782,7 @@ ex:incident-bec
 	a stonework:Incident ;
 	skos:definition "Declared on 30 September, when the callback on the actor's second payment request reached the real supplier, who had not changed banks and had not been paid for September."@en ;
 	skos:prefLabel "Supplier payment diverted by business email compromise"@en ;
-	stonework:attributedTo ex:actor ;
+	stonework:attributedTo ex:persona-sender ;
 	stonework:hasIncidentStatus stonework:incidentStatusContained ;
 	.
 
@@ -965,6 +966,18 @@ ex:ostep-send
 	stonework:stepOrder "3"^^xsd:integer ;
 	.
 
+ex:persona-rule-creator
+	a stonework:DigitalIdentity ;
+	skos:definition "Whoever used the controller's mailbox from 198.51.100.77 with a Linux browser, created the forwarding rule and read the forwarded mail. A persona: who is behind it is open."@en ;
+	skos:prefLabel "Persona: the forwarding rule's creator"@en ;
+	.
+
+ex:persona-sender
+	a stonework:DigitalIdentity ;
+	skos:definition "Whoever sent the bank-change email from the lookalike supplier domain. A persona: who is behind it is open, and so is whether it is the rule's creator."@en ;
+	skos:prefLabel "Persona: the lookalike email's sender"@en ;
+	.
+
 ex:ra-ap-clerk
 	a stonework:RoleAssignment ;
 	stonework:assignedRole ex:role-ap-clerk ;
@@ -1017,7 +1030,6 @@ ex:rule-forward
 ex:run-actor-op
 	a stonework:Process ;
 	skos:prefLabel "The actor's operation against the manufacturer"@en ;
-	stonework:attributedTo ex:actor ;
 	stonework:executionOf ex:opplan-bec ;
 	stonework:startedAtTime "2026-09-02T03:14:07Z"^^xsd:dateTime ;
 	.

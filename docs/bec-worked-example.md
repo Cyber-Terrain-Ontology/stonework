@@ -145,7 +145,7 @@ mailbox account created the forwarding rule. The person behind an identity is re
 through `accountOf` (or `attributedToAgent`). When someone else used the identity, the
 activity keeps the identity as its performer and names who is believed responsible with
 `attributedTo`: the rule's creation is `performedBy` the controller's mailbox account and
-`attributedTo` the actor.
+`attributedTo` the rule's creator, a persona (see piece 5).
 
 This matters because the checks see identities. Each execution is checked against its Step's
 `performerRole`, and each run against `separatedFrom`, with three possible answers:
@@ -504,9 +504,19 @@ in order:
 2. Read the forwarded invoice threads, and pick an invoice that is due.
 3. Send a bank-change request from a lookalike address. Output `paymentRequest`.
 
-Its run, `ex:run-actor-op`, is `attributedTo` the actor. The rule's creation on 2 September is
-the execution of Step 1, and the email sent on 15 September is the execution of Step 3, whose
-output is the email.
+The rule's creation on 2 September is the execution of Step 1, and the email sent on 15
+September is the execution of Step 3, whose output is the email.
+
+**Who is behind it: two personas.** The evidence ties the rule's creation and the mail reads
+to one address and one browser, and the email to a lookalike domain. Nothing in it ties the
+two together: that is the attribution hypothesis, pending at 60%. So each is attributed to a
+persona, a `DigitalIdentity` that isn't an account: `ex:persona-rule-creator` and
+`ex:persona-sender`. `ex:actor`, the one actor the investigation believes is behind both, has
+nothing attributed to it, and the run `ex:run-actor-op`, which would cover its executions if
+it were attributed, is attributed to no one. If the hypothesis is confirmed, each persona
+becomes `attributedToAgent` the actor and nothing attributed to the personas changes; if it's
+refuted, nothing has to be withdrawn. Attributing everything to one actor from the start
+would assert the very link the hypothesis says isn't established.
 
 **The rule.** Step 1's execution `produces` `ex:rule-forward`, a `stonework:MailboxRule`
 `ruleOfMailbox` the controller's account: `ruleName` "Sync", `matchesKeyword` "invoice",
@@ -644,9 +654,9 @@ SELECT ?execution ?when ?controller WHERE {
 ```
 
 → the 12 September sign-in at 03:40 from the rule's IP address, and the 16 September sign-in
-from the controller's workstation, both with "Unidentified BEC actor". The rule's creation is
-in the interval too, but it's already attributed. Review sorts the two: the first is the actor
-reading the mail, the second is the controller.
+from the controller's workstation, both with "Persona: the forwarding rule's creator". The
+rule's creation is in the interval too, but it's already attributed. Review sorts the two: the
+first is the rule's creator reading the mail, the second is the controller.
 
 **What review has to go on.** Each sign-in, and the rule's creation, records its client's
 address (`hasSourceAddress`) and browser (`usedUserAgent`); where an address is comes from a
@@ -709,7 +719,7 @@ hypothesis-and-evidence layer.
 ## Gaps, as proposals
 
 Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.12.0, and
-20 is done in 0.15.0; the rest are not in the ontology yet.
+20 is done in 0.15.0; 21 and 22 are unreleased; the rest are not in the ontology yet.
 
 1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
    (Hypothesis → anything, not functional) links a hypothesis to the technique, actor,
@@ -861,3 +871,16 @@ Smaller things:
   own catalogue, perhaps in the financial module.
 - The release Step's execution links to the wire with `hasOutput`, not `produces`:
   `produces` takes a `CyberEntity`, and a `FinancialTransaction` is an activity.
+
+21. **Unreleased: executions no record shows.** The 30 September callback is known only from
+    the clerk's statement, and the statement gives no time. `evidencedBy` now applies to any
+    activity, separating a reported execution from a recorded one (`generatedFrom`), and
+    `startedNotBefore` and `startedNotAfter` give the window the evidence allows in place of an
+    estimated time.
+
+22. **Unreleased: attribution to personas, and a run's attribution.** Attributing the rule's
+    creation and the email to one actor asserted what the attribution hypothesis says is
+    pending. Each is now attributed to a persona (see piece 5), joined to the actor with
+    `attributedToAgent` only when the hypothesis is confirmed. `attributedTo`'s scope note now
+    says this, and that a run's attribution covers its executions unless one is attributed
+    otherwise.
