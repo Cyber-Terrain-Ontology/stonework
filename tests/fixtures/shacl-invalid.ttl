@@ -79,6 +79,12 @@ example:orphanMailboxRule
 	stonework:ruleName "." ;
 	.
 
+example:outcomeThatIsAFactor
+	a stonework:Event ;
+	stonework:authenticatedWith stonework:executionOutcomeSucceeded ;
+	stonework:hasOutcome stonework:authenticationFactorKnowledge ;
+	.
+
 example:service
 	a stonework:NetworkService ;
 	stonework:port "70000"^^xsd:integer ;

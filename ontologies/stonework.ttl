@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.13.0> ;
-	owl:versionInfo "0.13.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.14.0> ;
+	owl:versionInfo "0.14.0" ;
 	.
 
 stonework:AIAgent
@@ -404,7 +404,7 @@ stonework:EmailAuthenticationResult
 	rdfs:subClassOf stonework:Assessment ;
 	skos:definition "The verdict of one sender-authentication check (SPF, DKIM, DMARC or ARC) on an EmailMessage, as a receiving server recorded it in an Authentication-Results header: the method, the verdict, the domain checked, and the server that checked."@en ;
 	skos:prefLabel "Email Authentication Result"@en ;
-	skos:scopeNote "A pass authenticates the domain, not the sender's honesty: a lookalike domain registered by an actor passes SPF, DKIM and DMARC for itself. Compare stonework:authenticatedDomain with the domain the recipient expected. The method and verdict are categories (stonework:hasAuthenticationMethod, stonework:hasAuthenticationVerdict)."@en ;
+	skos:scopeNote "A pass authenticates the domain, not the sender's honesty: a lookalike domain registered by an actor passes SPF, DKIM and DMARC for itself. Compare stonework:authenticatedDomain with the domain the recipient expected. The method and verdict are categories (stonework:hasEmailAuthenticationMethod, stonework:hasAuthenticationVerdict)."@en ;
 	.
 
 stonework:EmailMessage
@@ -430,7 +430,7 @@ stonework:Event
 	rdfs:subClassOf stonework:CyberActivity ;
 	skos:definition "An atomic, observable occurrence in a system, network, or environment that has potential security relevance but has not yet been assessed or declared as an Incident."@en ;
 	skos:prefLabel "Event"@en ;
-	skos:scopeNote "Represents the pre-triage state — a raw log entry, alert, or sensor observation. Distinguished from Incident by the absence of human or automated assessment declaring it significant and adverse. Useful for SIEM, log-based, and threat hunting use cases."@en ;
+	skos:scopeNote "Represents the pre-triage state — a raw log entry, alert, or sensor observation. Distinguished from Incident by the absence of human or automated assessment declaring it significant and adverse. Useful for SIEM, log-based, and threat hunting use cases. An Event parsed from a record keeps the link to it (stonework:generatedFrom) and names who performed it (stonework:performedBy). When an analyst places it in a run (stonework:correspondsToStep, stonework:partOfExecution) it stays an Event: it is the execution of that Step without changing type, and its link to the record remains."@en ;
 	.
 
 stonework:Feed
@@ -3125,8 +3125,8 @@ stonework:hasImpact
 
 stonework:hasInput
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:Process ;
-	skos:definition "Relates a Process to its input data or artifacts."@en ;
+	rdfs:domain stonework:CyberActivity ;
+	skos:definition "Relates an activity to its input data or artifacts, or to an activity it takes up, such as the payment an approval acts on."@en ;
 	skos:prefLabel "hasInput"@en ;
 	.
 
@@ -3237,8 +3237,8 @@ stonework:hasOnlineReference
 
 stonework:hasOutput
 	a owl:ObjectProperty ;
-	rdfs:domain stonework:Process ;
-	skos:definition "Relates a Process to the data or artifacts it produces."@en ;
+	rdfs:domain stonework:CyberActivity ;
+	skos:definition "Relates an activity to what it produces as output, data, artifacts or an activity it sets going, such as the wire a release sends."@en ;
 	skos:prefLabel "hasOutput"@en ;
 	.
 
@@ -4344,6 +4344,14 @@ stonework:osVersion
 	skos:prefLabel "osVersion"@en ;
 	.
 
+stonework:outcomeDetail
+	a owl:DatatypeProperty ;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range xsd:string ;
+	skos:definition "Why an activity ended as it did, as the source system reports it, such as an error code and its message."@en ;
+	skos:prefLabel "outcomeDetail"@en ;
+	.
+
 stonework:outcomeVariable
 	a
 		owl:ObjectProperty ,
@@ -4418,12 +4426,12 @@ stonework:performedBy
 	rdfs:domain [
 		a owl:Class ;
 		owl:unionOf (
+			stonework:CyberActivity
 			stonework:Plan
-			stonework:Process
 		) ;
 	] ;
 	rdfs:range stonework:Agent ;
-	skos:definition "Relates a Process to the Agent that performs it, or a Plan to the Agent responsible for carrying it out."@en ;
+	skos:definition "Relates an activity (a Process, an Event such as a log record, or any other CyberActivity) to the Agent that performed it, or a Plan to the Agent responsible for carrying it out."@en ;
 	skos:prefLabel "performedBy"@en ;
 	skos:scopeNote "On an execution, name the performer as observed. When the evidence shows only an identity, such as an account in an audit log, the performer is that DigitalIdentity, and the Agent behind it is reached through stonework:accountOf or stonework:attributedToAgent. When an identity may have been used by someone other than its holder, keep the identity as the performer and record the Agent believed responsible with stonework:attributedTo; an analyst who establishes the misuse records a stonework:Deviation. Who is expected to perform a Plan's Steps is given per Step, as Roles (stonework:performerRole)."@en ;
 	.

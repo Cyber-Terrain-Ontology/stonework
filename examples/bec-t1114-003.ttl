@@ -86,6 +86,8 @@ ex:act-signin-0912
 	skos:definition "A sign-in to the controller's mailbox at 03:40 UTC from the same unfamiliar IP address the rule was created from. Not yet attributed."@en ;
 	skos:prefLabel "Sign-in to the controller's mailbox, 12 September 03:40"@en ;
 	stonework:actsOn ex:acct-controller-mailbox ;
+	stonework:authenticatedWith stonework:authenticatorSessionToken ;
+	stonework:hasOutcome stonework:executionOutcomeSucceeded ;
 	stonework:hasSourceAddress ex:ip-actor-signin ;
 	stonework:performedBy ex:acct-controller-mailbox ;
 	stonework:startedAtTime "2026-09-12T03:40:00Z"^^xsd:dateTime ;
@@ -97,6 +99,8 @@ ex:act-signin-0916
 	skos:definition "A sign-in to the controller's mailbox from the controller's office workstation, shortly before the 16 September approval. Not yet attributed."@en ;
 	skos:prefLabel "Sign-in to the controller's mailbox, 16 September 14:55"@en ;
 	stonework:actsOn ex:acct-controller-mailbox ;
+	stonework:authenticatedWith stonework:authenticatorSessionToken ;
+	stonework:hasOutcome stonework:executionOutcomeSucceeded ;
 	stonework:hasSourceAddress ex:ip-controller-office ;
 	stonework:performedBy ex:acct-controller-mailbox ;
 	stonework:startedAtTime "2026-09-16T14:55:00Z"^^xsd:dateTime ;
@@ -168,8 +172,8 @@ ex:auth-dkim-bank-change
 	skos:prefLabel "DKIM: pass for supp1ier.example"@en ;
 	stonework:authenticatedBy ex:mx-inbound ;
 	stonework:authenticatedDomain ex:dom-lookalike ;
-	stonework:hasAuthenticationMethod stonework:authenticationMethodDKIM ;
 	stonework:hasAuthenticationVerdict stonework:authenticationVerdictPass ;
+	stonework:hasEmailAuthenticationMethod stonework:emailAuthenticationMethodDKIM ;
 	.
 
 ex:auth-dmarc-bank-change
@@ -177,8 +181,8 @@ ex:auth-dmarc-bank-change
 	skos:prefLabel "DMARC: pass for supp1ier.example"@en ;
 	stonework:authenticatedBy ex:mx-inbound ;
 	stonework:authenticatedDomain ex:dom-lookalike ;
-	stonework:hasAuthenticationMethod stonework:authenticationMethodDMARC ;
 	stonework:hasAuthenticationVerdict stonework:authenticationVerdictPass ;
+	stonework:hasEmailAuthenticationMethod stonework:emailAuthenticationMethodDMARC ;
 	.
 
 ex:auth-spf-bank-change
@@ -186,8 +190,8 @@ ex:auth-spf-bank-change
 	skos:prefLabel "SPF: pass for supp1ier.example"@en ;
 	stonework:authenticatedBy ex:mx-inbound ;
 	stonework:authenticatedDomain ex:dom-lookalike ;
-	stonework:hasAuthenticationMethod stonework:authenticationMethodSPF ;
 	stonework:hasAuthenticationVerdict stonework:authenticationVerdictPass ;
+	stonework:hasEmailAuthenticationMethod stonework:emailAuthenticationMethodSPF ;
 	.
 
 ex:b-account-contain
