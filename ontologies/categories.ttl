@@ -13,8 +13,8 @@
 	rdfs:label "STONEWORK Categories and Roles"@en ;
 	dcterms:description "Category and Role subclasses, associated vocabulary named individuals, and category-specific object properties for the STONEWORK ontology. Kept separate to allow the core ontology to load without the full vocabulary set."@en ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.5.0> ;
-	owl:versionInfo "0.5.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.6.0> ;
+	owl:versionInfo "0.6.0" ;
 	.
 
 stonework:AccountType
