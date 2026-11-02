@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.14.0 (core), categories 0.5.0: outcomes and sign-in authentication
+
+How an activity ended, and how a sign-in was authenticated.
+
+### Added
+
+- `stonework:hasOutcome` (CyberActivity → `ExecutionOutcome`, functional; in `categories.ttl`) and `stonework:outcomeDetail` (string): how any activity ended, as observed, and why, as the source reports it. A Step's `outcomeVariable` binds the same value in a run.
+- `executionOutcomeInterrupted`: an activity that paused for something more, such as a further authentication step, and continues in another record (not in CACAO).
+- `stonework:AuthenticatorType` scheme, after NIST SP 800-63B: password, PIN, recovery code, SMS code, voice call, email code, push approval, authenticator-app code, hardware OTP token, FIDO2 security key, platform passkey, smart card, client certificate, SSH key, API key or client secret, session token, federated assertion. `stonework:phishingResistant` marks the four bound to the site's origin.
+- `stonework:AuthenticationFactor` scheme: knowledge, possession, inherence.
+- `stonework:authenticatedWith` (CyberActivity → `AuthenticatorType`) and `stonework:authenticationFactor` (CyberActivity → `AuthenticationFactor`): what a sign-in presented, and the distinct factors checked, per activity. A replayed session token presents no factor.
+- SHACL: `HasOutcomeShape`, `AuthenticatedWithShape`, `AuthenticationFactorShape`, `AuthenticatorTypeShape`; fixtures for each.
+
+### Changed
+
+- `stonework:performedBy` takes any `CyberActivity` (or a `Plan`), not only a `Process`: an `Event` parsed from a log record names the account that performed it without also being typed a `Process`.
+- `stonework:hasInput` and `stonework:hasOutput` take any `CyberActivity`, for the same reason: a bank portal's release record has the wire as its output.
+- Scope note on `stonework:Event`: an Event parsed from a record keeps `generatedFrom` and names its performer; placed in a run (`correspondsToStep`, `partOfExecution`), it stays an Event and is the Step's execution without changing type.
+- **Breaking (released in 0.13.0 only):** the email sender-authentication categories are renamed so they can't be mistaken for sign-in authentication: `AuthenticationMethod` → `EmailAuthenticationMethod`, `hasAuthenticationMethod` → `hasEmailAuthenticationMethod`, `authenticationMethodScheme` and its individuals (`authenticationMethodSPF`, …) → `emailAuthenticationMethod…`.
+- `ExecutionOutcome` covers any observed activity, not only executions of a Step.
+- Examples: the BEC example's two sign-ins are authenticated with a session token and succeeded.
+
 ## 0.13.0 (core), categories 0.4.0, STIX framework 0.4.0: email evidence
 
 An `EmailMessage` carries its headers as data, so a message taken from a mailbox is evidence that can be queried: who it claimed to be from, where replies went, which thread it joined, and what the receiving server's authentication checks found. Received headers are Events derived from the message, which is also how a parsed log record points back to its log. A mailbox rule, the artifact at the centre of T1114.003, has its own class.
