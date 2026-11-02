@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.14.0 (core), categories 0.5.0: outcomes and sign-in authentication
 
 How an activity ended, and how a sign-in was authenticated.
 
