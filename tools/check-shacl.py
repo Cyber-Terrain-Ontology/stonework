@@ -366,6 +366,7 @@ def main() -> int:
             "shacl-invalid-variable-binding.ttl",
             "shacl-invalid-deviation.ttl",
             "shacl-invalid-review.ttl",
+            "shacl-invalid-start-bounds.ttl",
         ):
             failures += expect_violation(
                 fixture, "core", "Malformed fixture was accepted"
@@ -459,6 +460,11 @@ def main() -> int:
             "shacl-warning-review.ttl",
             "core",
             "A Review with no analyst or end time should warn, not fail",
+        )
+        failures += expect_warning(
+            "shacl-warning-execution-support.ttl",
+            "core",
+            "An execution resting on no record or evidence should warn, not fail",
         )
         failures += expect_warning(
             "shacl-warning-currency-exchange.ttl",

@@ -696,12 +696,14 @@ ex:exe0930-enter
 
 ex:exe0930-verify
 	a stonework:Process ;
-	skos:definition "The clerk called the supplier at the number on file. The supplier had not changed banks, so the payment was stopped."@en ;
+	skos:definition "The clerk called the supplier at the number on file. The supplier had not changed banks, so the payment was stopped. Only the clerk's statement records the call, and it gives no time: after the payment was entered, and before the run ended."@en ;
 	skos:prefLabel "Execution: verify the changed bank details by callback (30 September)"@en ;
 	stonework:correspondsToStep ex:wstep-verify ;
+	stonework:evidencedBy ex:file-clerk-statement ;
 	stonework:partOfExecution ex:run-wire-0930 ;
 	stonework:performedBy ex:ap-clerk ;
-	stonework:startedAtTime "2026-09-30T09:40:00Z"^^xsd:dateTime ;
+	stonework:startedNotAfter "2026-09-30T09:45:00Z"^^xsd:dateTime ;
+	stonework:startedNotBefore "2026-09-30T09:05:00Z"^^xsd:dateTime ;
 	stonework:usedBinding ex:b0930-details ;
 	.
 

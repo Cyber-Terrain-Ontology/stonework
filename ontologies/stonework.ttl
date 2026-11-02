@@ -2670,14 +2670,16 @@ stonework:evidencedBy
 	rdfs:domain [
 		a owl:Class ;
 		owl:unionOf (
+			stonework:CyberActivity
 			stonework:Deviation
 			stonework:IdentityControl
 			stonework:Sighting
 		) ;
 	] ;
 	rdfs:range stonework:DigitalArtifact ;
-	skos:definition "A Sighting, Deviation or IdentityControl is substantiated by this DigitalArtifact (memory dump, PCAP, log excerpt, sample, call record, recorded statement). Connects analytical observation to forensic evidence."@en ;
+	skos:definition "A Sighting, Deviation, IdentityControl or activity is substantiated by this DigitalArtifact (memory dump, PCAP, log excerpt, sample, call record, recorded statement). Connects analytical observation to forensic evidence."@en ;
 	skos:prefLabel "evidencedBy"@en ;
+	skos:scopeNote "An activity parsed from a system's own record is stonework:generatedFrom that record: it is recorded. An activity established otherwise, such as a phone call a signed statement describes, or an analyst's own step in an investigation, is evidencedBy the artifacts that show it: it is reported, and only as good as they are. An activity can be both. When the evidence bounds an activity's start but doesn't give it, use stonework:startedNotBefore and stonework:startedNotAfter rather than an estimated stonework:startedAtTime."@en ;
 	.
 
 stonework:examines
@@ -5265,6 +5267,32 @@ stonework:startedAtTime
 	rdfs:seeAlso prov:startedAtTime ;
 	skos:definition "The date and time at which a CyberActivity began."@en ;
 	skos:prefLabel "startedAtTime" ;
+	.
+
+stonework:startedNotAfter
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range xsd:dateTime ;
+	rdfs:seeAlso <http://www.cidoc-crm.org/cidoc-crm/P82b_end_of_the_begin> ;
+	skos:definition "The latest time at which a CyberActivity can have begun, when the evidence bounds its start but doesn't give it."@en ;
+	skos:prefLabel "startedNotAfter"@en ;
+	skos:scopeNote "See stonework:startedNotBefore. CIDOC CRM's \"end of the begin\" (P82b)."@en ;
+	.
+
+stonework:startedNotBefore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range xsd:dateTime ;
+	rdfs:seeAlso <http://www.cidoc-crm.org/cidoc-crm/P82a_begin_of_the_begin> ;
+	skos:definition "The earliest time at which a CyberActivity can have begun, when the evidence bounds its start but doesn't give it."@en ;
+	skos:prefLabel "startedNotBefore"@en ;
+	skos:scopeNote "With stonework:startedNotAfter, a window for a start that isn't known exactly, such as a call a statement places between two logged events, in place of an estimated stonework:startedAtTime: an estimate on a timeline reads as a fact. Either bound can be given alone. When the start is known, use stonework:startedAtTime; bounds given as well must contain it. A comparison with another time is undetermined while the window overlaps it. CIDOC CRM's \"begin of the begin\" (P82a)."@en ;
 	.
 
 stonework:stepOrder

@@ -78,6 +78,24 @@ has no `endedAtTime`: incomplete, not malformed. `ReviewShape` requires a Review
 finding, at least one input and the execution it is part of, and warns when it names no
 analyst or end time.
 
+## Executions no record shows
+
+Most executions in a case come from records: a parsed audit row or sign-in is an Event
+`generatedFrom` its log, and placing it in a run makes it an execution. Some don't. A clerk's
+signed statement says a call was made; the analyst's own searches and reviews are part of the
+investigation's runs. These are `evidencedBy` the artifacts that show them (a statement, a call
+record, a saved query), the same property that substantiates a Deviation or an
+IdentityControl. `generatedFrom` says recorded; `evidencedBy` alone says reported.
+
+A statement often bounds a time without giving it: the call came after the payment was
+entered and before it was cancelled. `startedNotBefore` and `startedNotAfter` record that
+window (CIDOC CRM's "begin of the begin" and "end of the begin"), so an estimate doesn't
+appear on a timeline as a fact. A comparison with another time is undetermined while the
+window overlaps it.
+
+`ExecutionSupportShape` warns about an execution placed in a run with neither: nothing in
+the data says what it rests on.
+
 ## `refersTo` rather than `owl:sameAs`
 
 STIX objects from different publishers often describe the same technique, CVE or malware

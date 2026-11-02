@@ -2,7 +2,15 @@
 
 ## Unreleased
 
+### Added
+
+- `stonework:startedNotBefore` and `stonework:startedNotAfter` (CyberActivity → `xsd:dateTime`, functional): a window for a start the evidence bounds but doesn't give, such as a call a statement places between two logged events, in place of an estimated `startedAtTime`. After CIDOC CRM's begin of the begin and end of the begin (P82a, P82b).
+- SHACL: the bounds in order, and containing `startedAtTime` if both are given (`ActivityWindowShape`); a warning for an execution placed in a run that rests on neither a record (`generatedFrom`) nor evidence (`evidencedBy`) (`ExecutionSupportShape`). Fixtures for each.
+
 ### Changed
+
+- `stonework:evidencedBy` applies to any CyberActivity as well: an execution no record shows, established by a statement, a call record or a saved query, is evidencedBy them. Its scope note distinguishes recorded (`generatedFrom`) from reported (`evidencedBy` alone).
+- BEC worked example: the 30 September callback rests on the clerk's statement and has a window, not a time.
 
 - `stonework:refersTo` covers evidence as well as intelligence: what a log or message names (a tenant, an account, a host) refers to the organization's own entity for it, such as a Plan Step's target. Definition and scope note only; the scope note now says why it isn't `owl:sameAs` for revision (nothing follows from it unless followed, so retracting it retracts nothing else). Docs: [investigation-management.md](docs/investigation-management.md).
 
