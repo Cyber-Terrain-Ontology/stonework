@@ -835,6 +835,42 @@ stonework:RegistrationDateShape
 	sh:targetSubjectsOf stonework:registrationDate ;
 	.
 
+stonework:ReviewShape
+	a sh:NodeShape ;
+	sh:property
+		[
+			sh:class stonework:ReviewFinding ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Review has exactly one finding."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:hasReviewFinding ;
+		] ,
+		[
+			sh:message "A Review examines at least one record (stonework:hasInput)."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:hasInput ;
+		] ,
+		[
+			sh:message "A Review is part of an investigation (stonework:partOfExecution)."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:partOfExecution ;
+		] ,
+		[
+			sh:message "A Review should name the analyst who performed it (stonework:performedBy)."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:performedBy ;
+			sh:severity sh:Warning ;
+		] ,
+		[
+			sh:message "A Review should record when it ended (stonework:endedAtTime), so that a later review of the same records can supersede it."@en ;
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:endedAtTime ;
+			sh:severity sh:Warning ;
+		]
+		;
+	sh:targetClass stonework:Review ;
+	.
+
 stonework:RoleAssignmentShape
 	a sh:NodeShape ;
 	sh:property

@@ -1,8 +1,7 @@
 # Design: an analyst's review of records
 
-*Draft 2026-11-01, for discussion. Proposal 20 in
-[bec-worked-example.md](bec-worked-example.md#gaps-as-proposals). Nothing here is in the
-ontology yet.*
+*Designed 2026-11-01 and released in STONEWORK 0.15.0 (categories 0.6.0). Proposal 20 in
+[bec-worked-example.md](bec-worked-example.md#gaps-as-proposals).*
 
 ## The gap
 
@@ -113,8 +112,8 @@ ex:review-0917
 
 ### Validation
 
-- `ReviewShape`: at least one `hasInput`; exactly one `hasReviewFinding`; `partOfExecution`
-  an Investigation (directly or through a Step's execution). Violations.
+- `ReviewShape`: at least one `hasInput`; exactly one `hasReviewFinding`; a
+  `partOfExecution` (the investigation, or the execution of one of its Steps). Violations.
 - Warnings: no `performedBy`; no `endedAtTime` (a later review can't be ordered without it).
 - A query, not a shape: a record whose latest Review in an investigation is *not relevant*
   but which is placed in one of that investigation's runs, attributed, or cited as evidence.
@@ -128,12 +127,12 @@ record, not shared intelligence, so leaving it out is the default.
 
 ## In Moai
 
-Once the terms are released, the Records tab gets two actions on a selection, "Not relevant"
+The Records tab gets two actions on a selection, "Not relevant"
 and "Relevant". Each is an analyst action like the others: one Review in its own graph, undone
 by deleting it. The status filter gains *Reviewed: not relevant*, hidden by default, and each
 record shows its latest finding. The contradiction query joins the case's checks.
 
 ## Release
 
-STONEWORK 0.15.0 (core: `Review`, `hasReviewFinding`; categories 0.6.0: `ReviewFinding`),
-with `ReviewShape`, a section in investigation-management.md, and proposal 20 marked done.
+STONEWORK 0.15.0 (core: `Review`; categories 0.6.0: `ReviewFinding`, `hasReviewFinding`),
+with `ReviewShape` and a section in [investigation-management.md](investigation-management.md).

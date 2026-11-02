@@ -339,6 +339,15 @@ example:refusedToken
 	stonework:startedAtTime "2026-09-30T22:15:37Z"^^xsd:dateTime ;
 	.
 
+example:review
+	a stonework:Review ;
+	stonework:endedAtTime "2026-08-21T15:20:00Z"^^xsd:dateTime ;
+	stonework:hasInput example:activity ;
+	stonework:hasReviewFinding stonework:reviewFindingNotRelevant ;
+	stonework:partOfExecution example:investigation ;
+	stonework:performedBy example:analyst ;
+	.
+
 example:roleSource
 	a stonework:Publication ;
 	.

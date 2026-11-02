@@ -708,8 +708,8 @@ hypothesis-and-evidence layer.
 
 ## Gaps, as proposals
 
-Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.12.0;
-the rest are not in the ontology yet.
+Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.12.0, and
+20 is done in 0.15.0; the rest are not in the ontology yet.
 
 1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
    (Hypothesis → anything, not functional) links a hypothesis to the technique, actor,
@@ -847,12 +847,12 @@ lose it. The four small ones, 13 to 16, are done; 17 to 19 remain.
     business processes as well as playbooks. Proposal: discuss durations on Steps, and
     whether a timeout is a guard on time elapsed or a separate kind of Transition.
 
-20. **No record that records were reviewed and found not relevant.** Building the case from
-    its evidence, most records turn out not to matter, and nothing records that an analyst
-    looked at them. `Opinion` is about correctness, and `examines` and `collects` don't take
-    Events. Proposal: a `Review` (⊑ `Process`, part of the investigation, performed by the
-    analyst, the records as inputs) with a `ReviewFinding` of relevant or not relevant. See
-    [record-review.md](record-review.md).
+20. **Done in 0.15.0: reviews of records.** Building the case from its evidence, most records
+    turn out not to matter, and nothing recorded that an analyst had looked at them.
+    `Opinion` is about correctness, and `examines` and `collects` don't take Events. A
+    `stonework:Review` (⊑ `Process`, part of the investigation, performed by the analyst, the
+    records as inputs) has a `ReviewFinding` of relevant or not relevant
+    (`hasReviewFinding`). See [record-review.md](record-review.md).
 
 Smaller things:
 

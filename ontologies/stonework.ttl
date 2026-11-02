@@ -638,7 +638,7 @@ stonework:Investigation
 	rdfs:subClassOf stonework:Process ;
 	skos:definition "A systematic Process of inquiry, evidence collection, analysis, hypothesis testing, and conclusion to understand, attribute, or resolve security incidents, threats, anomalies, or other matters of interest." ;
 	skos:prefLabel "Investigation" ;
-	skos:scopeNote "Includes digital forensics, threat hunting, root cause analysis, and incident investigations, and the cases an analyst works. Its subject is stonework:investigates; its sources are stonework:examines (intelligence products) and stonework:collects (digital artifacts as evidence); its hypotheses are stonework:testsHypothesis; its output is stonework:producesReport. Who works it is stonework:performedBy and stonework:leadInvestigator; when, stonework:startedAtTime and stonework:endedAtTime. Its lifecycle is stonework:hasInvestigationStatus, how it ended is stonework:hasInvestigationOutcome, and its urgency is stonework:hasPriority (all in categories.ttl). An Investigation merged into another keeps its record, linked by stonework:mergedInto."@en ;
+	skos:scopeNote "Includes digital forensics, threat hunting, root cause analysis, and incident investigations, and the cases an analyst works. Its subject is stonework:investigates; its sources are stonework:examines (intelligence products) and stonework:collects (digital artifacts as evidence); its hypotheses are stonework:testsHypothesis; its reviews of records are stonework:Reviews that are stonework:partOfExecution it; its output is stonework:producesReport. Who works it is stonework:performedBy and stonework:leadInvestigator; when, stonework:startedAtTime and stonework:endedAtTime. Its lifecycle is stonework:hasInvestigationStatus, how it ended is stonework:hasInvestigationOutcome, and its urgency is stonework:hasPriority (all in categories.ttl). An Investigation merged into another keeps its record, linked by stonework:mergedInto."@en ;
 	.
 
 stonework:InvestigationPlan
@@ -1046,6 +1046,15 @@ stonework:Report
 	rdfs:subClassOf stonework:IntelligenceProduct ;
 	skos:definition "A collection of threat intelligence focused on one or more topics, such as a description of a threat actor, malware, or attack technique." ;
 	skos:prefLabel "Report" ;
+	.
+
+stonework:Review
+	a owl:Class ;
+	rdfs:subClassOf stonework:Process ;
+	rdfs:seeAlso <https://ontology.caseontology.org/case/investigation/InvestigativeAction> ;
+	skos:definition "An analyst's examination of records or artifacts, as part of an investigation, ending in a judgment of whether they are relevant to it."@en ;
+	skos:prefLabel "Review"@en ;
+	skos:scopeNote "The records reviewed are stonework:hasInput; the investigation is the execution the review is stonework:partOfExecution (directly, or through the execution of one of its Steps; when the investigation follows an InvestigationPlan, the Step a review carries out is stonework:correspondsToStep); the analyst is stonework:performedBy; when, stonework:startedAtTime and stonework:endedAtTime. What it found is stonework:hasReviewFinding (in categories.ttl), which applies to every input: records found relevant and records found not relevant are two Reviews. A later Review of the same record in the same investigation supersedes an earlier one, and both stay as the record of the work. A finding of not relevant says nothing about whether a record is true, benign or malicious: correctness is a stonework:Opinion, and how a whole investigation ended is stonework:hasInvestigationOutcome. Follows the CASE investigative action: who examined what, when, and what resulted."@en ;
 	.
 
 stonework:Risk
