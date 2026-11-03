@@ -17,13 +17,37 @@ stonework:ActivityWindowShape
 		] ,
 		[
 			sh:datatype xsd:dateTime ;
+			sh:lessThanOrEquals stonework:startedNotAfter ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "startedNotBefore must be no later than startedNotAfter."@en ;
+			sh:path stonework:startedNotBefore ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
 			sh:maxCount "1"^^xsd:integer ;
 			sh:path stonework:endedAtTime ;
+		] ,
+		[
+			sh:datatype xsd:dateTime ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:path stonework:startedNotAfter ;
+		] ,
+		[
+			sh:lessThanOrEquals stonework:startedAtTime ;
+			sh:message "startedAtTime must be no earlier than startedNotBefore."@en ;
+			sh:path stonework:startedNotBefore ;
+		] ,
+		[
+			sh:lessThanOrEquals stonework:startedNotAfter ;
+			sh:message "startedAtTime must be no later than startedNotAfter."@en ;
+			sh:path stonework:startedAtTime ;
 		]
 		;
 	sh:targetSubjectsOf
 		stonework:endedAtTime ,
-		stonework:startedAtTime
+		stonework:startedAtTime ,
+		stonework:startedNotAfter ,
+		stonework:startedNotBefore
 		;
 	.
 
@@ -300,6 +324,29 @@ stonework:EpssScoreShape
 		sh:path stonework:epssScore ;
 	] ;
 	sh:targetSubjectsOf stonework:epssScore ;
+	.
+
+stonework:ExecutionSupportShape
+	a sh:NodeShape ;
+	sh:message "An execution placed in a run should rest on something: the record it was parsed from (stonework:generatedFrom), the artifacts that show it (stonework:evidencedBy), or executions of its own (stonework:partOfExecution), as a sub-run does."@en ;
+	sh:or (
+		[
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:generatedFrom ;
+		]
+		[
+			sh:minCount "1"^^xsd:integer ;
+			sh:path stonework:evidencedBy ;
+		]
+		[
+			sh:minCount "1"^^xsd:integer ;
+			sh:path [
+				sh:inversePath stonework:partOfExecution ;
+			] ;
+		]
+	) ;
+	sh:severity sh:Warning ;
+	sh:targetSubjectsOf stonework:correspondsToStep ;
 	.
 
 stonework:ExploitMaturityShape

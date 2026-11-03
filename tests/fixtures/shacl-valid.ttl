@@ -64,6 +64,16 @@ example:bulletinTechnique
 	stonework:refersTo example:canonicalTechnique ;
 	.
 
+example:callPlan
+	a stonework:Plan ;
+	stonework:hasStep example:callStep ;
+	.
+
+example:callStep
+	a stonework:Step ;
+	stonework:isStepOf example:callPlan ;
+	.
+
 example:campaign
 	a stonework:Campaign ;
 	.
@@ -337,6 +347,14 @@ example:refusedToken
 	stonework:hasOutcome stonework:executionOutcomeFailed ;
 	stonework:outcomeDetail "50173: The provided grant has expired due to it being revoked." ;
 	stonework:startedAtTime "2026-09-30T22:15:37Z"^^xsd:dateTime ;
+	.
+
+example:reportedCall
+	a stonework:Process ;
+	stonework:correspondsToStep example:callStep ;
+	stonework:evidencedBy example:statement ;
+	stonework:startedNotAfter "2026-09-30T09:52:00Z"^^xsd:dateTime ;
+	stonework:startedNotBefore "2026-09-30T09:05:00Z"^^xsd:dateTime ;
 	.
 
 example:review
