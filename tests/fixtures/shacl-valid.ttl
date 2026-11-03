@@ -290,6 +290,28 @@ example:openHypothesis
 	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
 	.
 
+example:p23-contain
+	a stonework:Step ;
+	stonework:invokesPlan example:p23-containment-v2 ;
+	stonework:isStepOf example:p23-detection ;
+	.
+
+example:p23-containment-v1
+	a stonework:ControlPlan ;
+	stonework:planVersion "1" ;
+	.
+
+example:p23-containment-v2
+	a stonework:ControlPlan ;
+	stonework:planVersion "2" ;
+	stonework:revisionOf example:p23-containment-v1 ;
+	.
+
+example:p23-detection
+	a stonework:DetectionPlan ;
+	stonework:hasStep example:p23-contain ;
+	.
+
 example:playbook
 	a stonework:Playbook ;
 	stonework:hasPlaybookType stonework:playbookTypeDetection ;

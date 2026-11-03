@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.16.0> ;
-	owl:versionInfo "0.16.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.17.0> ;
+	owl:versionInfo "0.17.0" ;
 	.
 
 stonework:AIAgent
@@ -3581,7 +3581,7 @@ stonework:implements
 	rdfs:range stonework:Behavior ;
 	skos:definition "Relates a concrete, Step-decomposed Behavior to the more abstract Behavior it is a specific realization of."@en ;
 	skos:prefLabel "implements" ;
-	skos:scopeNote "General-purpose relationship covering both offense (a Procedure implements a Technique) and defense (a ControlPlan implements a Control) with one property rather than a bespoke one per pairing."@en ;
+	skos:scopeNote "General-purpose relationship covering both offense (a Procedure implements a Technique) and defense (a ControlPlan implements a Control) with one property rather than a bespoke one per pairing. A Step that runs another Plan stonework:invokesPlan it; an organization's Plan adapted from a template implements the template."@en ;
 	.
 
 stonework:implementsCountermeasure
@@ -3692,6 +3692,22 @@ stonework:investigates
 	skos:definition "Relates an Investigation to the subject being investigated."@en ;
 	skos:prefLabel "investigates"@en ;
 	skos:scopeNote "Range intentionally unset: an Investigation may examine any matter of interest, among them an Incident, Campaign, ThreatActor or MalwareSample, a CyberActivityCluster, a Vulnerability or a Product's exposure to it, an Indicator, or an Infrastructure. The earlier union range (Campaign, Incident, MalwareSample, ThreatActor) rejected nothing: OWL only inferred that any other subject belonged to the union, which misclassified it."@en ;
+	.
+
+stonework:invokesPlan
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Step ;
+	rdfs:range stonework:Plan ;
+	rdfs:seeAlso
+		<https://docs.oasis-open.org/cacao/security-playbooks/v2.0/security-playbooks-v2.0.html> ,
+		<https://www.omg.org/spec/BPMN/2.0.2/>
+		;
+	skos:definition "Relates a Step to the Plan that performing it runs: each execution of the Step is a run of that Plan."@en ;
+	skos:prefLabel "invokesPlan"@en ;
+	skos:scopeNote "BPMN's call activity, CACAO's playbook-action. The execution that is stonework:correspondsToStep the Step is also stonework:executionOf the invoked Plan, and the invoked Plan's Step executions are stonework:partOfExecution of it: one activity, the Step's performance and the Plan's run. Not stonework:implements, which relates something concrete to the more abstract thing it realizes; running a containment plan carries out the Control the plan implements, which the path invokesPlan/implements reaches. Composition within one participant's plans only: between participants only data passes (see stonework:suppliedBy). A Plan doesn't invoke itself through its own Steps."@en ;
 	.
 
 stonework:involvesCampaign
@@ -4940,6 +4956,16 @@ stonework:respondsToActivity
 	skos:definition "A cyber activity whose occurrence prompted or provides the context for this financial transaction, without asserting that the transaction financed the activity."@en ;
 	skos:prefLabel "respondsToActivity"@en ;
 	skos:scopeNote "Use for a victim's ransom payment linked to the incident it responds to, restitution or remediation payments, and similar contextual relationships. Use stonework:fundsActivity only when the transaction finances the linked activity."@en ;
+	.
+
+stonework:revisionOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Plan ;
+	rdfs:range stonework:Plan ;
+	rdfs:seeAlso prov:wasRevisionOf ;
+	skos:definition "Relates a Plan to the earlier version of the same plan it revises."@en ;
+	skos:prefLabel "revisionOf"@en ;
+	skos:scopeNote "Each version of a plan is its own Plan individual, with its stonework:planVersion, and a run is checked against the version it is stonework:executionOf. Once a Plan has runs, change it by making a revision rather than editing it: an edit in place would have past runs judged against a process they never followed. A Plan with no runs can be edited. Not transitive: the chain of versions is followed in a query, so withdrawing one link withdraws nothing else. After PROV-O's wasRevisionOf. A Plan adapted from a template stonework:implements the template instead: it is a realization, not a version."@en ;
 	.
 
 stonework:revokedBy

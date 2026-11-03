@@ -538,6 +538,18 @@ stonework:InvestigationShape
 	sh:targetClass stonework:Investigation ;
 	.
 
+stonework:InvokesPlanShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Plan ;
+		sh:disjoint stonework:isStepOf ;
+		sh:maxCount "1"^^xsd:integer ;
+		sh:message "A Step invokes at most one Plan, and not the Plan it is a Step of."@en ;
+		sh:path stonework:invokesPlan ;
+	] ;
+	sh:targetSubjectsOf stonework:invokesPlan ;
+	.
+
 stonework:IpVersionShape
 	a sh:NodeShape ;
 	sh:property [
@@ -916,6 +928,27 @@ stonework:ReviewShape
 		]
 		;
 	sh:targetClass stonework:Review ;
+	.
+
+stonework:RevisionOfShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Plan ;
+		sh:message "A Plan is a revision of an earlier Plan."@en ;
+		sh:path stonework:revisionOf ;
+	] ;
+	sh:targetSubjectsOf stonework:revisionOf ;
+	.
+
+stonework:RevisionVersionShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:message "A revised Plan should say which version it is (stonework:planVersion), so its runs can name the version they followed."@en ;
+		sh:minCount "1"^^xsd:integer ;
+		sh:path stonework:planVersion ;
+		sh:severity sh:Warning ;
+	] ;
+	sh:targetSubjectsOf stonework:revisionOf ;
 	.
 
 stonework:RoleAssignmentShape
