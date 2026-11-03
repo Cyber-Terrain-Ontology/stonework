@@ -468,7 +468,7 @@ ex:dstep-contain
 	a stonework:Step ;
 	skos:definition "Run the containment plan for the mailbox where a rule was found."@en ;
 	skos:prefLabel "Contain the mailbox"@en ;
-	stonework:implements ex:ctlplan-forwarding ;
+	stonework:invokesPlan ex:ctlplan-forwarding ;
 	stonework:isStepOf ex:detplan-forwarding ;
 	.
 

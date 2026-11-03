@@ -719,7 +719,7 @@ hypothesis-and-evidence layer.
 ## Gaps, as proposals
 
 Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.12.0, and
-20 is done in 0.15.0; 21 and 22 are unreleased; the rest are not in the ontology yet.
+20 is done in 0.15.0, 21 and 22 in 0.16.0, 23 in 0.17.0; the rest are not in the ontology yet.
 
 1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
    (Hypothesis → anything, not functional) links a hypothesis to the technique, actor,
@@ -872,7 +872,7 @@ Smaller things:
 - The release Step's execution links to the wire with `hasOutput`, not `produces`:
   `produces` takes a `CyberEntity`, and a `FinancialTransaction` is an activity.
 
-21. **Unreleased: executions no record shows.** The 30 September callback is known only from
+21. **Done in 0.16.0: executions no record shows.** The 30 September callback is known only from
     the clerk's statement, and the statement gives no time. `evidencedBy` now applies to any
     activity, separating a reported execution from a recorded one (`generatedFrom`), and
     `startedNotBefore` and `startedNotAfter` give the window the evidence allows in place of an
@@ -880,9 +880,18 @@ Smaller things:
     three artifacts the investigation would have had: the bank portal's payment activity, the
     containment's audit-log records, and the review's notice to suppliers and customers.
 
-22. **Unreleased: attribution to personas, and a run's attribution.** Attributing the rule's
+22. **Done in 0.16.0: attribution to personas, and a run's attribution.** Attributing the rule's
     creation and the email to one actor asserted what the attribution hypothesis says is
     pending. Each is now attributed to a persona (see piece 5), joined to the actor with
     `attributedToAgent` only when the hypothesis is confirmed. `attributedTo`'s scope note now
     says this, and that a run's attribution covers its executions unless one is attributed
     otherwise.
+
+23. **Done in 0.17.0: calling a plan, and revising one.** Drawing the plans as BPMN raised two
+    things. The detection plan's "Contain the mailbox" ran the containment plan, which the
+    example said with `implements`; but `implements` means a realization of something more
+    abstract, and it's transitive. `stonework:invokesPlan` (Step → Plan) now says it: BPMN's
+    call activity, CACAO's `playbook-action`. And once plans can be edited, a plan with runs
+    needs versions, so past runs aren't judged against a process they never followed:
+    `stonework:revisionOf` (Plan → Plan), with `planVersion` on each version. See
+    [plan-execution-model.md](plan-execution-model.md#2e-calling-a-plan-and-revising-one-0170).
