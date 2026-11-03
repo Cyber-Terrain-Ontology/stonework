@@ -228,6 +228,35 @@ The [BEC worked example](bec-worked-example.md#5-the-actors-plan-and-the-message
 has both queries. How a message travels (email, phone, an authenticated
 portal) matters for its risk and is not modelled yet.
 
+## 2e. Calling a plan, and revising one (unreleased)
+
+**A Step can run another Plan** of the same participant: a detection plan
+that hands a confirmed rule to the containment plan, a playbook that calls a
+sub-playbook. `invokesPlan` (Step → Plan, functional) says so. In a run, one
+activity plays both parts: it is `correspondsToStep` the calling Step and
+`executionOf` the invoked Plan, and the invoked Plan's Step executions are
+`partOfExecution` of it. This is BPMN's call activity and CACAO's
+`playbook-action`.
+
+It isn't `implements`, which relates something concrete to the more abstract
+thing it realizes, and which is transitive: a Step that `implements` a
+containment plan would also implement every Control the plan implements.
+Running the plan does carry out those Controls, and the path
+`invokesPlan/implements` still reaches them, as a query, not an inference.
+
+**A Plan with runs is revised, not edited.** Runs point at Steps
+(`correspondsToStep`), so changing a Plan in place would judge its past runs
+against a process they never followed. A new version is a Plan of its own,
+with its `planVersion`, and `revisionOf` (Plan → Plan) the version it
+revises; runs stay `executionOf` the version they followed. `revisionOf` is
+deliberately not transitive, so the chain is followed in a query and
+withdrawing one link withdraws nothing else (as with `refersTo`). A Plan
+adapted from a template `implements` the template: a realization, not a
+version.
+
+Diagram layout, if a plan is drawn (as BPMN, say), isn't part of STONEWORK:
+it belongs to the drawing, kept beside the plan.
+
 ---
 
 ## 3. Entity-relationship diagram — one full vertical slice
@@ -505,7 +534,7 @@ STONEWORK plan can be written in CACAO.
 | `start` / `end` steps | Implicit | Generated on export |
 | `action` step: `commands`, `agent`, `targets` | `Step`; `performerRole` for who should do it; `stepTarget` for what it should act on (an entity, or a Variable bound in the run), checked against `actsOn` on the execution | Partial: commands have no STONEWORK form |
 | `owner` on a step (a STIX Identity, "the owner or responsible party") | Closest is `performerRole`, but that names a Role, not a party | Partial |
-| `playbook-action` (`playbook_id`, `playbook_version`) | A Step that `implements` another Plan; its execution is `executionOf` that Plan; `planVersion` | Good |
+| `playbook-action` (`playbook_id`, `playbook_version`) | A Step that `invokesPlan` another Plan; its execution is `executionOf` that Plan; `planVersion`, and `revisionOf` between versions | Good |
 | `on_completion` | Unguarded `Transition` | Exact |
 | `on_success` / `on_failure` | Transitions guarded with `guardValue` on the Step's `outcomeVariable` (*succeeded*, *failed*, *timed out*) | Good |
 | `if-condition` (`condition`, `on_true`, `on_false`) | Exclusive split: one guarded Transition, and one guarded on the opposite | Partial: CACAO conditions are STIX Patterning expressions; a STONEWORK guard compares one Variable with one value |

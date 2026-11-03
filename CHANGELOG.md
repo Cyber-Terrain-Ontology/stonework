@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- `stonework:invokesPlan` (Step → Plan, functional): a Step whose performance is a run of another Plan, BPMN's call activity and CACAO's `playbook-action`. The execution of the Step is also `executionOf` the invoked Plan. `InvokesPlanShape`: at most one, a Plan, and not the Step's own Plan.
+- `stonework:revisionOf` (Plan → Plan, not transitive): a new version of a Plan, after PROV-O's `wasRevisionOf`. A Plan with runs is revised rather than edited, and runs stay on the version they followed. `RevisionOfShape`, and a warning when a revision has no `planVersion` (`RevisionVersionShape`). Fixtures for each.
+
+### Changed
+
+- `stonework:implements` scope note: a Step that runs another Plan `invokesPlan` it; a Plan adapted from a template implements the template.
+- BEC worked example: the detection plan's "Contain the mailbox" `invokesPlan` the containment plan, in place of `implements`.
+- Docs: [plan-execution-model.md](docs/plan-execution-model.md) section 2e; proposal 23 in [bec-worked-example.md](docs/bec-worked-example.md).
+
 ## 0.16.0 (core): what the evidence reports, and personas
 
 ### Added
