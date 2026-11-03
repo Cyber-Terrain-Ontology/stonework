@@ -719,7 +719,7 @@ hypothesis-and-evidence layer.
 ## Gaps, as proposals
 
 Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.12.0, and
-20 is done in 0.15.0, 21 and 22 in 0.16.0; 23 is unreleased; the rest are not in the ontology yet.
+20 is done in 0.15.0, 21 and 22 in 0.16.0, 23 in 0.17.0; the rest are not in the ontology yet.
 
 1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
    (Hypothesis → anything, not functional) links a hypothesis to the technique, actor,
@@ -887,11 +887,11 @@ Smaller things:
     says this, and that a run's attribution covers its executions unless one is attributed
     otherwise.
 
-23. **Unreleased: calling a plan, and revising one.** Drawing the plans as BPMN raised two
+23. **Done in 0.17.0: calling a plan, and revising one.** Drawing the plans as BPMN raised two
     things. The detection plan's "Contain the mailbox" ran the containment plan, which the
     example said with `implements`; but `implements` means a realization of something more
     abstract, and it's transitive. `stonework:invokesPlan` (Step → Plan) now says it: BPMN's
     call activity, CACAO's `playbook-action`. And once plans can be edited, a plan with runs
     needs versions, so past runs aren't judged against a process they never followed:
     `stonework:revisionOf` (Plan → Plan), with `planVersion` on each version. See
-    [plan-execution-model.md](plan-execution-model.md#2e-calling-a-plan-and-revising-one-unreleased).
+    [plan-execution-model.md](plan-execution-model.md#2e-calling-a-plan-and-revising-one-0170).

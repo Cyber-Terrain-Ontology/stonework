@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.17.0 (core): calling a plan, and revising one
+
 ### Added
 
 - `stonework:invokesPlan` (Step → Plan, functional): a Step whose performance is a run of another Plan, BPMN's call activity and CACAO's `playbook-action`. The execution of the Step is also `executionOf` the invoked Plan. `InvokesPlanShape`: at most one, a Plan, and not the Step's own Plan.

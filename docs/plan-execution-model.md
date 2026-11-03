@@ -228,7 +228,7 @@ The [BEC worked example](bec-worked-example.md#5-the-actors-plan-and-the-message
 has both queries. How a message travels (email, phone, an authenticated
 portal) matters for its risk and is not modelled yet.
 
-## 2e. Calling a plan, and revising one (unreleased)
+## 2e. Calling a plan, and revising one (0.17.0)
 
 **A Step can run another Plan** of the same participant: a detection plan
 that hands a confirmed rule to the containment plan, a playbook that calls a
