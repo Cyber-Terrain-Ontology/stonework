@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.16.0 (core): what the evidence reports, and personas
+
 ### Added
 
 - `stonework:startedNotBefore` and `stonework:startedNotAfter` (CyberActivity → `xsd:dateTime`, functional): a window for a start the evidence bounds but doesn't give, such as a call a statement places between two logged events, in place of an estimated `startedAtTime`. After CIDOC CRM's begin of the begin and end of the begin (P82a, P82b).
