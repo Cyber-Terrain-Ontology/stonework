@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.15.0> ;
-	owl:versionInfo "0.15.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.16.0> ;
+	owl:versionInfo "0.16.0" ;
 	.
 
 stonework:AIAgent
@@ -1672,7 +1672,7 @@ stonework:attributedTo
 	a owl:ObjectProperty ;
 	skos:definition "Links a CyberActivity to the Agent responsible for, or associated with, performing it." ;
 	skos:prefLabel "attributedTo" ;
-	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'attributed-to' shortcut. STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure, and a closed domain/range here would misrepresent real STIX 2.1 data and mislead reasoner-based consumers. In practice the object is typically a stonework:Agent — most often a stonework:ThreatActor in the adversarial case, matching STIX's own convention for 'attributed-to' — but stonework:CyberActivity is a general occurrence class covering defensive and neutral activities too (Investigations, a ControlPlan's Process), so the performer need not be adversarial."@en ;
+	skos:scopeNote "Domain/range intentionally left unset: this property is a direct lift of the STIX 2.1 relationship_type 'attributed-to' shortcut. STIX does not schema-constrain which SDO/SCO types may appear as source_ref/target_ref for a given relationship_type — that's producer convention, not enforceable structure, and a closed domain/range here would misrepresent real STIX 2.1 data and mislead reasoner-based consumers. In practice the object is typically a stonework:Agent — most often a stonework:ThreatActor in the adversarial case, matching STIX's own convention for 'attributed-to' — but stonework:CyberActivity is a general occurrence class covering defensive and neutral activities too (Investigations, a ControlPlan's Process), so the performer need not be adversarial. A run's attribution covers its executions (stonework:partOfExecution, at any depth), unless one is attributed otherwise; query it through the run rather than copying it onto each execution, so it can be withdrawn in one place. While who is behind an activity is open, attribute it to a persona, a stonework:DigitalIdentity that isn't an Account, such as \"whoever created the rule\"; when that is established, the persona is stonework:attributedToAgent the Agent, and nothing attributed to the persona needs to change. Two personas that may be one actor are kept apart until a Hypothesis says they are."@en ;
 	.
 
 stonework:attributedToAgent
@@ -2670,14 +2670,16 @@ stonework:evidencedBy
 	rdfs:domain [
 		a owl:Class ;
 		owl:unionOf (
+			stonework:CyberActivity
 			stonework:Deviation
 			stonework:IdentityControl
 			stonework:Sighting
 		) ;
 	] ;
 	rdfs:range stonework:DigitalArtifact ;
-	skos:definition "A Sighting, Deviation or IdentityControl is substantiated by this DigitalArtifact (memory dump, PCAP, log excerpt, sample, call record, recorded statement). Connects analytical observation to forensic evidence."@en ;
+	skos:definition "A Sighting, Deviation, IdentityControl or activity is substantiated by this DigitalArtifact (memory dump, PCAP, log excerpt, sample, call record, recorded statement). Connects analytical observation to forensic evidence."@en ;
 	skos:prefLabel "evidencedBy"@en ;
+	skos:scopeNote "An activity parsed from a system's own record is stonework:generatedFrom that record: it is recorded. An activity established otherwise, such as a phone call a signed statement describes, or an analyst's own step in an investigation, is evidencedBy the artifacts that show it: it is reported, and only as good as they are. An activity can be both. When the evidence bounds an activity's start but doesn't give it, use stonework:startedNotBefore and stonework:startedNotAfter rather than an estimated stonework:startedAtTime."@en ;
 	.
 
 stonework:examines
@@ -4755,9 +4757,9 @@ stonework:referencesMessage
 
 stonework:refersTo
 	a owl:ObjectProperty ;
-	skos:definition "Relates an object, typically from an intelligence source, to the canonical entity it refers to, such as an ATT&CK technique, a CVE, or a malware family, when the two are distinct individuals."@en ;
+	skos:definition "Relates an object, from an intelligence source or from evidence, to the canonical entity it refers to, such as an ATT&CK technique, a CVE, a malware family, or one of the organization's own assets or accounts, when the two are distinct individuals."@en ;
 	skos:prefLabel "refersTo"@en ;
-	skos:scopeNote "Unlike owl:sameAs, it does not merge the two individuals' properties. Two STIX objects with different STIX IDs are different objects even when both describe T1059: stones:stixId is functional, so owl:sameAs between them is inconsistent. Unlike skos:exactMatch, it does not make either end a skos:Concept. Domain and range intentionally unset: any intelligence object can refer to any canonical entity. A link found by a heuristic, such as an identifier parsed from a name, should carry its method and confidence through a stonework:QualifiedAssertion or stonework:hasProvenance."@en ;
+	skos:scopeNote "Unlike owl:sameAs, it does not merge the two individuals' properties. Two STIX objects with different STIX IDs are different objects even when both describe T1059: stones:stixId is functional, so owl:sameAs between them is inconsistent. Unlike skos:exactMatch, it does not make either end a skos:Concept. Domain and range intentionally unset: any intelligence object can refer to any canonical entity. A link found by a heuristic, such as an identifier parsed from a name, should carry its method and confidence through a stonework:QualifiedAssertion or stonework:hasProvenance. The same holds for what evidence names: the resource a log or message gives a tenant, an account or a host refersTo the organization's own entity for it, such as a Plan Step's target, without merging the two. Neither symmetric nor transitive, so nothing follows from it unless an application follows it: an analyst can retract the link without retracting anything inferred from it, and competing links can stand side by side until one is judged."@en ;
 	.
 
 stonework:refines
@@ -5265,6 +5267,32 @@ stonework:startedAtTime
 	rdfs:seeAlso prov:startedAtTime ;
 	skos:definition "The date and time at which a CyberActivity began."@en ;
 	skos:prefLabel "startedAtTime" ;
+	.
+
+stonework:startedNotAfter
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range xsd:dateTime ;
+	rdfs:seeAlso <http://www.cidoc-crm.org/cidoc-crm/P82b_end_of_the_begin> ;
+	skos:definition "The latest time at which a CyberActivity can have begun, when the evidence bounds its start but doesn't give it."@en ;
+	skos:prefLabel "startedNotAfter"@en ;
+	skos:scopeNote "See stonework:startedNotBefore. CIDOC CRM's \"end of the begin\" (P82b)."@en ;
+	.
+
+stonework:startedNotBefore
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:CyberActivity ;
+	rdfs:range xsd:dateTime ;
+	rdfs:seeAlso <http://www.cidoc-crm.org/cidoc-crm/P82a_begin_of_the_begin> ;
+	skos:definition "The earliest time at which a CyberActivity can have begun, when the evidence bounds its start but doesn't give it."@en ;
+	skos:prefLabel "startedNotBefore"@en ;
+	skos:scopeNote "With stonework:startedNotAfter, a window for a start that isn't known exactly, such as a call a statement places between two logged events, in place of an estimated stonework:startedAtTime: an estimate on a timeline reads as a fact. Either bound can be given alone. When the start is known, use stonework:startedAtTime; bounds given as well must contain it. A comparison with another time is undetermined while the window overlaps it. CIDOC CRM's \"begin of the begin\" (P82a)."@en ;
 	.
 
 stonework:stepOrder

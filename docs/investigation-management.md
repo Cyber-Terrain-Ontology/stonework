@@ -78,6 +78,25 @@ has no `endedAtTime`: incomplete, not malformed. `ReviewShape` requires a Review
 finding, at least one input and the execution it is part of, and warns when it names no
 analyst or end time.
 
+## Executions no record shows
+
+Most executions in a case come from records: a parsed audit row or sign-in is an Event
+`generatedFrom` its log, and placing it in a run makes it an execution. Some don't. A clerk's
+signed statement says a call was made; the analyst's own searches and reviews are part of the
+investigation's runs. These are `evidencedBy` the artifacts that show them (a statement, a call
+record, a saved query), the same property that substantiates a Deviation or an
+IdentityControl. `generatedFrom` says recorded; `evidencedBy` alone says reported.
+
+A statement often bounds a time without giving it: the call came after the payment was
+entered and before it was cancelled. `startedNotBefore` and `startedNotAfter` record that
+window (CIDOC CRM's "begin of the begin" and "end of the begin"), so an estimate doesn't
+appear on a timeline as a fact. A comparison with another time is undetermined while the
+window overlaps it.
+
+`ExecutionSupportShape` warns about an execution placed in a run that rests on nothing: no
+record, no evidence, and no executions of its own (a sub-run rests on its parts). An analyst's
+own step, such as a review, rests on what it produced: the notice it sent, the notes it kept.
+
 ## `refersTo` rather than `owl:sameAs`
 
 STIX objects from different publishers often describe the same technique, CVE or malware
@@ -88,3 +107,11 @@ reasoner it would also merge each publisher's names, dates and markings onto the
 that the object refers to the canonical entity. A link found by a heuristic, such as an ID
 parsed from an object's name, should carry its method and confidence through a
 `QualifiedAssertion` or `hasProvenance`.
+
+Evidence raises the same question. A parsed audit log names the tenant it came from, and the
+organization's plan names its own tenant as a Step's target: two individuals for one thing.
+The log's tenant `refersTo` the organization's. Because `refersTo` is neither symmetric nor
+transitive and merges nothing, a check that compares an execution's target with its Step's
+follows it explicitly, and an analyst who retracts the link retracts nothing else with it.
+Two candidate links can also stand side by side until one is judged, which `owl:sameAs` would
+turn into one merged individual.

@@ -1,0 +1,21 @@
+@prefix example: <https://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:plan
+	a stonework:Plan ;
+	stonework:hasStep example:step ;
+	.
+
+example:step
+	a stonework:Step ;
+	stonework:isStepOf example:plan ;
+	.
+
+example:unsupported
+	a stonework:Process ;
+	stonework:correspondsToStep example:step ;
+	.
