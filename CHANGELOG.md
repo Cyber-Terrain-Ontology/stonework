@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- `stonework:OperationPlan`: `skos:altLabel "Attack plan"@en`, and a scope note sentence saying user interfaces may show it by that name, the phrase practitioners use for an adversary's procedures in order. The class keeps its name and IRI.
+
 ## 0.17.0 (core): calling a plan, and revising one
 
 ### Added
