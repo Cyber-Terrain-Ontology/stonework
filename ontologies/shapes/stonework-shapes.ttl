@@ -5,6 +5,21 @@
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+stonework:AbsorbedHypothesisStatusShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:in (
+			stonework:hypothesisStatusSuperseded
+			stonework:hypothesisStatusConfirmed
+			stonework:hypothesisStatusRefuted
+		) ;
+		sh:message "A Hypothesis merged into another (stonework:absorbedInto) should be superseded, unless it was already confirmed or refuted."@en ;
+		sh:path stonework:hasHypothesisStatus ;
+		sh:severity sh:Warning ;
+	] ;
+	sh:targetSubjectsOf stonework:absorbedInto ;
+	.
+
 stonework:ActivityWindowShape
 	a sh:NodeShape ;
 	sh:property
@@ -774,6 +789,21 @@ stonework:ObservationWindowShape
 		;
 	.
 
+stonework:ObsoletedHypothesisStatusShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:in (
+			stonework:hypothesisStatusSuperseded
+			stonework:hypothesisStatusConfirmed
+			stonework:hypothesisStatusRefuted
+		) ;
+		sh:message "A Hypothesis replaced by a later one (the object of stonework:obsoletes) should be superseded, unless it was already confirmed or refuted."@en ;
+		sh:path stonework:hasHypothesisStatus ;
+		sh:severity sh:Warning ;
+	] ;
+	sh:targetObjectsOf stonework:obsoletes ;
+	.
+
 stonework:OutcomeVariableShape
 	a sh:NodeShape ;
 	sh:property [
@@ -1058,6 +1088,21 @@ stonework:SplitKindShape
 		sh:path stonework:splitKind ;
 	] ;
 	sh:targetSubjectsOf stonework:splitKind ;
+	.
+
+stonework:SplitParentStatusShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:in (
+			stonework:hypothesisStatusSuperseded
+			stonework:hypothesisStatusConfirmed
+			stonework:hypothesisStatusRefuted
+		) ;
+		sh:message "A Hypothesis that was split (the object of stonework:splitFrom) should be superseded, unless it was already confirmed or refuted."@en ;
+		sh:path stonework:hasHypothesisStatus ;
+		sh:severity sh:Warning ;
+	] ;
+	sh:targetObjectsOf stonework:splitFrom ;
 	.
 
 stonework:StepTargetShape

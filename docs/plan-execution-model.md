@@ -454,7 +454,9 @@ kept, and the later one points at it. `splitFrom` is the parent a split
 produced this hypothesis from. `absorbedInto` is the survivor this one was
 merged into. An Investigation uses `mergedInto`. `obsoletes` is the
 earlier hypothesis this one replaces, including one formed after a
-refutation. None of the three is transitive: the chain is followed in a
+refutation. The earlier hypothesis's status becomes superseded unless it
+was already confirmed or refuted, so a query for live hypotheses need not
+follow the lineage. None of the three is transitive: the chain is followed in a
 query, so withdrawing one link withdraws nothing else. `hypothesisPart` is
 a conjunction, not a successor.
 

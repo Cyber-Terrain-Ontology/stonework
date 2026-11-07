@@ -507,6 +507,11 @@ def main() -> int:
             "A revised Plan with no planVersion should warn, not fail",
         )
         failures += expect_warning(
+            "shacl-warning-hypothesis-lineage.ttl",
+            "core",
+            "A pending Hypothesis set aside by its lineage should warn, not fail",
+        )
+        failures += expect_warning(
             "shacl-warning-currency-exchange.ttl",
             "financial",
             "A partially mapped currency exchange should warn, not fail",

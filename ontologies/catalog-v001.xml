@@ -4,7 +4,7 @@
         <uri name="https://cyberterrain.org/ns/stonework#" uri="stonework.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/0.18.0" uri="stonework.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/categories#" uri="categories.ttl"/>
-        <uri name="https://cyberterrain.org/ns/stonework/categories/0.6.0" uri="categories.ttl"/>
+        <uri name="https://cyberterrain.org/ns/stonework/categories/0.7.0" uri="categories.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/full" uri="profiles/stonework-full.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/full/0.2.0" uri="profiles/stonework-full.ttl"/>
         <uri name="https://cyberterrain.org/ns/stonework/profiles/stix" uri="profiles/stonework-stix.ttl"/>

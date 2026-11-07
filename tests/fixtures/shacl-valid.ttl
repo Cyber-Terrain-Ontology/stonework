@@ -8,6 +8,7 @@
 example:absorbedHypothesis
 	a stonework:Hypothesis ;
 	stonework:absorbedInto example:successorHypothesis ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusSuperseded ;
 	.
 
 example:account
@@ -62,6 +63,11 @@ example:authResult
 
 example:boundEntity
 	a stonework:CyberEntity ;
+	.
+
+example:broadHypothesis
+	a stonework:Hypothesis ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusSuperseded ;
 	.
 
 example:bulletinTechnique
@@ -439,12 +445,12 @@ example:sourceStep
 
 example:splitActivity
 	a stonework:Hypothesis ;
-	stonework:splitFrom example:openHypothesis ;
+	stonework:splitFrom example:broadHypothesis ;
 	.
 
 example:splitAttribution
 	a stonework:Hypothesis ;
-	stonework:splitFrom example:openHypothesis ;
+	stonework:splitFrom example:broadHypothesis ;
 	.
 
 example:sponsorAssignment
