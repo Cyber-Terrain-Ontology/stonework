@@ -37,6 +37,7 @@ ex:act-comsvcs-invoke-minidump
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-comsvcs-invoke-minidump ;
 	stonework:endedAtTime "2026-08-01T14:00:12Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-edr ;
 	stonework:partOfExecution ex:act-attempt-comsvcs ;
 	stonework:startedAtTime "2026-08-01T14:00:03Z"^^xsd:dateTime ;
 	.
@@ -49,6 +50,7 @@ ex:act-comsvcs-locate-lsass
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-comsvcs-locate-lsass ;
 	stonework:endedAtTime "2026-08-01T14:00:02Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-edr ;
 	stonework:partOfExecution ex:act-attempt-comsvcs ;
 	stonework:startedAtTime "2026-08-01T14:00:00Z"^^xsd:dateTime ;
 	.
@@ -60,6 +62,7 @@ ex:act-credential-access-achieved
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-credential-access-achieved ;
 	stonework:endedAtTime "2026-08-01T14:00:46Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-edr ;
 	stonework:partOfExecution ex:run-opplan-t1003-001 ;
 	stonework:startedAtTime "2026-08-01T14:00:46Z"^^xsd:dateTime ;
 	.
@@ -72,6 +75,7 @@ ex:act-procdump-locate-lsass
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-procdump-locate-lsass ;
 	stonework:endedAtTime "2026-08-01T14:00:16Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-edr ;
 	stonework:partOfExecution ex:act-attempt-procdump ;
 	stonework:startedAtTime "2026-08-01T14:00:15Z"^^xsd:dateTime ;
 	.
@@ -84,6 +88,7 @@ ex:act-procdump-run
 	stonework:attributedTo ex:threat-actor ;
 	stonework:correspondsToStep ex:step-procdump-run ;
 	stonework:endedAtTime "2026-08-01T14:00:45Z"^^xsd:dateTime ;
+	stonework:evidencedBy ex:log-edr ;
 	stonework:partOfExecution ex:act-attempt-procdump ;
 	stonework:produces ex:cond-procdump-credential-material ;
 	stonework:startedAtTime "2026-08-01T14:00:17Z"^^xsd:dateTime ;
@@ -146,6 +151,13 @@ ex:hyp-procdump-outcome
 	stonework:hasHypothesisStatus stonework:hypothesisStatusConfirmed ;
 	stonework:predictedType stonework:SecurityCondition ;
 	stonework:predictsVariable ex:var-procdump-outcome ;
+	.
+
+ex:log-edr
+	a stonework:Log ;
+	skos:definition "The endpoint detection record of the 1 August credential-access attempts on the target host: both lsass lookups, the blocked comsvcs.dll MiniDump, the procdump.exe run, and the moment the dump held credential material."@en ;
+	skos:prefLabel "EDR log of the credential-access attempts"@en ;
+	stonework:logSource "Endpoint detection and response agent" ;
 	.
 
 ex:opplan-t1003-001

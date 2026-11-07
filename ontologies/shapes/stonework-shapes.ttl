@@ -441,6 +441,23 @@ stonework:HypothesisShape
 	a sh:NodeShape ;
 	sh:property
 		[
+			sh:class stonework:Hypothesis ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Hypothesis is merged into at most one Hypothesis."@en ;
+			sh:path stonework:absorbedInto ;
+		] ,
+		[
+			sh:class stonework:Hypothesis ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Hypothesis is split from at most one Hypothesis."@en ;
+			sh:path stonework:splitFrom ;
+		] ,
+		[
+			sh:class stonework:Hypothesis ;
+			sh:message "A Hypothesis obsoletes a Hypothesis."@en ;
+			sh:path stonework:obsoletes ;
+		] ,
+		[
 			sh:class stonework:Variable ;
 			sh:maxCount "1"^^xsd:integer ;
 			sh:message "A Hypothesis predicts at most one Variable. One tested directly by an Investigation (stonework:testsHypothesis) need not predict a plan Variable at all."@en ;

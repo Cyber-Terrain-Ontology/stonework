@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.17.0> ;
-	owl:versionInfo "0.17.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.18.0> ;
+	owl:versionInfo "0.18.0" ;
 	.
 
 stonework:AIAgent
@@ -544,7 +544,7 @@ stonework:Hypothesis
 	rdfs:subClassOf stonework:IntelligenceProduct ;
 	skos:definition "A structured, falsifiable prediction about the value a Variable will resolve to once the Behavior or Step declaring that Variable executes."@en ;
 	skos:prefLabel "Hypothesis" ;
-	skos:scopeNote "Formalizes the anticipated side of the Variable lifecycle described in stonework:Variable's scopeNote: a Hypothesis names, in advance, the value an output Variable is predicted to be bound to. Linked to the Variable it predicts via stonework:predictsVariable, and to the prediction itself via stonework:predictedType (a class, the common case — mirrors stonework:guardType), stonework:predictedValue (a specific individual), or stonework:predictedLiteral (a scalar) — mirroring stonework:boundTo/stonework:boundToLiteral on the actual-result side. A Hypothesis is judged against the stonework:VariableBinding of its Variable in the Investigation that tests it (stonework:testsHypothesis): the binding stonework:boundIn that Investigation or in an execution stonework:partOfExecution it. When a run binds the Variable more than once, as when one search Step is run for each of several mailboxes, the Step's own execution (itself an Investigation) tests the Hypothesis, so that one binding judges it. A Transition's guard properties, which test a Variable's actual bound value, implicitly test agreement with whichever Hypothesis predicted that Variable — confirming it if they match, refuting it otherwise. May attach at any level of a Step/Plan decomposition, since stonework:Step is itself a stonework:Behavior. What a Hypothesis is about is stonework:hypothesisAbout. A compound claim, such as \"actor X is using technique Y\", is a Hypothesis whose stonework:hypothesisPart values are its separately testable claims (the activity, the attribution), so a refuted compound shows which part failed."@en ;
+	skos:scopeNote "Formalizes the anticipated side of the Variable lifecycle described in stonework:Variable's scopeNote: a Hypothesis names, in advance, the value an output Variable is predicted to be bound to. Linked to the Variable it predicts via stonework:predictsVariable, and to the prediction itself via stonework:predictedType (a class, the common case — mirrors stonework:guardType), stonework:predictedValue (a specific individual), or stonework:predictedLiteral (a scalar) — mirroring stonework:boundTo/stonework:boundToLiteral on the actual-result side. A Hypothesis is judged against the stonework:VariableBinding of its Variable in the Investigation that tests it (stonework:testsHypothesis): the binding stonework:boundIn that Investigation or in an execution stonework:partOfExecution it. When a run binds the Variable more than once, as when one search Step is run for each of several mailboxes, the Step's own execution (itself an Investigation) tests the Hypothesis, so that one binding judges it. A Transition's guard properties, which test a Variable's actual bound value, implicitly test agreement with whichever Hypothesis predicted that Variable — confirming it if they match, refuting it otherwise. May attach at any level of a Step/Plan decomposition, since stonework:Step is itself a stonework:Behavior. What a Hypothesis is about is stonework:hypothesisAbout. A compound claim, such as \"actor X is using technique Y\", is a Hypothesis whose stonework:hypothesisPart values are its separately testable claims (the activity, the attribution), so a refuted compound shows which part failed. Lineage keeps the earlier Hypothesis: stonework:splitFrom names the one this was split from, stonework:absorbedInto the one this was merged into, and stonework:obsoletes the one this replaces."@en ;
 	.
 
 stonework:IBAN
@@ -1344,6 +1344,18 @@ stonework:abaRoutingNumber
 	rdfs:range xsd:string ;
 	skos:definition "The US ABA routing transit number of this institution. National branch or bank codes from other schemes, for example a UK sort code, may be recorded with the same property pending scheme-specific refinement."@en ;
 	skos:prefLabel "abaRoutingNumber"@en ;
+	.
+
+stonework:absorbedInto
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range stonework:Hypothesis ;
+	skos:definition "Relates a Hypothesis to the Hypothesis it was merged into, once they were concluded to be the same claim."@en ;
+	skos:prefLabel "absorbedInto"@en ;
+	skos:scopeNote "Keeps the absorbed Hypothesis rather than deleting it, so its identity, tests and status stay traceable. A merge is an analyst's decision; when and by whom are recorded through stonework:hasProvenance or a stonework:QualifiedAssertion. Functional: one survivor. Not transitive: the chain is followed in a query, so withdrawing one link withdraws nothing else. An Investigation uses stonework:mergedInto, not this property."@en ;
 	.
 
 stonework:accessesFile
@@ -4076,7 +4088,7 @@ stonework:mergedInto
 	rdfs:range stonework:Investigation ;
 	skos:definition "Relates an Investigation to the Investigation it was merged into, once analysts concluded the two examine the same matter."@en ;
 	skos:prefLabel "mergedInto"@en ;
-	skos:scopeNote "Keeps the merged Investigation as a record rather than deleting it, so its identity, findings and history stay traceable. A merge is an analyst's decision; when and by whom are recorded through stonework:hasProvenance or a stonework:QualifiedAssertion."@en ;
+	skos:scopeNote "Keeps the merged Investigation as a record rather than deleting it, so its identity, findings and history stay traceable. A merge is an analyst's decision; when and by whom are recorded through stonework:hasProvenance or a stonework:QualifiedAssertion. A Hypothesis merged into another uses stonework:absorbedInto."@en ;
 	.
 
 stonework:messageId
@@ -4275,6 +4287,16 @@ stonework:observedIn
 	skos:definition "Relates an observed entity, such as a DigitalArtifact, Infrastructure, Malware, Product, Behavior, Identifier, or SecurityCondition, to the CyberActivity (for example a Campaign, Incident, or Event) in which it was observed or collected."@en ;
 	skos:prefLabel "observedIn"@en ;
 	skos:scopeNote "A general-purpose shortcut: the kind of context is conveyed by typing the CyberActivity, so narrower subproperties per activity type are unnecessary. Asserting this property does not imply that the object is a Campaign; type it explicitly when that matters. When an observation needs its own metadata, such as observer, time, location, count, or confidence, model it as a stonework:Sighting instead. Not an inverse of stonework:uses, which records that an actor, campaign, or malware employs a technique or tool rather than that an entity was seen in an activity."@en ;
+	.
+
+stonework:obsoletes
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range stonework:Hypothesis ;
+	rdfs:seeAlso dcterms:replaces ;
+	skos:definition "Relates a Hypothesis to an earlier Hypothesis it replaces."@en ;
+	skos:prefLabel "obsoletes"@en ;
+	skos:scopeNote "The later Hypothesis obsoletes the earlier one, which is kept. Use it when a refuted or faded Hypothesis is replaced by the one formed from it. One Hypothesis may obsolete more than one earlier Hypothesis. Not transitive: follow the chain in a query, so withdrawing one link withdraws nothing else. After Dublin Core replaces. A split is stonework:splitFrom, and a merge is stonework:absorbedInto. stonework:hypothesisPart is a conjunction of one claim, not a successor."@en ;
 	.
 
 stonework:occursOn
@@ -5273,6 +5295,18 @@ stonework:spawns
 	owl:inverseOf stonework:hasParentProcess ;
 	skos:definition "A RuntimeProcess creates a child process. Inverse of stonework:hasParentProcess; enables top-down process tree traversal for execution chain analysis."@en ;
 	skos:prefLabel "spawns"@en ;
+	.
+
+stonework:splitFrom
+	a
+		owl:ObjectProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range stonework:Hypothesis ;
+	skos:definition "Relates a Hypothesis to the Hypothesis it was split from."@en ;
+	skos:prefLabel "splitFrom"@en ;
+	skos:scopeNote "A Hypothesis that has started to catch two patterns is kept, and each pattern is a new Hypothesis that splitFrom it. Several may name the same parent. Functional: one parent. Not transitive. Not stonework:hypothesisPart: parts are the conjunction of one claim, while a split is two claims that used to be one. The parent is not deleted."@en ;
 	.
 
 stonework:srcPort
