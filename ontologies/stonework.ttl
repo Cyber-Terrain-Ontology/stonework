@@ -874,9 +874,10 @@ stonework:Operation
 stonework:OperationPlan
 	a owl:Class ;
 	rdfs:subClassOf stonework:Playbook ;
+	skos:altLabel "Attack plan"@en ;
 	skos:definition "A Playbook specifically representing an adversary's operational plan — the offensive counterpart within the Playbook hierarchy."@en ;
 	skos:prefLabel "Operation Plan" ;
-	skos:scopeNote "Named to avoid colliding with the already-established stonework:AttackPattern and stonework:AttackTechnique, and to align with stonework:Operation, whose definition ('a coordinated set of activities... unified command, intent, or resourcing') describes the executed counterpart of an OperationPlan. Generic stonework:Playbook remains available for the undifferentiated or defensive case."@en ;
+	skos:scopeNote "Named to avoid colliding with the already-established stonework:AttackPattern and stonework:AttackTechnique, and to align with stonework:Operation, whose definition ('a coordinated set of activities... unified command, intent, or resourcing') describes the executed counterpart of an OperationPlan. Generic stonework:Playbook remains available for the undifferentiated or defensive case. User interfaces may call it an attack plan (its altLabel), the phrase practitioners use for an adversary's procedures in order, each carrying out a technique under the tactic it serves."@en ;
 	.
 
 stonework:Opinion

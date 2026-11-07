@@ -17,6 +17,7 @@ A hypothesis that is split, merged, or replaced is kept. The new one points at t
 
 ### Changed
 
+- `stonework:OperationPlan`: `skos:altLabel "Attack plan"@en`, and a scope note sentence saying user interfaces may show it by that name, the phrase practitioners use for an adversary's procedures in order. The class keeps its name and IRI.
 - Docs: [plan-execution-model.md](docs/plan-execution-model.md). The design log's deferred genealogy item is this.
 
 ## 0.17.0 (core): calling a plan, and revising one
