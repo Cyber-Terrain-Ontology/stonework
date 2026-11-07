@@ -416,6 +416,9 @@ vulnerability assessment, ...).
 | `stonework:deviationKind` | `Deviation` → `DeviationKind` (functional; in `categories.ttl`) | Skipped, wrong role, same agent, out of order, misused identity, wrong target. |
 | `stonework:hypothesisAbout` | `Hypothesis` → anything | What a hypothesis concerns, for finding it; several values, no roles. |
 | `stonework:hypothesisPart` | `Hypothesis` → `Hypothesis` | A claim a compound hypothesis is the conjunction of; refuted parts say which claim failed. |
+| `stonework:splitFrom` | `Hypothesis` → `Hypothesis` (functional) | This hypothesis is one produced by splitting that one. The parent is kept. |
+| `stonework:absorbedInto` | `Hypothesis` → `Hypothesis` (functional) | This hypothesis was merged into that one. An Investigation merged into another uses `mergedInto`. |
+| `stonework:obsoletes` | `Hypothesis` → `Hypothesis` | This hypothesis replaces that earlier one, which is kept. A refuted hypothesis a new one is formed from. |
 | `stonework:IdentityControl` | class, under `QualifiedAssertion` | That an Agent controlled a DigitalIdentity during an interval (`validFrom`, `validUntil`), with evidence; not exclusive of the holder. |
 | `stonework:controllingAgent` | `IdentityControl` → `Agent` (functional) | Who controlled it. |
 | `stonework:controlledIdentity` | `IdentityControl` → `DigitalIdentity` (functional) | The identity, such as a UserAccount. |
@@ -446,11 +449,18 @@ change).
 `Procedure`/`Playbook`/`OperationPlan`,
 `Process`/`Investigation`, `SecurityCondition`, `implements`.
 
-**Deliberately not built yet:** Hypothesis revision/genealogy (a
-`revisesHypothesis`-type property for "refuted → form a new Hypothesis" —
-would matter for a multi-round investigation, not needed for this trace) and
-a home for complex output artifacts (plots, time series) — neither
-`DigitalArtifact` nor `IntelligenceProduct` is an exact fit.
+**Hypothesis lineage.** A hypothesis that is split, merged, or replaced is
+kept, and the later one points at it. `splitFrom` is the parent a split
+produced this hypothesis from. `absorbedInto` is the survivor this one was
+merged into. An Investigation uses `mergedInto`. `obsoletes` is the
+earlier hypothesis this one replaces, including one formed after a
+refutation. None of the three is transitive: the chain is followed in a
+query, so withdrawing one link withdraws nothing else. `hypothesisPart` is
+a conjunction, not a successor.
+
+**Deliberately not built yet:** a home for complex output artifacts (plots,
+time series) — neither `DigitalArtifact` nor `IntelligenceProduct` is an
+exact fit.
 
 ---
 

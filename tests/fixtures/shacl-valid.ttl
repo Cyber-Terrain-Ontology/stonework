@@ -5,6 +5,11 @@
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+example:absorbedHypothesis
+	a stonework:Hypothesis ;
+	stonework:absorbedInto example:successorHypothesis ;
+	.
+
 example:account
 	a stonework:UserAccount ;
 	.
@@ -144,6 +149,11 @@ example:epssObservation
 example:externalAddress
 	a stonework:EmailAddress ;
 	stonework:emailValue "archive.mailbox@freemail.example" ;
+	.
+
+example:fadedHypothesis
+	a stonework:Hypothesis ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusRefuted ;
 	.
 
 example:freshSignIn
@@ -427,6 +437,16 @@ example:sourceStep
 	stonework:splitKind stonework:flowKindParallel ;
 	.
 
+example:splitActivity
+	a stonework:Hypothesis ;
+	stonework:splitFrom example:openHypothesis ;
+	.
+
+example:splitAttribution
+	a stonework:Hypothesis ;
+	stonework:splitFrom example:openHypothesis ;
+	.
+
 example:sponsorAssignment
 	a stonework:RoleAssignment ;
 	stonework:assignedRole stonework:threatActorRoleSponsor ;
@@ -448,6 +468,12 @@ example:stepExecution
 
 example:stepRole
 	a stonework:Role ;
+	.
+
+example:successorHypothesis
+	a stonework:Hypothesis ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
+	stonework:obsoletes example:fadedHypothesis ;
 	.
 
 example:targetStep

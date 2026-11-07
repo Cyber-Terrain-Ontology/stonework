@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- BEC worked example: the identity-control finding, the skipped-callback deviation, and the two role assignments cite the case file as `hasProvenance`, so the example passes the strict profile. The checker runs it against `financial-strict`.
+- Credential-dump trace: the five leaf executions cite the endpoint log that shows them (`evidencedBy`). The checker fails if that file raises a warning.
+
+## 0.18.0 (core): hypothesis lineage
+
+A hypothesis that is split, merged, or replaced is kept. The new one points at the earlier one.
+
+### Added
+
+- `stonework:splitFrom` (Hypothesis → Hypothesis, functional): this hypothesis is one of those produced by splitting that one. Several may name the same parent. `HypothesisShape`.
+- `stonework:absorbedInto` (Hypothesis → Hypothesis, functional): this hypothesis was merged into that one. The absorbed record is kept. An Investigation still uses `mergedInto`.
+- `stonework:obsoletes` (Hypothesis → Hypothesis, not transitive): the later hypothesis replaces the earlier one, including a refuted hypothesis a new one is formed from. After Dublin Core `replaces`. One hypothesis may obsolete more than one earlier hypothesis.
+
+### Changed
+
+- Docs: [plan-execution-model.md](docs/plan-execution-model.md). The design log's deferred genealogy item is this.
+
 ## 0.17.0 (core): calling a plan, and revising one
 
 ### Added

@@ -38,7 +38,7 @@ ex:inv-2026-114
 | `leadInvestigator` | Functional, ⊑ `performedBy` | `performedBy` already relates any Process to its Agents; the lead is the one accountable. Roles in a period or context use `RoleAssignment`. |
 | `examines` | Object property | The intelligence an investigation considers: reports, bulletins, imported STIX bundles. `collects` stays for digital artifacts collected as evidence. |
 | `testsHypothesis` | Object property | A direct link to the hypotheses, which before were reachable only through a plan's Variables. |
-| `mergedInto` | Functional | When two investigations turn out to be the same matter, the merged one keeps its record and points to the survivor. |
+| `mergedInto` | Functional | When two investigations turn out to be the same matter, the merged one keeps its record and points to the survivor. A hypothesis merged into another uses `absorbedInto`. |
 | `refersTo` | Object property | An intelligence object to the canonical entity it refers to (a vendor's T1059 to ATT&CK's), without `owl:sameAs`. See below. |
 
 **Changed for analysts' judgments:** `opinionOf` may now target a `QualifiedAssertion`, so an analyst can confirm or reject one proposed link (an `Opinion` with `stones:opinion` agree or disagree). `HypothesisShape` no longer requires a predicted `Variable`: a hypothesis an investigation tests directly need not belong to a plan; at most one Variable is still enforced.

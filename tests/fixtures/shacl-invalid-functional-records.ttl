@@ -200,6 +200,10 @@ example:firstVariable
 
 example:hypothesis
 	a stonework:Hypothesis ;
+	stonework:absorbedInto
+		example:firstVariable ,
+		example:secondVariable
+		;
 	stonework:predictedLiteral
 		"first" ,
 		"second"
@@ -213,6 +217,10 @@ example:hypothesis
 		example:secondSubject
 		;
 	stonework:predictsVariable
+		example:firstVariable ,
+		example:secondVariable
+		;
+	stonework:splitFrom
 		example:firstVariable ,
 		example:secondVariable
 		;
