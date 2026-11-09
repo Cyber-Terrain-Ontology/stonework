@@ -1,11 +1,6 @@
 # Changelog
 
-## Unreleased
-
-- BEC worked example: the identity-control finding, the skipped-callback deviation, and the two role assignments cite the case file as `hasProvenance`, so the example passes the strict profile. The checker runs it against `financial-strict`.
-- Credential-dump trace: the five leaf executions cite the endpoint log that shows them (`evidencedBy`). The checker fails if that file raises a warning.
-
-## 0.18.0 (core), categories 0.7.0: hypothesis lineage
+## 0.19.0 (core), categories 0.7.0: hypothesis lineage
 
 A hypothesis that is split, merged, or replaced is kept. The new one points at the earlier one, and the earlier one is superseded unless it already reached a verdict.
 
@@ -18,8 +13,20 @@ A hypothesis that is split, merged, or replaced is kept. The new one points at t
 
 ### Changed
 
-- `stonework:OperationPlan`: `skos:altLabel "Attack plan"@en`, and a scope note sentence saying user interfaces may show it by that name, the phrase practitioners use for an adversary's procedures in order. The class keeps its name and IRI.
 - Docs: [plan-execution-model.md](docs/plan-execution-model.md). The design log's deferred genealogy item is this.
+- BEC worked example: the identity-control finding, the skipped-callback deviation, and the two role assignments cite the case file as `hasProvenance`, so the example passes the strict profile. The checker runs it against `financial-strict`.
+- Credential-dump trace: the five leaf executions cite the endpoint log that shows them (`evidencedBy`). The checker fails if that file raises a warning.
+
+## 0.18.0 (core): assessing whether a vulnerability was exploited
+
+### Added
+
+- `stonework:assessesExploitationOf` (CourseOfAction → Vulnerability): a course of action that determines whether the vulnerability was exploited, such as forensic triage or a compromise assessment, as distinct from `mitigatesVulnerability`, which addresses the vulnerability itself. For CISA's known-exploited catalog, whose entries can require forensic triage as well as a fix, and for advisories that say what to look for after patching. `AssessesExploitationOfShape`: the object is a Vulnerability. Fixtures for each.
+
+### Changed
+
+- `stonework:mitigatesVulnerability`: a scope note pointing to `assessesExploitationOf`.
+- `stonework:OperationPlan`: `skos:altLabel "Attack plan"@en`, and a scope note sentence saying user interfaces may show it by that name, the phrase practitioners use for an adversary's procedures in order. The class keeps its name and IRI.
 
 ## 0.17.0 (core): calling a plan, and revising one
 

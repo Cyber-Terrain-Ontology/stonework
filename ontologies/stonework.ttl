@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.18.0> ;
-	owl:versionInfo "0.18.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.19.0> ;
+	owl:versionInfo "0.19.0" ;
 	.
 
 stonework:AIAgent
@@ -1633,6 +1633,15 @@ stonework:assertionSubject
 	skos:definition "Identifies the resource in the subject or source position of a qualified assertion."@en ;
 	skos:prefLabel "assertion subject"@en ;
 	skos:scopeNote "Range is intentionally unset because framework relationships may originate from either a CyberEntity, a CyberActivity, or another externally defined resource."@en ;
+	.
+
+stonework:assessesExploitationOf
+	a owl:ObjectProperty ;
+	rdfs:domain stonework:CourseOfAction ;
+	rdfs:range stonework:Vulnerability ;
+	skos:definition "Relates a CourseOfAction to a Vulnerability whose exploitation it determines, such as forensic triage or a compromise assessment."@en ;
+	skos:prefLabel "assessesExploitationOf"@en ;
+	skos:scopeNote "Distinct from stonework:mitigatesVulnerability, which addresses the vulnerability itself. Patching closes the way in; this course of action asks whether someone already came through it. A source that directs both, such as CISA's catalog entries that require forensic triage, gives two courses of action."@en ;
 	.
 
 stonework:assessmentOf
@@ -4187,6 +4196,7 @@ stonework:mitigatesVulnerability
 	rdfs:range stonework:Vulnerability ;
 	skos:definition "A CourseOfAction (patch, workaround, compensating control) addresses this Vulnerability. Distinct from stonework:mitigates (Countermeasure → AttackPattern)."@en ;
 	skos:prefLabel "mitigatesVulnerability"@en ;
+	skos:scopeNote "A course of action that determines whether the vulnerability was exploited, rather than addressing it, is stonework:assessesExploitationOf."@en ;
 	.
 
 stonework:modelVersion

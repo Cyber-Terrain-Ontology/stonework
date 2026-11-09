@@ -162,6 +162,12 @@ example:fadedHypothesis
 	stonework:hasHypothesisStatus stonework:hypothesisStatusRefuted ;
 	.
 
+example:forensicTriage
+	a stonework:CourseOfAction ;
+	stonework:assessesExploitationOf example:vulnerability ;
+	stonework:description "Perform forensic triage under the directive's requirements."@en ;
+	.
+
 example:freshSignIn
 	a stonework:Event ;
 	stonework:authenticatedWith

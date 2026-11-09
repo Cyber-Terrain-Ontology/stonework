@@ -69,7 +69,7 @@ STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or 
 
 ## Status
 
-**Active development.** Core vocabulary (`ontologies/stonework.ttl`) is **0.18.0**. Controlled-vocabulary categories (`ontologies/categories.ttl`) are **0.7.0**.
+**Active development.** Core vocabulary (`ontologies/stonework.ttl`) is **0.19.0**. Controlled-vocabulary categories (`ontologies/categories.ttl`) are **0.7.0**.
 
 The namespace (`https://cyberterrain.org/ns/stonework#`) is stable and will not change. Bundled adapters in `ontologies/frameworks/` cover ATT&CK, CAPEC, D3FEND, EMB3D, CWE, CVE, CPE, CVSS, NIST SP 800-53, CIS, the Lockheed Martin Cyber Kill Chain, BFO 2020, OCSF, UCO, FATF, GeoSPARQL, and STIX/STONES. The ATT&CK adapter is a draft rendering of MITRE's data model specification v3.3.0. The scope of coverage will grow as the ontology matures. Feedback, issues, and contributions are welcome. Release notes are in [CHANGELOG.md](CHANGELOG.md).
 
