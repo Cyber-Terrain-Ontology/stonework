@@ -233,7 +233,8 @@ organization.
 
 - `ownedBy`/`hasLicenseType` — designed, not built.
 - Hypothesis revision/genealogy (a `revisesHypothesis`-type property for
-  "refuted → form a new Hypothesis") — explicitly deferred.
+  "refuted → form a new Hypothesis") — built in core 0.19.0 as
+  `splitFrom`, `absorbedInto`, and `obsoletes`.
 - A home for complex output artifacts (plots, time series) — neither
   `DigitalArtifact` nor `IntelligenceProduct` is an exact fit; undecided.
 - NIST-executable-depth `ControlPlan` ingest extending `nist_to_ttl.py` —

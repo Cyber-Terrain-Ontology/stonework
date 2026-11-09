@@ -31,6 +31,7 @@ FINANCIAL_SHAPES = SHAPES_DIR / "frameworks" / "financial-shapes.ttl"
 STRICT_SHAPES = SHAPES_DIR / "stonework-strict-shapes.ttl"
 FINANCIAL_EXAMPLE = ROOT / "examples" / "financial-follow-the-money.ttl"
 BEC_EXAMPLE = ROOT / "examples" / "bec-t1114-003.ttl"
+OPERATION_EXAMPLE = ROOT / "examples" / "operation-plan-t1003-001.ttl"
 
 # The ontology schemas are loaded as data so that sh:targetClass resolves
 # through rdfs:subClassOf.
@@ -269,6 +270,20 @@ def expect_clean(fixture: str, profile: str, why: str) -> int:
     return 1
 
 
+def expect_silent(fixture: str, profile: str, why: str) -> int:
+    """Fixture must produce no findings, including warnings.
+
+    Used for a worked example that is meant to be complete, so a new
+    advisory on it fails the run.
+    """
+    findings = validate(_path(fixture), profile)
+    if not findings:
+        return 0
+    print(f"{why} (profile '{profile}', {fixture}):", file=sys.stderr)
+    _report("unexpected finding:", findings)
+    return 1
+
+
 def expect_violation(fixture: str, profile: str, why: str) -> int:
     findings = validate(_path(fixture), profile)
     if any(f.severity == VIOLATION for f in findings):
@@ -355,6 +370,16 @@ def main() -> int:
             "financial",
             "BEC worked example failed the financial profile",
         )
+        failures += expect_clean(
+            str(BEC_EXAMPLE.relative_to(ROOT)),
+            "financial-strict",
+            "BEC worked example failed the strict profile",
+        )
+        failures += expect_silent(
+            str(OPERATION_EXAMPLE.relative_to(ROOT)),
+            "core",
+            "Credential-dump trace raised a shape finding",
+        )
 
         # Malformed records: the value is wrong, not merely absent.
         for fixture in (
@@ -368,7 +393,9 @@ def main() -> int:
             "shacl-invalid-review.ttl",
             "shacl-invalid-start-bounds.ttl",
             "shacl-invalid-invokes-plan.ttl",
+            "shacl-invalid-hypothesis-lineage.ttl",
             "shacl-invalid-assesses-exploitation.ttl",
+            "shacl-invalid-merged-into.ttl",
         ):
             failures += expect_violation(
                 fixture, "core", "Malformed fixture was accepted"
@@ -383,9 +410,16 @@ def main() -> int:
         # SHACL cardinality migration touched at once; confirm each shape
         # still fires independently rather than just "some" violation.
         failures += expect_violation_paths(
+            "shacl-invalid-hypothesis-lineage.ttl",
+            "core",
+            ("absorbedInto", "obsoletes", "splitFrom"),
+            "Hypothesis lineage fixture did not violate every lineage shape",
+        )
+        failures += expect_violation_paths(
             "shacl-invalid-functional-records.ttl",
             "core",
             (
+                "absorbedInto",
                 "assertionObject",
                 "assertionRelationType",
                 "assertionSubject",
@@ -440,6 +474,7 @@ def main() -> int:
                 "ruleOfMailbox",
                 "sentAtTime",
                 "sightedObject",
+                "splitFrom",
                 "splitKind",
                 "toStep",
                 "versionOf",
@@ -472,6 +507,11 @@ def main() -> int:
             "shacl-warning-revision-version.ttl",
             "core",
             "A revised Plan with no planVersion should warn, not fail",
+        )
+        failures += expect_warning(
+            "shacl-warning-hypothesis-lineage.ttl",
+            "core",
+            "A pending Hypothesis set aside by its lineage should warn, not fail",
         )
         failures += expect_warning(
             "shacl-warning-currency-exchange.ttl",

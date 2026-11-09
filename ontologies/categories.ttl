@@ -13,8 +13,8 @@
 	rdfs:label "STONEWORK Categories and Roles"@en ;
 	dcterms:description "Category and Role subclasses, associated vocabulary named individuals, and category-specific object properties for the STONEWORK ontology. Kept separate to allow the core ontology to load without the full vocabulary set."@en ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.6.0> ;
-	owl:versionInfo "0.6.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/categories/0.7.0> ;
+	owl:versionInfo "0.7.0" ;
 	.
 
 stonework:AccountType
@@ -2433,7 +2433,7 @@ stonework:hasHypothesisStatus
 	rdfs:range stonework:HypothesisStatus ;
 	skos:definition "Relates a Hypothesis to its current status in the confirm/refute lifecycle."@en ;
 	skos:prefLabel "hasHypothesisStatus"@en ;
-	skos:scopeNote "Kept explicit (rather than inferred from which Transition fired) so a Hypothesis's status is directly queryable without replaying the Step graph it was tested in."@en ;
+	skos:scopeNote "Kept explicit (rather than inferred from which Transition fired) so a Hypothesis's status is directly queryable without replaying the Step graph it was tested in. A Hypothesis set aside by its lineage before a verdict (split, merged into another, or replaced) is superseded, so a query for live Hypotheses need not follow the lineage; one already confirmed or refuted keeps that status."@en ;
 	.
 
 stonework:hasImpactLevel
@@ -2688,6 +2688,22 @@ stonework:hypothesisStatusScheme
 	dcterms:title "STONEWORK Hypothesis Status Scheme"@en ;
 	skos:definition "The controlled vocabulary of hypothesis lifecycle states."@en ;
 	skos:prefLabel "STONEWORK Hypothesis Status Scheme"@en ;
+	.
+
+stonework:hypothesisStatusSuperseded
+	a
+		owl:NamedIndividual ,
+		skos:Concept ,
+		stonework:HypothesisStatus
+		;
+	skos:definition "The Hypothesis was set aside before it was confirmed or refuted: split into others (stonework:splitFrom), merged into another (stonework:absorbedInto), or replaced by a later one (stonework:obsoletes)."@en ;
+	skos:inScheme
+		stonework:categoryScheme ,
+		stonework:hypothesisStatusScheme
+		;
+	skos:notation "superseded" ;
+	skos:prefLabel "Superseded"@en ;
+	skos:scopeNote "No longer being tested, and no verdict reached. The record is kept, and its lineage says what took its place. A Hypothesis already confirmed or refuted keeps that status when a later one replaces it."@en ;
 	.
 
 stonework:impactLevelCatastrophic

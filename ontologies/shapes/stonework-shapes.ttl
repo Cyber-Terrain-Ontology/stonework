@@ -5,6 +5,21 @@
 @prefix stonework: <https://cyberterrain.org/ns/stonework#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+stonework:AbsorbedHypothesisStatusShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:in (
+			stonework:hypothesisStatusSuperseded
+			stonework:hypothesisStatusConfirmed
+			stonework:hypothesisStatusRefuted
+		) ;
+		sh:message "A Hypothesis merged into another (stonework:absorbedInto) should be superseded, unless it was already confirmed or refuted."@en ;
+		sh:path stonework:hasHypothesisStatus ;
+		sh:severity sh:Warning ;
+	] ;
+	sh:targetSubjectsOf stonework:absorbedInto ;
+	.
+
 stonework:ActivityWindowShape
 	a sh:NodeShape ;
 	sh:property
@@ -451,6 +466,23 @@ stonework:HypothesisShape
 	a sh:NodeShape ;
 	sh:property
 		[
+			sh:class stonework:Hypothesis ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Hypothesis is merged into at most one Hypothesis."@en ;
+			sh:path stonework:absorbedInto ;
+		] ,
+		[
+			sh:class stonework:Hypothesis ;
+			sh:maxCount "1"^^xsd:integer ;
+			sh:message "A Hypothesis is split from at most one Hypothesis."@en ;
+			sh:path stonework:splitFrom ;
+		] ,
+		[
+			sh:class stonework:Hypothesis ;
+			sh:message "A Hypothesis obsoletes a Hypothesis."@en ;
+			sh:path stonework:obsoletes ;
+		] ,
+		[
 			sh:class stonework:Variable ;
 			sh:maxCount "1"^^xsd:integer ;
 			sh:message "A Hypothesis predicts at most one Variable. One tested directly by an Investigation (stonework:testsHypothesis) need not predict a plan Variable at all."@en ;
@@ -695,6 +727,13 @@ stonework:MailboxRuleShape
 	sh:targetClass stonework:MailboxRule ;
 	.
 
+stonework:MergedIntoShape
+	a sh:NodeShape ;
+	sh:class stonework:Investigation ;
+	sh:message "Only an Investigation is merged into another with mergedInto; a Hypothesis uses absorbedInto."@en ;
+	sh:targetSubjectsOf stonework:mergedInto ;
+	.
+
 stonework:MetricObservationShape
 	a sh:NodeShape ;
 	sh:property
@@ -765,6 +804,21 @@ stonework:ObservationWindowShape
 		stonework:firstSeen ,
 		stonework:lastSeen
 		;
+	.
+
+stonework:ObsoletedHypothesisStatusShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:in (
+			stonework:hypothesisStatusSuperseded
+			stonework:hypothesisStatusConfirmed
+			stonework:hypothesisStatusRefuted
+		) ;
+		sh:message "A Hypothesis replaced by a later one (the object of stonework:obsoletes) should be superseded, unless it was already confirmed or refuted."@en ;
+		sh:path stonework:hasHypothesisStatus ;
+		sh:severity sh:Warning ;
+	] ;
+	sh:targetObjectsOf stonework:obsoletes ;
 	.
 
 stonework:OutcomeVariableShape
@@ -1051,6 +1105,21 @@ stonework:SplitKindShape
 		sh:path stonework:splitKind ;
 	] ;
 	sh:targetSubjectsOf stonework:splitKind ;
+	.
+
+stonework:SplitParentStatusShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:in (
+			stonework:hypothesisStatusSuperseded
+			stonework:hypothesisStatusConfirmed
+			stonework:hypothesisStatusRefuted
+		) ;
+		sh:message "A Hypothesis that was split (the object of stonework:splitFrom) should be superseded, unless it was already confirmed or refuted."@en ;
+		sh:path stonework:hasHypothesisStatus ;
+		sh:severity sh:Warning ;
+	] ;
+	sh:targetObjectsOf stonework:splitFrom ;
 	.
 
 stonework:StepTargetShape

@@ -410,6 +410,7 @@ ex:ctl-actor-mailbox
 		ex:log-new-inboxrule ,
 		ex:log-signins-controller
 		;
+	stonework:hasProvenance ex:src-case-file ;
 	stonework:validFrom "2026-09-02T03:14:07Z"^^xsd:dateTime ;
 	stonework:validUntil "2026-09-30T16:05:00Z"^^xsd:dateTime ;
 	.
@@ -454,6 +455,7 @@ ex:dev-0916-callback
 		ex:file-clerk-statement ,
 		ex:log-calls-0916
 		;
+	stonework:hasProvenance ex:src-case-file ;
 	.
 
 ex:dom-lookalike
@@ -1024,6 +1026,7 @@ ex:persona-sender
 ex:ra-ap-clerk
 	a stonework:RoleAssignment ;
 	stonework:assignedRole ex:role-ap-clerk ;
+	stonework:hasProvenance ex:src-case-file ;
 	stonework:roleContext ex:org ;
 	stonework:rolePlayer ex:ap-clerk ;
 	.
@@ -1031,6 +1034,7 @@ ex:ra-ap-clerk
 ex:ra-controller
 	a stonework:RoleAssignment ;
 	stonework:assignedRole ex:role-controller ;
+	stonework:hasProvenance ex:src-case-file ;
 	stonework:roleContext ex:org ;
 	stonework:rolePlayer ex:controller ;
 	.
@@ -1120,6 +1124,12 @@ ex:sighting-controller-rule
 	stonework:sightedAt ex:mail-tenant ;
 	stonework:sightedBy ex:analyst ;
 	stonework:sightedObject cti-enc:attack-pattern--7d77a07d-02fe-4e88-8bd9-e9c008c01bf0 ;
+	.
+
+ex:src-case-file
+	a stonework:Publication ;
+	skos:definition "The investigation record these findings were written into: who holds the clerk and controller roles, the finding that the rule's creator controlled the controller's mailbox, and the finding that the 16 September callback was skipped."@en ;
+	skos:prefLabel "Case file for the September 2026 forwarding-rule investigation"@en ;
 	.
 
 ex:svc-automation
