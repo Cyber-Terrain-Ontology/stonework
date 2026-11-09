@@ -146,6 +146,12 @@ example:externalAddress
 	stonework:emailValue "archive.mailbox@freemail.example" ;
 	.
 
+example:forensicTriage
+	a stonework:CourseOfAction ;
+	stonework:assessesExploitationOf example:vulnerability ;
+	stonework:description "Perform forensic triage under the directive's requirements."@en ;
+	.
+
 example:freshSignIn
 	a stonework:Event ;
 	stonework:authenticatedWith
