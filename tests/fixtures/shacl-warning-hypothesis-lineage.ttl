@@ -1,0 +1,36 @@
+@prefix example: <https://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix stonework: <https://cyberterrain.org/ns/stonework#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+example:absorbed
+	a stonework:Hypothesis ;
+	stonework:absorbedInto example:survivor ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
+	.
+
+example:part
+	a stonework:Hypothesis ;
+	stonework:splitFrom example:splitParent ;
+	.
+
+example:replaced
+	a stonework:Hypothesis ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
+	.
+
+example:replacement
+	a stonework:Hypothesis ;
+	stonework:obsoletes example:replaced ;
+	.
+
+example:splitParent
+	a stonework:Hypothesis ;
+	stonework:hasHypothesisStatus stonework:hypothesisStatusPending ;
+	.
+
+example:survivor
+	a stonework:Hypothesis ;
+	.

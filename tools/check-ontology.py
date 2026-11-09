@@ -226,6 +226,7 @@ def main() -> int:
     concept_scheme = SKOS + "ConceptScheme"
 
     required_functional_properties = {
+        STONEWORK + "absorbedInto",
         STONEWORK + "assertionObject",
         STONEWORK + "assertionRelationType",
         STONEWORK + "assertionSubject",
@@ -278,6 +279,7 @@ def main() -> int:
         STONEWORK + "ruleOfMailbox",
         STONEWORK + "sentAtTime",
         STONEWORK + "sightedObject",
+        STONEWORK + "splitFrom",
         STONEWORK + "splitKind",
         STONEWORK + "toStep",
         STONEWORK + "versionOf",

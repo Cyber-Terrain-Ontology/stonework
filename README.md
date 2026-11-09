@@ -2,13 +2,14 @@
 
 **STONEWORK** *(Semantic Threat Ontology for Next-generation Extensions, Workflows, Objects, Relationships, and Knowledge)* **is an OWL 2 cyber ontology for reasoning across threats, weaknesses, controls, assets, and evidence.**
 
-The ontology provides a shared semantic layer for threats, weaknesses, defenses, assets, events, observables, financial activity, and evidence-bearing relationships. It is designed to connect operational CTI, defensive engineering, cyber-physical systems, and risk/control evidence without making any single source framework the center of the model.
+The ontology provides a shared semantic layer for threats, weaknesses, defenses, assets, plans and their executions, hypotheses, investigations, events, observables, financial activity, and evidence-bearing relationships. It is designed to connect operational CTI, defensive engineering, cyber-physical systems, and risk/control evidence without making any single source framework the center of the model.
 
 STONEWORK's goals are to:
 
 - provide a lightweight core vocabulary with stable identifiers for cyber reasoning;
 - align source frameworks as composable peer graphs rather than copying or replacing them;
 - support cross-framework queries that connect vulnerabilities, weaknesses, attack patterns, actors, assets, events, and controls;
+- keep a specification (a plan, a technique, a detection rule) distinct from a run, an observation, and the hypothesis tested against them;
 - give AI-assisted analysis a typed, provenance-aware knowledge model that can be extended for local missions and data sources.
 
 > STONEWORK is a candidate ontology for the **[Cyber Ontology Foundry](https://ncor-network.org/docs/research/cyber-ontology-foundry)**, announced at STIDS 2026.
@@ -21,17 +22,36 @@ STONEWORK organizes cyber knowledge across linked domains that commonly appear i
 
 | Domain | Sources |
 |---|---|
-| Adversary techniques (TTPs) | MITRE ATT&CK, MITRE ATT&CK for ICS, MITRE D3FEND |
+| Adversary techniques (TTPs) | MITRE ATT&CK, CAPEC, MITRE D3FEND |
 | Software weaknesses | CWE (Common Weakness Enumeration) |
 | Defensive controls | NIST SP 800-53, CIS Critical Controls |
 | Cyber-physical / OT assets | MITRE D3FEND PhysicalArtifact, MITRE EMB3D device properties |
 | Vulnerability linkage | Connects CVE → CWE → ATT&CK technique → control |
 | Event and observable alignment | OCSF, UCO, STIX/STONES |
 | Financial observables | Accounts, transactions, monetary amounts, crypto assets, and laundering typologies |
+| Plans, hypotheses, investigations, and qualified evidence | STONEWORK core; see below |
+
+There is no ATT&CK for ICS adapter. Technique, mitigation, and artifact use the core classes; an ICS device is a `stonework:PhysicalArtifact` (and a `stonework:Host` when it also runs processes). `ontologies/frameworks/attack.ttl` is a draft rendering of MITRE's ATT&CK Data Model Specification v3.3.0. Its `attack:Asset` class, for ICS targets, is sketched and still open. See [`docs/attack-mapping.md`](docs/attack-mapping.md).
 
 This coverage enables queries that no single standard can answer on its own. A SPARQL query can trace a CVE to the weakness it exploits, to the attack patterns that leverage that weakness, to the APT groups known to use them, and to the controls that mitigate the risk — in a single federated query.
 
 Both NIST SP 800-53 and CIS Controls now carry real, materialized `stonework:mitigatesAttackPattern` links to ATT&CK — not just conceptual coverage. NIST's crosswalk is sourced from the Center for Threat-Informed Defense's mapping, since NIST's own catalog defines no ATT&CK relationship on its own.
+
+### Plans, hypotheses, and evidence
+
+The core keeps a specification distinct from what happened, and a claim distinct from the evidence for it. Two root classes carry that split: `stonework:CyberEntity` for persistent things (agents, infrastructure, artifacts, behaviors, intelligence products) and `stonework:CyberActivity` for what occurs (events, processes, campaigns, incidents, investigations).
+
+A `stonework:Technique` is a method. A `stonework:Procedure` or other `stonework:Plan` is one way to carry it out, decomposed into `stonework:Step`s when that detail is worth recording. One run is a `stonework:CyberActivity` that is `stonework:executionOf` the plan; the values its `stonework:Variable`s take in that run are `stonework:VariableBinding`s. The gradient from tactic to a run is in [`docs/technique-modeling.md`](docs/technique-modeling.md). The Step, Transition, and Variable machinery is in [`docs/plan-execution-model.md`](docs/plan-execution-model.md).
+
+A `stonework:Hypothesis` is an intelligence product: a falsifiable claim. It usually predicts a plan Variable (`stonework:predictsVariable`). An `stonework:Investigation` can also test one directly (`stonework:testsHypothesis`) without that prediction. `stonework:hasHypothesisStatus` is pending, confirmed, refuted, or superseded. A compound claim, such as "actor X is using technique Y", is a hypothesis whose `stonework:hypothesisPart` values are the separately tested claims — the activity, and the attribution. Parts are a conjunction. Alternatives are separate hypotheses, not parts of one. Status and confidence stay explicit; they are not inferred. Consistency requires that a compound with a refuted part is itself refuted, and that its confidence is no higher than any part's. Shapes check that each part is a hypothesis and that a hypothesis predicts at most one Variable. They do not check that consistency. `stonework:hypothesisAbout` records what the hypothesis concerns. Lineage keeps the earlier hypothesis: `splitFrom` names the one this was split from, `absorbedInto` the survivor this was merged into, and `obsoletes` the one this replaces. The earlier one is superseded unless it was already confirmed or refuted. An investigation merged into another uses `mergedInto`.
+
+A `stonework:Campaign` is objective- and time-bounded and may be attributed to a `stonework:ThreatActor`. A `stonework:CyberActivityCluster` groups activity by analytic correlation and does not require a known actor. Activities join a cluster with `stonework:memberOfActivityCluster`. The same body of activity may be both.
+
+An `stonework:Indicator` is the intelligence claim, including a multi-step or TTP pattern. A `stonework:DetectionRule`, and its subclass `stonework:Signature`, is the deployable check. A `stonework:Sensor` applies rules (`stonework:usesRule`) and produces `stonework:SecurityObservation`s.
+
+A `stonework:QualifiedAssertion` records a relationship that can carry provenance, a confidence score from 0 to 100, and a validity interval (`stonework:validFrom`, `stonework:validUntil`). Provenance is optional in the baseline profile and required by the strict SHACL overlay. Source- and time-qualified metrics, including confidence history, are `stonework:MetricObservation`s. Activity parsed from a system's own record is `stonework:generatedFrom` that record. Activity established otherwise is `stonework:evidencedBy` the artifacts that show it.
+
+An investigation tests hypotheses, collects evidence, and closes with a status and an outcome ([`docs/investigation-management.md`](docs/investigation-management.md)). A `stonework:Review` records that an analyst found a batch of records relevant or not ([`docs/record-review.md`](docs/record-review.md)). An `stonework:Opinion` (`stonework:opinionOf`) can target an intelligence product or a single qualified assertion. Who could act through an identity, and during which interval, is a `stonework:IdentityControl`. An `stonework:EmailMessage` carries its headers and sender-authentication results; a `stonework:MailboxRule` is the artifact behind mailbox-forwarding techniques.
 
 ---
 
@@ -41,7 +61,7 @@ STONEWORK provides its own stable namespace and core model, then composes with c
 
 Bundled framework modules are STONEWORK extension and alignment ontologies, not semantically self-contained replacements for the core. Each module imports STONEWORK, owns only concepts and structures specific to its source standard, and aligns shared concepts to their canonical `stonework:` terms. A module can be loaded independently in the operational sense that its declared imports provide a complete closure; it is not independent of STONEWORK's semantics.
 
-[STONES](https://github.com/Cyber-Terrain-Ontology/stones) can be used as STONEWORK's extensible STIX 2.1 framework adapter when faithful STIX interchange is required. STONEWORK is not defined as an extension of STONES; STONES, ATT&CK, D3FEND, EMB3D, CWE, NIST SP 800-53, CIS Critical Controls, OCSF, UCO, FATF, and other framework modules are peer vocabularies that can be loaded alongside STONEWORK.
+[STONES](https://github.com/Cyber-Terrain-Ontology/stones) can be used as STONEWORK's extensible STIX 2.1 framework adapter when faithful STIX interchange is required. STONEWORK is not defined as an extension of STONES; STONES, ATT&CK, CAPEC, D3FEND, EMB3D, CWE, CVE, CPE, CVSS, NIST SP 800-53, CIS Critical Controls, the Lockheed Martin Cyber Kill Chain, OCSF, UCO, FATF, GeoSPARQL, BFO 2020, and other framework modules are peer vocabularies that can be loaded alongside STONEWORK.
 
 STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or CIS.
 
@@ -49,9 +69,9 @@ STONEWORK is independent work. It is not affiliated with OASIS, MITRE, NIST, or 
 
 ## Status
 
-**Active Development**
+**Active development.** Core vocabulary (`ontologies/stonework.ttl`) is **0.19.0**. Controlled-vocabulary categories (`ontologies/categories.ttl`) are **0.7.0**.
 
-The namespace (`https://cyberterrain.org/ns/stonework#`) is stable and will not change. Core vocabulary is in place. Framework coverage (ATT&CK, D3FEND, EMB3D, CWE, NIST SP 800-53, CIS, BFO 2020, OCSF, UCO, FATF, and STIX/STONES) is expanding. The scope of coverage will grow as the ontology matures. Feedback, issues, and contributions are welcome.
+The namespace (`https://cyberterrain.org/ns/stonework#`) is stable and will not change. Bundled adapters in `ontologies/frameworks/` cover ATT&CK, CAPEC, D3FEND, EMB3D, CWE, CVE, CPE, CVSS, NIST SP 800-53, CIS, the Lockheed Martin Cyber Kill Chain, BFO 2020, OCSF, UCO, FATF, GeoSPARQL, and STIX/STONES. The ATT&CK adapter is a draft rendering of MITRE's data model specification v3.3.0. The scope of coverage will grow as the ontology matures. Feedback, issues, and contributions are welcome. Release notes are in [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
@@ -88,9 +108,17 @@ SELECT ?class ?label WHERE {
 ORDER BY ?label
 ```
 
-### 4. Try the worked example
+### 4. Try a worked example
 
-Load the CTI reference datasets (ATT&CK, CAPEC, CVE, CWE, NIST SP 800-53, CIS) and run the Log4Shell chain query: from a vulnerable product to a threat actor to a defensive control in a single SPARQL query. Full walkthrough at [cyberterrain.org](https://cyberterrain.org).
+These examples are in the repository and exercise the plan, hypothesis, investigation, and financial vocabulary:
+
+| Example | What it shows |
+|---|---|
+| [`examples/operation-plan-t1003-001.ttl`](examples/operation-plan-t1003-001.ttl) | One ATT&CK procedure as a plan, a run, and hypotheses confirmed or refuted. Walkthrough: [`docs/plan-execution-model.md`](docs/plan-execution-model.md) |
+| [`examples/bec-t1114-003.ttl`](examples/bec-t1114-003.ttl) | A business-email compromise across an operation plan, a business process, detection, and an investigation. Walkthrough: [`docs/bec-worked-example.md`](docs/bec-worked-example.md) |
+| [`examples/financial-follow-the-money.ttl`](examples/financial-follow-the-money.ttl) | Accounts, transactions, and laundering stages. Walkthrough: [`docs/financial-observables.md`](docs/financial-observables.md) |
+
+The Log4Shell chain — a vulnerable product to a threat actor to a defensive control — needs the external CTI datasets (ATT&CK, CAPEC, CVE, CWE, NIST SP 800-53, CIS). Walkthrough at [cyberterrain.org](https://cyberterrain.org).
 
 ---
 
@@ -192,6 +220,7 @@ This concatenates the two files under the core's single `owl:Ontology` header, c
 ### Framework interoperability
 
 - `ontologies/frameworks/stix.ttl` maps STONES classes and properties into STONEWORK. STIX relationship source, target, and open-vocabulary type values project through the generic qualified-assertion properties. STIX Bundle remains intentionally unmapped because it is a transport container rather than a STIX Core Object or cyber-domain assertion.
+- `ontologies/frameworks/attack.ttl` maps MITRE's ATT&CK Data Model Specification v3.3.0 into STONEWORK. It is a draft. Relationships that mean the same as a STONEWORK property (uses, mitigates, detects, attributed-to, targets, revoked-by) are written as the STONEWORK property. See [`docs/attack-mapping.md`](docs/attack-mapping.md).
 - `ontologies/frameworks/cve.ttl` preserves only CVE JSON-specific record structures while using STONEWORK classes and properties directly for shared vulnerability and CVSS semantics. Source-native assigner and replacement identifiers are resolved to individuals linked with `stonework:assignedBy` and `stonework:supersededBy`. A CVE `affected` entry is a `stonework:ComponentContext` linked to its canonical `stonework:VersionedProduct` with `stonework:installationOf`; a property chain projects that two-step source path into the direct `stonework:affected` relationship used by cross-framework queries.
 - `ontologies/frameworks/cvss.ttl` adds decomposed vector components and additional subscores directly to the core `stonework:CvssMetric` assessment; it does not define a second metric class or duplicate the common core properties. CVSS assessments may come from NVD, CNAs, vendors, or analysts and may describe any vulnerability, not only a CVE record. Use `stonework:createdBy` for the scoring authority and `stonework:hasProvenance` for its source record.
 - `ontologies/frameworks/d3fend.ttl` maps compatible MITRE D3FEND 1.5.0 defensive and offensive techniques, tactics, events, artifacts, identifiers, and selected relationships into STONEWORK. It preserves D3FEND's source-native hierarchy and class/individual punning rather than asserting equivalence. `d3f:PhysicalArtifact` subclasses `stonework:PhysicalArtifact`.
@@ -202,13 +231,15 @@ This concatenates the two files under the core's single `owl:Ontology` header, c
 - `ontologies/frameworks/uco.ttl` maps compatible UCO 1.5.0 action, identity, location, and observable classes into STONEWORK. It remains class-only because UCO places observable values on facet nodes while STONEWORK commonly projects them directly onto domain entities.
 - `ontologies/frameworks/fatf.ttl` supplies a starter set of money-laundering typology individuals drawn from FATF methods-and-trends guidance, mapped into the neutral `stonework:IllicitFinanceTechnique` and `stonework:LaunderingStage` slots that the core defines. It is an illustrative, non-exhaustive, non-normative convenience — not a reproduction of FATF guidance — and other bodies' typology sets can populate the same slots.
 
-These adapters are alignment modules rather than copies of their source standards. Load the official D3FEND ontology, EMB3D catalog, OCSF schema, UCO ontologies, GeoSPARQL, GeoNames, or BFO 2020 alongside STONEWORK when source-native constraints and attributes are required. Type ICS assets as `PhysicalArtifact` (and `Host` when they also run processes); there is no ATT&CK ICS adapter because STONEWORK classes already cover technique, mitigation, and artifact.
+These adapters are alignment modules rather than copies of their source standards. Load the official D3FEND ontology, EMB3D catalog, OCSF schema, UCO ontologies, GeoSPARQL, GeoNames, or BFO 2020 alongside STONEWORK when source-native constraints and attributes are required. Type ICS assets as `PhysicalArtifact` (and `Host` when they also run processes).
 
 ### CVSS assessments and plan variables
 
 Use `stonework:cvssBaseScore`, `stonework:cvssSeverity`, and `stonework:cvssVector` directly on a `stonework:Vulnerability` for one selected headline score. Use `stonework:CvssMetric` through `stonework:hasCvssMetric` when version, scoring authority, provenance, or multiple assessments must be retained. The CVSS framework module adds decomposed vector fields but is not required for the common structured fields. CVSS base metrics express context-neutral technical severity. Environmental metrics may adjust technical severity for a deployment context, but CVSS alone does not establish that the product is present or express full enterprise risk.
 
 A `stonework:Variable` is not another CVSS representation. It is an execution-time placeholder used when a Plan consumes an existing score or an Investigation calculates a new assessment. An enterprise assessment may consider a `stonework:Vulnerability`, its `stonework:CvssMetric`, and current infrastructure state; the executing `stonework:Investigation` constructs a contextual `stonework:VulnerabilityAssessment` and binds an output Variable to it.
+
+Values that change over time or differ by source — an EPSS probability and its percentile, a report that a vulnerability was exploited, exploit maturity, known-exploited catalog membership — are `stonework:MetricObservation`s. The catalog or scoring source is `stonework:hasProvenance`, not a separate metric type. Direct datatype properties remain convenience projections for a single current value.
 
 ### Financial observables
 
@@ -228,6 +259,15 @@ We recommend using `skos:prefLabel` for an entity's preferred human-readable nam
 | Ontology reference (WIDOCO) | [cyberterrain.org/ns/stonework/doc](https://cyberterrain.org/ns/stonework/doc/) |
 | Namespace | `https://cyberterrain.org/ns/stonework#` |
 | STIX adapter | [STONES](https://github.com/Cyber-Terrain-Ontology/stones) |
+| Release notes | [CHANGELOG.md](CHANGELOG.md) |
+| Plans and executions | [`docs/plan-execution-model.md`](docs/plan-execution-model.md) |
+| Technique gradient | [`docs/technique-modeling.md`](docs/technique-modeling.md) |
+| ATT&CK mapping | [`docs/attack-mapping.md`](docs/attack-mapping.md) |
+| Investigations | [`docs/investigation-management.md`](docs/investigation-management.md) |
+| Record review | [`docs/record-review.md`](docs/record-review.md) |
+| Financial observables | [`docs/financial-observables.md`](docs/financial-observables.md) |
+| BEC worked example | [`docs/bec-worked-example.md`](docs/bec-worked-example.md) |
+| SHACL profiles | [`docs/shacl.md`](docs/shacl.md) |
 
 ---
 
@@ -235,7 +275,7 @@ We recommend using `skos:prefLabel` for an entity's preferred human-readable nam
 
 STONEWORK is the broad ontology in the Cyber Terrain Ontology ecosystem. It can compose with STONES when STIX 2.1 fidelity or interchange is needed:
 
-- **STONEWORK** — independent ontology for threats, weaknesses, controls, assets, events, financial observables, and cross-framework reasoning *(this repository)*
+- **STONEWORK** — independent ontology for threats, weaknesses, controls, assets, plans, hypotheses, investigations, and cross-framework reasoning *(this repository)*
 - **STONES** — faithful OWL 2 binding of STIX 2.1, usable as an extensible STIX framework adapter for STONEWORK
 
 Both ontologies are candidate submissions to the **Cyber Ontology Foundry**, alongside MITRE's [D3FEND Framework Ontology](https://github.com/d3fend/d3fend-ontology).
