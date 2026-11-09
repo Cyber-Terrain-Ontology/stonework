@@ -719,7 +719,7 @@ hypothesis-and-evidence layer.
 ## Gaps, as proposals
 
 Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.12.0, and
-20 is done in 0.15.0, 21 and 22 in 0.16.0, 23 in 0.17.0; the rest are not in the ontology yet.
+20 is done in 0.15.0, 21 and 22 in 0.16.0, 23 in 0.17.0; the rest are not in the ontology yet. 24 to 27 are proposed in [monitoring-alerts-subscriptions-watchlists.md](monitoring-alerts-subscriptions-watchlists.md).
 
 1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
    (Hypothesis → anything, not functional) links a hypothesis to the technique, actor,
@@ -895,3 +895,28 @@ Smaller things:
     needs versions, so past runs aren't judged against a process they never followed:
     `stonework:revisionOf` (Plan → Plan), with `planVersion` on each version. See
     [plan-execution-model.md](plan-execution-model.md#2e-calling-a-plan-and-revising-one-0170).
+
+Proposals 24 to 27 came from a monitoring scenario, not from this example: a SOC subscribed
+to an indicator feed, watching its firewall. See
+[monitoring-alerts-subscriptions-watchlists.md](monitoring-alerts-subscriptions-watchlists.md).
+
+24. **Alert.** The word every SOC uses has no term; `Event`'s scope note lists alerts among
+    pre-triage occurrences. Proposal: `stonework:Alert` ⊑ `SecurityObservation`, with
+    `raisedByRule` (the rule that fired), `matchedIndicator`, severity, an `AlertDisposition`
+    scheme (true positive, benign, false positive, duplicate) and `escalatedTo` an Incident;
+    aligned with OCSF's Detection Finding by `skos:closeMatch`.
+
+25. **Subscription.** `Feed` and `Publication` say where intelligence came from, not that an
+    organization was receiving it. Proposal: `stonework:Subscription` ⊑ `QualifiedAssertion`,
+    after `IdentityControl`: subscriber, source (a Feed, including a managed service's alert
+    stream, or a Publication series), the interval, channel and format. An organization's own appliance is
+    not a subscription.
+
+26. **Watchlists.** A block list or SIEM watchlist is one rule whose indicators change daily.
+    Proposal: `stonework:includesIndicator` (DetectionRule → Indicator), qualified with
+    `validFrom` and `validUntil` when the dates matter. Detection capability (sensors, the rules
+    they use, what each detects) needs no new terms, only a documented query.
+
+27. **When intelligence arrived.** Proposal: `stonework:receivedAt` (IntelligenceProduct →
+    dateTime), distinct from the source's `dcterms:created`/`modified`, so the delays in the
+    loop can be measured.
