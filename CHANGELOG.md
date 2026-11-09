@@ -7,7 +7,7 @@ A hypothesis that is split, merged, or replaced is kept. The new one points at t
 ### Added
 
 - `stonework:splitFrom` (Hypothesis → Hypothesis, functional): this hypothesis is one of those produced by splitting that one. Several may name the same parent. `HypothesisShape`.
-- `stonework:absorbedInto` (Hypothesis → Hypothesis, functional): this hypothesis was merged into that one. The absorbed record is kept. An Investigation still uses `mergedInto`.
+- `stonework:absorbedInto` (Hypothesis → Hypothesis, functional): this hypothesis was merged into that one. The absorbed record is kept. An Investigation still uses `mergedInto`, and `MergedIntoShape` rejects a subject of `mergedInto` that is not an Investigation.
 - `stonework:obsoletes` (Hypothesis → Hypothesis, not transitive): the later hypothesis replaces the earlier one, including a refuted hypothesis a new one is formed from. After Dublin Core `replaces`. One hypothesis may obsolete more than one earlier hypothesis.
 - `stonework:hypothesisStatusSuperseded` (in `categories.ttl`): set aside before a verdict, by a split, a merge, or a replacement. A hypothesis already confirmed or refuted keeps that status. Warnings when a hypothesis set aside by its lineage is still pending: `AbsorbedHypothesisStatusShape`, `SplitParentStatusShape`, `ObsoletedHypothesisStatusShape`.
 

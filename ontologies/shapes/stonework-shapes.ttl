@@ -727,6 +727,13 @@ stonework:MailboxRuleShape
 	sh:targetClass stonework:MailboxRule ;
 	.
 
+stonework:MergedIntoShape
+	a sh:NodeShape ;
+	sh:class stonework:Investigation ;
+	sh:message "Only an Investigation is merged into another with mergedInto; a Hypothesis uses absorbedInto."@en ;
+	sh:targetSubjectsOf stonework:mergedInto ;
+	.
+
 stonework:MetricObservationShape
 	a sh:NodeShape ;
 	sh:property

@@ -395,6 +395,7 @@ def main() -> int:
             "shacl-invalid-invokes-plan.ttl",
             "shacl-invalid-hypothesis-lineage.ttl",
             "shacl-invalid-assesses-exploitation.ttl",
+            "shacl-invalid-merged-into.ttl",
         ):
             failures += expect_violation(
                 fixture, "core", "Malformed fixture was accepted"
