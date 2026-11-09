@@ -1,9 +1,14 @@
 # Changelog
 
-## Unreleased
+## 0.18.0 (core): assessing whether a vulnerability was exploited
+
+### Added
+
+- `stonework:assessesExploitationOf` (CourseOfAction → Vulnerability): a course of action that determines whether the vulnerability was exploited, such as forensic triage or a compromise assessment, as distinct from `mitigatesVulnerability`, which addresses the vulnerability itself. For CISA's known-exploited catalog, whose entries can require forensic triage as well as a fix, and for advisories that say what to look for after patching. `AssessesExploitationOfShape`: the object is a Vulnerability. Fixtures for each.
 
 ### Changed
 
+- `stonework:mitigatesVulnerability`: a scope note pointing to `assessesExploitationOf`.
 - `stonework:OperationPlan`: `skos:altLabel "Attack plan"@en`, and a scope note sentence saying user interfaces may show it by that name, the phrase practitioners use for an adversary's procedures in order. The class keeps its name and IRI.
 
 ## 0.17.0 (core): calling a plan, and revising one

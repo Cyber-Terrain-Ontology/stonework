@@ -51,6 +51,16 @@ stonework:ActivityWindowShape
 		;
 	.
 
+stonework:AssessesExploitationOfShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Vulnerability ;
+		sh:message "A course of action assesses the exploitation of a Vulnerability."@en ;
+		sh:path stonework:assessesExploitationOf ;
+	] ;
+	sh:targetSubjectsOf stonework:assessesExploitationOf ;
+	.
+
 stonework:AuthenticatedWithShape
 	a sh:NodeShape ;
 	sh:property [
