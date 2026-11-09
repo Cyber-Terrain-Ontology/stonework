@@ -902,14 +902,14 @@ to an indicator feed, watching its firewall. See
 
 24. **Alert.** The word every SOC uses has no term; `Event`'s scope note lists alerts among
     pre-triage occurrences. Proposal: `stonework:Alert` ⊑ `SecurityObservation`, with
-    `triggeredBy` (the rule that fired), `matchedIndicator`, severity, an `AlertDisposition`
+    `raisedByRule` (the rule that fired), `matchedIndicator`, severity, an `AlertDisposition`
     scheme (true positive, benign, false positive, duplicate) and `escalatedTo` an Incident;
     aligned with OCSF's Detection Finding by `skos:closeMatch`.
 
 25. **Subscription.** `Feed` and `Publication` say where intelligence came from, not that an
     organization was receiving it. Proposal: `stonework:Subscription` ⊑ `QualifiedAssertion`,
-    after `IdentityControl`: subscriber, source (a Feed, a Publication series, or a managed
-    service's Sensor), the interval, channel and format. An organization's own appliance is
+    after `IdentityControl`: subscriber, source (a Feed, including a managed service's alert
+    stream, or a Publication series), the interval, channel and format. An organization's own appliance is
     not a subscription.
 
 26. **Watchlists.** A block list or SIEM watchlist is one rule whose indicators change daily.
@@ -918,4 +918,5 @@ to an indicator feed, watching its firewall. See
     they use, what each detects) needs no new terms, only a documented query.
 
 27. **When intelligence arrived.** Proposal: `stonework:receivedAt` (IntelligenceProduct →
-    dateTime), distinct from when it was published, so the delays in the loop can be measured.
+    dateTime), distinct from the source's `dcterms:created`/`modified`, so the delays in the
+    loop can be measured.

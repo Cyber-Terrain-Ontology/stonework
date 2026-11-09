@@ -43,7 +43,7 @@ automated tool capturing one or more cyber observables", so an Alert inherits th
 
 | Term | | Meaning |
 |---|---|---|
-| `stonework:triggeredBy` | Alert → DetectionRule | The rule that fired. A correlated alert names the correlation rule. |
+| `stonework:raisedByRule` | Alert → DetectionRule | The rule that fired. A correlated alert names the correlation rule. Not `triggeredBy`, which already links a Plan to the Event or Incident that starts it. |
 | `stonework:matchedIndicator` | Alert → Indicator | For an indicator-matching rule, the indicator that matched. |
 | `stonework:severity` | existing (string) | Widened to Alert. Kept a string, since tools score severity differently. |
 | `stonework:hasAlertDisposition` | Alert → AlertDisposition (functional; in `categories.ttl`) | What triage decided. Absent until triaged. |
@@ -60,7 +60,16 @@ rule matched in error), *duplicate* (another alert covers it).
 - an `Alert` is a sensor saying "look at this";
 - an `Incident` is a person, or automation, declaring it significant and adverse.
 
-`stonework:Event`'s scope note would drop "alert" from its list.
+`stonework:Event`'s scope note would drop "alert" from its list, and
+`stonework:SecurityObservation`'s would change: it now calls a security observation "the raw
+sensor-layer record prior to attribution or indicator matching". That stays true of a plain
+SecurityObservation; an Alert is the observation that a rule matched.
+
+**Alert and Sighting.** A `stonework:Sighting` records that a known CTI object, such as an
+indicator, was seen. An Alert with `matchedIndicator` is close to that, but it is the sensor
+raising the match for triage, and the match may be wrong. The Sighting is the assertion that
+the indicator was seen, recorded when triage finds the alert a true positive: the triage Step
+`produces` it, citing the alert. A false positive leaves an Alert and no Sighting.
 
 **Triage** is a Step in a detection plan, performed by a Role, whose output Variable binds the
 disposition. So "who triaged it, and when" is the run's, and the plan checks (performer,
@@ -84,18 +93,20 @@ record.
 | Term | | Meaning |
 |---|---|---|
 | `stonework:subscriber` | Subscription → Agent (functional) | Usually the Organization. |
-| `stonework:subscribedSource` | Subscription → Provenance or Sensor (functional) | A `Feed` (an ISAC's TAXII collection), a `Publication` series (a vendor's research blog), or a provider's `Sensor` (a managed detection service). |
+| `stonework:subscribedSource` | Subscription → Provenance (functional) | A `Feed` (an ISAC's TAXII collection, or a managed detection service's alert stream) or a `Publication` series (a vendor's research blog). |
 | `validFrom`, `validUntil` | existing | When it started and ended. |
 | `stonework:deliveryChannel` | string | TAXII 2.1, RSS, email, API, syslog. |
 | `stonework:deliveryFormat` | string | STIX 2.1, free text, JSON. |
 
-The three kinds of source differ in what arrives (reports, indicators, alerts), but the
-arrangement is the same.
+The sources differ in what arrives (reports, indicators, alerts), but the arrangement is the
+same. The source is always the feed or publication, never a Sensor: a provider's sensors stay
+sensors, linked from the alerts they raise by `madeBySensor`.
 
 **An organization's own appliance is not a subscription.** Its alerts are first-party: the
 organization's Sensor, watching the organization's environment, linked by `madeBySensor`. A
-managed service watching on the organization's behalf is a subscription. The test is whose
-sensor it is.
+managed service watching on the organization's behalf is a subscription to the service's
+feed. Pointing a subscription at a Sensor would be valid data that erases this line, since an
+agent on the organization's own laptop is a Sensor too, so the range excludes it.
 
 ## Proposal 26: Watchlists, and detection capability
 
@@ -124,9 +135,12 @@ whole list answers only by comparing snapshots.
 **`stonework:receivedAt`** (IntelligenceProduct → `xsd:dateTime`): when the organization
 received it, through a subscription or otherwise.
 
-It is distinct from when the product was created or published (`stonework:publishedDate`).
-The gap between published and received measures the feed; the gap between received and
-`includesIndicator`'s `validFrom` measures the SOC. A delivery record of its own (which
+It is distinct from the source's own timestamps, `dcterms:created` and `dcterms:modified` on
+the object the feed delivered. The gap from those to `receivedAt` measures the feed; the gap
+from `receivedAt` to `includesIndicator`'s `validFrom` measures the SOC. `publishedDate`
+(`dcterms:issued`) is not used for either: it is the calendar day of first public disclosure,
+so a same-day feed would look instant and an old public report would look like a late
+delivery. A delivery record of its own (which
 bundle, which poll) can come later if a case needs it.
 
 ## Example
@@ -143,19 +157,20 @@ ex:sub-isac
 ex:ind-198-51-100-23
     a stonework:Indicator ;
     stonework:hasProvenance ex:feed-isac-indicators ;
+    dcterms:created "2026-10-07T21:40:00Z"^^xsd:dateTime ;     # the feed's object
     stonework:receivedAt "2026-10-08T06:00:00Z"^^xsd:dateTime .
 
 ex:watch-198-51-100-23
     a stonework:QualifiedAssertion ;
     stonework:assertionSubject ex:fw-blocklist ;
-    stonework:assertionRelationType stonework:includesIndicator ;
+    stonework:assertionRelationType "includesIndicator" ;
     stonework:assertionObject ex:ind-198-51-100-23 ;
     stonework:validFrom "2026-10-11T02:00:00Z"^^xsd:dateTime .   # three days after it arrived
 
 ex:alert-1012-0412
     a stonework:Alert ;
     stonework:madeBySensor ex:fw-edge ;
-    stonework:triggeredBy ex:fw-blocklist ;
+    stonework:raisedByRule ex:fw-blocklist ;
     stonework:matchedIndicator ex:ind-198-51-100-23 ;
     stonework:severity "high" ;
     stonework:hasAlertDisposition stonework:alertDispositionTruePositive ;
@@ -166,11 +181,13 @@ ex:alert-1012-0412
 
 1. **OCSF:** `skos:closeMatch` between `ocsf:DetectionFinding` and `stonework:Alert`, or should
    Alert be an Event after all?
-2. **`triggeredBy`:** functional (one rule per alert), or several, for alerts that tools merge?
+2. **`raisedByRule`:** functional (one rule per alert), or several, for alerts that tools merge?
 3. **Severity:** keep the string, or a category scheme now?
 4. **Disposition values:** are the four enough? OCSF separates a finding's status (new, in
    progress, resolved) from its verdict; STONEWORK's runs already say when triage happened.
-5. **`escalatedTo`:** or an existing property for an incident's parts?
+5. ~~**`escalatedTo`:** or an existing property for an incident's parts?~~ Settled:
+   `escalatedTo` (Alert → Incident). `hasEvent`'s range is `Event`, so using it would make
+   the alert an Event, which this proposal rejects.
 
 ## Release
 
