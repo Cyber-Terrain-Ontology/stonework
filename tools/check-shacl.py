@@ -380,6 +380,11 @@ def main() -> int:
             "core",
             "Credential-dump trace raised a shape finding",
         )
+        failures += expect_silent(
+            "shacl-valid-competes-with.ttl",
+            "core",
+            "A confirmed hypothesis competing with a pending one should be silent",
+        )
 
         # Malformed records: the value is wrong, not merely absent.
         for fixture in (
@@ -396,6 +401,8 @@ def main() -> int:
             "shacl-invalid-hypothesis-lineage.ttl",
             "shacl-invalid-assesses-exploitation.ttl",
             "shacl-invalid-merged-into.ttl",
+            "shacl-invalid-competes-with.ttl",
+            "shacl-invalid-competes-with-self.ttl",
         ):
             failures += expect_violation(
                 fixture, "core", "Malformed fixture was accepted"
@@ -512,6 +519,11 @@ def main() -> int:
             "shacl-warning-hypothesis-lineage.ttl",
             "core",
             "A pending Hypothesis set aside by its lineage should warn, not fail",
+        )
+        failures += expect_warning(
+            "shacl-warning-competes-with.ttl",
+            "core",
+            "Two confirmed rivals should warn, not fail",
         )
         failures += expect_warning(
             "shacl-warning-currency-exchange.ttl",

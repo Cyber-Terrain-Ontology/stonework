@@ -14,8 +14,8 @@
 	dcterms:description "A semantic threat ontology and research framework that serves as the ground-truth model for cyber threat intelligence in the CyberTerrain ecosystem. It provides an extensible foundation for modeling cyber threat intelligence concepts, objects, relationships, workflows, and knowledge, and aligns with established CTI framework ontologies — including STONES (STIX 2.1), ATT&CK, CAPEC, CWE, CVE, and CPE — as authoritative reference vocabularies rather than ontologies it imports and extends." ;
 	dcterms:license <https://opensource.org/licenses/MIT> ;
 	dcterms:title "STONEWORK — Semantic Threat Ontology and Research Framework"@en ;
-	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.19.0> ;
-	owl:versionInfo "0.19.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/stonework/0.20.0> ;
+	owl:versionInfo "0.20.0" ;
 	.
 
 stonework:AIAgent
@@ -544,7 +544,7 @@ stonework:Hypothesis
 	rdfs:subClassOf stonework:IntelligenceProduct ;
 	skos:definition "A structured, falsifiable prediction about the value a Variable will resolve to once the Behavior or Step declaring that Variable executes."@en ;
 	skos:prefLabel "Hypothesis" ;
-	skos:scopeNote "Formalizes the anticipated side of the Variable lifecycle described in stonework:Variable's scopeNote: a Hypothesis names, in advance, the value an output Variable is predicted to be bound to. Linked to the Variable it predicts via stonework:predictsVariable, and to the prediction itself via stonework:predictedType (a class, the common case — mirrors stonework:guardType), stonework:predictedValue (a specific individual), or stonework:predictedLiteral (a scalar) — mirroring stonework:boundTo/stonework:boundToLiteral on the actual-result side. A Hypothesis is judged against the stonework:VariableBinding of its Variable in the Investigation that tests it (stonework:testsHypothesis): the binding stonework:boundIn that Investigation or in an execution stonework:partOfExecution it. When a run binds the Variable more than once, as when one search Step is run for each of several mailboxes, the Step's own execution (itself an Investigation) tests the Hypothesis, so that one binding judges it. A Transition's guard properties, which test a Variable's actual bound value, implicitly test agreement with whichever Hypothesis predicted that Variable — confirming it if they match, refuting it otherwise. May attach at any level of a Step/Plan decomposition, since stonework:Step is itself a stonework:Behavior. What a Hypothesis is about is stonework:hypothesisAbout. A compound claim, such as \"actor X is using technique Y\", is a Hypothesis whose stonework:hypothesisPart values are its separately testable claims (the activity, the attribution), so a refuted compound shows which part failed. Lineage keeps the earlier Hypothesis: stonework:splitFrom names the one this was split from, stonework:absorbedInto the one this was merged into, and stonework:obsoletes the one this replaces. The earlier Hypothesis's status becomes superseded unless it was already confirmed or refuted."@en ;
+	skos:scopeNote "Formalizes the anticipated side of the Variable lifecycle described in stonework:Variable's scopeNote: a Hypothesis names, in advance, the value an output Variable is predicted to be bound to. Linked to the Variable it predicts via stonework:predictsVariable, and to the prediction itself via stonework:predictedType (a class, the common case — mirrors stonework:guardType), stonework:predictedValue (a specific individual), or stonework:predictedLiteral (a scalar) — mirroring stonework:boundTo/stonework:boundToLiteral on the actual-result side. A Hypothesis is judged against the stonework:VariableBinding of its Variable in the Investigation that tests it (stonework:testsHypothesis): the binding stonework:boundIn that Investigation or in an execution stonework:partOfExecution it. When a run binds the Variable more than once, as when one search Step is run for each of several mailboxes, the Step's own execution (itself an Investigation) tests the Hypothesis, so that one binding judges it. A Transition's guard properties, which test a Variable's actual bound value, implicitly test agreement with whichever Hypothesis predicted that Variable — confirming it if they match, refuting it otherwise. May attach at any level of a Step/Plan decomposition, since stonework:Step is itself a stonework:Behavior. What a Hypothesis is about is stonework:hypothesisAbout. A compound claim, such as \"actor X is using technique Y\", is a Hypothesis whose stonework:hypothesisPart values are its separately testable claims (the activity, the attribution), so a refuted compound shows which part failed. Alternatives (\"X or W did it\") are separate Hypotheses linked by stonework:competesWith; confirming one does not refute the other. Lineage keeps the earlier Hypothesis: stonework:splitFrom names the one this was split from, stonework:absorbedInto the one this was merged into, and stonework:obsoletes the one this replaces. The earlier Hypothesis's status becomes superseded unless it was already confirmed or refuted."@en ;
 	.
 
 stonework:IBAN
@@ -1971,6 +1971,18 @@ stonework:communicatesWith
 	] ;
 	skos:definition "Relates a MalwareSample or Tool to Infrastructure or a URI with which it exchanges command-and-control or exfiltration traffic. Distinct from stonework:deliveredVia, which covers initial delivery."@en ;
 	skos:prefLabel "communicatesWith" ;
+	.
+
+stonework:competesWith
+	a
+		owl:ObjectProperty ,
+		owl:SymmetricProperty
+		;
+	rdfs:domain stonework:Hypothesis ;
+	rdfs:range stonework:Hypothesis ;
+	skos:definition "Relates two Hypotheses that answer the same question, where the analyst does not accept both."@en ;
+	skos:prefLabel "competesWith"@en ;
+	skos:scopeNote "Stated, not inferred, and not transitive: with three alternatives, each pair is asserted. Not a lineage link. stonework:splitFrom, stonework:absorbedInto and stonework:obsoletes relate a Hypothesis to its own history; competesWith relates rivals that are open at the same time. stonework:hypothesisPart is a conjunction of one claim, not an alternative. Confirming one Hypothesis does not refute its rivals; each status stays explicit. A warning when both are confirmed, since either a confirmation or the rivalry is wrong. The matrix that rates each item of evidence against each Hypothesis is not this property."@en ;
 	.
 
 stonework:compilationTimestamp
@@ -3563,7 +3575,7 @@ stonework:hypothesisPart
 	rdfs:range stonework:Hypothesis ;
 	skos:definition "Relates a compound Hypothesis to one of the claims it is the conjunction of: the compound holds only if every part holds."@en ;
 	skos:prefLabel "hypothesisPart"@en ;
-	skos:scopeNote "\"X is doing Y\" is two claims tested differently: that Y is happening (a search can confirm it) and that X is doing it (only attribution evidence can). Testing them together, a failure says only that something is wrong. As parts, each is a Hypothesis with its own prediction, test, status (stonework:hasHypothesisStatus), confidence and evidence, so the parts with status refuted are the ones that failed, and a confirmed part survives a refuted compound for reuse in a new one. Conjunction only: alternatives (\"X or W did it\") are competing Hypotheses, not parts of one. The compound's status and confidence stay explicit, not inferred; consistency requires that a confirmed compound has only confirmed parts, that a compound with a refuted part is refuted, and that its confidence is no higher than any part's. Parts may themselves have parts."@en ;
+	skos:scopeNote "\"X is doing Y\" is two claims tested differently: that Y is happening (a search can confirm it) and that X is doing it (only attribution evidence can). Testing them together, a failure says only that something is wrong. As parts, each is a Hypothesis with its own prediction, test, status (stonework:hasHypothesisStatus), confidence and evidence, so the parts with status refuted are the ones that failed, and a confirmed part survives a refuted compound for reuse in a new one. Conjunction only: alternatives (\"X or W did it\") are competing Hypotheses linked by stonework:competesWith, not parts of one. The compound's status and confidence stay explicit, not inferred; consistency requires that a confirmed compound has only confirmed parts, that a compound with a refuted part is refuted, and that its confidence is no higher than any part's. Parts may themselves have parts."@en ;
 	.
 
 stonework:iban
