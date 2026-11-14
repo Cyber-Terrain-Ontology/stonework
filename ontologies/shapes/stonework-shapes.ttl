@@ -139,6 +139,47 @@ stonework:CertificateValidityShape
 	sh:targetClass stonework:Certificate ;
 	.
 
+stonework:CompetesWithShape
+	a sh:NodeShape ;
+	sh:property [
+		sh:class stonework:Hypothesis ;
+		sh:message "competesWith relates two Hypotheses."@en ;
+		sh:path stonework:competesWith ;
+	] ;
+	sh:sparql [
+		sh:message "A Hypothesis does not compete with itself."@en ;
+		sh:select """
+			PREFIX stonework: <https://cyberterrain.org/ns/stonework#>
+			SELECT $this ?path
+			WHERE {
+				$this stonework:competesWith $this .
+				BIND (stonework:competesWith AS ?path)
+			}
+			""" ;
+	] ;
+	sh:targetSubjectsOf stonework:competesWith ;
+	.
+
+stonework:CompetingConfirmedShape
+	a sh:NodeShape ;
+	sh:severity sh:Warning ;
+	sh:sparql [
+		sh:message "Two competing Hypotheses are both confirmed. Either a confirmation or the rivalry is wrong. Confirming one does not refute the other."@en ;
+		sh:select """
+			PREFIX stonework: <https://cyberterrain.org/ns/stonework#>
+			SELECT $this ?path
+			WHERE {
+				$this stonework:competesWith ?rival .
+				FILTER ( $this != ?rival )
+				$this stonework:hasHypothesisStatus stonework:hypothesisStatusConfirmed .
+				?rival stonework:hasHypothesisStatus stonework:hypothesisStatusConfirmed .
+				BIND (stonework:competesWith AS ?path)
+			}
+			""" ;
+	] ;
+	sh:targetSubjectsOf stonework:competesWith ;
+	.
+
 stonework:ConfidenceShape
 	a sh:NodeShape ;
 	sh:property [

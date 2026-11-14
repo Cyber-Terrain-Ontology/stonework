@@ -719,7 +719,8 @@ hypothesis-and-evidence layer.
 ## Gaps, as proposals
 
 Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.12.0, and
-20 is done in 0.15.0, 21 and 22 in 0.16.0, 23 in 0.17.0; the rest are not in the ontology yet.
+20 is done in 0.15.0, 21 and 22 in 0.16.0, 23 in 0.17.0, 28 in 0.20.0; the rest are not in
+the ontology yet.
 
 1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
    (Hypothesis → anything, not functional) links a hypothesis to the technique, actor,
@@ -727,7 +728,8 @@ Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.
    whose parts can fail separately ("X is doing Y": the activity and the attribution) is a
    compound with `stonework:hypothesisPart` (Hypothesis → Hypothesis): it holds only if every
    part holds, each part has its own test, status and confidence, and the refuted parts say
-   which claim failed. Conjunction only; alternatives are competing hypotheses. The
+   which claim failed. Conjunction only; alternatives are competing hypotheses linked by
+   `stonework:competesWith` (proposal 28). The
    compound's status stays explicit, checked against its parts by a query.
 
 2. **Done in 0.12.0: a Step names the Role that performs it.** `stonework:performerRole`
@@ -895,3 +897,9 @@ Smaller things:
     needs versions, so past runs aren't judged against a process they never followed:
     `stonework:revisionOf` (Plan → Plan), with `planVersion` on each version. See
     [plan-execution-model.md](plan-execution-model.md#2e-calling-a-plan-and-revising-one-0170).
+
+28. **Done in 0.20.0: competing hypotheses.** Alternatives ("X or W did it") are not parts of
+    one hypothesis. `stonework:competesWith` (symmetric, Hypothesis ↔ Hypothesis) links two
+    that answer the same question when the analyst does not accept both. It is stated, not
+    inferred, and not transitive, and it is not lineage. Confirming one does not refute the
+    other. A warning when both are confirmed.

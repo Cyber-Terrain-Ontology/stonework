@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.20.0 (core): competing hypotheses
+
+Alternatives are separate hypotheses. `competesWith` links two that answer the same question when the analyst does not accept both. Confirming one does not refute the other.
+
+### Added
+
+- `stonework:competesWith` (Hypothesis ↔ Hypothesis, symmetric, not transitive): stated, not inferred. With three alternatives, each pair is asserted. Not lineage (`splitFrom`, `absorbedInto`, `obsoletes`) and not a conjunction (`hypothesisPart`). `CompetesWithShape`: the object is a Hypothesis other than the subject. `CompetingConfirmedShape` warns when both rivals are confirmed.
+
+### Changed
+
+- Docs: [plan-execution-model.md](docs/plan-execution-model.md), [bec-worked-example.md](docs/bec-worked-example.md).
+
 ## 0.19.0 (core), categories 0.7.0: hypothesis lineage
 
 A hypothesis that is split, merged, or replaced is kept. The new one points at the earlier one, and the earlier one is superseded unless it already reached a verdict.
