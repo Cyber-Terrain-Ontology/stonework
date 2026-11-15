@@ -47,12 +47,22 @@ automated tool capturing one or more cyber observables", so an Alert inherits th
 | `stonework:matchedIndicator` | Alert → Indicator | For an indicator-matching rule, the indicator that matched. |
 | `stonework:hasAlertSeverity` | Alert → SeverityLevel (functional) | The level the sensor gave it, in the sensor's own scheme. See [Severity](#severity). |
 | `stonework:escalatedTo` | Alert → Incident | The incident it became part of. |
+| `stonework:observedEvent` | SecurityObservation → Event (optional) | The Event the observation recorded, when the graph holds one: a firewall log entry loaded through the OCSF adapter, or an email's delivery. Most alerts won't have one. |
 
 What triage decided is not a property of the Alert: it is a dated history, below.
 
-**Not a status attached to an event.** An Alert is a record of its own because appliances
-raise many alerts with no event behind them. A false positive still has to be looked at, and
-the look has to be recorded, but there is nothing for a status to be attached to.
+**What an alert is about.** Every alert is about something that happened: a connection, a
+download, a login. The Alert is the record that ties the parts together, much as a chess game
+ties two players and a referee where a binary link can't: the sensor that saw it
+(`madeBySensor`), what it saw and when (the observables and the observation window), the rule
+that matched (`raisedByRule`) and, for an indicator rule, the indicator (`matchedIndicator`).
+
+**Not a status attached to an event.** What happened doesn't have to be stored as an Event
+of its own. A SOC's appliances raise thousands of alerts a day, most of them false
+positives, and a graph holding an Event for each harmless connection would mostly hold
+noise. The Alert carries what the sensor saw, and that is enough to triage it. When an Event
+record does exist, `observedEvent` links to it. So the Alert is a record of its own, and
+triage is recorded on the Alert, not as a status on an Event.
 
 ### Disposition history
 
@@ -126,6 +136,19 @@ labels in other languages. The proposal:
 - a `SecurityObservation` is what a sensor recorded about it;
 - an `Alert` is a sensor saying "look at this";
 - an `Incident` is a person, or automation, declaring it significant and adverse.
+
+Put shortly: an Event is something that happened, an Alert is something suspicious that
+happened, and an Incident is something harmful or unauthorized that happened. For example,
+a web proxy appliance fires each time a developer visits a site that once served a
+malicious component, long after the lab has patched the component:
+
+- the Event: a developer visited the site (the proxy log has it; the graph needn't);
+- the Alert: the appliance told the SOC that someone visited a site with a malicious
+  component, thousands of times over;
+- the Incident, had there been one: the malicious code compromised a developer's device.
+
+Each of those alerts is triaged as benign. None of them becomes an incident, and the
+graph holds no Event for them.
 
 `stonework:Event`'s scope note would drop "alert" from its list, and
 `stonework:SecurityObservation`'s would change: it now calls a security observation "the raw
@@ -255,6 +278,7 @@ ex:watch-198-51-100-23
 ex:alert-1012-0412
     a stonework:Alert ;
     stonework:madeBySensor ex:fw-edge ;
+    stonework:hasObservable ex:ip-198-51-100-23 ;     # what it saw; no Event record needed
     stonework:raisedByRule ex:fw-blocklist ;
     stonework:matchedIndicator ex:ind-198-51-100-23 ;
     stonework:hasAlertSeverity ex:fwvendor-high ;
@@ -313,6 +337,10 @@ ex:map-fwvendor-high
    `typicalSeverity` with level properties in this release, or keep them as strings and
    replace them in a later one? Replacing them changes what the Encyclopedia's nightly
    loader writes for every CVE.
+9. **`observedEvent`:** its domain is SecurityObservation, so a plain observation can name
+   its Event too, not only an Alert. Is that right, and should it be functional, or can one
+   observation record several Events (a sensor's summary of a burst of connections)? Ryan's
+   view: several, not functional.
 
 ## Release
 
