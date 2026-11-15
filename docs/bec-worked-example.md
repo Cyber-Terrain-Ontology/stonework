@@ -902,9 +902,11 @@ to an indicator feed, watching its firewall. See
 
 24. **Alert.** The word every SOC uses has no term; `Event`'s scope note lists alerts among
     pre-triage occurrences. Proposal: `stonework:Alert` ⊑ `SecurityObservation`, with
-    `raisedByRule` (the rule that fired), `matchedIndicator`, severity, an `AlertDisposition`
-    scheme (true positive, benign, false positive, duplicate) and `escalatedTo` an Incident;
-    aligned with OCSF's Detection Finding by `skos:closeMatch`.
+    `raisedByRule` (the rule that fired), `matchedIndicator`, the sensor's severity level and
+    `escalatedTo` an Incident; aligned with OCSF's Detection Finding by `skos:closeMatch`.
+    Triage is a dated history (`AlertTriage`, each with an `AlertDisposition`: true positive,
+    benign, false positive, duplicate), not one property on the Alert. Severity becomes one
+    STONEWORK scale from 0 to 100, with each source's levels mapped to bands on it.
 
 25. **Subscription.** `Feed` and `Publication` say where intelligence came from, not that an
     organization was receiving it. Proposal: `stonework:Subscription` ⊑ `QualifiedAssertion`,

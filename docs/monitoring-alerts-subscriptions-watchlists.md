@@ -1,6 +1,6 @@
 # Design: alerts, subscriptions and watchlists
 
-*Proposed 2026-11-07. Proposals 24 to 27 in
+*Proposed 2026-11-07; revised 2026-11-15 after review (#114, #117). Proposals 24 to 27 in
 [bec-worked-example.md](bec-worked-example.md#gaps-as-proposals). Not in the ontology yet.*
 
 ## The gap
@@ -45,13 +45,80 @@ automated tool capturing one or more cyber observables", so an Alert inherits th
 |---|---|---|
 | `stonework:raisedByRule` | Alert → DetectionRule | The rule that fired. A correlated alert names the correlation rule. Not `triggeredBy`, which already links a Plan to the Event or Incident that starts it. |
 | `stonework:matchedIndicator` | Alert → Indicator | For an indicator-matching rule, the indicator that matched. |
-| `stonework:severity` | existing (string) | Widened to Alert. Kept a string, since tools score severity differently. |
-| `stonework:hasAlertDisposition` | Alert → AlertDisposition (functional; in `categories.ttl`) | What triage decided. Absent until triaged. |
+| `stonework:hasAlertSeverity` | Alert → SeverityLevel (functional) | The level the sensor gave it, in the sensor's own scheme. See [Severity](#severity). |
 | `stonework:escalatedTo` | Alert → Incident | The incident it became part of. |
+
+What triage decided is not a property of the Alert: it is a dated history, below.
+
+**Not a status attached to an event.** An Alert is a record of its own because appliances
+raise many alerts with no event behind them. A false positive still has to be looked at, and
+the look has to be recorded, but there is nothing for a status to be attached to.
+
+### Disposition history
+
+An alert's disposition changes: it waits, someone looks at it, it's found benign, later it's
+reopened when a related incident turns up. One functional `hasAlertDisposition` on the Alert
+would keep only the last decision. Instead each decision is a triage of its own, following
+`stonework:Review`:
+
+**`stonework:AlertTriage`** ⊑ `stonework:Process`: *an analyst's or tool's examination of an
+Alert, ending in a disposition.*
+
+| Term | | Meaning |
+|---|---|---|
+| `hasInput` | existing | The Alert (or Alerts) triaged. |
+| `performedBy` | existing | Who decided: a person, or the tool that auto-closed it. |
+| `startedAtTime`, `endedAtTime` | existing | When. A triage with a start and no end is one in progress ("under review"). |
+| `stonework:hasAlertDisposition` | AlertTriage → AlertDisposition (functional; in `categories.ttl`) | What it decided. |
+| `correspondsToStep`, `partOfExecution` | existing | The triage Step of the detection plan, and the run it belongs to. |
 
 **`AlertDisposition`** scheme: *true positive* (the activity is malicious), *benign* (the rule
 matched correctly, but the activity is expected: a scanner, an admin), *false positive* (the
 rule matched in error), *duplicate* (another alert covers it).
+
+An alert with no triage is untriaged. Its current disposition is the one from the triage that
+ended last; earlier triages stay as the record of the work, as later Reviews supersede earlier
+ones. "Escalated" is not a disposition: it is `escalatedTo`, alongside a true-positive triage.
+"Downgraded" is a change of severity, which a triage can record (question 6).
+
+Each triage is a Step execution, so who did it and when come from the run, and the plan
+checks (performer, separation of duties, skipped steps) apply to triage like any other step.
+A triage imported from a tool's case history also needs its source (question 7).
+
+### Severity
+
+Every system scores severity its own way, and every severity in STONEWORK today is a bare
+string: `stonework:severity` (Event, Incident), `stonework:cvssSeverity`, and CAPEC's
+`capec:typicalSeverity`. Strings can't be compared across sources, and they can't carry
+labels in other languages. The proposal:
+
+1. **One STONEWORK severity scale, an integer from 0 to 100.** 0 is no severity (CVSS "None",
+   "informational"). It is the ground truth other scales map to.
+2. **An outside scale's levels are individuals.** **`stonework:SeverityLevel`** ⊑ `skos:Concept`,
+   one `skos:ConceptScheme` per source (an appliance vendor, CVSS, CAPEC), with `skos:prefLabel`
+   in as many languages as needed.
+3. **Each level maps to a band, not a point.** A vendor's "High" means somewhere in a range.
+   **`stonework:SeverityMapping`** ⊑ `QualifiedAssertion`:
+
+   | Term | | Meaning |
+   |---|---|---|
+   | `stonework:mapsLevel` | SeverityMapping → SeverityLevel (functional) | The source's level. |
+   | `stonework:severityLowerBound`, `stonework:severityUpperBound` | integer 0–100 (functional) | The band on the STONEWORK scale. A shape checks lower ≤ upper. |
+   | `stonework:mappingForVersion` | string | The product or specification version the mapping holds for. Vendors change their scales between versions. |
+   | `hasProvenance` | existing | Who made the mapping. A mapping is a judgment. |
+
+4. **Bands are per source, and not always even.** An appliance with Low / Medium / High might
+   map them to 1–33, 34–66 and 67–100. CVSS, the first scheme STONEWORK ships, is its 0.0–10.0
+   score times ten: None 0, Low 1–39, Medium 40–69, High 70–89, Critical 90–100. A source that
+   gives a number, as CVSS does, has a point on the scale as well as a band.
+5. **The record keeps what the source said.** The Alert carries the vendor's level; its place
+   on the scale comes through the mapping. A wrong mapping is corrected in one place, without
+   touching the data.
+6. **Severity of what.** An alert's severity (how urgent the vendor thinks it is), a
+   vulnerability's (technical severity) and an incident's (assessed impact) are different
+   things. They share the scale so they can be compared, and each keeps its own property:
+   `hasAlertSeverity` here; the vulnerability and incident properties come when the existing
+   strings are replaced (question 8).
 
 **How it differs from its neighbours:**
 
@@ -70,10 +137,6 @@ indicator, was seen. An Alert with `matchedIndicator` is close to that, but it i
 raising the match for triage, and the match may be wrong. The Sighting is the assertion that
 the indicator was seen, recorded when triage finds the alert a true positive: the triage Step
 `produces` it, citing the alert. A false positive leaves an Alert and no Sighting.
-
-**Triage** is a Step in a detection plan, performed by a Role, whose output Variable binds the
-disposition. So "who triaged it, and when" is the run's, and the plan checks (performer,
-separation of duties, skipped steps) apply to triage like any other step.
 
 **OCSF.** OCSF 1.9 has *Detection Finding* (class 2004), with severity, status and
 disposition. STONEWORK's OCSF adapter places every OCSF event under `stonework:Event`, an
@@ -143,6 +206,28 @@ so a same-day feed would look instant and an old public report would look like a
 delivery. A delivery record of its own (which
 bundle, which poll) can come later if a case needs it.
 
+## The window of exposure
+
+Dated watchlist entries show when an organization could not yet detect an indicator that was
+already in use. That window needs no term of its own: it is a documented query over dates
+these proposals record.
+
+- **Start:** the earliest date a source shows the indicator in use: a report's
+  `publishedDate`, a sighting's first-seen time, or the date a CVE's exploitation was first
+  reported.
+- **End:** the watchlist entry's `validFrom` (Proposal 26), when the rule began to detect it.
+- **In between, `receivedAt` (Proposal 27) splits it in two:** start to received is the
+  feed's delay, received to `validFrom` the SOC's. Different problems with different owners,
+  so both dates are kept.
+
+What follows from the window uses existing terms. The search back through the logs is a run
+of a detection plan, one step per log source, over the window. Anything it finds is an
+Alert raised by that hunt's rule and triaged like any other. An investigation's conclusion
+"we were exposed from X to Y" is a finding resting on the query and its dates. A tool can
+start the search whenever an indicator reaches a watchlist with a start date in the past;
+that is tooling, but the ontology records each run. A class for a named window can come later,
+if analysts need to cite one on its own.
+
 ## Example
 
 ```turtle
@@ -172,9 +257,37 @@ ex:alert-1012-0412
     stonework:madeBySensor ex:fw-edge ;
     stonework:raisedByRule ex:fw-blocklist ;
     stonework:matchedIndicator ex:ind-198-51-100-23 ;
-    stonework:severity "high" ;
-    stonework:hasAlertDisposition stonework:alertDispositionTruePositive ;
+    stonework:hasAlertSeverity ex:fwvendor-high ;
     stonework:escalatedTo ex:incident-1012 .
+
+# Two triages: the night shift's auto-rule closed it as benign; the morning analyst reopened it.
+ex:triage-1012-0412-a
+    a stonework:AlertTriage ;
+    stonework:hasInput ex:alert-1012-0412 ;
+    stonework:performedBy ex:soar-autoclose ;
+    stonework:endedAtTime "2026-10-12T04:13:00Z"^^xsd:dateTime ;
+    stonework:hasAlertDisposition stonework:alertDispositionBenign .
+
+ex:triage-1012-0412-b
+    a stonework:AlertTriage ;
+    stonework:hasInput ex:alert-1012-0412 ;
+    stonework:performedBy ex:analyst-kim ;
+    stonework:endedAtTime "2026-10-12T08:40:00Z"^^xsd:dateTime ;     # ended last: current
+    stonework:hasAlertDisposition stonework:alertDispositionTruePositive .
+
+# The firewall vendor's "High", placed on the STONEWORK scale.
+ex:fwvendor-high
+    a stonework:SeverityLevel ;
+    skos:inScheme ex:fwvendor-severity ;
+    skos:prefLabel "High"@en , "Élevée"@fr .
+
+ex:map-fwvendor-high
+    a stonework:SeverityMapping ;
+    stonework:mapsLevel ex:fwvendor-high ;
+    stonework:severityLowerBound 67 ;
+    stonework:severityUpperBound 100 ;
+    stonework:mappingForVersion "7.4" ;
+    stonework:hasProvenance ex:soc-severity-review-2026 .
 ```
 
 ## Questions for discussion
@@ -182,16 +295,29 @@ ex:alert-1012-0412
 1. **OCSF:** `skos:closeMatch` between `ocsf:DetectionFinding` and `stonework:Alert`, or should
    Alert be an Event after all?
 2. **`raisedByRule`:** functional (one rule per alert), or several, for alerts that tools merge?
-3. **Severity:** keep the string, or a category scheme now?
+3. ~~**Severity:** keep the string, or a category scheme now?~~ Settled (#114): one 0–100
+   STONEWORK scale, each source's levels as individuals mapped to bands. See
+   [Severity](#severity).
 4. **Disposition values:** are the four enough? OCSF separates a finding's status (new, in
-   progress, resolved) from its verdict; STONEWORK's runs already say when triage happened.
+   progress, resolved) from its verdict. Here the status comes from the triages (none,
+   one in progress, one ended), and the scheme holds only the verdict.
 5. ~~**`escalatedTo`:** or an existing property for an incident's parts?~~ Settled:
    `escalatedTo` (Alert → Incident). `hasEvent`'s range is `Event`, so using it would make
    the alert an Event, which this proposal rejects.
+6. **Downgrading:** a triage that changes an alert's severity. Record the analyst's level on
+   the triage (`hasAlertSeverity` widened to AlertTriage), leaving the sensor's on the Alert?
+7. **A triage's source:** `hasProvenance` applies to IntelligenceProducts and
+   QualifiedAssertions, not activities. Widen it to AlertTriage, for triages imported from a
+   SIEM's or SOAR's case history, or is the run's provenance enough?
+8. **The existing strings:** replace `stonework:severity`, `cvssSeverity` and CAPEC's
+   `typicalSeverity` with level properties in this release, or keep them as strings and
+   replace them in a later one? Replacing them changes what the Encyclopedia's nightly
+   loader writes for every CVE.
 
 ## Release
 
-A minor core version with categories (the `AlertDisposition` scheme), with shapes for the
-new functional properties, fixtures, and a worked example: a week of a SOC's firewall alerts
-against a CISA advisory's indicators, with one indicator loaded late and one kept past its
-expiry.
+A minor core version with categories (the `AlertDisposition` scheme, the CVSS severity scheme
+and its bands), with shapes for the new functional properties and the band bounds, fixtures,
+and a worked example: a week of a SOC's firewall alerts against a CISA advisory's
+indicators, with one indicator loaded late, one kept past its expiry, and one alert closed
+and reopened.
