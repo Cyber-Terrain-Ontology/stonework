@@ -337,6 +337,17 @@ ex:map-fwvendor-high
    `typicalSeverity` with level properties in this release, or keep them as strings and
    replace them in a later one? Replacing them changes what the Encyclopedia's nightly
    loader writes for every CVE.
+
+   **Proposed answer: add, don't replace.** CVSS stays in full: each `CvssMetric`'s base
+   score, vector, version and base severity, the vector's parts as `cvss:` terms, and the
+   shortcuts on the Vulnerability (`cvssBaseScore`, `cvssVector`, `cvssSeverity`). CVSS
+   is the industry's common language for vulnerability severity, and the vector says
+   things a level can't (network or local, user interaction). The severity scale doesn't
+   replace it: CVSS becomes the first scheme, its five levels mapped to bands on the
+   scale. So the level property is added beside the string, which stays. Queries that use
+   `cvssSeverity` keep working, and the nightly's change is an addition, not a rewrite.
+   The strings are deprecated later, if ever, once the tools that read them use the
+   levels. The same holds for `stonework:severity` and CAPEC's `typicalSeverity`.
 9. **`observedEvent`:** its domain is SecurityObservation, so a plain observation can name
    its Event too, not only an Alert. Is that right, and should it be functional, or can one
    observation record several Events (a sensor's summary of a burst of connections)? Ryan's
