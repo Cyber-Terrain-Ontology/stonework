@@ -720,7 +720,8 @@ hypothesis-and-evidence layer.
 
 Numbered for discussion. Proposals 1, 2, 4 to 10, 12 and 13 to 16 are done in 0.12.0, and
 20 is done in 0.15.0, 21 and 22 in 0.16.0, 23 in 0.17.0, 28 in 0.20.0; the rest are not in
-the ontology yet. 24 to 27 are proposed in [monitoring-alerts-subscriptions-watchlists.md](monitoring-alerts-subscriptions-watchlists.md).
+the ontology yet. 24 to 27 are proposed in [monitoring-alerts-subscriptions-watchlists.md](monitoring-alerts-subscriptions-watchlists.md);
+30 and 32 have design notes under review (#123, #126).
 
 1. **Done in 0.12.0: what a hypothesis is about, and its parts.** `stonework:hypothesisAbout`
    (Hypothesis → anything, not functional) links a hypothesis to the technique, actor,
@@ -930,3 +931,30 @@ to an indicator feed, watching its firewall. See
     that answer the same question when the analyst does not accept both. It is stated, not
     inferred, and not transitive, and it is not lineage. Confirming one does not refute the
     other. A warning reports when both are confirmed.
+
+29. **Compound consistency.** The `hypothesisPart` note already says that a confirmed compound
+    has only confirmed parts, that a compound with a refuted part is refuted, and that its
+    confidence is no higher than any part's. Shapes check only that each part is a
+    Hypothesis. Proposal: three warnings, one per rule, plus one for a superseded part of a
+    confirmed compound. They report a disagreement without changing anything. They need
+    SPARQL constraints, and the README line that says shapes don't check consistency would
+    change. (Raised by Jeff on #121.)
+
+30. **The CTI Encyclopedia's build record.** A statement drawn from the Encyclopedia should
+    say which release of each source it rests on and when that was last confirmed current.
+    Proposal: each source is a `Feed`, the nightly update is a `Plan` with a Step per source,
+    and each Step's execution records `stonework:sourceRelease` and
+    `stonework:hasLoadOutcome` (a new `LoadOutcome` scheme: loaded, already current,
+    refused, failed). Design note in #123.
+
+31. **Findings and custody.** A finding is a `QualifiedAssertion` subclass, kept apart from
+    the Hypothesis it bears on and the report that cites it. `Custody` records one holding
+    of an item (custodian, the item and its hash, interval, place, purpose, handling), and
+    `ChainOfCustody` is the record for one item, judged intact, broken or unverified. Not
+    written yet; waiting on the discussion of what real custody records hold.
+
+32. **How a vulnerability is exploited.** Proposal: `stonework:TechniqueMapping` ⊑
+    `QualifiedAssertion`, a source's claim that a technique is used with a vulnerability,
+    with `stonework:hasMappingRole` (a `MappingRole` scheme after CTID's: exploitation
+    technique, primary impact, secondary impact) and required provenance. Corroboration is
+    an `Opinion` of the mapping; no shortcut properties. Design note in #126.
