@@ -298,6 +298,7 @@ def main() -> int:
 
     non_transitive_properties = {
         STONEWORK + "categorizedBy",
+        STONEWORK + "competesWith",
         STONEWORK + "drops",
         STONEWORK + "hostedBy",
     }
