@@ -416,7 +416,7 @@ vulnerability assessment, ...).
 | `stonework:deviationKind` | `Deviation` → `DeviationKind` (functional; in `categories.ttl`) | Skipped, wrong role, same agent, out of order, misused identity, wrong target. |
 | `stonework:hypothesisAbout` | `Hypothesis` → anything | What a hypothesis concerns, for finding it; several values, no roles. |
 | `stonework:hypothesisPart` | `Hypothesis` → `Hypothesis` | A claim a compound hypothesis is the conjunction of; refuted parts say which claim failed. |
-| `stonework:competesWith` | `Hypothesis` ↔ `Hypothesis` (symmetric) | Two hypotheses that answer the same question, where the analyst does not accept both. Stated, not inferred. |
+| `stonework:competesWith` | `Hypothesis` ↔ `Hypothesis` (symmetric, irreflexive) | Two hypotheses that answer the same question, where the analyst does not accept both. Stated, not inferred. A hypothesis does not compete with itself. |
 | `stonework:splitFrom` | `Hypothesis` → `Hypothesis` (functional) | This hypothesis is one produced by splitting that one. The parent is kept. |
 | `stonework:absorbedInto` | `Hypothesis` → `Hypothesis` (functional) | This hypothesis was merged into that one. An Investigation merged into another uses `mergedInto`. |
 | `stonework:obsoletes` | `Hypothesis` → `Hypothesis` | This hypothesis replaces that earlier one, which is kept. A refuted hypothesis a new one is formed from. |
@@ -463,12 +463,13 @@ a conjunction, not a successor.
 
 **Competing hypotheses.** Alternatives ("X or W did it") are separate
 hypotheses, not parts of one. `competesWith` links two that answer the same
-question when the analyst does not accept both. It is symmetric, stated
-rather than inferred, and not transitive: three alternatives are three
-pairs. It is not lineage. A query follows either direction, because the
-inverse is not stored. Confirming one does not refute the others, and a
-warning reports when both are confirmed. The matrix that rates each item of
-evidence against each hypothesis is not this property.
+question when the analyst does not accept both. It is symmetric and
+irreflexive, stated rather than inferred, and not transitive: three
+alternatives are three pairs, and a hypothesis does not compete with itself.
+It is not lineage. A query follows either direction, because the inverse is
+not inferred. Stating both directions is fine. Confirming one does not refute
+the others, and a warning reports when both are confirmed. The matrix that
+rates each item of evidence against each hypothesis is not this property.
 
 **Deliberately not built yet:** a home for complex output artifacts (plots,
 time series) — neither `DigitalArtifact` nor `IntelligenceProduct` is an
