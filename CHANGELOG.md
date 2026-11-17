@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased: NIST module 0.3.0, the controls' text
+
+A NIST SP 800-53 control carried only its identifier, family and title. It now carries what it requires and NIST's discussion of it, from the OSCAL catalog.
+
+### Added
+
+- `nist:statement` ⊑ `stonework:description` (functional): what the control requires, its items numbered by their labels, each parameter shown as NIST prints it ("[Assignment: organization-defined ...]").
+- `nist:discussion` ⊑ `stonework:description` (functional): NIST's discussion of the control, the OSCAL part named "guidance". The CTI Encyclopedia copies it into its description graph for semantic search.
+
 ## 0.20.0 (core): competing hypotheses
 
 Alternatives are separate hypotheses. `competesWith` links two that answer the same question when the analyst does not accept both. Confirming one does not refute the other.
