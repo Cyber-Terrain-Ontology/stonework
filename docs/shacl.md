@@ -161,6 +161,10 @@ favour of generic ones, and needed a bespoke SPARQL workaround to enforce
 ordering — which is why severity tiers were not expressible before. Jena's SHACL
 implementation covers the W3C Core constraints this repo uses, including
 `sh:lessThanOrEquals` natively, and reports authored `sh:message` values.
+`CompetesWithShape` and `CompetingConfirmedShape` use SPARQL where Core
+cannot compare two nodes. The first rejects a hypothesis that competes with
+itself. The second warns when both rivals are confirmed.
+`CompetesWithSubjectShape` checks the subject with Core `sh:class`.
 
 Jena always exits 0 when it can produce a ValidationReport, including for
 non-conforming data, so the harness canonicalizes the Turtle report to N-Triples
