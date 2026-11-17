@@ -927,7 +927,7 @@ to an indicator feed, watching its firewall. See
     loop can be measured.
 
 28. **Done in 0.20.0: competing hypotheses.** Alternatives ("X or W did it") are not parts of
-    one hypothesis. `stonework:competesWith` (symmetric, Hypothesis ↔ Hypothesis) links two
+    one hypothesis. `stonework:competesWith` (symmetric and irreflexive, Hypothesis ↔ Hypothesis) links two
     that answer the same question when the analyst does not accept both. It is stated, not
     inferred, and not transitive, and it is not lineage. Confirming one does not refute the
     other. A warning reports when both are confirmed.

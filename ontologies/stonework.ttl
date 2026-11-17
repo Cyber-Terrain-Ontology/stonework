@@ -1976,13 +1976,14 @@ stonework:communicatesWith
 stonework:competesWith
 	a
 		owl:ObjectProperty ,
+		owl:IrreflexiveProperty ,
 		owl:SymmetricProperty
 		;
 	rdfs:domain stonework:Hypothesis ;
 	rdfs:range stonework:Hypothesis ;
 	skos:definition "Relates two Hypotheses that answer the same question, where the analyst does not accept both."@en ;
 	skos:prefLabel "competesWith"@en ;
-	skos:scopeNote "Stated, not inferred, and not transitive: with three alternatives, each pair is asserted. A query follows either direction, stonework:competesWith|^stonework:competesWith, because the inverse is not stored. Not a lineage link. stonework:splitFrom, stonework:absorbedInto and stonework:obsoletes relate a Hypothesis to its own history; competesWith relates rivals that are open at the same time. stonework:hypothesisPart is a conjunction of one claim, not an alternative. Confirming one Hypothesis does not refute its rivals; each status stays explicit. A warning reports when both are confirmed, since either a confirmation or the rivalry is wrong. The matrix that rates each item of evidence against each Hypothesis is not this property."@en ;
+	skos:scopeNote "Stated, not inferred, not transitive, and irreflexive: a Hypothesis does not compete with itself. With three alternatives, each pair is asserted. A query follows either direction, stonework:competesWith|^stonework:competesWith, because the inverse is not inferred. Not a lineage link. stonework:splitFrom, stonework:absorbedInto and stonework:obsoletes relate a Hypothesis to its own history; competesWith relates rivals that are open at the same time. stonework:hypothesisPart is a conjunction of one claim, not an alternative. Confirming one Hypothesis does not refute its rivals; each status stays explicit. A warning reports when both are confirmed, since either a confirmation or the rivalry is wrong. The matrix that rates each item of evidence against each Hypothesis is not this property."@en ;
 	.
 
 stonework:compilationTimestamp

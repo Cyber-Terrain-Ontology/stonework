@@ -296,6 +296,14 @@ def main() -> int:
         if transitive_property not in types[prop]:
             errors.append(f"{describe(prop)} must be an owl:TransitiveProperty")
 
+    irreflexive_property = OWL + "IrreflexiveProperty"
+    required_irreflexive_properties = {
+        STONEWORK + "competesWith",
+    }
+    for prop in sorted(required_irreflexive_properties):
+        if irreflexive_property not in types[prop]:
+            errors.append(f"{describe(prop)} must be an owl:IrreflexiveProperty")
+
     non_transitive_properties = {
         STONEWORK + "categorizedBy",
         STONEWORK + "competesWith",

@@ -6,7 +6,7 @@ Alternatives are separate hypotheses. `competesWith` links two that answer the s
 
 ### Added
 
-- `stonework:competesWith` (Hypothesis ↔ Hypothesis, symmetric, not transitive): stated, not inferred. With three alternatives, each pair is asserted. Not lineage (`splitFrom`, `absorbedInto`, `obsoletes`) and not a conjunction (`hypothesisPart`). `CompetesWithShape`: the object is a Hypothesis other than the subject. `CompetesWithSubjectShape`: the subject is a Hypothesis. A query follows either direction, because the inverse is not stored. `CompetingConfirmedShape` warns when both rivals are confirmed.
+- `stonework:competesWith` (Hypothesis ↔ Hypothesis, symmetric, irreflexive, not transitive): stated, not inferred. With three alternatives, each pair is asserted. A hypothesis does not compete with itself. Not lineage (`splitFrom`, `absorbedInto`, `obsoletes`) and not a conjunction (`hypothesisPart`). `CompetesWithShape`: the object is a Hypothesis other than the subject. `CompetesWithSubjectShape`: the subject is a Hypothesis. A query follows either direction, because the inverse is not inferred. Stating both directions is fine. `CompetingConfirmedShape` warns when both rivals are confirmed.
 
 ### Changed
 
