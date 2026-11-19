@@ -1,12 +1,18 @@
 # Changelog
 
+## 0.20.1 (core): competesWith is irreflexive
+
+### Changed
+
+- `stonework:competesWith` is an `owl:IrreflexiveProperty`: a hypothesis does not compete with itself. `CompetesWithShape` already rejected that; now the ontology says it too, and `tools/check-ontology.py` checks it stays declared. The scope note says the inverse is not *inferred* (it said "not stored"), so stating both directions is fine. Docs: [plan-execution-model.md](docs/plan-execution-model.md), [bec-worked-example.md](docs/bec-worked-example.md).
+
 ## 0.20.0 (core): competing hypotheses
 
 Alternatives are separate hypotheses. `competesWith` links two that answer the same question when the analyst does not accept both. Confirming one does not refute the other.
 
 ### Added
 
-- `stonework:competesWith` (Hypothesis ↔ Hypothesis, symmetric, irreflexive, not transitive): stated, not inferred. With three alternatives, each pair is asserted. A hypothesis does not compete with itself. Not lineage (`splitFrom`, `absorbedInto`, `obsoletes`) and not a conjunction (`hypothesisPart`). `CompetesWithShape`: the object is a Hypothesis other than the subject. `CompetesWithSubjectShape`: the subject is a Hypothesis. A query follows either direction, because the inverse is not inferred. Stating both directions is fine. `CompetingConfirmedShape` warns when both rivals are confirmed.
+- `stonework:competesWith` (Hypothesis ↔ Hypothesis, symmetric, not transitive): stated, not inferred. With three alternatives, each pair is asserted. Not lineage (`splitFrom`, `absorbedInto`, `obsoletes`) and not a conjunction (`hypothesisPart`). `CompetesWithShape`: the object is a Hypothesis other than the subject. `CompetesWithSubjectShape`: the subject is a Hypothesis. A query follows either direction, because the inverse is not stored. `CompetingConfirmedShape` warns when both rivals are confirmed.
 
 ### Changed
 
