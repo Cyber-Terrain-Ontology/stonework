@@ -42,7 +42,7 @@
         <uri name="https://cyberterrain.org/ns/frameworks/killchain" uri="frameworks/killchain.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/killchain/0.1.0" uri="frameworks/killchain.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/nist" uri="frameworks/nist.ttl"/>
-        <uri name="https://cyberterrain.org/ns/frameworks/nist/0.2.0" uri="frameworks/nist.ttl"/>
+        <uri name="https://cyberterrain.org/ns/frameworks/nist/0.3.0" uri="frameworks/nist.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/ocsf" uri="frameworks/ocsf.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/ocsf/0.1.0" uri="frameworks/ocsf.ttl"/>
         <uri name="https://cyberterrain.org/ns/frameworks/registry" uri="extensions/registry.ttl"/>
