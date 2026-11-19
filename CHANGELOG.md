@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.20.1 (core): competesWith is irreflexive
+
+### Changed
+
+- `stonework:competesWith` is an `owl:IrreflexiveProperty`: a hypothesis does not compete with itself. `CompetesWithShape` already rejected that; now the ontology says it too, and `tools/check-ontology.py` checks it stays declared. The scope note says the inverse is not *inferred* (it said "not stored"), so stating both directions is fine. Docs: [plan-execution-model.md](docs/plan-execution-model.md), [bec-worked-example.md](docs/bec-worked-example.md).
+
 ## 0.20.0 (core): competing hypotheses
 
 Alternatives are separate hypotheses. `competesWith` links two that answer the same question when the analyst does not accept both. Confirming one does not refute the other.
