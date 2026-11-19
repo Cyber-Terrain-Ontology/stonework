@@ -72,6 +72,29 @@ be entities of their own (an `IntelligenceProduct` with `hasProvenance` to its F
 CVE List can't: its "release" is a git commit, made several times a day. A string covers
 every source now; release entities can come later if something needs them.
 
+**How it lines up with DCAT and PROV.** The terms are new because they say what a CTI
+citation needs, but the standard vocabularies cover the same ground, and the note follows
+STONEWORK's habit of saying so (as `Plan` does with `prov:Plan`):
+
+- `sourceRelease`'s value is what DCAT 3's `dcat:version` holds: "the version indicator
+  (name or identifier) of a resource". It is **not** declared a sub-property of it. The
+  subject differs: `dcat:version` describes the release itself (ATT&CK v20.1 *has version*
+  v20.1), while `sourceRelease` describes the Step that read it (the night's ATT&CK load
+  *found* v20.1). A sub-property would say the Step has a version. So `sourceRelease` gets
+  `rdfs:seeAlso dcat:version` and a scope note that says this. If release entities come
+  later, each carries `dcat:version`, the Step points at it with `hasInput`, and
+  `sourceRelease` becomes a shortcut that can be derived.
+- A `Feed` is what DCAT calls a `dcat:Dataset` that is published again and again; the
+  Feed's `url` is close to a `dcat:Distribution`'s access URL. Saying so would be an
+  `rdfs:seeAlso dcat:Dataset` on `Feed`, which is already in use; this proposal leaves it
+  as it is, and that can be a small change of its own.
+- The run and its Step executions are PROV activities: the example types them
+  `Process`, which already has `rdfs:seeAlso prov:Activity`. `hasInput` does the work of
+  `prov:used` here but says nothing about PROV today; `actsOn` is the property that carries
+  `rdfs:seeAlso prov:used`. Adding the same `seeAlso` to `hasInput` would be a small,
+  separate change. `hasLoadOutcome` has no PROV or DCAT counterpart: PROV records that an
+  activity used an entity, not whether the attempt succeeded.
+
 **Why a scheme, not a `Deviation`.** A refused load is the plan working as designed: the
 step that checks the source's version is part of the plan. A `Deviation` is a departure
 from the plan, found afterwards.
@@ -153,6 +176,6 @@ no Feed and no release; its outcome and time are what matter.
 
 ## Release
 
-A minor core version: `sourceRelease`, `hasLoadOutcome`, the `LoadOutcome` scheme, shapes
-for the functional property, and fixtures. The Encyclopedia starts writing records with
+A minor core version: `sourceRelease` (with `rdfs:seeAlso dcat:version`), `hasLoadOutcome`,
+the `LoadOutcome` scheme, shapes for the functional property, and fixtures. The Encyclopedia starts writing records with
 the first nightly after the release is loaded on its server.
