@@ -1,13 +1,17 @@
 # Changelog
 
-## Unreleased: NIST module 0.3.0, the controls' text
+## 0.20.1 (core), NIST module 0.3.0: competesWith is irreflexive; the controls' text
 
-A NIST SP 800-53 control carried only its identifier, family and title. It now carries what it requires and NIST's discussion of it, from the OSCAL catalog.
+A hypothesis does not compete with itself, and the ontology now says so. A NIST SP 800-53 control carried only its identifier, family and title; it now carries what it requires and NIST's discussion of it, from the OSCAL catalog.
 
 ### Added
 
 - `nist:statement` ⊑ `stonework:description` (functional): what the control requires, its items numbered by their labels, each parameter shown as NIST prints it ("[Assignment: organization-defined ...]").
 - `nist:discussion` ⊑ `stonework:description` (functional): NIST's discussion of the control, the OSCAL part named "guidance". The CTI Encyclopedia copies it into its description graph for semantic search.
+
+### Changed
+
+- `stonework:competesWith` is an `owl:IrreflexiveProperty`: a hypothesis does not compete with itself. `CompetesWithShape` already rejected that; now the ontology says it too, and `tools/check-ontology.py` checks it stays declared. The scope note says the inverse is not *inferred* (it said "not stored"), so stating both directions is fine. Docs: [plan-execution-model.md](docs/plan-execution-model.md), [bec-worked-example.md](docs/bec-worked-example.md).
 
 ## 0.20.0 (core): competing hypotheses
 
