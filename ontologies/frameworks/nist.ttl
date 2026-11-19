@@ -13,8 +13,8 @@
 	rdfs:label "NIST SP 800-53 Framework Ontology"@en ;
 	rdfs:comment "OWL vocabulary for NIST SP 800-53 Rev 5 security controls as represented in the CTI Encyclopedia. Base controls and control enhancements are both modeled as nist:Control individuals. Enhancements carry a nist:enhancementOf link to their parent control. Withdrawn controls are excluded from the data graph."@en ;
 	owl:imports <https://cyberterrain.org/ns/stonework#> ;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/nist/0.2.0> ;
-	owl:versionInfo "0.2.0" ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/nist/0.3.0> ;
+	owl:versionInfo "0.3.0" ;
 	.
 
 nist:Control
@@ -22,6 +22,18 @@ nist:Control
 	rdfs:subClassOf stonework:Control ;
 	rdfs:label "NIST SP 800-53 Control"@en ;
 	rdfs:comment "A NIST SP 800-53 Rev 5 security control or control enhancement. Base controls (e.g. AC-1) and enhancements (e.g. AC-2(1)) are both instances of this class; enhancements are distinguished by the presence of a nist:enhancementOf triple."@en ;
+	.
+
+nist:discussion
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:description ;
+	rdfs:label "discussion"@en ;
+	rdfs:comment "NIST's discussion of the control: what it is for and how it is applied, in plain prose. The OSCAL catalog's part named 'guidance', printed as 'Discussion' in SP 800-53. References to other publications keep only their titles. Withdrawn controls have none."@en ;
+	rdfs:domain nist:Control ;
+	rdfs:range xsd:string ;
 	.
 
 nist:enhancementOf
@@ -93,6 +105,18 @@ nist:sortId
 		;
 	rdfs:label "sort ID"@en ;
 	rdfs:comment "Zero-padded sort key from the OSCAL catalog, e.g. 'ac-02'. Used for stable ordering within a control family."@en ;
+	rdfs:domain nist:Control ;
+	rdfs:range xsd:string ;
+	.
+
+nist:statement
+	a
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty
+		;
+	rdfs:subPropertyOf stonework:description ;
+	rdfs:label "statement"@en ;
+	rdfs:comment "What the control requires, as SP 800-53 states it: the OSCAL catalog's part named 'statement', one line per item, numbered by the items' labels (a., 1., ...). Each parameter is shown as NIST prints it, '[Assignment: organization-defined ...]' or '[Selection (one or more): ...]', so the text names what an organization fills in without fixing a value."@en ;
 	rdfs:domain nist:Control ;
 	rdfs:range xsd:string ;
 	.
