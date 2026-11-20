@@ -19,9 +19,12 @@ frameworks:stix
 		<https://cyberterrain.org/ns/stonework#> ,
 		<https://cyberterrain.org/ns/stonework/categories#>
 		;
-	owl:versionIRI <https://cyberterrain.org/ns/frameworks/stix/0.4.0> ;
-	owl:versionInfo "0.4.0" ;
-	skos:scopeNote "STIX Bundle is intentionally not mapped to a STONEWORK domain class. A bundle is a transport container rather than a STIX Core Object or an assertion about the cyber domain; consumers may retain it as packaging metadata without treating it as a CyberEntity."@en ;
+	owl:versionIRI <https://cyberterrain.org/ns/frameworks/stix/0.4.1> ;
+	owl:versionInfo "0.4.1" ;
+	skos:scopeNote
+		"STIX Bundle is intentionally not mapped to a STONEWORK domain class. A bundle is a transport container rather than a STIX Core Object or an assertion about the cyber domain; consumers may retain it as packaging metadata without treating it as a CyberEntity."@en ,
+		"The STONES serialization-fidelity terms (STONES 0.3.0: stones:ListOrder, stones:ListItem, stones:listOrder, stones:listProperty, stones:listItem, stones:listIndex, stones:listValue, stones:listRef, stones:unmodeledProperties) are intentionally not mapped to STONEWORK. They record how a STIX document was written (the order of its lists, and the properties STONES does not model, kept verbatim) so it can be regenerated exactly; they make no assertion about the cyber domain. A key that appears in stones:unmodeledProperties is a candidate for a modeled STONES property, which this module would then align."@en
+		;
 	.
 
 stones:ArtifactObject

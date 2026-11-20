@@ -1,5 +1,13 @@
 # Changelog
 
+## STIX module 0.4.1: STONES' serialization-fidelity terms are not mapped
+
+STONES 0.3.0 adds terms that let a STIX document be regenerated exactly from its triples: list order (`stones:ListOrder`, `stones:ListItem` and their properties) and the properties STONES doesn't model, kept verbatim (`stones:unmodeledProperties`). They describe how the document was written, not the cyber domain, so this module leaves them unaligned, as it already does STIX Bundle.
+
+### Changed
+
+- `frameworks:stix` has a second `skos:scopeNote` saying so, and that a key found in `stones:unmodeledProperties` is a candidate for a modeled STONES property this module would then align.
+
 ## 0.20.1 (core), NIST module 0.3.0: competesWith is irreflexive; the controls' text
 
 A hypothesis does not compete with itself, and the ontology now says so. A NIST SP 800-53 control carried only its identifier, family and title; it now carries what it requires and NIST's discussion of it, from the OSCAL catalog.
